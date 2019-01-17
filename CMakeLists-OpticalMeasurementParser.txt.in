@@ -1,0 +1,20 @@
+cmake_minimum_required( VERSION 2.8.7 )
+
+include(ExternalProject)
+
+ExternalProject_Add(Windows-CalcEngine
+    GIT_REPOSITORY https://bitbucket.org/vidanovic/opticalmeasurementparser.git
+    GIT_TAG "master"
+    
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+  	
+    # SOURCE_DIR "${CMAKE_SOURCE_DIR}/3rdparty/Windows-CalcEngine"
+    SOURCE_DIR "${CMAKE_BINARY_DIR}/OpticalMeasurementParser-src"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/OpticalMeasurementParser-build"
+  	
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    TEST_COMMAND ""
+    INSTALL_COMMAND ""
+)

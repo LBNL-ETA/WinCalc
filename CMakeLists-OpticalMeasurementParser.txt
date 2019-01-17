@@ -1,0 +1,19 @@
+cmake_minimum_required( VERSION 2.8.7 )
+
+# Create include directories that will connect to library itself. This must be created before downloading 
+# OpticalMeasurementParser library or otherwise connections will not be created
+
+set(OpticalMeasurementParser_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/OpticalMeasurementParser-src/include")
+
+include_directories(${OpticalMeasurementParser_INCLUDE_DIRS})
+
+# Download and create Windows Calculation Engine library
+configure_file(CMakeLists-OpticalMeasurementParser.txt.in OpticalMeasurementParser-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/OpticalMeasurementParser-download)
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/OpticalMeasurementParser-download)
+ 
+# add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/Windows-CalcEngine)
+add_subdirectory(${CMAKE_BINARY_DIR}/OpticalMeasurementParser-src)
+set(OpticalMeasurementParser_LIB "${CMAKE_SHARED_LIBRARY_PREFIX}OpticalMeasurementParser${CMAKE_SHARED_LIBRARY_SUFFIX}")
