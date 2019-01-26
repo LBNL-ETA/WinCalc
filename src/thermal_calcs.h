@@ -8,21 +8,22 @@
 
 using Gas_Choice = Gases::GasDef;
 
-
-double calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-              std::vector<Gas_Choice> const & gaps,
-              double width,
-              double height);
-
-struct Thermal_Result
+struct Gap_Info
 {
-    double u;
-    double shgc;
+    Gas_Choice gas;
+    double thickness;
 };
 
-Thermal_Result calc_u_and_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-                 std::vector<Gas_Choice> const & gaps,
-                 double width,
-                 double height);
+double calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+                                        std::vector<Gap_Info> const & gaps,
+                                        double width,
+                                        double height,
+                                        Standard const & standard);
+
+double calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+                          std::vector<Gap_Info> const & gaps,
+                          double width,
+                          double height,
+                          Standard const & standard);
 
 #endif

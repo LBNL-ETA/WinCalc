@@ -1,0 +1,299 @@
+#include "create_wce_objects.h"
+
+SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
+{
+    SpectralAveraging::MeasuredRow converted(data.wavelength, data.T, data.frontR, data.backR);
+    return converted;
+}
+
+std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WLData> const & data)
+{
+    std::vector<SpectralAveraging::MeasuredRow> converted;
+
+    for(OpticsParser::WLData const & row : data)
+    {
+        converted.push_back(convert(row));
+    }
+    return converted;
+}
+
+std::shared_ptr<FenestrationCommon::CSeries>
+  convert(std::vector<std::pair<double, double>> const & v)
+{
+    std::shared_ptr<FenestrationCommon::CSeries> series =
+      std::make_shared<FenestrationCommon::CSeries>();
+    for(auto val : v)
+    {
+        series->addProperty(val.first, val.second);
+    }
+    return series;
+}
+
+std::shared_ptr<SpectralAveraging::CSpectralSampleData>
+  convert(std::vector<std::tuple<double, double, double, double>> const & measured_data)
+{
+    std::shared_ptr<SpectralAveraging::CSpectralSampleData> spectral_data =
+      std::make_shared<SpectralAveraging::CSpectralSampleData>();
+
+    for(auto val : measured_data)
+    {
+        spectral_data->addRecord(
+          std::get<0>(val), std::get<1>(val), std::get<2>(val), std::get<3>(val));
+    }
+
+    return spectral_data;
+}
+
+FenestrationCommon::IntegrationType convert(Integration_Rule_Type integration_rule_type)
+{
+    std::map<Integration_Rule_Type, FenestrationCommon::IntegrationType> integration_types;
+    integration_types[Integration_Rule_Type::RECTANGULAR] =
+      FenestrationCommon::IntegrationType::Rectangular;
+    integration_types[Integration_Rule_Type::TRAPEZOIDAL] =
+      FenestrationCommon::IntegrationType::Trapezoidal;
+
+    return integration_types[integration_rule_type];
+}
+
+
+template<typename T>
+std::vector<double> get_first_val(std::vector<T> const & vec)
+{
+    // returns a vector of the first of each tuple in the input vector
+    std::vector<double> res;
+    for(T const & val : vec)
+    {
+        res.push_back(std::get<0>(val));
+    }
+    return res;
+}
+
+template<>
+std::vector<double> get_first_val(std::vector<OpticsParser::WLData> const & wl_data)
+{
+    std::vector<double> res;
+
+    for(OpticsParser::WLData const & row : wl_data)
+    {
+        res.push_back(row.wavelength);
+    }
+
+    return res;
+}
+
+double get_minimum_wavelength(Method const & method,
+                              OpticsParser::ProductData const & product_data,
+                              std::shared_ptr<FenestrationCommon::CSeries> const & source_spectrum)
+{
+    double result = std::numeric_limits<double>::quiet_NaN();
+
+    if(method.min_wavelength.type == Wavelength_Boundary_Type::WAVELENGTH_SET)
+    {
+        if(method.wavelength_set.type == Wavelength_Set_Type::FILE)
+        {
+            result = method.wavelength_set.values[0];
+        }
+        else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+        {
+            result = source_spectrum->getXArray().front();
+        }
+        if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result = product_data.measurements[0].wavelength;
+        }
+    }
+    else if(method.min_wavelength.type == Wavelength_Boundary_Type::NUMBER)
+    {
+        result = method.min_wavelength.value;
+    }
+
+    return result;
+}
+
+double get_maximum_wavelength(Method const & method,
+                              OpticsParser::ProductData const & product_data,
+                              std::shared_ptr<FenestrationCommon::CSeries> const & source_spectrum)
+{
+    double result = std::numeric_limits<double>::quiet_NaN();
+
+    if(method.max_wavelength.type == Wavelength_Boundary_Type::WAVELENGTH_SET)
+    {
+        if(method.wavelength_set.type == Wavelength_Set_Type::FILE)
+        {
+            result = method.wavelength_set.values.back();
+        }
+        else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+        {
+            result = source_spectrum->getXArray().back();
+        }
+        if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result = product_data.measurements.back().wavelength;
+        }
+    }
+    else if(method.min_wavelength.type == Wavelength_Boundary_Type::NUMBER)
+    {
+        result = method.min_wavelength.value;
+    }
+
+    return result;
+}
+
+
+std::shared_ptr<FenestrationCommon::CSeries>
+  get_spectum_values(Spectrum const & spectrum,
+                     Wavelength_Set const & wavelength_set,
+                     OpticsParser::ProductData const & product_data)
+{
+    std::shared_ptr<FenestrationCommon::CSeries> result;
+
+    if(spectrum.type == Spectrum_Type::UV_ACTION)
+    {
+        if(wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result = convert(SpectralAveraging::UVAction(
+              get_first_val(product_data.measurements), spectrum.a, spectrum.b));
+        }
+        else
+        {
+            result =
+              convert(SpectralAveraging::UVAction(wavelength_set.values, spectrum.a, spectrum.b));
+        }
+    }
+    else if(spectrum.type == Spectrum_Type::KROCHMANN)
+    {
+        if(wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result =
+              convert(SpectralAveraging::Krochmann(get_first_val(product_data.measurements)));
+        }
+        else
+        {
+            result = convert(SpectralAveraging::Krochmann(wavelength_set.values));
+        }
+    }
+    else if(spectrum.type == Spectrum_Type::BLACKBODY)
+    {
+        if(wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result = convert(SpectralAveraging::BlackBodySpectrum(
+              get_first_val(product_data.measurements), spectrum.t));
+        }
+        else
+        {
+            result =
+              convert(SpectralAveraging::BlackBodySpectrum(wavelength_set.values, spectrum.t));
+        }
+    }
+    else if(spectrum.type == Spectrum_Type::NONE)
+    {
+        // if spectrum is none just use blank CSeries
+        result = std::make_shared<FenestrationCommon::CSeries>(FenestrationCommon::CSeries());
+    }
+    else
+    {
+        throw std::runtime_error("Unknown spectrum type.");
+    }
+
+    return result;
+}
+
+
+std::vector<double> get_wavelength_set_to_use(Method const & method,
+                                              OpticsParser::ProductData const & product_data)
+{
+    std::vector<double> result;
+
+    // if there is anything in wavelength_set give that preference
+    if(!method.wavelength_set.values.empty())
+    {
+        result = method.wavelength_set.values;
+    }
+    else
+    {
+        if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+        {
+            if(method.source_spectrum.values.empty())
+            {
+                throw std::runtime_error("Wavelength set to source but no source data loaded");
+            }
+            // Get the wavelengths from the source curve
+            result = get_first_val(method.source_spectrum.values);
+        }
+        else if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+        {
+            result = get_first_val(product_data.measurements);
+        }
+    }
+
+    return result;
+}
+
+
+std::shared_ptr<SingleLayerOptics::CScatteringLayer>
+  create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method)
+{
+    auto source_spectrum =
+      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+
+    auto wavelength_set = get_wavelength_set_to_use(method, product_data);
+
+    auto detector_spectrum =
+      get_spectum_values(method.detector_spectrum, method.wavelength_set, product_data);
+
+    std::shared_ptr<std::vector<double>> converted_wavelengths =
+      std::make_shared<std::vector<double>>(wavelength_set);
+
+    auto integration_rule = convert(method.integration_rule.type);
+
+    auto measured_wavelength_data = convert(product_data.measurements);
+    auto spectral_sample_data =
+      SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
+
+    std::shared_ptr<SpectralAveraging::CSpectralSample> spectral_sample =
+      std::make_shared<SpectralAveraging::CSpectralSample>(
+        spectral_sample_data, source_spectrum, integration_rule, method.integration_rule.k);
+
+    if(detector_spectrum->size())
+    {
+        spectral_sample->setDetectorData(detector_spectrum);
+    }
+
+    if(!wavelength_set.empty())
+    {
+        spectral_sample->setWavelengths(SpectralAveraging::WavelengthSet::Custom, wavelength_set);
+    }
+
+    double min_wavelength = get_minimum_wavelength(method, product_data, source_spectrum);
+    double max_wavelength = get_maximum_wavelength(method, product_data, source_spectrum);
+
+    std::shared_ptr<SingleLayerOptics::CMaterialSample> material =
+      std::make_shared<SingleLayerOptics::CMaterialSample>(
+        spectral_sample,
+        product_data.thickness,
+        FenestrationCommon::MaterialType::Monolithic,
+        min_wavelength,
+        max_wavelength);
+
+    // having to specify createSpecularLayer here is going to be problematic
+    // when we have to deal with other things like venetian, woven, etc...
+    auto scattering_layer = SingleLayerOptics::CScatteringLayer::createSpecularLayer(material);
+    std::shared_ptr<SingleLayerOptics::CScatteringLayer> layer =
+      std::make_shared<SingleLayerOptics::CScatteringLayer>(scattering_layer);
+
+    return layer;
+}
+
+
+std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>
+  create_multi_layer_scattered(std::vector<OpticsParser::ProductData> const & product_data,
+                               Method const & method)
+{
+    std::vector<SingleLayerOptics::CScatteringLayer> layers;
+    for(OpticsParser::ProductData const & product : product_data)
+    {
+        layers.push_back(*create_scattering_layer(product, method));
+    }
+
+    return MultiLayerOptics::CMultiLayerScattered::create(layers);
+}
