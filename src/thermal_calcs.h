@@ -2,7 +2,7 @@
 #define WINCALC_THERMAL_CALCS_H
 
 #include <windows_standards/standard.h>
-#include <OpticsParser.hpp>
+#include <OpticsProductData.hpp>
 
 #include <WCEGases.hpp>
 

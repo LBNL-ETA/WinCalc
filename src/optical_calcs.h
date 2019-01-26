@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <windows_standards/method.h>
-#include <OpticsParser.hpp>
+#include <OpticsProductData.hpp>
 
 #include <WCECommon.hpp>
 #include <WCEGases.hpp>
