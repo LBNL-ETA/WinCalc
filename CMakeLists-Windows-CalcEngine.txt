@@ -17,7 +17,7 @@ set(WindowsCalcEngine_INCLUDE_DIRS ${WindowsCalcEngine_INCLUDE_DIRS} "${CommonIn
 include_directories(${WindowsCalcEngine_INCLUDE_DIRS})
 
 # Download and create Windows Calculation Engine library
-configure_file(CMakeLists-Windows-CalcEngine.txt.in Windows-CalcEngine-download/CMakeLists.txt)
+configure_file(CMakeLists-Windows-CalcEngine.txt.in ${CMAKE_BINARY_DIR}/Windows-CalcEngine-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/Windows-CalcEngine-download)
 execute_process(COMMAND ${CMAKE_COMMAND} --build .

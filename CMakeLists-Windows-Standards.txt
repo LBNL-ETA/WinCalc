@@ -8,7 +8,7 @@ set(Windows-Standards_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/Windows-Standards-src/in
 include_directories(${Windows-Standards_INCLUDE_DIRS})
 
 # Download and create Windows Calculation Engine library
-configure_file(CMakeLists-Windows-Standards.txt.in Windows-Standards-download/CMakeLists.txt)
+configure_file(CMakeLists-Windows-Standards.txt.in ${CMAKE_BINARY_DIR}/Windows-Standards-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/Windows-Standards-download)
 execute_process(COMMAND ${CMAKE_COMMAND} --build .

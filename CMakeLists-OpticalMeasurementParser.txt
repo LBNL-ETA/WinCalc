@@ -8,7 +8,7 @@ set(OpticalMeasurementParser_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/OpticalMeasuremen
 include_directories(${OpticalMeasurementParser_INCLUDE_DIRS})
 
 # Download and create Windows Calculation Engine library
-configure_file(CMakeLists-OpticalMeasurementParser.txt.in OpticalMeasurementParser-download/CMakeLists.txt)
+configure_file(CMakeLists-OpticalMeasurementParser.txt.in ${CMAKE_BINARY_DIR}/OpticalMeasurementParser-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/OpticalMeasurementParser-download)
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
