@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include <windows_standards/load_standard.h>
+#include <load_standard.h>
 #include <OpticsParser.hpp>
 
 #include "thermal_calcs_disk.h"

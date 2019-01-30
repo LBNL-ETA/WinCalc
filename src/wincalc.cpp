@@ -1,4 +1,4 @@
-#include "wincalc/wincalc.h"
+#include "wincalc.h"
 
-#include "windows_standards/method.h"
+#include "method.h"
 #include "OpticsParser.hpp"

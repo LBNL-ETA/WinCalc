@@ -3,13 +3,13 @@
 
 #include <vector>
 
-#include <windows_standards/method.h>
+#include <method.h>
 #include <OpticsProductData.hpp>
 
 #include <WCECommon.hpp>
 #include <WCEGases.hpp>
 
-#include "wincalc/results.h"
+#include "results.h"
 
 using Side_Choice = FenestrationCommon::Side;
 using Calculated_Property_Choice = FenestrationCommon::PropertySimple;

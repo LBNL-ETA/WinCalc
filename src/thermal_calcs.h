@@ -1,7 +1,7 @@
 #ifndef WINCALC_THERMAL_CALCS_H
 #define WINCALC_THERMAL_CALCS_H
 
-#include <windows_standards/standard.h>
+#include <standard.h>
 #include <OpticsProductData.hpp>
 
 #include <WCEGases.hpp>
