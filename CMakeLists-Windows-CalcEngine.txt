@@ -23,6 +23,5 @@ execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/Windows-CalcEngine-download)
  
-# add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/Windows-CalcEngine)
-add_subdirectory(${CMAKE_BINARY_DIR}/Windows-CalcEngine-src)
+add_subdirectory(${CMAKE_BINARY_DIR}/Windows-CalcEngine-src "${CMAKE_BINARY_DIR}/Windows-CalcEngine-src")
 set(WindowsCalcEngine_LIB "${CMAKE_SHARED_LIBRARY_PREFIX}Windows-CalcEngine${CMAKE_SHARED_LIBRARY_SUFFIX}")

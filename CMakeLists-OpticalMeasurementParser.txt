@@ -14,6 +14,5 @@ execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/OpticalMeasurementParser-download)
  
-# add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/Windows-CalcEngine)
-add_subdirectory(${CMAKE_BINARY_DIR}/OpticalMeasurementParser-src)
+add_subdirectory(${CMAKE_BINARY_DIR}/OpticalMeasurementParser-src "${CMAKE_CURRENT_BINARY_DIR}/OpticalMeasurementParser-src")
 set(OpticalMeasurementParser_LIB "${CMAKE_SHARED_LIBRARY_PREFIX}OpticalMeasurementParser${CMAKE_SHARED_LIBRARY_SUFFIX}")
