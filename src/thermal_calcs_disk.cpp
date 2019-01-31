@@ -77,5 +77,6 @@ double calc_shgc(std::vector<std::string> const & product_file_paths,
                  double width)
 {
     Data_From_Disk data = read_from_disk(product_file_paths, gap_values, standard_path);
-    return calc_shgc_iso15099(data.products, data.gaps, width, height, data.standard);
+    auto shgc = calc_shgc_iso15099(data.products, data.gaps, width, height, data.standard);
+    return shgc;
 }

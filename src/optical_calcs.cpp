@@ -83,7 +83,7 @@ double calc_optical_property(MultiLayerOptics::CMultiLayerScattered & layer,
 WCEResult calc_all(OpticsParser::ProductData const & product_data, Method const & method)
 {
     auto scattering_layer = create_scattering_layer(product_data, method);
-    auto layer = MultiLayerOptics::CMultiLayerScattered::create(*scattering_layer);
+    auto layer = MultiLayerOptics::CMultiLayerScattered::create(scattering_layer);
 
     auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
                            const FenestrationCommon::Side side,
@@ -144,9 +144,9 @@ WCEColorResult calc_color(OpticsParser::ProductData const & product_data,
     auto layer_y = create_scattering_layer(product_data, method_y);
     auto layer_z = create_scattering_layer(product_data, method_z);
 
-    auto x_wavelengths = layer_x->getWavelengths();
-    auto y_wavelengths = layer_y->getWavelengths();
-    auto z_wavelengths = layer_z->getWavelengths();
+    auto x_wavelengths = layer_x.getWavelengths();
+    auto y_wavelengths = layer_y.getWavelengths();
+    auto z_wavelengths = layer_z.getWavelengths();
 
     if((x_wavelengths.front() != y_wavelengths.front())
        || (y_wavelengths.front() != z_wavelengths.front())
@@ -179,9 +179,9 @@ WCEColorResult calc_color(OpticsParser::ProductData const & product_data,
       get_wavelength_set_to_use(method_x, product_data);   // and the same wavelength set?
 
     std::shared_ptr<SingleLayerOptics::ColorProperties> color_props =
-      std::make_shared<SingleLayerOptics::ColorProperties>(*layer_x,
-                                                           *layer_y,
-                                                           *layer_z,
+      std::make_shared<SingleLayerOptics::ColorProperties>(layer_x,
+                                                           layer_y,
+                                                           layer_z,
                                                            *source_spectrum,
                                                            *detector_x,
                                                            *detector_y,
@@ -201,7 +201,7 @@ double calc_optical_property(OpticsParser::ProductData const & product_data,
                              Scattering_Choice scattering_choice)
 {
     auto scattering_layer = create_scattering_layer(product_data, method);
-    auto layer = MultiLayerOptics::CMultiLayerScattered::create(*scattering_layer);
+    auto layer = MultiLayerOptics::CMultiLayerScattered::create(scattering_layer);
 
     return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
 }
@@ -215,7 +215,7 @@ double calc_optical_property(std::vector<OpticsParser::ProductData> const & prod
     std::vector<SingleLayerOptics::CScatteringLayer> layers;
 	for(OpticsParser::ProductData const& product : product_data)
 	{
-        layers.push_back(*create_scattering_layer(product, method));
+        layers.push_back(create_scattering_layer(product, method));
 	}
 
 	auto layer = MultiLayerOptics::CMultiLayerScattered::create(layers);

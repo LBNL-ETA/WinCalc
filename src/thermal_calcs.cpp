@@ -56,14 +56,15 @@ Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu, Environmen
                                               environment.pressure_outside);
 
 	outdoor->setHCoeffModel(Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH);
-
-	return Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
+	auto system = Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
+    return system;
 }
 
 double calc_u_iso15099(Tarcog::ISO15099::CIGU & igu)
 {
     Tarcog::ISO15099::CSystem system = create_system(igu, environmental_conditions_u());
-    return system.getUValue();
+    double u = system.getUValue();
+    return u;
 }
 
 double calc_shgc_iso15099(Tarcog::ISO15099::CIGU & igu, double t_sol)
@@ -119,8 +120,8 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
     for(size_t i = 0; i < layers.size(); ++i)
     {
         double absorbtance = multi_layer_scattering->getAbsorptanceLayer(
-          i, FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct, 0, 0);
-        double thickness = layers[i].thickness;
+          i+1, FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct, 0, 0);
+        double thickness = layers[i].thickness / 1000.0;
         double conductivity = layers[i].conductivity;
         auto layer = Tarcog::ISO15099::Layers::solid(thickness, conductivity);
         layer->setSolarAbsorptance(absorbtance);

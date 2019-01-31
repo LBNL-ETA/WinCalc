@@ -26,7 +26,7 @@ std::shared_ptr<FenestrationCommon::CSeries>
 std::vector<double> get_wavelength_set_to_use(Method const & method,
                                               OpticsParser::ProductData const & product_data);
 
-std::shared_ptr<SingleLayerOptics::CScatteringLayer>
+SingleLayerOptics::CScatteringLayer
   create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method);
 
 std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>

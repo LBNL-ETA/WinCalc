@@ -2,6 +2,8 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 set(PROJECT_TEST_NAME ${PROJECT_NAME}-test)
 
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
 file( GLOB TEST_CPP RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp" )
 
 message("TEST_CPP " ${TEST_CPP} )
