@@ -8,7 +8,7 @@
 #include <WCESpectralAveraging.hpp>
 #include <WCEMultiLayerOptics.hpp>
 #include <OpticsProductData.hpp>
-#include <method.h>
+#include <windows_standards/windows_standard.h>
 
 SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
 std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WLData> const & data);

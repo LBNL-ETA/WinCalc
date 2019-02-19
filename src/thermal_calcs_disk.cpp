@@ -1,10 +1,9 @@
 #include <algorithm>
 
-#include <load_standard.h>
+#include <windows_standards/windows_standard.h>
 #include <OpticsParser.hpp>
 
 #include "thermal_calcs_disk.h"
-
 #include "thermal_calcs.h"
 
 Gap_Info convert(Gap_Data const & data)

@@ -1,8 +1,8 @@
-cmake_minimum_required( VERSION 2.8.7 )
+cmake_minimum_required( VERSION 3.5 )
 
 include(ExternalProject)
 
-ExternalProject_Add(Windows-Standards
+ExternalProject_Add(window_standards
     GIT_REPOSITORY https://bitbucket.org/StephenCzarnecki/windows-standards.git
     GIT_TAG "master"
     

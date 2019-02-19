@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 2.8.7 )
+cmake_minimum_required( VERSION 3.5 )
 
 # Create include directories that will connect to library itself. This must be created before downloading 
 # Windows-Standards library or otherwise connections will not be created
