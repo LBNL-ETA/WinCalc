@@ -1,5 +1,5 @@
 #include <algorithm>
-
+#include <locale>
 #include <windows_standards/windows_standard.h>
 #include <OpticsParser.hpp>
 
@@ -8,17 +8,14 @@
 
 Gap_Info convert(Gap_Data const & data)
 {
-    std::map<std::string, Gas_Choice> name_to_enum;
+    std::map<Gas_Type, Gas_Choice> type_to_wce_type;
     // Air, Argon, Krypton, Xenon
-    name_to_enum["air"] = Gas_Choice::Air;
-    name_to_enum["argon"] = Gas_Choice::Argon;
-    name_to_enum["krypton"] = Gas_Choice::Krypton;
-    name_to_enum["xenon"] = Gas_Choice::Xenon;
+    type_to_wce_type[Gas_Type::AIR] = Gas_Choice::Air;
+    type_to_wce_type[Gas_Type::ARGON] = Gas_Choice::Argon;
+    type_to_wce_type[Gas_Type::KRYPTON] = Gas_Choice::Krypton;
+    type_to_wce_type[Gas_Type::XENON] = Gas_Choice::Xenon;
 
-    std::string name = data.name;
-    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-
-    return Gap_Info{name_to_enum.at(name), data.thickness};
+    return Gap_Info{type_to_wce_type.at(data.gas), data.thickness};
 }
 
 std::vector<Gap_Info> convert(std::vector<Gap_Data> const & data)
@@ -59,7 +56,7 @@ Data_From_Disk read_from_disk(std::vector<std::string> const & product_file_path
     return Data_From_Disk{products, gaps, standard};
 }
 
-double calc_u(std::vector<std::string> const & product_file_paths,
+Thermal_Result calc_u(std::vector<std::string> const & product_file_paths,
               std::vector<Gap_Data> const & gap_values,
               std::string const & standard_path,
               double height,
@@ -69,7 +66,7 @@ double calc_u(std::vector<std::string> const & product_file_paths,
     return calc_u_iso15099(data.products, data.gaps, width, height, data.standard);
 }
 
-double calc_shgc(std::vector<std::string> const & product_file_paths,
+Thermal_Result calc_shgc(std::vector<std::string> const & product_file_paths,
                  std::vector<Gap_Data> const & gap_values,
                  std::string const & standard_path,
                  double height,

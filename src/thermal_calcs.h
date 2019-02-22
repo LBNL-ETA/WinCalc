@@ -6,6 +6,8 @@
 
 #include <WCEGases.hpp>
 
+#include "thermal_results.h"
+
 using Gas_Choice = Gases::GasDef;
 
 struct Gap_Info
@@ -14,13 +16,13 @@ struct Gap_Info
     double thickness;
 };
 
-double calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-                                        std::vector<Gap_Info> const & gaps,
-                                        double width,
-                                        double height,
-                                        Standard const & standard);
+Thermal_Result calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+                       std::vector<Gap_Info> const & gaps,
+                       double width,
+                       double height,
+                       Standard const & standard);
 
-double calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+Thermal_Result calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
                           std::vector<Gap_Info> const & gaps,
                           double width,
                           double height,

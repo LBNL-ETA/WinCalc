@@ -3,15 +3,15 @@ set( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
 
 add_library( ${LIB_NAME}   
 		optical_calcs.h
-		optical_calcs.cpp  
+		optical_calcs.cpp
+		optical_results.h
 		thermal_calcs.h
 		thermal_calcs.cpp       
 		thermal_calcs_disk.h
 		thermal_calcs_disk.cpp
+		thermal_results.h
 		create_wce_objects.h
-		create_wce_objects.cpp  
-		results.h
-		results.cpp)
+		create_wce_objects.cpp)
 
 
 

@@ -26,7 +26,10 @@ protected:
 TEST_F(TestCalcFromDisk, TestCalcFromDisk_1) {
 	SCOPED_TRACE( "Begin Test: Calc from disk." );
 
+#pragma warning(push)
+#pragma warning(disable: 4996)
 	std::string test_dir = std::getenv("WINCALC_TEST_DIR");
+#pragma warning(pop)
 	std::string path_sep(1, separator());
 
 	std::vector<std::string> product_paths;
@@ -36,8 +39,8 @@ TEST_F(TestCalcFromDisk, TestCalcFromDisk_1) {
 
 	std::string standard_path = test_dir + path_sep + "standards" + path_sep + "W5_NFRC_2003.std";
 
-	double u_result = calc_u(product_paths, gaps, standard_path, 1.0, 1.0);
+	Thermal_Result u_result = calc_u(product_paths, gaps, standard_path, 1.0, 1.0);
 
-	double shgc_result = calc_shgc(product_paths, gaps, standard_path, 1.0, 1.0);
+	Thermal_Result shgc_result = calc_shgc(product_paths, gaps, standard_path, 1.0, 1.0);
 }
 

@@ -139,22 +139,37 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
 	
 }
 
-double calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-                       std::vector<Gap_Info> const & gaps,
-                       double width,
-                       double height,
-                       Standard const & standard)
+Thermal_Result assemble_thermal_result(double result, IGU_Info const& igu_info)
 {
-    IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-    return calc_u_iso15099(igu_info.igu);
+    double t_sol = igu_info.t_sol;
+    std::vector<double> layer_solar_absorptances;
+    std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> solid_layers =
+      igu_info.igu.getSolidLayers();
+    for(auto const & layer : solid_layers)
+    {
+        layer_solar_absorptances.push_back(layer->getSolarAbsorptance());
+    }
+    return Thermal_Result{result, t_sol, layer_solar_absorptances};
 }
 
-double calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+Thermal_Result calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
                        std::vector<Gap_Info> const & gaps,
                        double width,
                        double height,
                        Standard const & standard)
 {
     IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-    return calc_shgc_iso15099(igu_info.igu, igu_info.t_sol);
+    double u = calc_u_iso15099(igu_info.igu);
+    return assemble_thermal_result(u, igu_info);
+}
+
+Thermal_Result calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
+                       std::vector<Gap_Info> const & gaps,
+                       double width,
+                       double height,
+                       Standard const & standard)
+{
+    IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
+    double shgc = calc_shgc_iso15099(igu_info.igu, igu_info.t_sol);
+    return assemble_thermal_result(shgc, igu_info);
 }
