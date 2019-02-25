@@ -23,14 +23,26 @@ std::shared_ptr<FenestrationCommon::CSeries>
                      Wavelength_Set const & wavelength_set,
                      OpticsParser::ProductData const & product_data);
 
+std::shared_ptr<FenestrationCommon::CSeries>
+  get_spectum_values(Spectrum const & spectrum,
+                     Wavelength_Set const & wavelength_set,
+                     std::vector<OpticsParser::ProductData> const & product_data);
+
 std::vector<double> get_wavelength_set_to_use(Method const & method,
                                               OpticsParser::ProductData const & product_data);
 
 SingleLayerOptics::CScatteringLayer
   create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method);
 
+SingleLayerOptics::SpecularLayer
+  create_specular_layer(OpticsParser::ProductData const & product_data, Method const & method);
+
 std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>
   create_multi_layer_scattered(std::vector<OpticsParser::ProductData> const & product_data,
+                             Method const & method);
+
+std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
+  create_multi_pane_specular(std::vector<OpticsParser::ProductData> const & product_data,
                                Method const & method);
 
 #endif

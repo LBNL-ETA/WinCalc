@@ -185,10 +185,10 @@ std::shared_ptr<FenestrationCommon::CSeries>
               convert(SpectralAveraging::BlackBodySpectrum(wavelength_set.values, spectrum.t));
         }
     }
-	else if(spectrum.type == Spectrum_Type::FILE)
-	{
+    else if(spectrum.type == Spectrum_Type::FILE)
+    {
         result = convert(spectrum.values);
-	}
+    }
     else if(spectrum.type == Spectrum_Type::NONE)
     {
         // if spectrum is none just use blank CSeries
@@ -200,6 +200,14 @@ std::shared_ptr<FenestrationCommon::CSeries>
     }
 
     return result;
+}
+
+std::shared_ptr<FenestrationCommon::CSeries>
+  get_spectum_values(Spectrum const & spectrum,
+                     Wavelength_Set const & wavelength_set,
+                     std::vector<OpticsParser::ProductData> const & product_data)
+{
+    return get_spectum_values(spectrum, wavelength_set, product_data[0]);
 }
 
 
@@ -271,7 +279,7 @@ SingleLayerOptics::CScatteringLayer
     double min_wavelength = get_minimum_wavelength(method, product_data, source_spectrum);
     double max_wavelength = get_maximum_wavelength(method, product_data, source_spectrum);
 
-	double thickness_meters = product_data.thickness / 1000.0;
+    double thickness_meters = product_data.thickness / 1000.0;
 
     std::shared_ptr<SingleLayerOptics::CMaterialSample> material =
       std::make_shared<SingleLayerOptics::CMaterialSample>(
@@ -284,13 +292,66 @@ SingleLayerOptics::CScatteringLayer
     // having to specify createSpecularLayer here is going to be problematic
     // when we have to deal with other things like venetian, woven, etc...
     auto scattering_layer = SingleLayerOptics::CScatteringLayer::createSpecularLayer(material);
-#if 0
-	std::shared_ptr<SingleLayerOptics::CScatteringLayer> layer =
-      std::make_shared<SingleLayerOptics::CScatteringLayer>(scattering_layer);
-
-    return layer;
-#endif
     return scattering_layer;
+}
+
+SingleLayerOptics::SpecularLayer
+  create_specular_layer(OpticsParser::ProductData const & product_data, Method const & method)
+{
+    auto source_spectrum =
+      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+
+    auto wavelength_set = get_wavelength_set_to_use(method, product_data);
+
+    auto detector_spectrum =
+      get_spectum_values(method.detector_spectrum, method.wavelength_set, product_data);
+
+    std::shared_ptr<std::vector<double>> converted_wavelengths =
+      std::make_shared<std::vector<double>>(wavelength_set);
+
+    auto integration_rule = convert(method.integration_rule.type);
+
+    auto measured_wavelength_data = convert(product_data.measurements);
+    auto spectral_sample_data =
+      SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
+
+#if 0
+    std::shared_ptr<SpectralAveraging::CSpectralSample> spectral_sample =
+      std::make_shared<SpectralAveraging::CSpectralSample>(
+        spectral_sample_data, source_spectrum, integration_rule, method.integration_rule.k);
+
+    if(detector_spectrum->size())
+    {
+        spectral_sample->setDetectorData(detector_spectrum);
+    }
+
+    if(!wavelength_set.empty())
+    {
+        spectral_sample->setWavelengths(SpectralAveraging::WavelengthSet::Custom, wavelength_set);
+    }
+
+#endif
+
+    double min_wavelength = get_minimum_wavelength(method, product_data, source_spectrum);
+    double max_wavelength = get_maximum_wavelength(method, product_data, source_spectrum);
+
+    double thickness_meters = product_data.thickness / 1000.0;
+
+    std::shared_ptr<SingleLayerOptics::CMaterial> material =
+      SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
+                                                 detector_spectrum,
+                                                 thickness_meters,
+                                                 FenestrationCommon::MaterialType::Monolithic,
+                                                 min_wavelength,
+                                                 max_wavelength,
+                                                 integration_rule,
+                                                 method.integration_rule.k);
+
+    // having to specify createSpecularLayer here is going to be problematic
+    // when we have to deal with other things like venetian, woven, etc...
+    auto scattering_layer = SingleLayerOptics::CScatteringLayer::createSpecularLayer(material);
+    SingleLayerOptics::SpecularLayer specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
+    return specular_layer;
 }
 
 
@@ -306,9 +367,27 @@ std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>
 
     auto layer = MultiLayerOptics::CMultiLayerScattered::create(layers);
 
-	auto source_spectrum =
-      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data[0]);
+    auto source_spectrum =
+      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
 
-	layer->setSourceData(source_spectrum);
-	return layer;
+    layer->setSourceData(source_spectrum);
+    return layer;
+}
+
+std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
+  create_multi_pane_specular(std::vector<OpticsParser::ProductData> const & product_data,
+                               Method const & method)
+{
+    std::vector<SingleLayerOptics::SpecularLayer> layers;
+    for(OpticsParser::ProductData const & product : product_data)
+    {
+        layers.push_back(create_specular_layer(product, method));
+    }
+
+	auto source_spectrum =
+      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+
+    auto layer = MultiLayerOptics::CMultiPaneSpecular::create(layers, source_spectrum);
+
+    return layer;
 }
