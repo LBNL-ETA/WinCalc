@@ -29,12 +29,13 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 add_executable(${PROJECT_TEST_NAME} 
 		calc_from_disk.unit.cpp          
-		main.cpp )
+		main.cpp
+		paths.h )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
 
-add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} -E env WINCALC_TEST_DIR=${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 

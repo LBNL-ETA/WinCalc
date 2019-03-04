@@ -2,15 +2,18 @@
 #include <gtest/gtest.h>
 #include <cstdlib>
 #include <memory>
+#include <iostream>
 
 #include "wincalc/wincalc.h"
 
-inline char separator()
+#include "paths.h"
+
+inline std::string separator()
 {
 #if defined _WIN32 || defined __CYGWIN__
-    return '\\';
+    return "\\";
 #else
-    return '/';
+    return "/";
 #endif
 }
 
@@ -23,14 +26,15 @@ protected:
 
 };
 
+#define GTEST_COUT std::cerr << "[          ] [ INFO ]"
+
 TEST_F(TestCalcFromDisk, TestCalcFromDisk_1) {
 	SCOPED_TRACE( "Begin Test: Calc from disk." );
 
-#pragma warning(push)
-#pragma warning(disable: 4996)
-	std::string test_dir = std::getenv("WINCALC_TEST_DIR");
-#pragma warning(pop)
-	std::string path_sep(1, separator());
+	GTEST_COUT << "test_dir" << std::endl;
+	GTEST_COUT << test_dir << std::endl;
+
+	std::string path_sep = separator();
 
 	std::vector<std::string> product_paths;
 	std::string clear_3_path = test_dir + path_sep + "products" + path_sep + "CLEAR_3.DAT";
@@ -42,5 +46,6 @@ TEST_F(TestCalcFromDisk, TestCalcFromDisk_1) {
 	Thermal_Result u_result = calc_u(product_paths, gaps, standard_path, 1.0, 1.0);
 
 	Thermal_Result shgc_result = calc_shgc(product_paths, gaps, standard_path, 1.0, 1.0);
+
 }
 
