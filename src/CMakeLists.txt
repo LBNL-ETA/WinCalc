@@ -7,8 +7,8 @@ add_library( ${LIB_NAME}
 		optical_results.h
 		thermal_calcs.h
 		thermal_calcs.cpp       
-		thermal_calcs_disk.h
-		thermal_calcs_disk.cpp
+		thermal_calcs_from_measured_data_source.h
+		thermal_calcs_from_measured_data_source.cpp
 		thermal_results.h
 		create_wce_objects.h
 		create_wce_objects.cpp)
@@ -30,7 +30,9 @@ if ( MSVC )
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
 
-
+target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)
 target_link_libraries( ${LIB_NAME} PRIVATE window_standards OpticalMeasurementParser Windows-CalcEngine)
+
+
 
 

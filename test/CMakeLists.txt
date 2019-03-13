@@ -29,12 +29,14 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 add_executable(${PROJECT_TEST_NAME} 
 		calc_from_disk.unit.cpp          
+		calc_from_json.unit.cpp
 		main.cpp
 		paths.h )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
 
 add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} "${CMAKE_CURRENT_LIST_DIR}")
