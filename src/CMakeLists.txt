@@ -30,8 +30,9 @@ if ( MSVC )
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
 
-target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)
-target_link_libraries( ${LIB_NAME} PRIVATE window_standards OpticalMeasurementParser Windows-CalcEngine)
+target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
+target_link_libraries(${LIB_NAME} PRIVATE Windows-CalcEngine)
+target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser)
 
 
 
