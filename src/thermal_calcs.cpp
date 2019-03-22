@@ -102,7 +102,7 @@ struct IGU_Info
 };
 
 IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
-                    std::vector<Gap_Info> const & gaps,
+                    std::vector<Engine_Gap_Info> const & gaps,
                     double width,
                     double height,
                     Standard const & standard)
@@ -135,10 +135,10 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
     }
 
     std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
-    for(Gap_Info gap_info : gaps)
+    for(Engine_Gap_Info Engine_Gap_Info : gaps)
     {
         tarcog_gaps.push_back(
-          Tarcog::ISO15099::Layers::gap(gap_info.thickness, Gases::CGas({{1.0, gap_info.gas}})));
+          Tarcog::ISO15099::Layers::gap(Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
     }
 
     return IGU_Info{create_igu(tarcog_solid_layers, tarcog_gaps, width, height), t_sol};
@@ -158,7 +158,7 @@ Thermal_Result assemble_thermal_result(double result, IGU_Info const & igu_info)
 }
 
 Thermal_Result calc_u_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-                               std::vector<Gap_Info> const & gaps,
+                               std::vector<Engine_Gap_Info> const & gaps,
                                double width,
                                double height,
                                Standard const & standard)
@@ -169,7 +169,7 @@ Thermal_Result calc_u_iso15099(std::vector<OpticsParser::ProductData> const & la
 }
 
 Thermal_Result calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
-                                  std::vector<Gap_Info> const & gaps,
+                                  std::vector<Engine_Gap_Info> const & gaps,
                                   double width,
                                   double height,
                                   Standard const & standard)

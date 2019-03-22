@@ -9,6 +9,17 @@
 #include <WCEMultiLayerOptics.hpp>
 #include <OpticsProductData.hpp>
 #include <windows_standards/windows_standard.h>
+#include <WCEGases.hpp>
+
+#include "gap.h"
+
+struct Engine_Gap_Info
+{
+    Gases::GasDef gas;
+    double thickness;
+};
+
+std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data);
 
 SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
 std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WLData> const & data);
@@ -17,6 +28,7 @@ std::shared_ptr<FenestrationCommon::CSeries>
 std::shared_ptr<SpectralAveraging::CSpectralSampleData>
   convert(std::vector<std::tuple<double, double, double, double>> const & measured_data);
 FenestrationCommon::IntegrationType convert(Integration_Rule_Type integration_rule_type);
+
 
 std::shared_ptr<FenestrationCommon::CSeries>
   get_spectum_values(Spectrum const & spectrum,

@@ -391,3 +391,25 @@ std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
 
     return layer;
 }
+
+Engine_Gap_Info convert(Gap_Data const & data)
+{
+    std::map<Gas_Type, Gases::GasDef> type_to_wce_type;
+    // Air, Argon, Krypton, Xenon
+    type_to_wce_type[Gas_Type::AIR] = Gases::GasDef::Air;
+    type_to_wce_type[Gas_Type::ARGON] = Gases::GasDef::Argon;
+    type_to_wce_type[Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
+    type_to_wce_type[Gas_Type::XENON] = Gases::GasDef::Xenon;
+
+    return Engine_Gap_Info{type_to_wce_type.at(data.gas), data.thickness};
+}
+
+std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data)
+{
+    std::vector<Engine_Gap_Info> result;
+    for(Gap_Data const & d : data)
+    {
+        result.push_back(convert(d));
+    }
+    return result;
+}

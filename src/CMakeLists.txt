@@ -11,7 +11,11 @@ add_library( ${LIB_NAME}
 		thermal_calcs_from_measured_data_source.cpp
 		thermal_results.h
 		create_wce_objects.h
-		create_wce_objects.cpp)
+		create_wce_objects.cpp
+		glazing_system.h
+		glazing_system.cpp
+		gap.h
+		gap.cpp)
 
 
 
