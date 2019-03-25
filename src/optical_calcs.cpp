@@ -80,7 +80,7 @@ double calc_optical_property(MultiLayerOptics::CMultiLayerScattered & layer,
 }
 
 
-WCEResult calc_all(OpticsParser::ProductData const & product_data, Method const & method)
+WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method)
 {
     auto scattering_layer = create_scattering_layer(product_data, method);
     auto layer = MultiLayerOptics::CMultiLayerScattered::create(scattering_layer);
@@ -91,10 +91,10 @@ WCEResult calc_all(OpticsParser::ProductData const & product_data, Method const 
         return calc_optical_property(*layer, prop, side, scattering);
     };
 
-    return do_calcs<WCEResult, double>(calc_f);
+    return do_calcs<WCE_Optical_Result, double>(calc_f);
 }
 
-WCEResult calc_all(std::vector<OpticsParser::ProductData> const & product_data,
+WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
                    Method const & method)
 {
     auto layer = create_multi_layer_scattered(product_data, method);
@@ -105,11 +105,11 @@ WCEResult calc_all(std::vector<OpticsParser::ProductData> const & product_data,
         return calc_optical_property(*layer, prop, side, scattering);
     };
 
-    return do_calcs<WCEResult, double>(calc_f);
+    return do_calcs<WCE_Optical_Result, double>(calc_f);
 }
 
 
-ColorResult calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
+Color_Result calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
                                   const FenestrationCommon::PropertySimple prop,
                                   const FenestrationCommon::Side side,
                                   const FenestrationCommon::Scattering scattering,
@@ -119,23 +119,23 @@ ColorResult calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProper
     auto trichromatic = color_props->getTrichromatic(prop, side, scattering, theta, phi);
     auto rgb = color_props->getRGB(prop, side, scattering, theta, phi);
     auto lab = color_props->getCIE_Lab(prop, side, scattering, theta, phi);
-    return ColorResult(trichromatic, rgb, lab);
+    return Color_Result(trichromatic, rgb, lab);
 }
 
-WCEColorResult
+WCE_Color_Result
   calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props)
 {
     auto calc_f = [&color_props](const FenestrationCommon::PropertySimple prop,
                                  const FenestrationCommon::Side side,
-                                 const FenestrationCommon::Scattering scattering) -> ColorResult {
+                                 const FenestrationCommon::Scattering scattering) -> Color_Result {
         return calc_color_properties(color_props, prop, side, scattering);
     };
 
-    return do_calcs<WCEColorResult, ColorResult>(calc_f);
+    return do_calcs<WCE_Color_Result, Color_Result>(calc_f);
 }
 
 
-WCEColorResult calc_color(OpticsParser::ProductData const & product_data,
+WCE_Color_Result calc_color(OpticsParser::ProductData const & product_data,
                           Method const & method_x,
                           Method const & method_y,
                           Method const & method_z)

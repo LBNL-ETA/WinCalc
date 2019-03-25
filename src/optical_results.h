@@ -7,7 +7,7 @@
 
 
 template<typename T>
-struct WCEResultTemplate
+struct WCE_Optical_Result_Template
 {
     T tf_direct_direct;
     T tb_direct_direct;
@@ -29,8 +29,7 @@ struct WCEResultTemplate
     T rb_diffuse_diffuse;
 };
 
-//typedef WCEResultTemplate<double> WCEResult;
-using WCEResult = WCEResultTemplate<double>;
+using WCE_Optical_Result = WCE_Optical_Result_Template<double>;
 
 struct Trichromatic
 {
@@ -68,12 +67,12 @@ struct Lab
     double b;
 };
 
-struct ColorResult
+struct Color_Result
 {
-    ColorResult() = default;
+    Color_Result() = default;
 
     template<typename T, typename R, typename L>
-    ColorResult(T const & t, R const & r, L const & l) : trichromatic(t), rgb(r), lab(l)
+    Color_Result(T const & t, R const & r, L const & l) : trichromatic(t), rgb(r), lab(l)
     {}
 
     Trichromatic trichromatic;
@@ -81,7 +80,7 @@ struct ColorResult
     Lab lab;
 };
 
-typedef WCEResultTemplate<ColorResult> WCEColorResult;
+typedef WCE_Optical_Result_Template<Color_Result> WCE_Color_Result;
 
 
 #endif

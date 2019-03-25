@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "wincalc/wincalc.h"
+#include "thermal_calcs_from_measured_data_source.h"
 
 #include "paths.h"
 

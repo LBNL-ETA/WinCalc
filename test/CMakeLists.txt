@@ -30,6 +30,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 add_executable(${PROJECT_TEST_NAME} 
 		calc_from_disk.unit.cpp          
 		calc_from_json.unit.cpp
+		glazing_system.unit.cpp
 		main.cpp
 		paths.h )
 

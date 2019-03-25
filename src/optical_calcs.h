@@ -3,18 +3,8 @@
 
 #include <vector>
 
-#include <windows_standards/windows_standard.h>
-#include <OpticsProductData.hpp>
-
-#include <WCECommon.hpp>
-#include <WCEGases.hpp>
-
+#include "optical_calc_params.h"
 #include "optical_results.h"
-
-using Side_Choice = FenestrationCommon::Side;
-using Calculated_Property_Choice = FenestrationCommon::PropertySimple;
-using Scattering_Choice = FenestrationCommon::Scattering;
-
 
 double calc_optical_property(OpticsParser::ProductData const & product_data,
                              Method const & method,
@@ -28,11 +18,11 @@ double calc_optical_property(std::vector<OpticsParser::ProductData> const & prod
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice);
 
-WCEResult calc_all(OpticsParser::ProductData const & product_data, Method const & method);
-WCEResult calc_all(std::vector<OpticsParser::ProductData> const & product_data,
+WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method);
+WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
                    Method const & method);
 
-WCEColorResult calc_color(OpticsParser::ProductData const & product_data,
+WCE_Color_Result calc_color(OpticsParser::ProductData const & product_data,
                               Method const & method_x,
                               Method const & method_y,
                               Method const & method_z);
