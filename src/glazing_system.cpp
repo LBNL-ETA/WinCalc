@@ -26,15 +26,6 @@ Thermal_Result Glazing_System::shgc() const
     return calc_shgc(solid_layers, gap_layers, standard, width, height);
 }
 
-double Glazing_System::specific_optical_property(Method_Type const & method_type,
-                                                 Calculated_Property_Choice property_choice,
-                                                 Side_Choice side_choice,
-                                                 Scattering_Choice scattering_choice) const
-{
-    Method method = get_method(method_type);
-    return calc_optical_property(
-      solid_layers, method, property_choice, side_choice, scattering_choice);
-}
 
 WCE_Optical_Result Glazing_System::all_method_values(Method_Type const & method_type) const
 {

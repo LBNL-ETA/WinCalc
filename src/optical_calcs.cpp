@@ -71,7 +71,7 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
     return calc_result;
 }
 
-double calc_optical_property(MultiLayerOptics::CMultiLayerScattered & layer,
+double calc_optical_property(MultiLayerOptics::CMultiPaneSpecular & layer,
                              Calculated_Property_Choice property_choice,
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice)
@@ -82,8 +82,7 @@ double calc_optical_property(MultiLayerOptics::CMultiLayerScattered & layer,
 
 WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method)
 {
-    auto scattering_layer = create_scattering_layer(product_data, method);
-    auto layer = MultiLayerOptics::CMultiLayerScattered::create(scattering_layer);
+    auto layer = create_multi_pane_specular({product_data}, method);
 
     auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
                            const FenestrationCommon::Side side,
@@ -97,7 +96,7 @@ WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Meth
 WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
                    Method const & method)
 {
-    auto layer = create_multi_layer_scattered(product_data, method);
+    auto layer = create_multi_pane_specular(product_data, method);
 
     auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
                            const FenestrationCommon::Side side,
@@ -200,9 +199,8 @@ double calc_optical_property(OpticsParser::ProductData const & product_data,
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice)
 {
-    auto scattering_layer = create_scattering_layer(product_data, method);
-    auto layer = MultiLayerOptics::CMultiLayerScattered::create(scattering_layer);
-
+    auto layer = create_multi_pane_specular({product_data}, method);
+    
     return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
 }
 
@@ -212,13 +210,7 @@ double calc_optical_property(std::vector<OpticsParser::ProductData> const & prod
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice)
 {
-    std::vector<SingleLayerOptics::CScatteringLayer> layers;
-	for(OpticsParser::ProductData const& product : product_data)
-	{
-        layers.push_back(create_scattering_layer(product, method));
-	}
-
-	auto layer = MultiLayerOptics::CMultiLayerScattered::create(layers);
+	auto layer = create_multi_pane_specular(product_data, method);
 
     return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
 }
