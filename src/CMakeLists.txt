@@ -36,8 +36,7 @@ if ( MSVC )
 endif()
 
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
-target_link_libraries(${LIB_NAME} PRIVATE Windows-CalcEngine)
-target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser)
+target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser Windows-CalcEngine)
 
 
 
