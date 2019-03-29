@@ -38,13 +38,13 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_json)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.83380702773635118, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091376375800192963, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.83385101472829093, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.86058891721415542, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.83380702773635118, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091376375800192963, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.86063515079923925, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 }
 
 TEST_F(TestCalcFromDisk, Test_NFRC_103_103_json)
@@ -71,15 +71,15 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_json)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.70324342292094888, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096478606342105686, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072235301276579358, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.70330055648824519, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096485399860676058, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072254488683882165, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.76323563155897300, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.70324342292094888, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096478606342105686, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072235301276579358, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.76330593361763821, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.70330055648824519, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096485399860676058, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072254488683882165, 1e-14);
 }
 
 TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
@@ -103,13 +103,13 @@ TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.8512829756503013, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.51336705611616373, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.43155934653114825, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.51340056427384817, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.43152333420448147, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.64593539928013155, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.51336705611616373, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.43155934653114825, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.64595738334695485, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.51340056427384817, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.43152333420448147, 1e-14);
 }
 
 TEST_F(TestCalcFromDisk, Test_NFRC_21515_json)
@@ -159,13 +159,13 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21000_json)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9142344855758333, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.90326977843465428, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.016619632167453473, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.90344456267444773, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.016308899104861548, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.90808092331727908, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.90326977843465428, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.016619632167453473, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.90816549494516030, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.90344456267444773, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.016308899104861548, 1e-14);
 }
 
 TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
@@ -189,11 +189,11 @@ TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.5661650115454711, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.85364583019181739, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.075845349816471272, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.85412076207801813, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.075260529980339358, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.87662673202249830, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.85364583019181739, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.075845349816471272, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.87692233510952988, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.85412076207801813, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.075260529980339358, 1e-14);
 }
