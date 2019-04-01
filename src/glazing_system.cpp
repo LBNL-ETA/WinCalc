@@ -35,18 +35,10 @@ WCE_Optical_Result Glazing_System::all_method_values(Method_Type const & method_
 
 WCE_Color_Result Glazing_System::color() const
 {
-    if(solid_layers.size() != 1)
-    {
-        std::stringstream err_msg;
-        err_msg << "Color calculations are currently only supported for single layer systems.  "
-                << "This system has "
-                << solid_layers.size() << " layers.";
-        throw std::runtime_error(err_msg.str());
-    }
     Method tristim_x = get_method(Method_Type::COLOR_TRISTIMX);
     Method tristim_y = get_method(Method_Type::COLOR_TRISTIMY);
     Method tristim_z = get_method(Method_Type::COLOR_TRISTIMZ);
-    return calc_color(solid_layers[0], tristim_x, tristim_y, tristim_z);
+    return calc_color(solid_layers, tristim_x, tristim_y, tristim_z);
 }
 
 Method Glazing_System::get_method(Method_Type const & method_type) const

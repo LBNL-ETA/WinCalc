@@ -22,7 +22,7 @@ WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Meth
 WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
                    Method const & method);
 
-WCE_Color_Result calc_color(OpticsParser::ProductData const & product_data,
+WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,
                               Method const & method_x,
                               Method const & method_y,
                               Method const & method_z);

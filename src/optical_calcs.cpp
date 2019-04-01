@@ -134,18 +134,18 @@ WCE_Color_Result
 }
 
 
-WCE_Color_Result calc_color(OpticsParser::ProductData const & product_data,
+WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,
                           Method const & method_x,
                           Method const & method_y,
                           Method const & method_z)
 {
-    auto layer_x = create_scattering_layer(product_data, method_x);
-    auto layer_y = create_scattering_layer(product_data, method_y);
-    auto layer_z = create_scattering_layer(product_data, method_z);
+    auto layer_x = create_multi_pane_specular(product_data, method_x);
+    auto layer_y = create_multi_pane_specular(product_data, method_y);
+    auto layer_z = create_multi_pane_specular(product_data, method_z);
 
-    auto x_wavelengths = layer_x.getWavelengths();
-    auto y_wavelengths = layer_y.getWavelengths();
-    auto z_wavelengths = layer_z.getWavelengths();
+    auto x_wavelengths = layer_x->getWavelengths();
+    auto y_wavelengths = layer_y->getWavelengths();
+    auto z_wavelengths = layer_z->getWavelengths();
 
     if((x_wavelengths.front() != y_wavelengths.front())
        || (y_wavelengths.front() != z_wavelengths.front())
@@ -171,16 +171,16 @@ WCE_Color_Result calc_color(OpticsParser::ProductData const & product_data,
     auto source_spectrum =
       get_spectum_values(method_x.detector_spectrum,
                          method_x.wavelength_set,
-                         product_data);   // All methods must have the same source
+                         product_data[0]);   // All methods must have the same source
                                           // spectrum? (Should it be checked above?)
 
     std::vector<double> wavelength_set =
-      get_wavelength_set_to_use(method_x, product_data);   // and the same wavelength set?
+      get_wavelength_set_to_use(method_x, product_data[0]);   // and the same wavelength set?
 
     std::shared_ptr<SingleLayerOptics::ColorProperties> color_props =
-      std::make_shared<SingleLayerOptics::ColorProperties>(layer_x,
-                                                           layer_y,
-                                                           layer_z,
+      std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
+                                                           std::move(layer_y),
+                                                           std::move(layer_z),
                                                            *source_spectrum,
                                                            *detector_x,
                                                            *detector_y,
