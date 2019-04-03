@@ -22,6 +22,7 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
     calc_result.tf_direct_direct = f(FenestrationCommon::PropertySimple::T,
                                      FenestrationCommon::Side::Front,
                                      FenestrationCommon::Scattering::DirectDirect);
+#if 0
     calc_result.tb_direct_direct = f(FenestrationCommon::PropertySimple::T,
                                      FenestrationCommon::Side::Back,
                                      FenestrationCommon::Scattering::DirectDirect);
@@ -32,6 +33,7 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
                                      FenestrationCommon::Side::Back,
                                      FenestrationCommon::Scattering::DirectDirect);
 
+	
     // direct diffuse
     calc_result.tf_direct_diffuse = f(FenestrationCommon::PropertySimple::T,
                                       FenestrationCommon::Side::Front,
@@ -67,7 +69,7 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
     calc_result.rb_diffuse_diffuse = f(FenestrationCommon::PropertySimple::R,
                                        FenestrationCommon::Side::Back,
                                        FenestrationCommon::Scattering::DiffuseDiffuse);
-
+#endif
     return calc_result;
 }
 
