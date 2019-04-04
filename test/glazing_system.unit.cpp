@@ -17,34 +17,6 @@ protected:
     {}
 };
 
-TEST_F(TestGlazingSystem, Test_NFRC_103_glazing_system_memory_leak)
-{
-    SCOPED_TRACE("Begin Test: Single clear NFRC 103 for memory leaks.");
-    
-	std::filesystem::path standard_path(test_dir);
-    standard_path /= "standards";
-    standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
-
-	std::filesystem::path clear_3_path(test_dir);
-    clear_3_path /= "products";
-    clear_3_path /= "CLEAR_3.json";
-
-	std::vector<Gap_Data> gaps;
-
-    for(size_t i = 0; i < 10000; ++i)
-    {
-        std::cout << "Memory leak iteration " << i << std::endl;
-        std::vector<OpticsParser::ProductData> products;
-        OpticsParser::ProductData clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
-        products.push_back(clear_3);        
-
-        Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
-		WCE_Color_Result color_results = glazing_system.color();
-
-    }
-}
-
 TEST_F(TestGlazingSystem, Test_NFRC_103_glazing_system)
 {
     SCOPED_TRACE("Begin Test: Single clear NFRC 103 as a glazing system.");
