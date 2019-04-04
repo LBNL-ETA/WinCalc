@@ -22,7 +22,6 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
     calc_result.tf_direct_direct = f(FenestrationCommon::PropertySimple::T,
                                      FenestrationCommon::Side::Front,
                                      FenestrationCommon::Scattering::DirectDirect);
-#if 0
     calc_result.tb_direct_direct = f(FenestrationCommon::PropertySimple::T,
                                      FenestrationCommon::Side::Back,
                                      FenestrationCommon::Scattering::DirectDirect);
@@ -69,7 +68,6 @@ R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
     calc_result.rb_diffuse_diffuse = f(FenestrationCommon::PropertySimple::R,
                                        FenestrationCommon::Side::Back,
                                        FenestrationCommon::Scattering::DiffuseDiffuse);
-#endif
     return calc_result;
 }
 
@@ -96,7 +94,7 @@ WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Meth
 }
 
 WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
-                   Method const & method)
+                            Method const & method)
 {
     auto layer = create_multi_pane_specular(product_data, method);
 
@@ -109,13 +107,14 @@ WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & produ
     return do_calcs<WCE_Optical_Result, double>(calc_f);
 }
 
-
-Color_Result calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
-                                  const FenestrationCommon::PropertySimple prop,
-                                  const FenestrationCommon::Side side,
-                                  const FenestrationCommon::Scattering scattering,
-                                  double theta = 0,
-                                  double phi = 0)
+template<typename T>
+Color_Result
+  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties<T>> color_props,
+                        const FenestrationCommon::PropertySimple prop,
+                        const FenestrationCommon::Side side,
+                        const FenestrationCommon::Scattering scattering,
+                        double theta = 0,
+                        double phi = 0)
 {
     auto trichromatic = color_props->getTrichromatic(prop, side, scattering, theta, phi);
     auto rgb = color_props->getRGB(prop, side, scattering, theta, phi);
@@ -123,8 +122,9 @@ Color_Result calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorPrope
     return Color_Result(trichromatic, rgb, lab);
 }
 
+template<typename T>
 WCE_Color_Result
-  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props)
+  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties<T>> color_props)
 {
     auto calc_f = [&color_props](const FenestrationCommon::PropertySimple prop,
                                  const FenestrationCommon::Side side,
@@ -137,9 +137,9 @@ WCE_Color_Result
 
 
 WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,
-                          Method const & method_x,
-                          Method const & method_y,
-                          Method const & method_z)
+                            Method const & method_x,
+                            Method const & method_y,
+                            Method const & method_z)
 {
     auto layer_x = create_multi_pane_specular(product_data, method_x);
     auto layer_y = create_multi_pane_specular(product_data, method_y);
@@ -174,25 +174,25 @@ WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & produ
       get_spectum_values(method_x.detector_spectrum,
                          method_x.wavelength_set,
                          product_data[0]);   // All methods must have the same source
-                                          // spectrum? (Should it be checked above?)
+                                             // spectrum? (Should it be checked above?)
 
     std::vector<double> wavelength_set =
       get_wavelength_set_to_use(method_x, product_data[0]);   // and the same wavelength set?
 
-    std::shared_ptr<SingleLayerOptics::ColorProperties> color_props =
-      std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
-                                                           std::move(layer_y),
-                                                           std::move(layer_z),
-                                                           *source_spectrum,
-                                                           *detector_x,
-                                                           *detector_y,
-                                                           *detector_z,
-                                                           wavelength_set);
+    auto color_props =
+      std::make_shared<SingleLayerOptics::ColorProperties<MultiLayerOptics::CMultiPaneSpecular>>(
+        *layer_x,
+        *layer_y,
+        *layer_z,
+        *source_spectrum,
+        *detector_x,
+        *detector_y,
+        *detector_z,
+        wavelength_set);
 
 
     return calc_color_properties(color_props);
 }
-
 
 
 double calc_optical_property(OpticsParser::ProductData const & product_data,
@@ -202,7 +202,7 @@ double calc_optical_property(OpticsParser::ProductData const & product_data,
                              Scattering_Choice scattering_choice)
 {
     auto layer = create_multi_pane_specular({product_data}, method);
-    
+
     return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
 }
 
@@ -212,8 +212,7 @@ double calc_optical_property(std::vector<OpticsParser::ProductData> const & prod
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice)
 {
-	auto layer = create_multi_pane_specular(product_data, method);
+    auto layer = create_multi_pane_specular(product_data, method);
 
     return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
 }
-
