@@ -19,8 +19,8 @@ struct Glazing_System
     std::vector<OpticsParser::ProductData> solid_layers;
     std::vector<Gap_Data> gap_layers;
     Standard standard;
-    double height;
     double width;
+    double height;    
 
     Thermal_Result u() const;
     Thermal_Result shgc() const;
