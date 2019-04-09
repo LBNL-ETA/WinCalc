@@ -112,6 +112,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.43152333420448147, 1e-14);
 }
 
+#if 0
+
 TEST_F(TestCalcFromDisk, Test_NFRC_21515_json)
 {
     SCOPED_TRACE("Begin Test: NFRC 21515 using json as a data source.");
@@ -137,6 +139,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21515_json)
                                    << "NFRC 21515 data has errors in the wavelength measurements.";
     	
 }
+
+#endif
 
 TEST_F(TestCalcFromDisk, Test_NFRC_21000_json)
 {

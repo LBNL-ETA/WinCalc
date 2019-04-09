@@ -298,6 +298,8 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_103_glazing_system)
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072254488683882165, 1e-14);
 }
 
+#if 0
+
 TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
 {
     SCOPED_TRACE("Begin Test: Single clear NFRC 9023 as a glazing system.");
@@ -1273,3 +1275,4 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(color_results.rb_diffuse_diffuse.trichromatic.Y, 14.772429094278383, 1e-14);
     EXPECT_NEAR(color_results.rb_diffuse_diffuse.trichromatic.Z, 7.0267089564314791, 1e-14);
 }
+#endif
