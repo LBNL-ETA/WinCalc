@@ -23,7 +23,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_optics)
     clear_3_path /= "products";
     clear_3_path /= "CLEAR_3.DAT";
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseFile(clear_3_path.string());
     products.push_back(clear_3);
 
     std::vector<Gap_Data> gaps;
@@ -53,7 +54,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_optics)
     clear_3_path /= "products";
     clear_3_path /= "CLEAR_3.DAT";
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseFile(clear_3_path.string());
     products.push_back(clear_3);
     products.push_back(clear_3);
 

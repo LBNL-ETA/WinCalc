@@ -26,7 +26,8 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_glazing_system)
     clear_3_path /= "CLEAR_3.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseJSONFile(clear_3_path.string());
     products.push_back(clear_3);
 
     std::vector<Gap_Data> gaps;
@@ -270,7 +271,8 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_103_glazing_system)
     clear_3_path /= "CLEAR_3.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseJSONFile(clear_3_path.string());
     products.push_back(clear_3);
     products.push_back(clear_3);
 
