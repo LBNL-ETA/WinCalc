@@ -25,7 +25,7 @@ struct Glazing_System
     Thermal_Result u() const;
     Thermal_Result shgc() const;
 
-    WCE_Optical_Result all_method_values(Method_Type const & method_type) const;
+    WCE_Simple_Result all_method_values(Method_Type const & method_type) const;
 
     WCE_Color_Result color() const;
 

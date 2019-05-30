@@ -233,7 +233,7 @@ TEST_F(TestCalcFromDisk, Test_checker_tool_json_format)
     EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.87692233510952988, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.74586605149018637, 1e-14);
     EXPECT_NEAR(shgc_result.t_sol, 0.68430788281695709, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
 }
