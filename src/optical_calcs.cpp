@@ -45,7 +45,7 @@ WCE_Optical_Result<T>
 
     calc_result.diffuse_diffuse =
       do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
-          return f(p, s, FenestrationCommon::Scattering::DirectDiffuse);
+          return f(p, s, FenestrationCommon::Scattering::DiffuseDiffuse);
       });
     return calc_result;
 }
