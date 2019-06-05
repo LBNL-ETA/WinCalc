@@ -5,31 +5,25 @@
 #ifndef WINCALC_RESULTS_H_
 #define WINCALC_RESULTS_H_
 
-
 template<typename T>
-struct WCE_Optical_Result_Template
+struct WCE_Optical_Result_By_Transmittance
 {
-    T tf_direct_direct;
-    T tb_direct_direct;
-    T rf_direct_direct;
-    T rb_direct_direct;
-    T tf_direct_diffuse;
-    T tb_direct_diffuse;
-    T rf_direct_diffuse;
-    T rb_direct_diffuse;
-    /*
-    T tf_diffuse_direct;
-    T tb_diffuse_direct;
-    T rf_diffuse_direct;
-    T rb_diffuse_direct;
-    */
-    T tf_diffuse_diffuse;
-    T tb_diffuse_diffuse;
-    T rf_diffuse_diffuse;
-    T rb_diffuse_diffuse;
+    T tf;
+    T tb;
+    T rf;
+    T rb;
 };
 
-using WCE_Optical_Result = WCE_Optical_Result_Template<double>;
+
+template<typename T>
+struct WCE_Optical_Result
+{
+    WCE_Optical_Result_By_Transmittance<T> direct_direct;
+    WCE_Optical_Result_By_Transmittance<T> direct_diffuse;
+    WCE_Optical_Result_By_Transmittance<T> diffuse_diffuse;
+};
+
+using WCE_Simple_Result = WCE_Optical_Result<double>;
 
 struct Trichromatic
 {
@@ -80,7 +74,7 @@ struct Color_Result
     Lab lab;
 };
 
-typedef WCE_Optical_Result_Template<Color_Result> WCE_Color_Result;
+using WCE_Color_Result = WCE_Optical_Result<Color_Result>;
 
 
 #endif

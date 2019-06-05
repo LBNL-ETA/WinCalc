@@ -26,7 +26,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_json)
     clear_3_path /= "CLEAR_3.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseJSONFile(clear_3_path.string());
     products.push_back(clear_3);
 
     std::vector<Gap_Data> gaps;
@@ -34,7 +35,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -56,7 +57,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_json)
     clear_3_path /= "CLEAR_3.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseJSONFile(clear_3_path.string());
     products.push_back(clear_3);
     products.push_back(clear_3);
 
@@ -67,7 +69,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
@@ -91,7 +93,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
     product_path /= "913.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData product = OpticsParser::parseJSONFile(product_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
     products.push_back(product);
 
     std::vector<Gap_Data> gaps;
@@ -99,7 +102,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.8512829756503013, 1e-14);
@@ -131,7 +134,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21515_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
     EXPECT_THROW(calc_u(products, gaps, standard, 1.0, 1.0), std::runtime_error)
       << "NFRC 21515 data has errors in the wavelength measurements.";
     
@@ -151,7 +154,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21000_json)
     product_path /= "21000.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData product = OpticsParser::parseJSONFile(product_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
     products.push_back(product);
 
     std::vector<Gap_Data> gaps;
@@ -159,7 +163,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21000_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9142344855758333, 1e-14);
@@ -181,7 +185,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
     product_path /= "2600.json";
 
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData product = OpticsParser::parseJSONFile(product_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
     products.push_back(product);
 
     std::vector<Gap_Data> gaps;
@@ -189,7 +194,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.5661650115454711, 1e-14);
@@ -200,4 +205,35 @@ TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
     EXPECT_NEAR(shgc_result.result, 0.87692233510952988, 1e-14);
     EXPECT_NEAR(shgc_result.t_sol, 0.85412076207801813, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.075260529980339358, 1e-14);
+}
+
+TEST_F(TestCalcFromDisk, Test_checker_tool_json_format)
+{
+    SCOPED_TRACE("Begin Test: Calculations using checker tool json as a data source.");
+
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "checker_tool_input_example.json";
+
+    std::vector<OpticsParser::ProductData> products;
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
+    products.push_back(product);
+
+    std::vector<Gap_Data> gaps;
+
+    std::filesystem::path standard_path(test_dir);
+    standard_path /= "standards";
+    standard_path /= "W5_NFRC_2003.std";
+    Standard standard = load_standard(standard_path.string());
+
+    Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
+    EXPECT_NEAR(u_result.result, 6.1066618491036087, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.68430788281695709, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
+
+    Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
+    EXPECT_NEAR(shgc_result.result, 0.74586605149018637, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.68430788281695709, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
 }

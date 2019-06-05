@@ -27,7 +27,7 @@ Thermal_Result Glazing_System::shgc() const
 }
 
 
-WCE_Optical_Result Glazing_System::all_method_values(Method_Type const & method_type) const
+WCE_Simple_Result Glazing_System::all_method_values(Method_Type const & method_type) const
 {
     Method method = get_method(method_type);
     return calc_all(solid_layers, method);

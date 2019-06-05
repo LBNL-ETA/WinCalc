@@ -18,8 +18,8 @@ double calc_optical_property(std::vector<OpticsParser::ProductData> const & prod
                              Side_Choice side_choice,
                              Scattering_Choice scattering_choice);
 
-WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method);
-WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
+WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method);
+WCE_Simple_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
                    Method const & method);
 
 WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,

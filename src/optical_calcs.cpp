@@ -12,62 +12,41 @@
 #include "optical_calcs.h"
 #include "create_wce_objects.h"
 
-template<typename R, typename T>
-R do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
+template<typename T>
+WCE_Optical_Result_By_Transmittance<T>
+  do_calc(std::function<T(const FenestrationCommon::PropertySimple prop,
+                          const FenestrationCommon::Side side)> const & f)
+{
+    WCE_Optical_Result_By_Transmittance<T> calc_result;
+    calc_result.tf = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front);
+    calc_result.tb = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back);
+    calc_result.rf = f(FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front);
+    calc_result.rb = f(FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back);
+
+    return calc_result;
+}
+
+template<typename T>
+WCE_Optical_Result<T> 
+  do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
                            const FenestrationCommon::Side side,
                            const FenestrationCommon::Scattering scattering)> const & f)
 {
-    R calc_result;
-    // direct direct
-    calc_result.tf_direct_direct = f(FenestrationCommon::PropertySimple::T,
-                                     FenestrationCommon::Side::Front,
-                                     FenestrationCommon::Scattering::DirectDirect);
-    calc_result.tb_direct_direct = f(FenestrationCommon::PropertySimple::T,
-                                     FenestrationCommon::Side::Back,
-                                     FenestrationCommon::Scattering::DirectDirect);
-    calc_result.rf_direct_direct = f(FenestrationCommon::PropertySimple::R,
-                                     FenestrationCommon::Side::Front,
-                                     FenestrationCommon::Scattering::DirectDirect);
-    calc_result.rb_direct_direct = f(FenestrationCommon::PropertySimple::R,
-                                     FenestrationCommon::Side::Back,
-                                     FenestrationCommon::Scattering::DirectDirect);
+    WCE_Optical_Result<T> calc_result;
+    calc_result.direct_direct =
+      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+          return f(p, s, FenestrationCommon::Scattering::DirectDirect);
+      });
 
-	
-    // direct diffuse
-    calc_result.tf_direct_diffuse = f(FenestrationCommon::PropertySimple::T,
-                                      FenestrationCommon::Side::Front,
-                                      FenestrationCommon::Scattering::DirectDiffuse);
-    calc_result.tb_direct_diffuse = f(FenestrationCommon::PropertySimple::T,
-                                      FenestrationCommon::Side::Back,
-                                      FenestrationCommon::Scattering::DirectDiffuse);
-    calc_result.rf_direct_diffuse = f(FenestrationCommon::PropertySimple::R,
-                                      FenestrationCommon::Side::Front,
-                                      FenestrationCommon::Scattering::DirectDiffuse);
-    calc_result.rb_direct_diffuse = f(FenestrationCommon::PropertySimple::R,
-                                      FenestrationCommon::Side::Back,
-                                      FenestrationCommon::Scattering::DirectDiffuse);
+    calc_result.direct_diffuse =
+      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+          return f(p, s, FenestrationCommon::Scattering::DirectDiffuse);
+      });
 
-    // diffuse direct.  Not implemented in WCE
-    /*
-    calc_result.tf_diffuse_direct =
-    calc_result.tb_diffuse_direct =
-    calc_result.rf_diffuse_direct =
-    calc_result.rb_diffuse_direct =
-    */
-
-    // diffuse diffuse
-    calc_result.tf_diffuse_diffuse = f(FenestrationCommon::PropertySimple::T,
-                                       FenestrationCommon::Side::Front,
-                                       FenestrationCommon::Scattering::DiffuseDiffuse);
-    calc_result.tb_diffuse_diffuse = f(FenestrationCommon::PropertySimple::T,
-                                       FenestrationCommon::Side::Back,
-                                       FenestrationCommon::Scattering::DiffuseDiffuse);
-    calc_result.rf_diffuse_diffuse = f(FenestrationCommon::PropertySimple::R,
-                                       FenestrationCommon::Side::Front,
-                                       FenestrationCommon::Scattering::DiffuseDiffuse);
-    calc_result.rb_diffuse_diffuse = f(FenestrationCommon::PropertySimple::R,
-                                       FenestrationCommon::Side::Back,
-                                       FenestrationCommon::Scattering::DiffuseDiffuse);
+    calc_result.diffuse_diffuse =
+      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+          return f(p, s, FenestrationCommon::Scattering::DiffuseDiffuse);
+      });
     return calc_result;
 }
 
@@ -80,7 +59,7 @@ double calc_optical_property(MultiLayerOptics::CMultiPaneSpecular & layer,
 }
 
 
-WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method)
+WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data, Method const & method)
 {
     auto layer = create_multi_pane_specular({product_data}, method);
 
@@ -90,11 +69,11 @@ WCE_Optical_Result calc_all(OpticsParser::ProductData const & product_data, Meth
         return calc_optical_property(*layer, prop, side, scattering);
     };
 
-    return do_calcs<WCE_Optical_Result, double>(calc_f);
+    return do_calcs<double>(calc_f);
 }
 
-WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
-                            Method const & method)
+WCE_Simple_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
+                           Method const & method)
 {
     auto layer = create_multi_pane_specular(product_data, method);
 
@@ -104,7 +83,7 @@ WCE_Optical_Result calc_all(std::vector<OpticsParser::ProductData> const & produ
         return calc_optical_property(*layer, prop, side, scattering);
     };
 
-    return do_calcs<WCE_Optical_Result, double>(calc_f);
+    return do_calcs<double>(calc_f);
 }
 
 template<typename T>
@@ -132,7 +111,7 @@ WCE_Color_Result
         return calc_color_properties(color_props, prop, side, scattering);
     };
 
-    return do_calcs<WCE_Color_Result, Color_Result>(calc_f);
+    return do_calcs<Color_Result>(calc_f);
 }
 
 

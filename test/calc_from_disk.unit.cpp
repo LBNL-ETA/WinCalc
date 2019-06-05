@@ -23,7 +23,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_optics)
     clear_3_path /= "products";
     clear_3_path /= "CLEAR_3.DAT";
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseFile(clear_3_path.string());
     products.push_back(clear_3);
 
     std::vector<Gap_Data> gaps;
@@ -32,7 +33,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_optics)
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
 
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -53,7 +54,8 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_optics)
     clear_3_path /= "products";
     clear_3_path /= "CLEAR_3.DAT";
     std::vector<OpticsParser::ProductData> products;
-    OpticsParser::ProductData clear_3 = OpticsParser::parseFile(clear_3_path.string());
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData clear_3 = parser.parseFile(clear_3_path.string());
     products.push_back(clear_3);
     products.push_back(clear_3);
 
@@ -65,7 +67,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_103_optics)
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
 
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);

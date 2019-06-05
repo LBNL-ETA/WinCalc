@@ -24,6 +24,10 @@ if(NOT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 endif()
 
+set(BUILD_Windows_CalcStandards_tests OFF CACHE BOOL "")
+set(BUILD_Optical_Measurement_Parser_Tests OFF CACHE BOOL "")
+set(BUILD_WCE_TESTING OFF CACHE BOOL "")
+
 include(CMakeLists-Windows-Standards.txt)
 include(CMakeLists-OpticalMeasurementParser.txt)
 include(CMakeLists-Windows-CalcEngine.txt)
@@ -38,6 +42,10 @@ target_include_directories(${LIB_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-enable_testing()
-add_subdirectory(test)
+Option(BUILD_WinCalc_tests "Build WinCalc tests." ON)
+
+if(BUILD_WinCalc_tests)
+	enable_testing()
+	add_subdirectory( test )
+endif()
 
