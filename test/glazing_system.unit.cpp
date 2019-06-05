@@ -35,7 +35,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -283,7 +283,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_103_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -319,7 +319,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -563,7 +563,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -807,7 +807,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -1051,7 +1051,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path);
+    Standard standard = load_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
