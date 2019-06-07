@@ -1,0 +1,65 @@
+Standard Description : Consistent with prEN 410:1998
+Standard Provides Methods: SOLAR, PHOTOPIC, TUV, CRI_X, CRI_Y, CRI_Z
+
+Name : SOLAR
+Description : prEN 410 Solar
+Source Spectrum : prEN 410 Table 2 AM1_0.ssp
+Detector Spectrum : None
+Wavelength Set : Source
+Integration Rule : Pre-weighted Table (Normalized, k=1.0)
+Minimum Wavelength : Wavelength set
+Maximum Wavelength : Wavelength set
+
+Name : PHOTOPIC
+Description : not photopic, evil testing
+Source Spectrum : prEN410_Table_2_AM1_0_divdL.ssp
+Detector Spectrum : None
+Wavelength Set : Source
+Integration Rule : Trapezoidal
+Minimum Wavelength : Wavelength set
+Maximum Wavelength : Wavelength set
+
+Name : TUV
+Description : prEN 410 UV Transmittance - Table 3 in prEN 410 is identical to ISO 9050 Table 4
+Source Spectrum : ISO 9050 Table 4.ssp
+Detector Spectrum : None
+Wavelength Set : Source
+Integration Rule : Pre-weighted Table (Normalized, k=1.0)
+Minimum Wavelength : Wavelength set
+Maximum Wavelength : Wavelength set
+
+Name : COLOR_TRISTIMX
+Description : prEN 410 Color Rendering Index x component
+Source Spectrum : prEN 410 Table 5 D65.ssp
+Detector Spectrum : prEN 410 Table 6 1931 X.dsp
+Wavelength Set : Source
+Integration Rule : Rectangular (Normalized, k=1.0)
+Minimum Wavelength : 0.38
+Maximum Wavelength : 0.78
+
+Name : COLOR_TRISTIMY
+Description : prEN 410 Color Rendering Index y component
+Source Spectrum : prEN 410 Table 5 D65.ssp
+Detector Spectrum : prEN 410 Table 6 1931 Y.dsp
+Wavelength Set : Source
+Integration Rule : Rectangular (Normalized, k=1.0)
+Minimum Wavelength : 0.38
+Maximum Wavelength : 0.78
+
+Name :COLOR_TRISTIMZ
+Description : prEN 410 Color Rendering Index z component
+Source Spectrum : prEN 410 Table 5 D65.ssp
+Detector Spectrum : prEN 410 Table 6 1931 Z.dsp
+Wavelength Set : Source
+Integration Rule : Rectangular (Normalized, k=1.0)
+Minimum Wavelength : 0.38
+Maximum Wavelength : 0.78
+
+Name : THERMAL IR
+Description : EN673 and EN12898, Eh = 1.1887 En -  0.4967 En^2   + 0.2452 En^3 
+Source Spectrum : en12898blackbodytable.ssp
+Detector Spectrum : None
+Wavelength Set : Data
+Integration Rule : Pre-weighted Table (Normalized, k=300.0)
+Minimum Wavelength : 5.0
+Maximum Wavelength : Wavelength set

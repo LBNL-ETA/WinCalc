@@ -128,7 +128,7 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
                                                    0,
                                                    0);
         double thickness = layers[i].thickness / 1000.0;
-        double conductivity = layers[i].conductivity;
+        double conductivity = layers[i].conductivity.value(); // Conductivity must be set somewhere before here, hopefully by whatever is loading the product data
         auto layer = Tarcog::ISO15099::Layers::solid(thickness, conductivity);
         layer->setSolarAbsorptance(absorbtance);
         tarcog_solid_layers.push_back(layer);

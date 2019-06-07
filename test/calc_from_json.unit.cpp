@@ -213,7 +213,7 @@ TEST_F(TestCalcFromDisk, Test_checker_tool_json_format)
 
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
-    product_path /= "checker_tool_input_example.json";
+    product_path /= "CGD89_092661-2-Efb.json";
 
     std::vector<OpticsParser::ProductData> products;
     OpticsParser::Parser parser;
@@ -228,12 +228,13 @@ TEST_F(TestCalcFromDisk, Test_checker_tool_json_format)
     Standard standard = load_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(u_result.result, 6.1066618491036087, 1e-14);
+    EXPECT_NEAR(u_result.result, 5.9430476606957274, 1e-14);
     EXPECT_NEAR(u_result.t_sol, 0.68430788281695709, 1e-14);
     EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.74586605149018637, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.74694841129369050, 1e-14);
     EXPECT_NEAR(shgc_result.t_sol, 0.68430788281695709, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092862800360215, 1e-14);
 }
+

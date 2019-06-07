@@ -262,6 +262,208 @@ TEST_F(TestGlazingSystem, Test_NFRC_103_glazing_system)
     EXPECT_NEAR(color_results.diffuse_diffuse.rb.trichromatic.Z, 7.0267089564314791, 1e-14);
 }
 
+TEST_F(TestGlazingSystem, Test_CEN_18100)
+{
+    SCOPED_TRACE("Begin Test: Calculations using CEN standard and NFRC ID 18100.");
+
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "CGD89_092661-2-Efb.json";
+
+    std::vector<OpticsParser::ProductData> products;
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
+    products.push_back(product);
+
+    std::vector<Gap_Data> gaps;
+
+    std::filesystem::path standard_path(test_dir);
+    standard_path /= "standards";
+    standard_path /= "CENblackbody.std";
+    Standard standard = load_standard(standard_path.string());
+
+    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+
+#if 0   // CEN does not work with thermal calcs yet
+    Thermal_Result u_result = glazing_system.u();
+    EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.83385101472829093, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
+
+    Thermal_Result shgc_result = glazing_system.shgc();
+    EXPECT_NEAR(shgc_result.result, 0.86063515079923925, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
+#endif
+
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+
+    EXPECT_NEAR(solar_results.direct_direct.tf, 0.71099480233705104, 1e-14);
+    EXPECT_NEAR(solar_results.direct_direct.tb, 0.71099480233705104, 1e-14);
+    EXPECT_NEAR(solar_results.direct_direct.rf, 0.096206310544553184, 1e-14);
+    EXPECT_NEAR(solar_results.direct_direct.rb, 0.096206310544553184, 1e-14);
+    EXPECT_NEAR(solar_results.direct_diffuse.tf, 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.direct_diffuse.tb, 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.direct_diffuse.rf, 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.direct_diffuse.rb, 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.diffuse_diffuse.tf, 0.63794850948211068, 1e-14);
+    EXPECT_NEAR(solar_results.diffuse_diffuse.tb, 0.63794850948211068, 1e-14);
+    EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.14708624967220474, 1e-14);
+    EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.14708624967220474, 1e-14);
+
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+
+    EXPECT_NEAR(photopic_results.direct_direct.tf, 0.86829208459208473, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_direct.tb, 0.86829208459208473, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_direct.rf, 0.073958714858714872, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_direct.rb, 0.073958714858714872, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_diffuse.tf, 0.0, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_diffuse.tb, 0.0, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_diffuse.rf, 0.0, 1e-14);
+    EXPECT_NEAR(photopic_results.direct_diffuse.rb, 0.0, 1e-14);
+    EXPECT_NEAR(photopic_results.diffuse_diffuse.tf, 0.78935221564455493, 1e-14);
+    EXPECT_NEAR(photopic_results.diffuse_diffuse.tb, 0.78935221564455493, 1e-14);
+    EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.13525667684831866, 1e-14);
+    EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.13525667684831866, 1e-14);
+
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+
+    EXPECT_NEAR(tuv_results.direct_direct.tf, 0.58680022914517072, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_direct.tb, 0.58680022914517072, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_direct.rf, 0.062468365658078714, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_direct.rb, 0.062468365658078714, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_diffuse.tf, 0.0, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_diffuse.tb, 0.0, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_diffuse.rf, 0.0, 1e-14);
+    EXPECT_NEAR(tuv_results.direct_diffuse.rb, 0.0, 1e-14);
+    EXPECT_NEAR(tuv_results.diffuse_diffuse.tf, 0.51624387678949246, 1e-14);
+    EXPECT_NEAR(tuv_results.diffuse_diffuse.tb, 0.51624387678949246, 1e-14);
+    EXPECT_NEAR(tuv_results.diffuse_diffuse.rf, 0.11499438276955672, 1e-14);
+    EXPECT_NEAR(tuv_results.diffuse_diffuse.rb, 0.11499438276955672, 1e-14);
+
+    WCE_Color_Result color_results = glazing_system.color();
+
+    EXPECT_NEAR(color_results.direct_direct.tf.lab.a, 1.0038394903462700, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.lab.b, 2.3170364131629428, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.lab.L, 94.666217263591847, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.rgb.R, 255, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.rgb.G, 219, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.rgb.B, 160, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.trichromatic.X, 110.93794675689205, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.trichromatic.Y, 86.830285384922604, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.trichromatic.Z, 37.766861720090134, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_direct.tb.lab.a, 1.0038394903462700, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.lab.b, 2.3170364131629428, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.lab.L, 94.666217263591847, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.rgb.R, 255, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.rgb.G, 219, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.rgb.B, 160, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.trichromatic.X, 110.93794675689205, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.trichromatic.Y, 86.830285384922604, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.trichromatic.Z, 37.766861720090134, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_direct.rf.lab.a, -13.456067709025742, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.lab.b, -9.4328475174762723, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.lab.L, 32.685672100834950, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.rgb.R, 104, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.rgb.G, 80, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.rgb.B, 60, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.trichromatic.X, 7.6940962765412291, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.trichromatic.Y, 7.3931504074726693, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.trichromatic.Z, 4.5913598850064936, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_direct.rb.lab.a, -13.456067709025742, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.lab.b, -9.4328475174762723, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.lab.L, 32.685672100834950, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.rgb.R, 104, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.rgb.G, 80, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.rgb.B, 60, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.trichromatic.X, 7.6940962765412291, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.trichromatic.Y, 7.3931504074726693, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.trichromatic.Z, 4.5913598850064936, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_diffuse.tf.lab.a, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.lab.b, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.lab.L, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.rgb.R, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.rgb.G, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.rgb.B, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.trichromatic.X, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.trichromatic.Y, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tf.trichromatic.Z, 0.0, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_diffuse.tb.lab.a, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.lab.b, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.lab.L, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.rgb.R, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.rgb.G, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.rgb.B, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.trichromatic.X, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.trichromatic.Y, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.tb.trichromatic.Z, 0.0, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_diffuse.rf.lab.a, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.lab.b, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.lab.L, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.rgb.R, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.rgb.G, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.rgb.B, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.trichromatic.X, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.trichromatic.Y, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rf.trichromatic.Z, 0.0, 1e-14);
+
+    EXPECT_NEAR(color_results.direct_diffuse.rb.lab.a, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.lab.b, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.lab.L, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.rgb.R, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.rgb.G, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.rgb.B, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.trichromatic.X, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.trichromatic.Y, 0.0, 1e-14);
+    EXPECT_NEAR(color_results.direct_diffuse.rb.trichromatic.Z, 0.0, 1e-14);
+
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.a, 0.81757398116044655, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.b, 2.2108499191388242, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.L, 91.205381649557779, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.R, 255, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.G, 210, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.B, 154, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.trichromatic.X, 100.75088390371182, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.trichromatic.Y, 78.936123385628918, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.trichromatic.Z, 34.352321822802963, 1e-14);
+
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.lab.a, 0.81757398116044655, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.lab.b, 2.2108499191388242, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.lab.L, 91.205381649557779, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.rgb.R, 255, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.rgb.G, 210, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.rgb.B, 154, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.trichromatic.X, 100.75088390371182, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.trichromatic.Y, 78.936123385628918, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tb.trichromatic.Z, 34.352321822802963, 1e-14);
+
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.a, -9.1523474616345695, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.b, -6.2165296319391494, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.L, 43.540458616337347, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.R, 153, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.G, 102, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.B, 75, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.trichromatic.X, 15.396430391918670, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.trichromatic.Y, 13.522673394145196, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.trichromatic.Z, 7.2781779179768638, 1e-14);
+
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.a, -9.1523474616345695, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.b, -6.2165296319391494, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.L, 43.540458616337347, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.R, 153, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.G, 102, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.B, 75, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.trichromatic.X, 15.396430391918670, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.trichromatic.Y, 13.522673394145196, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.trichromatic.Z, 7.2781779179768638, 1e-14);
+}
+
 TEST_F(TestGlazingSystem, Test_NFRC_103_103_glazing_system)
 {
     SCOPED_TRACE("Begin Test: Double clear NFRC 103-103 as a glazing system.");
