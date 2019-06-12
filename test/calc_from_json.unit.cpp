@@ -17,9 +17,9 @@ protected:
     {}
 };
 
-TEST_F(TestCalcFromDisk, Test_NFRC_103_json)
+TEST_F(TestCalcFromDisk, Test_NFRC_102_json)
 {
-    SCOPED_TRACE("Begin Test: Single clear NFRC 103 using json as a data source.");
+    SCOPED_TRACE("Begin Test: Single clear NFRC 102 using json as a data source.");
 
     std::filesystem::path clear_3_path(test_dir);
     clear_3_path /= "products";
@@ -48,9 +48,9 @@ TEST_F(TestCalcFromDisk, Test_NFRC_103_json)
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 }
 
-TEST_F(TestCalcFromDisk, Test_NFRC_103_103_json)
+TEST_F(TestCalcFromDisk, Test_NFRC_102_102_json)
 {
-    SCOPED_TRACE("Begin Test: Double clear NFRC 103-103 using json as a data source.");
+    SCOPED_TRACE("Begin Test: Double clear NFRC 102-102 using json as a data source.");
 
     std::filesystem::path clear_3_path(test_dir);
     clear_3_path /= "products";

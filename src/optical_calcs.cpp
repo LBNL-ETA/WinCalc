@@ -150,7 +150,7 @@ WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & produ
       get_spectum_values(method_z.detector_spectrum, method_z.wavelength_set, product_data);
 
     auto source_spectrum =
-      get_spectum_values(method_x.detector_spectrum,
+      get_spectum_values(method_x.source_spectrum,
                          method_x.wavelength_set,
                          product_data[0]);   // All methods must have the same source
                                              // spectrum? (Should it be checked above?)
