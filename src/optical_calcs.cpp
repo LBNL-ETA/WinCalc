@@ -27,24 +27,24 @@ WCE_Optical_Result_By_Transmittance<T>
 }
 
 template<typename T>
-WCE_Optical_Result<T> 
+WCE_Optical_Result<T>
   do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
                            const FenestrationCommon::Side side,
                            const FenestrationCommon::Scattering scattering)> const & f)
 {
     WCE_Optical_Result<T> calc_result;
-    calc_result.direct_direct =
-      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+    calc_result.direct_direct = do_calc<T>(
+      [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
           return f(p, s, FenestrationCommon::Scattering::DirectDirect);
       });
 
-    calc_result.direct_diffuse =
-      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+    calc_result.direct_diffuse = do_calc<T>(
+      [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
           return f(p, s, FenestrationCommon::Scattering::DirectDiffuse);
       });
 
-    calc_result.diffuse_diffuse =
-      do_calc<T>([&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
+    calc_result.diffuse_diffuse = do_calc<T>(
+      [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
           return f(p, s, FenestrationCommon::Scattering::DiffuseDiffuse);
       });
     return calc_result;
@@ -142,21 +142,16 @@ WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & produ
     }
 
 
-    auto detector_x =
-      get_spectum_values(method_x.detector_spectrum, method_x.wavelength_set, product_data);
-    auto detector_y =
-      get_spectum_values(method_y.detector_spectrum, method_y.wavelength_set, product_data);
-    auto detector_z =
-      get_spectum_values(method_z.detector_spectrum, method_z.wavelength_set, product_data);
+    auto detector_x = get_spectum_values(method_x.detector_spectrum, method_x, product_data);
+    auto detector_y = get_spectum_values(method_y.detector_spectrum, method_y, product_data);
+    auto detector_z = get_spectum_values(method_z.detector_spectrum, method_z, product_data);
 
-    auto source_spectrum =
-      get_spectum_values(method_x.source_spectrum,
-                         method_x.wavelength_set,
-                         product_data[0]);   // All methods must have the same source
-                                             // spectrum? (Should it be checked above?)
+    // All methods must have the same source
+    // spectrum? (Should it be checked above?)
+    auto source_spectrum = get_spectum_values(method_x.source_spectrum, method_x, product_data[0]);
 
-    std::vector<double> wavelength_set =
-      get_wavelength_set_to_use(method_x, product_data[0]);   // and the same wavelength set?
+    // and the same wavelength set?
+    std::vector<double> wavelength_set = get_wavelength_set_to_use(method_x, product_data[0]);
 
     auto color_props =
       std::make_shared<SingleLayerOptics::ColorProperties<MultiLayerOptics::CMultiPaneSpecular>>(

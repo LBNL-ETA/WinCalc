@@ -140,63 +140,85 @@ double get_maximum_wavelength(Method const & method,
 }
 
 
-std::shared_ptr<FenestrationCommon::CSeries>
-  get_spectum_values(Spectrum const & spectrum,
-                     Wavelength_Set const & wavelength_set,
-                     OpticsParser::ProductData const & product_data)
+std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
+  Spectrum const & spectrum, Method const & method, OpticsParser::ProductData const & product_data)
 {
     std::shared_ptr<FenestrationCommon::CSeries> result;
 
-    if(spectrum.type == Spectrum_Type::UV_ACTION)
+    switch(spectrum.type)
     {
-        if(wavelength_set.type == Wavelength_Set_Type::DATA)
-        {
-            result = convert(SpectralAveraging::UVAction(
-              get_first_val(product_data.measurements), spectrum.a, spectrum.b));
-        }
-        else
-        {
-            result =
-              convert(SpectralAveraging::UVAction(wavelength_set.values, spectrum.a, spectrum.b));
-        }
-    }
-    else if(spectrum.type == Spectrum_Type::KROCHMANN)
-    {
-        if(wavelength_set.type == Wavelength_Set_Type::DATA)
-        {
-            result =
-              convert(SpectralAveraging::Krochmann(get_first_val(product_data.measurements)));
-        }
-        else
-        {
-            result = convert(SpectralAveraging::Krochmann(wavelength_set.values));
-        }
-    }
-    else if(spectrum.type == Spectrum_Type::BLACKBODY)
-    {
-        if(wavelength_set.type == Wavelength_Set_Type::DATA)
-        {
-            result = convert(SpectralAveraging::BlackBodySpectrum(
-              get_first_val(product_data.measurements), spectrum.t));
-        }
-        else
-        {
-            result =
-              convert(SpectralAveraging::BlackBodySpectrum(wavelength_set.values, spectrum.t));
-        }
-    }
-    else if(spectrum.type == Spectrum_Type::FILE)
-    {
-        result = convert(spectrum.values);
-    }
-    else if(spectrum.type == Spectrum_Type::NONE)
-    {
-        // if spectrum is none just use blank CSeries
-        result = std::make_shared<FenestrationCommon::CSeries>(FenestrationCommon::CSeries());
-    }
-    else
-    {
-        throw std::runtime_error("Unknown spectrum type.");
+        case Spectrum_Type::UV_ACTION:
+            switch(method.wavelength_set.type)
+            {
+                case Wavelength_Set_Type::DATA:
+                    // Wavelengths come from the measured data.  Extract first column and pass those
+                    result = convert(SpectralAveraging::UVAction(
+                      get_first_val(product_data.measurements), spectrum.a, spectrum.b));
+                    break;
+                case Wavelength_Set_Type::SOURCE:
+                    // Wavelengths come from the source spectrum.  Extract first column and pass
+                    // those
+                    result = convert(SpectralAveraging::UVAction(
+                      get_first_val(method.source_spectrum.values), spectrum.a, spectrum.b));
+                    break;
+                case Wavelength_Set_Type::FILE:
+                    // Wavelengths should already be loaded into the wavelength_set
+                    result = convert(SpectralAveraging::UVAction(
+                      method.wavelength_set.values, spectrum.a, spectrum.b));
+                    break;
+            }
+            break;
+        case Spectrum_Type::KROCHMANN:
+            switch(method.wavelength_set.type)
+            {
+                case Wavelength_Set_Type::DATA:
+                    // Wavelengths come from the measured data.  Extract first column and pass those
+                    result = convert(
+                      SpectralAveraging::Krochmann(get_first_val(product_data.measurements)));
+                    break;
+                case Wavelength_Set_Type::SOURCE:
+                    // Wavelengths come from the source spectrum.  Extract first column and pass
+                    // those
+                    result = convert(
+                      SpectralAveraging::Krochmann(get_first_val(method.source_spectrum.values)));
+                    break;
+                case Wavelength_Set_Type::FILE:
+                    // Wavelengths should already be loaded into the wavelength_set
+                    result = convert(SpectralAveraging::Krochmann(method.wavelength_set.values));
+                    break;
+            }
+            break;
+        case Spectrum_Type::BLACKBODY:
+            switch(method.wavelength_set.type)
+            {
+                case Wavelength_Set_Type::DATA:
+                    // Wavelengths come from the measured data.  Extract first column and pass those
+                    result = convert(SpectralAveraging::BlackBodySpectrum(
+                      get_first_val(product_data.measurements), spectrum.t));
+                    break;
+                case Wavelength_Set_Type::SOURCE:
+                    // Wavelengths come from the source spectrum.  Extract first column and pass
+                    // those
+                    result = convert(SpectralAveraging::BlackBodySpectrum(
+                      get_first_val(method.source_spectrum.values), spectrum.t));
+                    break;
+                case Wavelength_Set_Type::FILE:
+                    // Wavelengths should already be loaded into the wavelength_set
+                    result = convert(SpectralAveraging::BlackBodySpectrum(
+                      method.wavelength_set.values, spectrum.t));
+                    break;
+            }
+            break;
+        case Spectrum_Type::FILE:
+            result = convert(spectrum.values);
+            break;
+        case Spectrum_Type::NONE:
+            // if spectrum is none just use blank CSeries
+            result = std::make_shared<FenestrationCommon::CSeries>(FenestrationCommon::CSeries());
+            break;
+        default:
+            throw std::runtime_error("Unknown spectrum type.");
+            break;
     }
 
     return result;
@@ -204,10 +226,10 @@ std::shared_ptr<FenestrationCommon::CSeries>
 
 std::shared_ptr<FenestrationCommon::CSeries>
   get_spectum_values(Spectrum const & spectrum,
-                     Wavelength_Set const & wavelength_set,
+                     Method const & method,
                      std::vector<OpticsParser::ProductData> const & product_data)
 {
-    return get_spectum_values(spectrum, wavelength_set, product_data[0]);
+    return get_spectum_values(spectrum, method, product_data[0]);
 }
 
 
@@ -245,13 +267,11 @@ std::vector<double> get_wavelength_set_to_use(Method const & method,
 SingleLayerOptics::CScatteringLayer
   create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method)
 {
-    auto source_spectrum =
-      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+    auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
 
     auto wavelength_set = get_wavelength_set_to_use(method, product_data);
 
-    auto detector_spectrum =
-      get_spectum_values(method.detector_spectrum, method.wavelength_set, product_data);
+    auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, product_data);
 
     std::shared_ptr<std::vector<double>> converted_wavelengths =
       std::make_shared<std::vector<double>>(wavelength_set);
@@ -297,7 +317,7 @@ SingleLayerOptics::CScatteringLayer
 
 SingleLayerOptics::SpecularLayer
   create_specular_layer(OpticsParser::ProductData const & product_data, Method const & method)
-{    
+{
     auto wavelength_set = get_wavelength_set_to_use(method, product_data);
 
     std::shared_ptr<std::vector<double>> converted_wavelengths =
@@ -309,8 +329,7 @@ SingleLayerOptics::SpecularLayer
     auto spectral_sample_data =
       SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
 
-	auto source_spectrum =
-      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+    auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
 
     double min_wavelength = get_minimum_wavelength(method, product_data, source_spectrum);
     double max_wavelength = get_maximum_wavelength(method, product_data, source_spectrum);
@@ -346,8 +365,7 @@ std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>
 
     auto layer = MultiLayerOptics::CMultiLayerScattered::create(layers);
 
-    auto source_spectrum =
-      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+    auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
 
     layer->setSourceData(source_spectrum);
     return layer;
@@ -363,13 +381,12 @@ std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
         layers.push_back(create_specular_layer(product, method));
     }
 
-    auto source_spectrum =
-      get_spectum_values(method.source_spectrum, method.wavelength_set, product_data);
+    auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
 
-    auto detector_spectrum =
-      get_spectum_values(method.detector_spectrum, method.wavelength_set, product_data);
+    auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, product_data);
 
-    auto layer = MultiLayerOptics::CMultiPaneSpecular::create(layers, source_spectrum, detector_spectrum);
+    auto layer =
+      MultiLayerOptics::CMultiPaneSpecular::create(layers, source_spectrum, detector_spectrum);
 
     return layer;
 }

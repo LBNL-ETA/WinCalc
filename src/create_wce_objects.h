@@ -30,14 +30,12 @@ std::shared_ptr<SpectralAveraging::CSpectralSampleData>
 FenestrationCommon::IntegrationType convert(Integration_Rule_Type integration_rule_type);
 
 
-std::shared_ptr<FenestrationCommon::CSeries>
-  get_spectum_values(Spectrum const & spectrum,
-                     Wavelength_Set const & wavelength_set,
-                     OpticsParser::ProductData const & product_data);
+std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
+  Spectrum const & spectrum, Method const & method, OpticsParser::ProductData const & product_data);
 
 std::shared_ptr<FenestrationCommon::CSeries>
   get_spectum_values(Spectrum const & spectrum,
-                     Wavelength_Set const & wavelength_set,
+                     Method const & method,
                      std::vector<OpticsParser::ProductData> const & product_data);
 
 std::vector<double> get_wavelength_set_to_use(Method const & method,
@@ -51,10 +49,10 @@ SingleLayerOptics::SpecularLayer
 
 std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>
   create_multi_layer_scattered(std::vector<OpticsParser::ProductData> const & product_data,
-                             Method const & method);
+                               Method const & method);
 
 std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
   create_multi_pane_specular(std::vector<OpticsParser::ProductData> const & product_data,
-                               Method const & method);
+                             Method const & method);
 
 #endif
