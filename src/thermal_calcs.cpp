@@ -62,7 +62,8 @@ Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
 
 double calc_u_iso15099(Tarcog::ISO15099::CIGU & igu)
 {
-    Tarcog::ISO15099::CSystem system = create_system(igu, environmental_conditions_u());
+    auto env = environmental_conditions_u();
+    Tarcog::ISO15099::CSystem system = create_system(igu, env);
     double u = system.getUValue();
     return u;
 }
@@ -128,8 +129,15 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
                                                    0,
                                                    0);
         double thickness = layers[i].thickness / 1000.0;
-        double conductivity = layers[i].conductivity.value(); // Conductivity must be set somewhere before here, hopefully by whatever is loading the product data
-        auto layer = Tarcog::ISO15099::Layers::solid(thickness, conductivity);
+        double conductivity =
+          layers[i].conductivity.value();   // Conductivity must be set somewhere before here,
+                                            // hopefully by whatever is loading the product data
+        auto layer = Tarcog::ISO15099::Layers::solid(thickness,
+                                                     conductivity,
+                                                     layers[i].frontEmissivity,
+                                                     layers[i].IRTransmittance,
+                                                     layers[i].backEmissivity,
+                                                     layers[i].IRTransmittance);
         layer->setSolarAbsorptance(absorbtance);
         tarcog_solid_layers.push_back(layer);
     }
@@ -137,8 +145,8 @@ IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
     std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
     for(Engine_Gap_Info Engine_Gap_Info : gaps)
     {
-        tarcog_gaps.push_back(
-          Tarcog::ISO15099::Layers::gap(Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
+        tarcog_gaps.push_back(Tarcog::ISO15099::Layers::gap(
+          Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
     }
 
     return IGU_Info{create_igu(tarcog_solid_layers, tarcog_gaps, width, height), t_sol};
