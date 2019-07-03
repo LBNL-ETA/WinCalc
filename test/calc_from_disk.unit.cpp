@@ -37,13 +37,13 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_optics)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.83385101472829093, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.83384927443226908, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.86063515079923925, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.86063405690810812, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.83384927443226908, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 }
 
 TEST_F(TestCalcFromDisk, Test_NFRC_102_102_optics)
@@ -71,13 +71,13 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_102_optics)
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0);
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.70330055648824519, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096485399860676058, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072254488683882165, 1e-14);
+    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
+    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
 
     Thermal_Result shgc_result = calc_shgc(products, gaps, standard, 1.0, 1.0);
-    EXPECT_NEAR(shgc_result.result, 0.76330593361763821, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.70330055648824519, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096485399860676058, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072254488683882165, 1e-14);
+    EXPECT_NEAR(shgc_result.result, 0.76330438232287146, 1e-14);
+    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
+    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
 }
