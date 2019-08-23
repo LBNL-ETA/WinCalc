@@ -17,14 +17,12 @@ std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WL
     return converted;
 }
 
-std::shared_ptr<FenestrationCommon::CSeries>
-  convert(std::vector<std::pair<double, double>> const & v)
+FenestrationCommon::CSeries convert(std::vector<std::pair<double, double>> const & v)
 {
-    std::shared_ptr<FenestrationCommon::CSeries> series =
-      std::make_shared<FenestrationCommon::CSeries>();
+    FenestrationCommon::CSeries series;
     for(auto val : v)
     {
-        series->addProperty(val.first, val.second);
+        series.addProperty(val.first, val.second);
     }
     return series;
 }
@@ -83,7 +81,7 @@ std::vector<double> get_first_val(std::vector<OpticsParser::WLData> const & wl_d
 
 double get_minimum_wavelength(Method const & method,
                               OpticsParser::ProductData const & product_data,
-                              std::shared_ptr<FenestrationCommon::CSeries> const & source_spectrum)
+                              FenestrationCommon::CSeries const & source_spectrum)
 {
     double result = std::numeric_limits<double>::quiet_NaN();
 
@@ -95,7 +93,7 @@ double get_minimum_wavelength(Method const & method,
         }
         else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
         {
-            result = source_spectrum->getXArray().front();
+            result = source_spectrum.getXArray().front();
         }
         if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
         {
@@ -112,7 +110,7 @@ double get_minimum_wavelength(Method const & method,
 
 double get_maximum_wavelength(Method const & method,
                               OpticsParser::ProductData const & product_data,
-                              std::shared_ptr<FenestrationCommon::CSeries> const & source_spectrum)
+                              FenestrationCommon::CSeries const & source_spectrum)
 {
     double result = std::numeric_limits<double>::quiet_NaN();
 
@@ -124,7 +122,7 @@ double get_maximum_wavelength(Method const & method,
         }
         else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
         {
-            result = source_spectrum->getXArray().back();
+            result = source_spectrum.getXArray().back();
         }
         if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
         {
@@ -140,10 +138,11 @@ double get_maximum_wavelength(Method const & method,
 }
 
 
-std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
-  Spectrum const & spectrum, Method const & method, OpticsParser::ProductData const & product_data)
+FenestrationCommon::CSeries get_spectum_values(Spectrum const & spectrum,
+                                               Method const & method,
+                                               OpticsParser::ProductData const & product_data)
 {
-    std::shared_ptr<FenestrationCommon::CSeries> result;
+    FenestrationCommon::CSeries result;
 
     switch(spectrum.type)
     {
@@ -213,8 +212,7 @@ std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
             result = convert(spectrum.values);
             break;
         case Spectrum_Type::NONE:
-            // if spectrum is none just use blank CSeries
-            result = std::make_shared<FenestrationCommon::CSeries>(FenestrationCommon::CSeries());
+            // if spectrum is none just use empty CSeries
             break;
         default:
             throw std::runtime_error("Unknown spectrum type.");
@@ -224,7 +222,7 @@ std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
     return result;
 }
 
-std::shared_ptr<FenestrationCommon::CSeries>
+FenestrationCommon::CSeries
   get_spectum_values(Spectrum const & spectrum,
                      Method const & method,
                      std::vector<OpticsParser::ProductData> const & product_data)
@@ -286,7 +284,7 @@ SingleLayerOptics::CScatteringLayer
       std::make_shared<SpectralAveraging::CSpectralSample>(
         spectral_sample_data, source_spectrum, integration_rule, method.integration_rule.k);
 
-    if(detector_spectrum->size())
+    if(detector_spectrum.size())
     {
         spectral_sample->setDetectorData(detector_spectrum);
     }

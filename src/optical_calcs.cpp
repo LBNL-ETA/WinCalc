@@ -86,9 +86,8 @@ WCE_Simple_Result calc_all(std::vector<OpticsParser::ProductData> const & produc
     return do_calcs<double>(calc_f);
 }
 
-template<typename T>
 Color_Result
-  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties<T>> color_props,
+  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
                         const FenestrationCommon::PropertySimple prop,
                         const FenestrationCommon::Side side,
                         const FenestrationCommon::Scattering scattering,
@@ -101,9 +100,8 @@ Color_Result
     return Color_Result(trichromatic, rgb, lab);
 }
 
-template<typename T>
 WCE_Color_Result
-  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties<T>> color_props)
+  calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props)
 {
     auto calc_f = [&color_props](const FenestrationCommon::PropertySimple prop,
                                  const FenestrationCommon::Side side,
@@ -154,14 +152,14 @@ WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & produ
     std::vector<double> wavelength_set = get_wavelength_set_to_use(method_x, product_data[0]);
 
     auto color_props =
-      std::make_shared<SingleLayerOptics::ColorProperties<MultiLayerOptics::CMultiPaneSpecular>>(
-        *layer_x,
-        *layer_y,
-        *layer_z,
-        *source_spectrum,
-        *detector_x,
-        *detector_y,
-        *detector_z,
+      std::make_shared<SingleLayerOptics::ColorProperties>(
+        std::move(layer_x),
+        std::move(layer_y),
+        std::move(layer_z),
+        source_spectrum,
+        detector_x,
+        detector_y,
+        detector_z,
         wavelength_set);
 
 

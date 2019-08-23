@@ -23,17 +23,17 @@ std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data);
 
 SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
 std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WLData> const & data);
-std::shared_ptr<FenestrationCommon::CSeries>
-  convert(std::vector<std::pair<double, double>> const & v);
+FenestrationCommon::CSeries convert(std::vector<std::pair<double, double>> const & v);
 std::shared_ptr<SpectralAveraging::CSpectralSampleData>
   convert(std::vector<std::tuple<double, double, double, double>> const & measured_data);
 FenestrationCommon::IntegrationType convert(Integration_Rule_Type integration_rule_type);
 
 
-std::shared_ptr<FenestrationCommon::CSeries> get_spectum_values(
-  Spectrum const & spectrum, Method const & method, OpticsParser::ProductData const & product_data);
+FenestrationCommon::CSeries get_spectum_values(Spectrum const & spectrum,
+                                               Method const & method,
+                                               OpticsParser::ProductData const & product_data);
 
-std::shared_ptr<FenestrationCommon::CSeries>
+FenestrationCommon::CSeries
   get_spectum_values(Spectrum const & spectrum,
                      Method const & method,
                      std::vector<OpticsParser::ProductData> const & product_data);
