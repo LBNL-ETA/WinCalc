@@ -44,7 +44,7 @@ std::vector<double> get_wavelength_set_to_use(Method const & method,
 SingleLayerOptics::CScatteringLayer
   create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method);
 
-SingleLayerOptics::SpecularLayer
+std::shared_ptr<SingleLayerOptics::SpecularLayer>
   create_specular_layer(OpticsParser::ProductData const & product_data, Method const & method);
 
 std::unique_ptr<MultiLayerOptics::CMultiLayerScattered>

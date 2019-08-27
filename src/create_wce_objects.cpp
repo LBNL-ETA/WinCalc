@@ -313,7 +313,7 @@ SingleLayerOptics::CScatteringLayer
     return scattering_layer;
 }
 
-SingleLayerOptics::SpecularLayer
+std::shared_ptr<SingleLayerOptics::SpecularLayer>
   create_specular_layer(OpticsParser::ProductData const & product_data, Method const & method)
 {
     auto wavelength_set = get_wavelength_set_to_use(method, product_data);
@@ -345,8 +345,7 @@ SingleLayerOptics::SpecularLayer
 
     material->setBandWavelengths(wavelength_set);
 
-    SingleLayerOptics::SpecularLayer specular_layer =
-      SingleLayerOptics::SpecularLayer::createLayer(material);
+    auto specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
     return specular_layer;
 }
 
@@ -373,7 +372,7 @@ std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
   create_multi_pane_specular(std::vector<OpticsParser::ProductData> const & product_data,
                              Method const & method)
 {
-    std::vector<SingleLayerOptics::SpecularLayer> layers;
+    std::vector<std::shared_ptr<SingleLayerOptics::SpecularLayer>> layers;
     for(OpticsParser::ProductData const & product : product_data)
     {
         layers.push_back(create_specular_layer(product, method));
