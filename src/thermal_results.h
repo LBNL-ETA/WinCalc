@@ -3,11 +3,13 @@
 
 #include <vector>
 
-struct Thermal_Result
+namespace wincalc
 {
-    double result;
-    double t_sol;
-    std::vector<double> layer_solar_absorptances;
-};
-
+    struct Thermal_Result
+    {
+        double result;
+        double t_sol;
+        std::vector<double> layer_solar_absorptances;
+    };
+}   // namespace wincalc
 #endif

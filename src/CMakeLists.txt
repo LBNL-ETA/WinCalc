@@ -16,7 +16,8 @@ add_library( ${LIB_NAME}
 		glazing_system.cpp
 		gap.h
 		gap.cpp
-		optical_calc_params.h)
+		optical_calc_params.h
+		environmental_conditions.h)
 
 
 

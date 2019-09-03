@@ -8,6 +8,8 @@
 #include "thermal_calcs_from_measured_data_source.h"
 #include "paths.h"
 
+using namespace wincalc;
+
 class TestCalcFromDisk : public testing::Test
 {
 protected:

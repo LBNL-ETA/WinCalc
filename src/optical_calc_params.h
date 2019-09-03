@@ -7,8 +7,10 @@
 #include <WCECommon.hpp>
 #include <WCEGases.hpp>
 
-using Side_Choice = FenestrationCommon::Side;
-using Calculated_Property_Choice = FenestrationCommon::PropertySimple;
-using Scattering_Choice = FenestrationCommon::Scattering;
-
+namespace wincalc
+{
+    using Side_Choice = FenestrationCommon::Side;
+    using Calculated_Property_Choice = FenestrationCommon::PropertySimple;
+    using Scattering_Choice = FenestrationCommon::Scattering;
+}   // namespace wincalc
 #endif

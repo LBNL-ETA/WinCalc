@@ -10,6 +10,8 @@
 
 #include "paths.h"
 
+using namespace wincalc;
+
 class TestGlazingSystem : public testing::Test
 {
 protected:

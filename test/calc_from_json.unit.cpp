@@ -10,6 +10,8 @@
 
 #include "paths.h"
 
+using namespace wincalc;
+
 class TestCalcFromDisk : public testing::Test
 {
 protected:
