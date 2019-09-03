@@ -268,6 +268,7 @@ namespace wincalc
         return result;
     }
 
+
 #if 0   // removing scattering layers for now
     SingleLayerOptics::CScatteringLayer
       create_scattering_layer(OpticsParser::ProductData const & product_data, Method const & method)
@@ -321,23 +322,41 @@ namespace wincalc
         return scattering_layer;
     }
 #endif
-#if 0
+
     std::vector<double> wavelength_range_factory(OpticsParser::ProductData const & product_data,
                                                  Method const & method,
                                                  Spectal_Data_Wavelength_Range_Method const & type,
                                                  int number_visible_bands,
                                                  int number_solar_bands)
-    {}
-#endif
+    {
+        if(type == Spectal_Data_Wavelength_Range_Method::CONDENSED)
+        {
+            return FenestrationCommon::generateSpectrum(number_visible_bands, number_solar_bands);
+        }
+        else if(type == Spectal_Data_Wavelength_Range_Method::ISO_9050)
+        {
+            return FenestrationCommon::generateISO9050Wavelengths();
+        }
+        else if(type == Spectal_Data_Wavelength_Range_Method::FULL)
+        {
+            return get_wavelength_set_to_use(method, product_data);
+        }
+        else
+        {
+            throw std::runtime_error("Unknown wavelength method.");
+        }
+    }
+
 
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(OpticsParser::ProductData const & product_data,
-                            Method const & method/*,
+                            Method const & method,
                             Spectal_Data_Wavelength_Range_Method const & type,
                             int number_visible_bands,
-                            int number_solar_bands*/)
+                            int number_solar_bands)
     {
-        auto wavelength_set = get_wavelength_set_to_use(method, product_data);
+        auto wavelength_set = wavelength_range_factory(
+          product_data, method, type, number_visible_bands, number_solar_bands);
 
         std::shared_ptr<std::vector<double>> converted_wavelengths =
           std::make_shared<std::vector<double>>(wavelength_set);

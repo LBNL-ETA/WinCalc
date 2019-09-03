@@ -9,38 +9,77 @@
 #include "create_wce_objects.h"
 #include "thermal_calcs.h"
 #include "environmental_conditions.h"
-         
+
 namespace wincalc
-{    
-    Environmental_Conditions environmental_conditions_u()
+{
+    Environments environmental_conditions_u()
     {
-        return Environmental_Conditions{
-          294.15, 294.15, 1.0, 101325.0, 255.15, 0.0, 26.0, 5.5, 255.15, 1.0, 101325.0};
+        Environment inside{294.15,
+                           101325.0,
+                           0.0,
+                           Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
+                           294.15,
+                           1.0,
+                           0.0,
+                           0.0};
+
+        Environment outside{255.15,
+                            101325.0,
+                            26.0,
+                            Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
+                            255.15,
+                            1.0,
+                            5.5,
+                            0.0};
+
+        return Environments{outside, inside};
     }
 
-    Environmental_Conditions environmental_conditions_shgc()
-    {
-        return Environmental_Conditions{
-          297.15, 297.15, 1.0, 101325.0, 305.15, 783.0, 15.0, 2.75, 305.15, 1.0, 101325.0};
+    Environments environmental_conditions_shgc()
+    {        
+        Environment inside{297.15,
+                           101325.0,
+                           0.0,
+                           Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
+                           297.15,
+                           1.0,
+                           0.0,
+                           0.0};
+
+        Environment outside{305.15,
+                            101325.0,
+                            15.0,
+                            Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
+                            305.15,
+                            1.0,
+                            2.75,
+                            783};
+
+        return Environments{outside, inside};
     }
 
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
-                                            Environmental_Conditions const & environment)
+                                            Environments const & environments)
     {
         std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment> indoor =
-          Tarcog::ISO15099::Environments::indoor(environment.air_temperature_inside,
-                                                 environment.pressure_room);
+          Tarcog::ISO15099::Environments::indoor(environments.inside.air_tempareature,
+                                                 environments.inside.pressure);
+
+		indoor->setHCoeffModel(environments.inside.coefficient_model,
+                               environments.inside.convection_coefficient);
 
         std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
-          Tarcog::ISO15099::Environments::outdoor(environment.air_temperature_outside,
-                                                  environment.wind_speed_outside,
-                                                  environment.direct_solar_radiation,
-                                                  environment.effective_sky_temperature,
+          Tarcog::ISO15099::Environments::outdoor(environments.outside.air_tempareature,
+                                                  environments.outside.air_speed,
+                                                  environments.outside.direct_solar_radiation,
+                                                  environments.outside.radiation_temperature,
                                                   Tarcog::ISO15099::SkyModel::AllSpecified,
-                                                  environment.pressure_outside);
+                                                  environments.outside.pressure);
 
-        outdoor->setHCoeffModel(Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH);
+		outdoor->setHCoeffModel(environments.outside.coefficient_model,
+                               environments.outside.convection_coefficient);
+        
         auto system = Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
         return system;
     }
