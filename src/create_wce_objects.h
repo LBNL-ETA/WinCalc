@@ -12,6 +12,7 @@
 #include <WCEGases.hpp>
 
 #include "gap.h"
+#include "environmental_conditions.h"
 
 namespace wincalc
 {
@@ -28,7 +29,13 @@ namespace wincalc
         CONDENSED
     };
 
-    std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data);
+    std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment>
+      create_indoor_environment(Environment const & environment);
+
+	std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment>
+      create_outdoor_environment(Environment const & environment);
+
+      std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data);
 
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
     std::vector<SpectralAveraging::MeasuredRow>

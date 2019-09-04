@@ -2,6 +2,36 @@
 
 namespace wincalc
 {
+    std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment>
+      create_indoor_environment(Environment const & environment)
+    {
+        std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment> indoor =
+          Tarcog::ISO15099::Environments::indoor(environment.air_tempareature,
+                                                 environment.pressure);
+
+        indoor->setHCoeffModel(environment.coefficient_model,
+                               environment.convection_coefficient);
+
+		return indoor;
+	}
+
+    std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment>
+      create_outdoor_environment(Environment const & environment)
+    {
+	
+	std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
+          Tarcog::ISO15099::Environments::outdoor(environment.air_tempareature,
+                                                  environment.air_speed,
+                                                  environment.direct_solar_radiation,
+                                                  environment.radiation_temperature,
+                                                  Tarcog::ISO15099::SkyModel::AllSpecified,
+                                                  environment.pressure);
+
+        outdoor->setHCoeffModel(environment.coefficient_model,
+                                environment.convection_coefficient);
+        return outdoor;
+    }
+
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
         SpectralAveraging::MeasuredRow converted(data.wavelength, data.T, data.frontR, data.backR);

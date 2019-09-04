@@ -62,24 +62,8 @@ namespace wincalc
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments)
     {
-        std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment> indoor =
-          Tarcog::ISO15099::Environments::indoor(environments.inside.air_tempareature,
-                                                 environments.inside.pressure);
-
-		indoor->setHCoeffModel(environments.inside.coefficient_model,
-                               environments.inside.convection_coefficient);
-
-        std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
-          Tarcog::ISO15099::Environments::outdoor(environments.outside.air_tempareature,
-                                                  environments.outside.air_speed,
-                                                  environments.outside.direct_solar_radiation,
-                                                  environments.outside.radiation_temperature,
-                                                  Tarcog::ISO15099::SkyModel::AllSpecified,
-                                                  environments.outside.pressure);
-
-		outdoor->setHCoeffModel(environments.outside.coefficient_model,
-                               environments.outside.convection_coefficient);
-        
+        auto indoor = create_indoor_environment(environments.inside);
+        auto outdoor = create_outdoor_environment(environments.outside);
         auto system = Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
         return system;
     }
