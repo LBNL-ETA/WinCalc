@@ -1,6 +1,8 @@
 #ifndef WINCALC_GAP_H
 #define WINCALC_GAP_H
 
+#include <WCEGases.hpp>
+
 namespace wincalc
 {
     enum class Gas_Type
