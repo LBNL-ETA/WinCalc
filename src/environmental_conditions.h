@@ -23,4 +23,7 @@ namespace wincalc
         Environment inside;
     };
 
+	Environments nfrc_u_environments();
+    Environments nfrc_shgc_environments();
+
 }   // namespace wincalc

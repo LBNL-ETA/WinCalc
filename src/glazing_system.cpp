@@ -10,22 +10,26 @@ namespace wincalc
                                    std::vector<Gap_Data> const & gap_layers,
                                    Standard const & standard,
                                    double width,
-                                   double height) :
+                                   double height,
+                                   Environments const & u_environment,
+                                   Environments const & shgc_environment) :
         solid_layers(solid_layers),
         gap_layers(gap_layers),
         standard(standard),
         width(width),
-        height(height)
+        height(height),
+        u_environment(u_environment),
+        shgc_environment(shgc_environment)
     {}
 
     Thermal_Result Glazing_System::u() const
     {
-        return calc_u(solid_layers, gap_layers, standard, width, height);
+        return calc_u(solid_layers, gap_layers, standard, width, height, u_environment);
     }
 
     Thermal_Result Glazing_System::shgc() const
     {
-        return calc_shgc(solid_layers, gap_layers, standard, width, height);
+        return calc_shgc(solid_layers, gap_layers, standard, width, height, shgc_environment);
     }
 
 

@@ -17,7 +17,8 @@ add_library( ${LIB_NAME}
 		gap.h
 		gap.cpp
 		optical_calc_params.h
-		environmental_conditions.h)
+		environmental_conditions.h
+		environmental_conditions.cpp)
 
 
 

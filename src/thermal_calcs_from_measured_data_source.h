@@ -9,6 +9,7 @@
 
 #include "thermal_results.h"
 #include "gap.h"
+#include "environmental_conditions.h"
 
 namespace wincalc
 {
@@ -16,12 +17,14 @@ namespace wincalc
                           std::vector<Gap_Data> const & gap_values,
                           Standard const & standard,
                           double width,
-                          double height);
+                          double height,
+                          Environments const & environments);
 
     Thermal_Result calc_shgc(std::vector<OpticsParser::ProductData> const & products,
                              std::vector<Gap_Data> const & gap_values,
                              Standard const & standard,
                              double width,
-                             double height);
+                             double height,
+                             Environments const & environments);
 }   // namespace wincalc
 #endif

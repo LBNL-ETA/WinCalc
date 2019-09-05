@@ -7,6 +7,7 @@
 #include "gap.h"
 #include "thermal_results.h"
 #include "optical_results.h"
+#include "environmental_conditions.h"
 
 namespace wincalc
 {
@@ -16,13 +17,18 @@ namespace wincalc
                        std::vector<Gap_Data> const & gap_values,
                        Standard const & standard,
                        double width = 1.0,
-                       double height = 1.0);
+                       double height = 1.0,
+                       Environments const & u_environment = nfrc_u_environments(),
+                       Environments const & shgc_environment = nfrc_shgc_environments());
 
         std::vector<OpticsParser::ProductData> solid_layers;
         std::vector<Gap_Data> gap_layers;
         Standard standard;
         double width;
         double height;
+
+		Environments u_environment;
+        Environments shgc_environment;
 
         Thermal_Result u() const;
         Thermal_Result shgc() const;

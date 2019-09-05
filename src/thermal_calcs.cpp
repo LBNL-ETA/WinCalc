@@ -12,52 +12,6 @@
 
 namespace wincalc
 {
-    Environments environmental_conditions_u()
-    {
-        Environment inside{294.15,
-                           101325.0,
-                           0.0,
-                           Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
-                           294.15,
-                           1.0,
-                           0.0,
-                           0.0};
-
-        Environment outside{255.15,
-                            101325.0,
-                            26.0,
-                            Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
-                            255.15,
-                            1.0,
-                            5.5,
-                            0.0};
-
-        return Environments{outside, inside};
-    }
-
-    Environments environmental_conditions_shgc()
-    {        
-        Environment inside{297.15,
-                           101325.0,
-                           0.0,
-                           Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
-                           297.15,
-                           1.0,
-                           0.0,
-                           0.0};
-
-        Environment outside{305.15,
-                            101325.0,
-                            15.0,
-                            Tarcog::ISO15099::BoundaryConditionsCoeffModel::CalculateH,
-                            305.15,
-                            1.0,
-                            2.75,
-                            783};
-
-        return Environments{outside, inside};
-    }
-
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments)
@@ -68,17 +22,18 @@ namespace wincalc
         return system;
     }
 
-    double calc_u_iso15099(Tarcog::ISO15099::CIGU & igu)
+    double calc_u_iso15099(Tarcog::ISO15099::CIGU & igu, Environments const & environments)
     {
-        auto env = environmental_conditions_u();
-        Tarcog::ISO15099::CSystem system = create_system(igu, env);
+        Tarcog::ISO15099::CSystem system = create_system(igu, environments);
         double u = system.getUValue();
         return u;
     }
 
-    double calc_shgc_iso15099(Tarcog::ISO15099::CIGU & igu, double t_sol)
+    double calc_shgc_iso15099(Tarcog::ISO15099::CIGU & igu,
+                              double t_sol,
+                              Environments const & environments)
     {
-        Tarcog::ISO15099::CSystem system = create_system(igu, environmental_conditions_shgc());
+        Tarcog::ISO15099::CSystem system = create_system(igu, environments);
         return system.getSHGC(t_sol);
     }
 
@@ -177,10 +132,11 @@ namespace wincalc
                                    std::vector<Engine_Gap_Info> const & gaps,
                                    double width,
                                    double height,
-                                   Standard const & standard)
+                                   Standard const & standard,
+                                   Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-        double u = calc_u_iso15099(igu_info.igu);
+        double u = calc_u_iso15099(igu_info.igu, environments);
         return assemble_thermal_result(u, igu_info);
     }
 
@@ -188,10 +144,11 @@ namespace wincalc
                                       std::vector<Engine_Gap_Info> const & gaps,
                                       double width,
                                       double height,
-                                      Standard const & standard)
+                                      Standard const & standard,
+                                      Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-        double shgc = calc_shgc_iso15099(igu_info.igu, igu_info.t_sol);
+        double shgc = calc_shgc_iso15099(igu_info.igu, igu_info.t_sol, environments);
         return assemble_thermal_result(shgc, igu_info);
     }
 }   // namespace wincalc

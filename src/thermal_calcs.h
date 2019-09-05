@@ -7,6 +7,7 @@
 #include "thermal_results.h"
 
 #include "create_wce_objects.h"   // For Engine_Gap_Info, better to just expose engine gap enum
+#include "environmental_conditions.h"
 
 namespace wincalc
 {
@@ -14,13 +15,15 @@ namespace wincalc
                                    std::vector<Engine_Gap_Info> const & gaps,
                                    double width,
                                    double height,
-                                   Standard const & standard);
+                                   Standard const & standard,
+                                   Environments const & environments);
 
     Thermal_Result calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
                                       std::vector<Engine_Gap_Info> const & gaps,
                                       double width,
                                       double height,
-                                      Standard const & standard);
+                                      Standard const & standard,
+                                      Environments const & environments);
 
 }   // namespace wincalc
 #endif
