@@ -13,8 +13,10 @@ namespace wincalc
         double radiation_temperature;   // this is effective room temperature/effective sky
                                         // temperature in WINDOW environment
         double emissivity;
-        double air_speed;
-        double direct_solar_radiation;
+        double air_speed = 0.0;
+        Tarcog::ISO15099::AirHorizontalDirection air_direction =
+          Tarcog::ISO15099::AirHorizontalDirection::None;
+        double direct_solar_radiation = 0.0;
     };
 
     struct Environments

@@ -11,6 +11,7 @@ namespace wincalc
                            294.15,
                            1.0,
                            0.0,
+                           Tarcog::ISO15099::AirHorizontalDirection::None,
                            0.0};
 
         Environment outside{255.15,
@@ -20,6 +21,7 @@ namespace wincalc
                             255.15,
                             1.0,
                             5.5,
+                            Tarcog::ISO15099::AirHorizontalDirection::Windward,
                             0.0};
 
         return Environments{outside, inside};
@@ -34,6 +36,7 @@ namespace wincalc
                            297.15,
                            1.0,
                            0.0,
+                           Tarcog::ISO15099::AirHorizontalDirection::None,
                            0.0};
 
         Environment outside{305.15,
@@ -43,6 +46,7 @@ namespace wincalc
                             305.15,
                             1.0,
                             2.75,
+                            Tarcog::ISO15099::AirHorizontalDirection::Windward,
                             783};
 
         return Environments{outside, inside};
