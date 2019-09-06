@@ -9,17 +9,15 @@ namespace wincalc
           Tarcog::ISO15099::Environments::indoor(environment.air_tempareature,
                                                  environment.pressure);
 
-        indoor->setHCoeffModel(environment.coefficient_model,
-                               environment.convection_coefficient);
+        indoor->setHCoeffModel(environment.coefficient_model, environment.convection_coefficient);
 
-		return indoor;
-	}
+        return indoor;
+    }
 
     std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment>
       create_outdoor_environment(Environment const & environment)
     {
-	
-	std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
+        std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
           Tarcog::ISO15099::Environments::outdoor(environment.air_tempareature,
                                                   environment.air_speed,
                                                   environment.direct_solar_radiation,
@@ -27,8 +25,7 @@ namespace wincalc
                                                   Tarcog::ISO15099::SkyModel::AllSpecified,
                                                   environment.pressure);
 
-        outdoor->setHCoeffModel(environment.coefficient_model,
-                                environment.convection_coefficient);
+        outdoor->setHCoeffModel(environment.coefficient_model, environment.convection_coefficient);
         return outdoor;
     }
 
@@ -75,12 +72,14 @@ namespace wincalc
         return spectral_data;
     }
 
-    FenestrationCommon::IntegrationType convert(Integration_Rule_Type integration_rule_type)
+    FenestrationCommon::IntegrationType
+      convert(window_standards::Integration_Rule_Type integration_rule_type)
     {
-        std::map<Integration_Rule_Type, FenestrationCommon::IntegrationType> integration_types;
-        integration_types[Integration_Rule_Type::RECTANGULAR] =
+        std::map<window_standards::Integration_Rule_Type, FenestrationCommon::IntegrationType>
+          integration_types;
+        integration_types[window_standards::Integration_Rule_Type::RECTANGULAR] =
           FenestrationCommon::IntegrationType::Rectangular;
-        integration_types[Integration_Rule_Type::TRAPEZOIDAL] =
+        integration_types[window_standards::Integration_Rule_Type::TRAPEZOIDAL] =
           FenestrationCommon::IntegrationType::Trapezoidal;
 
         return integration_types[integration_rule_type];
@@ -112,28 +111,28 @@ namespace wincalc
         return res;
     }
 
-    double get_minimum_wavelength(Method const & method,
+    double get_minimum_wavelength(window_standards::Optical_Standard_Method const & method,
                                   OpticsParser::ProductData const & product_data,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
         double result = std::numeric_limits<double>::quiet_NaN();
 
-        if(method.min_wavelength.type == Wavelength_Boundary_Type::WAVELENGTH_SET)
+        if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
         {
-            if(method.wavelength_set.type == Wavelength_Set_Type::FILE)
+            if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
                 result = method.wavelength_set.values[0];
             }
-            else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+            else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
             {
                 result = source_spectrum.getXArray().front();
             }
-            if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+            if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
                 result = product_data.measurements[0].wavelength;
             }
         }
-        else if(method.min_wavelength.type == Wavelength_Boundary_Type::NUMBER)
+        else if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
         {
             result = method.min_wavelength.value;
         }
@@ -141,28 +140,28 @@ namespace wincalc
         return result;
     }
 
-    double get_maximum_wavelength(Method const & method,
+    double get_maximum_wavelength(window_standards::Optical_Standard_Method const & method,
                                   OpticsParser::ProductData const & product_data,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
         double result = std::numeric_limits<double>::quiet_NaN();
 
-        if(method.max_wavelength.type == Wavelength_Boundary_Type::WAVELENGTH_SET)
+        if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
         {
-            if(method.wavelength_set.type == Wavelength_Set_Type::FILE)
+            if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
                 result = method.wavelength_set.values.back();
             }
-            else if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+            else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
             {
                 result = source_spectrum.getXArray().back();
             }
-            if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+            if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
                 result = product_data.measurements.back().wavelength;
             }
         }
-        else if(method.max_wavelength.type == Wavelength_Boundary_Type::NUMBER)
+        else if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
         {
             result = method.max_wavelength.value;
         }
@@ -171,84 +170,85 @@ namespace wincalc
     }
 
 
-    FenestrationCommon::CSeries get_spectum_values(Spectrum const & spectrum,
-                                                   Method const & method,
-                                                   OpticsParser::ProductData const & product_data)
+    FenestrationCommon::CSeries
+      get_spectum_values(window_standards::Spectrum const & spectrum,
+                         window_standards::Optical_Standard_Method const & method,
+                         OpticsParser::ProductData const & product_data)
     {
         FenestrationCommon::CSeries result;
 
         switch(spectrum.type)
         {
-            case Spectrum_Type::UV_ACTION:
+            case window_standards::Spectrum_Type::UV_ACTION:
                 switch(method.wavelength_set.type)
                 {
-                    case Wavelength_Set_Type::DATA:
+                    case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
                         result = convert(SpectralAveraging::UVAction(
                           get_first_val(product_data.measurements), spectrum.a, spectrum.b));
                         break;
-                    case Wavelength_Set_Type::SOURCE:
+                    case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
                         result = convert(SpectralAveraging::UVAction(
                           get_first_val(method.source_spectrum.values), spectrum.a, spectrum.b));
                         break;
-                    case Wavelength_Set_Type::FILE:
+                    case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
                         result = convert(SpectralAveraging::UVAction(
                           method.wavelength_set.values, spectrum.a, spectrum.b));
                         break;
                 }
                 break;
-            case Spectrum_Type::KROCHMANN:
+            case window_standards::Spectrum_Type::KROCHMANN:
                 switch(method.wavelength_set.type)
                 {
-                    case Wavelength_Set_Type::DATA:
+                    case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
                         result = convert(
                           SpectralAveraging::Krochmann(get_first_val(product_data.measurements)));
                         break;
-                    case Wavelength_Set_Type::SOURCE:
+                    case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
                         result = convert(SpectralAveraging::Krochmann(
                           get_first_val(method.source_spectrum.values)));
                         break;
-                    case Wavelength_Set_Type::FILE:
+                    case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
                         result =
                           convert(SpectralAveraging::Krochmann(method.wavelength_set.values));
                         break;
                 }
                 break;
-            case Spectrum_Type::BLACKBODY:
+            case window_standards::Spectrum_Type::BLACKBODY:
                 switch(method.wavelength_set.type)
                 {
-                    case Wavelength_Set_Type::DATA:
+                    case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
                         result = convert(SpectralAveraging::BlackBodySpectrum(
                           get_first_val(product_data.measurements), spectrum.t));
                         break;
-                    case Wavelength_Set_Type::SOURCE:
+                    case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
                         result = convert(SpectralAveraging::BlackBodySpectrum(
                           get_first_val(method.source_spectrum.values), spectrum.t));
                         break;
-                    case Wavelength_Set_Type::FILE:
+                    case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
                         result = convert(SpectralAveraging::BlackBodySpectrum(
                           method.wavelength_set.values, spectrum.t));
                         break;
                 }
                 break;
-            case Spectrum_Type::FILE:
+            case window_standards::Spectrum_Type::FILE:
                 result = convert(spectrum.values);
                 break;
-            case Spectrum_Type::NONE:
+            case window_standards::Spectrum_Type::NONE:
                 // if spectrum is none just use empty CSeries
                 break;
             default:
@@ -260,16 +260,17 @@ namespace wincalc
     }
 
     FenestrationCommon::CSeries
-      get_spectum_values(Spectrum const & spectrum,
-                         Method const & method,
+      get_spectum_values(window_standards::Spectrum const & spectrum,
+                         window_standards::Optical_Standard_Method const & method,
                          std::vector<OpticsParser::ProductData> const & product_data)
     {
         return get_spectum_values(spectrum, method, product_data[0]);
     }
 
 
-    std::vector<double> get_wavelength_set_to_use(Method const & method,
-                                                  OpticsParser::ProductData const & product_data)
+    std::vector<double>
+      get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
+                                OpticsParser::ProductData const & product_data)
     {
         std::vector<double> result;
 
@@ -280,7 +281,7 @@ namespace wincalc
         }
         else
         {
-            if(method.wavelength_set.type == Wavelength_Set_Type::SOURCE)
+            if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
             {
                 if(method.source_spectrum.values.empty())
                 {
@@ -289,7 +290,7 @@ namespace wincalc
                 // Get the wavelengths from the source curve
                 result = get_first_val(method.source_spectrum.values);
             }
-            else if(method.wavelength_set.type == Wavelength_Set_Type::DATA)
+            else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
                 result = get_first_val(product_data.measurements);
             }
@@ -353,11 +354,12 @@ namespace wincalc
     }
 #endif
 
-    std::vector<double> wavelength_range_factory(OpticsParser::ProductData const & product_data,
-                                                 Method const & method,
-                                                 Spectal_Data_Wavelength_Range_Method const & type,
-                                                 int number_visible_bands,
-                                                 int number_solar_bands)
+    std::vector<double>
+      wavelength_range_factory(OpticsParser::ProductData const & product_data,
+                               window_standards::Optical_Standard_Method const & method,
+                               Spectal_Data_Wavelength_Range_Method const & type,
+                               int number_visible_bands,
+                               int number_solar_bands)
     {
         if(type == Spectal_Data_Wavelength_Range_Method::CONDENSED)
         {
@@ -380,7 +382,7 @@ namespace wincalc
 
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(OpticsParser::ProductData const & product_data,
-                            Method const & method,
+                            window_standards::Optical_Standard_Method const & method,
                             Spectal_Data_Wavelength_Range_Method const & type,
                             int number_visible_bands,
                             int number_solar_bands)
@@ -440,7 +442,7 @@ namespace wincalc
 #endif
     std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
       create_multi_pane_specular(std::vector<OpticsParser::ProductData> const & product_data,
-                                 Method const & method,
+                                 window_standards::Optical_Standard_Method const & method,
                                  Spectal_Data_Wavelength_Range_Method const & type,
                                  int number_visible_bands,
                                  int number_solar_bands)

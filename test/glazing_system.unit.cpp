@@ -11,6 +11,7 @@
 #include "paths.h"
 
 using namespace wincalc;
+using namespace window_standards;
 
 class TestGlazingSystem : public testing::Test
 {
@@ -37,7 +38,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -51,7 +52,8 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(shgc_result.t_sol, 0.83384927443226908, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results =
+      glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.83384927443226908, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.83384927443226908, 1e-14);
@@ -66,7 +68,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.13582105577994347, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.13591418999379981, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.89925998453884770, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.89925998453884770, 1e-14);
@@ -81,7 +83,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.14757793943808908, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.14757829179791318, 1e-14);
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.092848281215754655, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.092848281215754655, 1e-14);
@@ -96,7 +98,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.098178626096193294, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.099197678703354053, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.84164657137221865, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.84164657137221865, 1e-14);
@@ -111,7 +113,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.14446518639920292, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.14461921642651610, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.72756582869388287, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.72756582869388287, 1e-14);
@@ -126,7 +128,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.13546504847396040, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.13587074925002177, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.71453569050965315, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.71453569050965315, 1e-14);
@@ -283,7 +285,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -297,7 +299,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(shgc_result.t_sol, 0.68430691378849040, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.68430691378849040, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.68430691378849040, 1e-14);
@@ -312,7 +314,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.15348172531293150, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.15348172531293150, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.86832251036896257, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.86832251036896257, 1e-14);
@@ -328,7 +330,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.13523727253567985, 1e-14);
 
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.10406653669916405, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.10406653669916405, 1e-14);
@@ -343,7 +345,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.062546948798173865, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.062546948798173865, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.80537668591094791, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.80537668591094791, 1e-14);
@@ -358,7 +360,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.13234604089933558, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.13234604089933558, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.70007334141233502, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.70007334141233502, 1e-14);
@@ -373,7 +375,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.11824996341674447, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.11824996341674447, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.68235739699681930, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.68235739699681930, 1e-14);
@@ -529,7 +531,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "CENblackbody.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -545,7 +547,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 #endif
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.71099188861066809, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.71099188861066809, 1e-14);
@@ -560,7 +562,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.14709734859263215, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.14709734859263215, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.86829208459208473, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.86829208459208473, 1e-14);
@@ -575,7 +577,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.13525667684831866, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.13525667684831866, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.58733483792234731, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.58733483792234731, 1e-14);
@@ -592,9 +594,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
 
     WCE_Color_Result color_results = glazing_system.color();
 
-	EXPECT_NEAR(color_results.direct_direct.tf.lab.L, 94.666217263591847, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tf.lab.L, 94.666217263591847, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tf.lab.a, 1.0038394903462700, 1e-14);
-    EXPECT_NEAR(color_results.direct_direct.tf.lab.b, 2.3170364131629428, 1e-14);    
+    EXPECT_NEAR(color_results.direct_direct.tf.lab.b, 2.3170364131629428, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tf.rgb.R, 255, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tf.rgb.G, 255, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tf.rgb.B, 255, 1e-14);
@@ -602,7 +604,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.direct_direct.tf.trichromatic.Y, 86.830285384922604, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tf.trichromatic.Z, 91.092529581183740, 1e-14);
 
-	EXPECT_NEAR(color_results.direct_direct.tb.lab.L, 94.666217263591847, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.tb.lab.L, 94.666217263591847, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tb.lab.a, 1.0038394903462700, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tb.lab.b, 2.3170364131629428, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tb.rgb.R, 255, 1e-14);
@@ -612,9 +614,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.direct_direct.tb.trichromatic.Y, 86.830285384922604, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.tb.trichromatic.Z, 91.092529581183740, 1e-14);
 
-	EXPECT_NEAR(color_results.direct_direct.rf.lab.L, 32.685672100834950, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rf.lab.L, 32.685672100834950, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rf.lab.a, -13.456067709025742, 1e-14);
-    EXPECT_NEAR(color_results.direct_direct.rf.lab.b, -9.4328475174762723, 1e-14);    
+    EXPECT_NEAR(color_results.direct_direct.rf.lab.b, -9.4328475174762723, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rf.rgb.R, 38, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rf.rgb.G, 92, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rf.rgb.B, 101, 1e-14);
@@ -622,9 +624,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.direct_direct.rf.trichromatic.Y, 7.3931504074726693, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rf.trichromatic.Z, 11.074221343637136, 1e-14);
 
-	EXPECT_NEAR(color_results.direct_direct.rb.lab.L, 32.685672100834950, 1e-14);
+    EXPECT_NEAR(color_results.direct_direct.rb.lab.L, 32.685672100834950, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rb.lab.a, -13.456067709025742, 1e-14);
-    EXPECT_NEAR(color_results.direct_direct.rb.lab.b, -9.4328475174762723, 1e-14);    
+    EXPECT_NEAR(color_results.direct_direct.rb.lab.b, -9.4328475174762723, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rb.rgb.R, 38, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rb.rgb.G, 92, 1e-14);
     EXPECT_NEAR(color_results.direct_direct.rb.rgb.B, 101, 1e-14);
@@ -672,9 +674,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.direct_diffuse.rb.trichromatic.Y, 0.0, 1e-14);
     EXPECT_NEAR(color_results.direct_diffuse.rb.trichromatic.Z, 0.0, 1e-14);
 
-	EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.L, 91.205381649557779, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.L, 91.205381649557779, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.a, 0.81757398116044655, 1e-14);
-    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.b, 2.2108499191388242, 1e-14);    
+    EXPECT_NEAR(color_results.diffuse_diffuse.tf.lab.b, 2.2108499191388242, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.R, 255, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.G, 253, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.tf.rgb.B, 249, 1e-14);
@@ -692,9 +694,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.diffuse_diffuse.tb.trichromatic.Y, 78.936123385628918, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.tb.trichromatic.Z, 82.856762497727459, 1e-14);
 
-	EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.L, 43.540458616337347, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.L, 43.540458616337347, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.a, -9.1523474616345695, 1e-14);
-    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.b, -6.2165296319391494, 1e-14);    
+    EXPECT_NEAR(color_results.diffuse_diffuse.rf.lab.b, -6.2165296319391494, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.R, 87, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.G, 119, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.rgb.B, 125, 1e-14);
@@ -702,9 +704,9 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.trichromatic.Y, 13.522673394145196, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rf.trichromatic.Z, 17.554745273890433, 1e-14);
 
-	EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.L, 43.540458616337347, 1e-14);
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.L, 43.540458616337347, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.a, -9.1523474616345695, 1e-14);
-    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.b, -6.2165296319391494, 1e-14);    
+    EXPECT_NEAR(color_results.diffuse_diffuse.rb.lab.b, -6.2165296319391494, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.R, 87, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.G, 119, 1e-14);
     EXPECT_NEAR(color_results.diffuse_diffuse.rb.rgb.B, 125, 1e-14);
@@ -734,7 +736,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_102_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -770,7 +772,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -784,7 +786,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.89925998453884770, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.89925998453884770, 1e-14);
@@ -799,7 +801,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.14757793943808908, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.14757829179791318, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.83385101472829093, 1e-14);
@@ -814,7 +816,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.13582160214429620, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.13591473635815252, 1e-14);
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.092847372531649014, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.092847372531649014, 1e-14);
@@ -829,7 +831,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.098178562240941875, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.099197614848102633, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.88455027707939504, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.88455027707939504, 1e-14);
@@ -844,7 +846,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.14632052149223410, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.14634816212636417, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.87316376513614979, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.87316376513614979, 1e-14);
@@ -859,7 +861,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.14771062629560355, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.14778961302433385, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.71627812708040550, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.71627812708040550, 1e-14);
@@ -1014,7 +1016,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -1028,7 +1030,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.83385101472829093, 1e-14);
@@ -1043,7 +1045,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.13582160214429620, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.13591473635815252, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.89925998453884770, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.89925998453884770, 1e-14);
@@ -1058,7 +1060,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.14757793943808908, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.14757829179791318, 1e-14);
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.092847372531649014, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.092847372531649014, 1e-14);
@@ -1073,7 +1075,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.098178562240941875, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.099197614848102633, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.88455027707939504, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.88455027707939504, 1e-14);
@@ -1088,7 +1090,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.14632052149223410, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.14634816212636417, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.87316376513614979, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.87316376513614979, 1e-14);
@@ -1103,7 +1105,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.14771062629560355, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.14778961302433385, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.71627812708040550, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.71627812708040550, 1e-14);
@@ -1258,7 +1260,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -1272,7 +1274,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.83385101472829093, 1e-14);
@@ -1287,7 +1289,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.13582160214429620, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.13591473635815252, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.89925998453884770, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.89925998453884770, 1e-14);
@@ -1302,7 +1304,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.14757793943808908, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.14757829179791318, 1e-14);
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.092847372531649014, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.092847372531649014, 1e-14);
@@ -1317,7 +1319,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.098178562240941875, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.099197614848102633, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.88455027707939504, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.88455027707939504, 1e-14);
@@ -1332,7 +1334,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.14632052149223410, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.14634816212636417, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.87316376513614979, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.87316376513614979, 1e-14);
@@ -1347,7 +1349,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.14771062629560355, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.14778961302433385, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.71627812708040550, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.71627812708040550, 1e-14);
@@ -1502,7 +1504,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Standard standard = load_optical_standard(standard_path.string());
 
     Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
 
@@ -1516,7 +1518,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(shgc_result.t_sol, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091383936352422049, 1e-14);
 
-    WCE_Optical_Result solar_results = glazing_system.all_method_values(Method_Type::SOLAR);
+    WCE_Optical_Result solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
     EXPECT_NEAR(solar_results.direct_direct.tf, 0.83385101472829093, 1e-14);
     EXPECT_NEAR(solar_results.direct_direct.tb, 0.83385101472829093, 1e-14);
@@ -1531,7 +1533,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(solar_results.diffuse_diffuse.rf, 0.13582160214429620, 1e-14);
     EXPECT_NEAR(solar_results.diffuse_diffuse.rb, 0.13591473635815252, 1e-14);
 
-    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Method_Type::PHOTOPIC);
+    WCE_Optical_Result photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
     EXPECT_NEAR(photopic_results.direct_direct.tf, 0.89925998453884770, 1e-14);
     EXPECT_NEAR(photopic_results.direct_direct.tb, 0.89925998453884770, 1e-14);
@@ -1546,7 +1548,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rf, 0.14757793943808908, 1e-14);
     EXPECT_NEAR(photopic_results.diffuse_diffuse.rb, 0.14757829179791318, 1e-14);
 
-    WCE_Optical_Result spf_results = glazing_system.all_method_values(Method_Type::SPF);
+    WCE_Optical_Result spf_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SPF);
 
     EXPECT_NEAR(spf_results.direct_direct.tf, 0.092847372531649014, 1e-14);
     EXPECT_NEAR(spf_results.direct_direct.tb, 0.092847372531649014, 1e-14);
@@ -1561,7 +1563,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(spf_results.diffuse_diffuse.rf, 0.098178562240941875, 1e-14);
     EXPECT_NEAR(spf_results.diffuse_diffuse.rb, 0.099197614848102633, 1e-14);
 
-    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Method_Type::TDW);
+    WCE_Optical_Result tdw_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TDW);
 
     EXPECT_NEAR(tdw_results.direct_direct.tf, 0.88455027707939504, 1e-14);
     EXPECT_NEAR(tdw_results.direct_direct.tb, 0.88455027707939504, 1e-14);
@@ -1576,7 +1578,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rf, 0.14632052149223410, 1e-14);
     EXPECT_NEAR(tdw_results.diffuse_diffuse.rb, 0.14634816212636417, 1e-14);
 
-    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Method_Type::TKR);
+    WCE_Optical_Result tkr_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TKR);
 
     EXPECT_NEAR(tkr_results.direct_direct.tf, 0.87316376513614979, 1e-14);
     EXPECT_NEAR(tkr_results.direct_direct.tb, 0.87316376513614979, 1e-14);
@@ -1591,7 +1593,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rf, 0.14771062629560355, 1e-14);
     EXPECT_NEAR(tkr_results.diffuse_diffuse.rb, 0.14778961302433385, 1e-14);
 
-    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Method_Type::TUV);
+    WCE_Optical_Result tuv_results = glazing_system.all_method_values(Optical_Standard_Method_Type::TUV);
 
     EXPECT_NEAR(tuv_results.direct_direct.tf, 0.71627812708040550, 1e-14);
     EXPECT_NEAR(tuv_results.direct_direct.tb, 0.71627812708040550, 1e-14);

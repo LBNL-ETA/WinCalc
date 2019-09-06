@@ -69,9 +69,9 @@ namespace wincalc
                         std::vector<Engine_Gap_Info> const & gaps,
                         double width,
                         double height,
-                        Standard const & standard)
+                        window_standards::Optical_Standard const & standard)
     {
-        auto solar_method = standard.methods.at(Method_Type::SOLAR);
+        auto solar_method = standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
         auto multi_pane_specular = create_multi_pane_specular(layers, solar_method);
 
         double t_sol =
@@ -132,7 +132,7 @@ namespace wincalc
                                    std::vector<Engine_Gap_Info> const & gaps,
                                    double width,
                                    double height,
-                                   Standard const & standard,
+                                   window_standards::Optical_Standard const & standard,
                                    Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
@@ -144,7 +144,7 @@ namespace wincalc
                                       std::vector<Engine_Gap_Info> const & gaps,
                                       double width,
                                       double height,
-                                      Standard const & standard,
+                                      window_standards::Optical_Standard const & standard,
                                       Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);

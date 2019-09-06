@@ -15,14 +15,14 @@ namespace wincalc
                                    std::vector<Engine_Gap_Info> const & gaps,
                                    double width,
                                    double height,
-                                   Standard const & standard,
+                                   window_standards::Optical_Standard const & standard,
                                    Environments const & environments);
 
     Thermal_Result calc_shgc_iso15099(std::vector<OpticsParser::ProductData> const & layers,
                                       std::vector<Engine_Gap_Info> const & gaps,
                                       double width,
                                       double height,
-                                      Standard const & standard,
+                                      window_standards::Optical_Standard const & standard,
                                       Environments const & environments);
 
 }   // namespace wincalc

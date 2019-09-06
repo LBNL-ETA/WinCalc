@@ -9,25 +9,25 @@
 namespace wincalc
 {
     double calc_optical_property(OpticsParser::ProductData const & product_data,
-                                 Method const & method,
+                                 window_standards::Optical_Standard_Method const & method,
                                  Calculated_Property_Choice property_choice,
                                  Side_Choice side_choice,
                                  Scattering_Choice scattering_choice);
 
     double calc_optical_property(std::vector<OpticsParser::ProductData> const & product_data,
-                                 Method const & method,
+                                 window_standards::Optical_Standard_Method const & method,
                                  Calculated_Property_Choice property_choice,
                                  Side_Choice side_choice,
                                  Scattering_Choice scattering_choice);
 
     WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data,
-                               Method const & method);
+                               window_standards::Optical_Standard_Method const & method);
     WCE_Simple_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
-                               Method const & method);
+                               window_standards::Optical_Standard_Method const & method);
 
     WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,
-                                Method const & method_x,
-                                Method const & method_y,
-                                Method const & method_z);
+                                window_standards::Optical_Standard_Method const & method_x,
+                                window_standards::Optical_Standard_Method const & method_y,
+                                window_standards::Optical_Standard_Method const & method_z);
 }   // namespace wincalc
 #endif

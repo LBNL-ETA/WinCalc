@@ -15,7 +15,7 @@ namespace wincalc
     {
         Glazing_System(std::vector<OpticsParser::ProductData> const & products,
                        std::vector<Gap_Data> const & gap_values,
-                       Standard const & standard,
+                       window_standards::Optical_Standard const & standard,
                        double width = 1.0,
                        double height = 1.0,
                        Environments const & u_environment = nfrc_u_environments(),
@@ -23,22 +23,24 @@ namespace wincalc
 
         std::vector<OpticsParser::ProductData> solid_layers;
         std::vector<Gap_Data> gap_layers;
-        Standard standard;
+        window_standards::Optical_Standard standard;
         double width;
         double height;
 
-		Environments u_environment;
+        Environments u_environment;
         Environments shgc_environment;
 
         Thermal_Result u() const;
         Thermal_Result shgc() const;
 
-        WCE_Simple_Result all_method_values(Method_Type const & method_type) const;
+        WCE_Simple_Result all_method_values(
+          window_standards::Optical_Standard_Method_Type const & method_type) const;
 
         WCE_Color_Result color() const;
 
     protected:
-        Method get_method(Method_Type const & method_type) const;
+        window_standards::Optical_Standard_Method
+          get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
     };
 }   // namespace wincalc
 #endif

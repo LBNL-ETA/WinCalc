@@ -10,7 +10,7 @@ namespace wincalc
 {
     Thermal_Result calc_u(std::vector<OpticsParser::ProductData> const & products,
                           std::vector<Gap_Data> const & gap_values,
-                          Standard const & standard,
+                          window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
                           Environments const & environments)
@@ -21,7 +21,7 @@ namespace wincalc
 
     Thermal_Result calc_shgc(std::vector<OpticsParser::ProductData> const & products,
                              std::vector<Gap_Data> const & gap_values,
-                             Standard const & standard,
+                             window_standards::Optical_Standard const & standard,
                              double width,
                              double height,
                              Environments const & environments)

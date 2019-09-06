@@ -11,6 +11,7 @@
 #include "paths.h"
 
 using namespace wincalc;
+using namespace window_standards;
 
 class TestCalcFromDisk : public testing::Test
 {
@@ -37,7 +38,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -71,7 +72,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_102_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
@@ -104,7 +105,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_913_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 5.8512829756503013, 1e-14);
@@ -136,7 +137,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21515_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Standard standard = load_optical_standard(standard_path.string());
     EXPECT_THROW(calc_u(products, gaps, standard, 1.0, 1.0), std::runtime_error)
       << "NFRC 21515 data has errors in the wavelength measurements.";
     
@@ -165,7 +166,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_21000_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 5.9142344855758333, 1e-14);
@@ -196,7 +197,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_2600_json)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 5.7344786572407171, 1e-14);
@@ -227,7 +228,7 @@ TEST_F(TestCalcFromDisk, Test_checker_tool_json_format)
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 3.6258264794653012, 1e-14);

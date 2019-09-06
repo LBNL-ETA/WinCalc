@@ -8,7 +8,7 @@ namespace wincalc
 {
     Glazing_System::Glazing_System(std::vector<OpticsParser::ProductData> const & solid_layers,
                                    std::vector<Gap_Data> const & gap_layers,
-                                   Standard const & standard,
+                                   window_standards::Optical_Standard const & standard,
                                    double width,
                                    double height,
                                    Environments const & u_environment,
@@ -33,26 +33,32 @@ namespace wincalc
     }
 
 
-    WCE_Simple_Result Glazing_System::all_method_values(Method_Type const & method_type) const
+    WCE_Simple_Result Glazing_System::all_method_values(
+      window_standards::Optical_Standard_Method_Type const & method_type) const
     {
-        Method method = get_method(method_type);
+        auto method = get_method(method_type);
         return calc_all(solid_layers, method);
     }
 
     WCE_Color_Result Glazing_System::color() const
     {
-        Method tristim_x = get_method(Method_Type::COLOR_TRISTIMX);
-        Method tristim_y = get_method(Method_Type::COLOR_TRISTIMY);
-        Method tristim_z = get_method(Method_Type::COLOR_TRISTIMZ);
+        window_standards::Optical_Standard_Method tristim_x =
+          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMX);
+        window_standards::Optical_Standard_Method tristim_y =
+          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMY);
+        window_standards::Optical_Standard_Method tristim_z =
+          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMZ);
         return calc_color(solid_layers, tristim_x, tristim_y, tristim_z);
     }
 
-    Method Glazing_System::get_method(Method_Type const & method_type) const
+    window_standards::Optical_Standard_Method Glazing_System::get_method(
+      window_standards::Optical_Standard_Method_Type const & method_type) const
     {
         auto method_itr = standard.methods.find(method_type);
         if(method_itr == standard.methods.end())
         {
-            std::map<Method_Type, std::string> method_names = method_type_to_name();
+            std::map<window_standards::Optical_Standard_Method_Type, std::string> method_names =
+              window_standards::method_type_to_name();
             auto method_name = method_names.find(method_type);
             if(method_name != method_names.end())
             {
@@ -64,8 +70,11 @@ namespace wincalc
             else
             {
                 std::stringstream err_msg;
-                err_msg << "Unknown method type: "
-                        << static_cast<std::underlying_type<Method_Type>::type>(method_type);
+                err_msg
+                  << "Unknown method type: "
+                  << static_cast<
+                       std::underlying_type<window_standards::Optical_Standard_Method_Type>::type>(
+                       method_type);
                 throw std::runtime_error(err_msg.str());
             }
         }

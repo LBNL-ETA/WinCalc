@@ -10,6 +10,7 @@
 #include "environmental_conditions.h"
 
 using namespace wincalc;
+using namespace window_standards;
 
 class TestCalcFromDisk : public testing::Test
 {
@@ -36,7 +37,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_optics)
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
 
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -70,7 +71,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_102_optics)
     standard_path /= "standards";
     standard_path /= "W5_NFRC_2003.std";
 
-    Standard standard = load_standard(standard_path.string());
+    Optical_Standard standard = load_optical_standard(standard_path.string());
 
     Thermal_Result u_result = calc_u(products, gaps, standard, 1.0, 1.0, nfrc_u_environments());
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
