@@ -18,7 +18,11 @@ add_library( ${LIB_NAME}
 		gap.cpp
 		optical_calc_params.h
 		environmental_conditions.h
-		environmental_conditions.cpp)
+		environmental_conditions.cpp
+		product_data.h
+		product_data.cpp
+		convert_optics_parser.h
+		convert_optics_parser.cpp)
 
 
 

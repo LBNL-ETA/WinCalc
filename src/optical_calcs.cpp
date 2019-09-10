@@ -12,6 +12,8 @@
 #include "optical_calcs.h"
 #include "create_wce_objects.h"
 
+
+
 namespace wincalc
 {
     template<typename T>
@@ -60,7 +62,7 @@ namespace wincalc
         return layer.getPropertySimple(property_choice, side_choice, scattering_choice);
     }
 
-
+	#if 0
     WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data,
                                window_standards::Optical_Standard_Method const & method)
     {
@@ -74,8 +76,26 @@ namespace wincalc
 
         return do_calcs<double>(calc_f);
     }
+#endif
+    WCE_Simple_Result
+      calc_all(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+                               window_standards::Optical_Standard_Method const & method)
+    {
+        auto layer = create_multi_pane_specular({product_data}, method);
 
-    WCE_Simple_Result calc_all(std::vector<OpticsParser::ProductData> const & product_data,
+        auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
+                               const FenestrationCommon::Side side,
+                               const FenestrationCommon::Scattering scattering) {
+            return calc_optical_property(*layer, prop, side, scattering);
+        };
+
+        return do_calcs<double>(calc_f);
+    }
+
+
+
+    WCE_Simple_Result
+      calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                                window_standards::Optical_Standard_Method const & method)
     {
         auto layer = create_multi_pane_specular(product_data, method);
@@ -117,7 +137,8 @@ namespace wincalc
     }
 
 
-    WCE_Color_Result calc_color(std::vector<OpticsParser::ProductData> const & product_data,
+    WCE_Color_Result
+      calc_color(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                                 window_standards::Optical_Standard_Method const & method_x,
                                 window_standards::Optical_Standard_Method const & method_y,
                                 window_standards::Optical_Standard_Method const & method_z)
@@ -170,7 +191,8 @@ namespace wincalc
     }
 
 
-    double calc_optical_property(OpticsParser::ProductData const & product_data,
+    double
+      calc_optical_property(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                                  window_standards::Optical_Standard_Method const & method,
                                  Calculated_Property_Choice property_choice,
                                  Side_Choice side_choice,
@@ -181,7 +203,8 @@ namespace wincalc
         return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
     }
 
-    double calc_optical_property(std::vector<OpticsParser::ProductData> const & product_data,
+    double calc_optical_property(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                                  window_standards::Optical_Standard_Method const & method,
                                  Calculated_Property_Choice property_choice,
                                  Side_Choice side_choice,

@@ -9,6 +9,7 @@
 #include "create_wce_objects.h"
 #include "thermal_calcs.h"
 #include "environmental_conditions.h"
+#include "convert_optics_parser.h"
 
 namespace wincalc
 {
@@ -72,7 +73,8 @@ namespace wincalc
                         window_standards::Optical_Standard const & standard)
     {
         auto solar_method = standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
-        auto multi_pane_specular = create_multi_pane_specular(layers, solar_method);
+        auto converted_layers = convert(layers);
+        auto multi_pane_specular = create_multi_pane_specular(converted_layers, solar_method);
 
         double t_sol =
           multi_pane_specular->getPropertySimple(FenestrationCommon::PropertySimple::T,

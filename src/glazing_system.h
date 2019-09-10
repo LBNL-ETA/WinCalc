@@ -8,39 +8,134 @@
 #include "thermal_results.h"
 #include "optical_results.h"
 #include "environmental_conditions.h"
+#include "product_data.h"
 
 namespace wincalc
 {
-    struct Glazing_System
+    struct Glazing_System_Optical_Interface
     {
-        Glazing_System(std::vector<OpticsParser::ProductData> const & products,
-                       std::vector<Gap_Data> const & gap_values,
-                       window_standards::Optical_Standard const & standard,
-                       double width = 1.0,
-                       double height = 1.0,
-                       Environments const & u_environment = nfrc_u_environments(),
-                       Environments const & shgc_environment = nfrc_shgc_environments());
+        Glazing_System_Optical_Interface(window_standards::Optical_Standard const & standard);
 
-        std::vector<OpticsParser::ProductData> solid_layers;
-        std::vector<Gap_Data> gap_layers;
+        virtual WCE_Simple_Result
+          all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
+                            double theta = 0,
+                            double phi = 0) const = 0;
+
+        virtual WCE_Color_Result color(double theta = 0, double phi = 0) const = 0;
+
+        void optical_standard(window_standards::Optical_Standard const & s);
+        window_standards::Optical_Standard optical_standard();
+
+    protected:
         window_standards::Optical_Standard standard;
+
+        window_standards::Optical_Standard_Method
+          get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
+    };
+
+    struct Glazing_System_Thermal_Interface
+    {
+        virtual Thermal_Result u(double theta = 0, double phi = 0) const = 0;
+        virtual Thermal_Result shgc(std::vector<double> const & absorptances,
+                                    double theta = 0,
+                                    double phi = 0) const = 0;
+        virtual Thermal_Result shgc(double theta = 0, double phi = 0) const = 0;
+    };
+
+    struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
+    {
+#if 0
+        /* override the calls in Glazing_System_Interface*/
+        virtual square_matrix matrix_method_results(
+          window_standards::Optical_Standard_Method_Type const & method_type) const = 0;
+#endif
+        /* may have the same square matrix results for color in the future*/
+    };
+
+#if 0
+    std::unique_ptr<Glazing_System_Interface> glazing_system_factory(
+      std::vector<some_other_product_data_format> const & products /*some stuff*/)
+    {}
+
+    std::unique_ptr<Glazing_System_Interface>
+      glazing_system_factory(std::vector<OpticsParser::ProductData> const & products
+                             /*some stuff*/)
+    {}
+
+    std::unique_ptr<BSDF_Glazing_System_Interface> bsdf_glazing_system_factory(
+      std::vector<OpticsParser::ProductData> const & products /*some stuff*/)
+    {}
+
+    std::unique_ptr<BSDF_Glazing_System_Interface> bsdf_glazing_system_factory(
+      std::vector<some_other_product_data_format> const & products /*some stuff*/)
+    {}
+#endif
+
+    struct Glazing_System_Optical : Glazing_System_Optical_Interface
+    {
+        Glazing_System_Optical(
+          std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
+          window_standards::Optical_Standard const & standard);
+
+        WCE_Simple_Result all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
+                            double theta = 0,
+                            double phi = 0) const override;
+
+        WCE_Color_Result color(double theta = 0, double phi = 0) const override;
+
+    protected:
+        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> solid_layers;
+    };
+
+    struct Glazing_System_Thermal : Glazing_System_Thermal_Interface
+    {
+        Glazing_System_Thermal(
+          std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
+          std::vector<Gap_Data> const & gap_layers,
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & u_environment = nfrc_u_environments(),
+          Environments const & shgc_environment = nfrc_shgc_environments());
+
+        std::vector<Gap_Data> gap_layers;
+        std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products;
         double width;
         double height;
 
         Environments u_environment;
         Environments shgc_environment;
 
-        Thermal_Result u() const;
-        Thermal_Result shgc() const;
+        Thermal_Result u(double theta, double phi) const;
+        Thermal_Result shgc(std::vector<double> const & absorptances_front,
+                                    double theta = 0,
+                            double phi = 0) const override;
+        Thermal_Result shgc(double theta, double phi) const override;
+    };
 
-        WCE_Simple_Result all_method_values(
-          window_standards::Optical_Standard_Method_Type const & method_type) const;
+    struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal,
+                                                Glazing_System_Optical
+    {
+        Glazing_System_Thermal_And_Optical(
+          std::vector<Product_Data_Thermal_Optical> const & product_data,
+          std::vector<Gap_Data> const & gap_values,
+          window_standards::Optical_Standard const & standard,
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & u_environment = nfrc_u_environments(),
+          Environments const & shgc_environment = nfrc_shgc_environments());
 
-        WCE_Color_Result color() const;
+        Thermal_Result shgc(double theta, double phi) const;
+        
 
-    protected:
-        window_standards::Optical_Standard_Method
-          get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
+#if 0
+        std::vector<Product_Data_Thermal_Optical> product_data;
+        std::vector<Gap_Data> const & gap_values;
+        window_standards::Optical_Standard standard;
+        double width;
+        double height;
+        Environments u_environment;
+        Environments shgc_environment;
+#endif
     };
 }   // namespace wincalc
 #endif
