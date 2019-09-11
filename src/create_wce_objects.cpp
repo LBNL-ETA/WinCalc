@@ -1,4 +1,6 @@
 #include "create_wce_objects.h"
+#include "convert_optics_parser.h"
+#include "util.h"
 
 namespace wincalc
 {
@@ -460,11 +462,11 @@ namespace wincalc
     }
 #endif
 
-	FenestrationCommon::CSeries get_spectum_values(
-      window_standards::Spectrum const & spectrum,
-      window_standards::Optical_Standard_Method const & method,
-      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
-    {        
+    FenestrationCommon::CSeries
+      get_spectum_values(window_standards::Spectrum const & spectrum,
+                         window_standards::Optical_Standard_Method const & method,
+                         std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
+    {
         if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
         {
             return get_spectum_values(
@@ -479,8 +481,7 @@ namespace wincalc
         else
         {
             throw std::runtime_error("Unsupported optical data structure.");
-        }
-        return FenestrationCommon::CSeries();
+        }        
     }
 
     FenestrationCommon::CSeries get_spectum_values(
@@ -488,24 +489,12 @@ namespace wincalc
       window_standards::Optical_Standard_Method const & method,
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data)
     {
-        if(product_data.size() > 1)
+        if(!all_optical_layers_the_same(product_data))
         {
-            for(size_t i = 0; i < product_data.size() - 1; ++i)
-            {
-                if(static_cast<bool>(
-                     std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(
-                       product_data[i]))
-                   != static_cast<bool>(
-                     std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(
-                       product_data[i + 1])))
-                {
-                    throw std::runtime_error("Not sure how to get spectrum values for systems that "
-                                             "are a mix of nband and dual band");
-                }
-            }
+            throw std::runtime_error("Not sure how to get spectrum values for systems that "
+                                     "are a mix of nband and dual band");
         }
         return get_spectum_values(spectrum, method, product_data[0]);
-
     }
 
 #if 0
@@ -605,28 +594,25 @@ namespace wincalc
         return result;
     }
 
-	std::vector<double>
+    std::vector<double>
       get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
                                 std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
     {
-            if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
-            {
-                return get_wavelength_set_to_use(                  
-                  method,
-                  *std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data));
-            }
-            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(
-                      product_data))
-            {
-                throw std::runtime_error("Dual band products not yet supported");
-            }
-            else
-            {
-                throw std::runtime_error("Unsupported optical data structure.");
-            }
-
-			return std::vector<double>();
-		}
+        if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
+        {
+            return get_wavelength_set_to_use(
+              method,
+              *std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data));
+        }
+        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data))
+        {
+            throw std::runtime_error("Dual band products not yet supported");
+        }
+        else
+        {
+            throw std::runtime_error("Unsupported optical data structure.");
+        }
+    }
 
 #if 0   // removing scattering layers for now
     SingleLayerOptics::CScatteringLayer
@@ -734,16 +720,18 @@ namespace wincalc
         }
     }
 
-    std::shared_ptr<SingleLayerOptics::SpecularLayer> create_specular_layer(
-      wincalc::Product_Data_Dual_Band_Optical const & product_data,
-      window_standards::Optical_Standard_Method const & method,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+#pragma warning(push)
+#pragma warning(disable : 4100)
+    std::shared_ptr<SingleLayerOptics::SpecularLayer>
+      create_specular_layer(wincalc::Product_Data_Dual_Band_Optical const & product_data,
+                            window_standards::Optical_Standard_Method const & method,
+                            Spectal_Data_Wavelength_Range_Method const & type,
+                            int number_visible_bands,
+                            int number_solar_bands)
     {
         throw std::runtime_error("Dual band not yet supported.");
-        return std::shared_ptr<SingleLayerOptics::SpecularLayer>();
     }
+#pragma warning(pop)
 
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(wincalc::Product_Data_N_Band_Optical const & product_data,
@@ -791,20 +779,20 @@ namespace wincalc
                             int number_visible_bands,
                             int number_solar_bands)
     {
-        std::shared_ptr<SingleLayerOptics::SpecularLayer> result;
+        std::shared_ptr<SingleLayerOptics::SpecularLayer> result;        
         if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data))
         {
             result = create_specular_layer(
-              std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data),
+              *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data),
               method,
               type,
               number_visible_bands,
               number_solar_bands);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
-        {
+        {            
             result = create_specular_layer(
-              std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data),
+              *std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data),
               method,
               type,
               number_visible_bands,
@@ -907,12 +895,12 @@ namespace wincalc
     }
 #endif
 
-    std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular>
-      create_multi_pane_specular(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-                                 window_standards::Optical_Standard_Method const & method,
-                                 Spectal_Data_Wavelength_Range_Method const & type,
-                                 int number_visible_bands,
-                                 int number_solar_bands)
+    std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular> create_multi_pane_specular(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      Spectal_Data_Wavelength_Range_Method const & type,
+      int number_visible_bands,
+      int number_solar_bands)
     {
         std::vector<std::shared_ptr<SingleLayerOptics::SpecularLayer>> layers;
         for(std::shared_ptr<wincalc::Product_Data_Optical> const & product : product_data)
@@ -951,5 +939,92 @@ namespace wincalc
             result.push_back(convert(d));
         }
         return result;
+    }
+
+    Tarcog::ISO15099::CIGU create_igu(
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> const & solid_layers,
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gaps,
+      double width,
+      double height)
+    {
+        Tarcog::ISO15099::CIGU igu(width, height);
+        igu.addLayer(solid_layers[0]);
+        if(!gaps.empty())
+        {
+            for(size_t i = 0; i < gaps.size(); ++i)
+            {
+                // if there are gaps then there should be one more solid layer
+                // than gap layer.  So we can just add a gap then a solid layer
+                // at the next index until the end of the gaps
+                igu.addLayer(gaps[i]);
+                igu.addLayer(solid_layers[i + 1]);
+            }
+        }
+        return igu;
+    }
+
+
+    IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                        std::vector<Engine_Gap_Info> const & gaps,
+                        double width,
+                        double height,
+                        window_standards::Optical_Standard const & standard)
+
+    {
+        auto solar_method =
+          standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
+        auto optical_layers = get_optical_layers(layers);
+
+
+        auto multi_pane_specular = create_multi_pane_specular(optical_layers, solar_method);
+
+        double t_sol =
+          multi_pane_specular->getPropertySimple(FenestrationCommon::PropertySimple::T,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::Scattering::DirectDirect,
+                                                 0,
+                                                 0);
+
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
+
+        for(size_t i = 0; i < layers.size(); ++i)
+        {
+            double absorbtance =
+              multi_pane_specular->getAbsorptanceLayer(i + 1,
+                                                       FenestrationCommon::Side::Front,
+                                                       FenestrationCommon::ScatteringSimple::Direct,
+                                                       0,
+                                                       0);
+            double thickness = layers[i].thermal_data->thickness_meters;
+            double conductivity = layers[i].thermal_data->conductivity;
+
+            auto layer = Tarcog::ISO15099::Layers::solid(thickness,
+                                                         conductivity,
+                                                         layers[i].thermal_data->emissivity_front.value(),
+                                                         layers[i].thermal_data->ir_transmittance_front.value(),
+                                                         layers[i].thermal_data->emissivity_back.value(),
+                                                         layers[i].thermal_data->ir_transmittance_back.value());
+            layer->setSolarAbsorptance(absorbtance);
+            tarcog_solid_layers.push_back(layer);
+        }
+
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
+        for(Engine_Gap_Info Engine_Gap_Info : gaps)
+        {
+            tarcog_gaps.push_back(Tarcog::ISO15099::Layers::gap(
+              Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
+        }
+
+        return IGU_Info{create_igu(tarcog_solid_layers, tarcog_gaps, width, height), t_sol};
+    }
+
+    IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
+                        std::vector<Engine_Gap_Info> const & gaps,
+                        double width,
+                        double height,
+                        window_standards::Optical_Standard const & standard)
+    {
+        auto converted_layers = convert(layers);
+        return create_igu(converted_layers, gaps, width, height, standard);
     }
 }   // namespace wincalc

@@ -18,7 +18,7 @@ namespace wincalc
         return converted_data;
     }
 
-    Product_Data_N_Band_Optical convert(OpticsParser::ProductData const & product)
+    Product_Data_N_Band_Optical convert_optical(OpticsParser::ProductData const & product)
     {
         std::vector<Wavelength_Data> converted_wavelengths = convert(product.measurements);
         // TODO WCE Fix this to use actual type and not always monolithic
@@ -28,13 +28,26 @@ namespace wincalc
         return converted;
     }
 
-    std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
+    wincalc::Product_Data_Thermal convert_thermal(OpticsParser::ProductData const & product)
+    {
+        return wincalc::Product_Data_Thermal(*product.conductivity,
+                                             product.thickness / 1000.0,
+                                             product.IRTransmittance,
+                                             product.IRTransmittance,
+                                             product.frontEmissivity,
+                                             product.backEmissivity,
+                                             false);
+    }
+
+    std::vector<wincalc::Product_Data_Optical_Thermal>
       convert(std::vector<OpticsParser::ProductData> const & product)
     {
-        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> converted;
+        std::vector<wincalc::Product_Data_Optical_Thermal> converted;
         for(auto layer : product)
         {
-            converted.push_back(std::make_shared<wincalc::Product_Data_Optical>(convert(layer)));
+            auto optical = std::make_shared<Product_Data_N_Band_Optical>(convert_optical(layer));
+            auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(layer));
+            converted.push_back(wincalc::Product_Data_Optical_Thermal{optical, thermal});
         }
 
         return converted;

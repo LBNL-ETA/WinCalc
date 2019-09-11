@@ -7,9 +7,10 @@
 #include <WCECommon.hpp>
 #include <WCESpectralAveraging.hpp>
 #include <WCEMultiLayerOptics.hpp>
+#include <WCEGases.hpp>
+#include <WCETarcog.hpp>
 #include <OpticsProductData.hpp>
 #include <windows_standards/windows_standard.h>
-#include <WCEGases.hpp>
 
 #include "gap.h"
 #include "environmental_conditions.h"
@@ -150,6 +151,25 @@ namespace wincalc
         Spectal_Data_Wavelength_Range_Method::FULL,
       int number_visible_bands = 5,
       int number_solar_bands = 10);
+
+	struct IGU_Info
+    {
+        Tarcog::ISO15099::CIGU igu;
+        double t_sol;
+    };	
+
+    IGU_Info
+      create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                 std::vector<Engine_Gap_Info> const & gaps,
+                 double width,
+                 double height,
+                 window_standards::Optical_Standard const & standard);
+
+    IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
+                        std::vector<Engine_Gap_Info> const & gaps,
+                        double width,
+                        double height,
+                        window_standards::Optical_Standard const & standard);
 
 }   // namespace wincalc
 #endif

@@ -7,8 +7,6 @@ add_library( ${LIB_NAME}
 		optical_results.h
 		thermal_calcs.h
 		thermal_calcs.cpp       
-		thermal_calcs_from_measured_data_source.h
-		thermal_calcs_from_measured_data_source.cpp
 		thermal_results.h
 		create_wce_objects.h
 		create_wce_objects.cpp
@@ -22,7 +20,9 @@ add_library( ${LIB_NAME}
 		product_data.h
 		product_data.cpp
 		convert_optics_parser.h
-		convert_optics_parser.cpp)
+		convert_optics_parser.cpp
+		util.h
+		util.cpp)
 
 
 

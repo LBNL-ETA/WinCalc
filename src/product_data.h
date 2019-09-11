@@ -4,15 +4,22 @@
 
 namespace wincalc
 {
-    struct Flipped_Layer
+    struct Flippable_Solid_Layer
     {
-        Flipped_Layer(bool flipped = false);
-
+        Flippable_Solid_Layer(double thickness_meters, bool flipped = false);
+        double thickness_meters;
         bool flipped;
     };
 
-    struct Product_Data_Thermal : Flipped_Layer
+    struct Product_Data_Thermal : Flippable_Solid_Layer
     {
+        Product_Data_Thermal(double conductivity,
+                             double thickness_meters,
+                             std::optional<double> ir_transmittance_front = std::optional<double>(),
+                             std::optional<double> ir_transmittance_back = std::optional<double>(),
+                             std::optional<double> emissivity_front = std::optional<double>(),
+                             std::optional<double> emissivity_back = std::optional<double>(),
+                             bool flipped = false);
         double conductivity;
         std::optional<double> ir_transmittance_front;
         std::optional<double> ir_transmittance_back;
@@ -29,10 +36,10 @@ namespace wincalc
         double a_front;
     };
 
-    struct Product_Data_Optical : Flipped_Layer
+    struct Product_Data_Optical : Flippable_Solid_Layer
     {
-        Product_Data_Optical(bool flipped = false);
-		virtual ~Product_Data_Optical();
+        Product_Data_Optical(double thickness_meters, bool flipped = false);
+        virtual ~Product_Data_Optical();
     };
 
     struct Product_Data_Dual_Band_Optical : Product_Data_Optical
@@ -66,11 +73,10 @@ namespace wincalc
                                     std::vector<Wavelength_Data> wavelength_data,
                                     bool flipped = false);
         FenestrationCommon::MaterialType material_type;
-        double thickness_meters;
         std::vector<Wavelength_Data> wavelength_data;
     };
 
-    struct Product_Data_Thermal_Optical
+    struct Product_Data_Optical_Thermal
     {
         std::shared_ptr<Product_Data_Optical> optical_data;
         std::shared_ptr<Product_Data_Thermal> thermal_data;

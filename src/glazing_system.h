@@ -77,14 +77,15 @@ namespace wincalc
           std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
           window_standards::Optical_Standard const & standard);
 
-        WCE_Simple_Result all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
+        WCE_Simple_Result
+          all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
                             double theta = 0,
                             double phi = 0) const override;
 
         WCE_Color_Result color(double theta = 0, double phi = 0) const override;
 
     protected:
-        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> solid_layers;
+        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> solid_layers_optical;
     };
 
     struct Glazing_System_Thermal : Glazing_System_Thermal_Interface
@@ -98,7 +99,7 @@ namespace wincalc
           Environments const & shgc_environment = nfrc_shgc_environments());
 
         std::vector<Gap_Data> gap_layers;
-        std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products;
+        std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
         double width;
         double height;
 
@@ -107,16 +108,15 @@ namespace wincalc
 
         Thermal_Result u(double theta, double phi) const;
         Thermal_Result shgc(std::vector<double> const & absorptances_front,
-                                    double theta = 0,
+                            double theta = 0,
                             double phi = 0) const override;
         Thermal_Result shgc(double theta, double phi) const override;
     };
 
-    struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal,
-                                                Glazing_System_Optical
+    struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
     {
         Glazing_System_Thermal_And_Optical(
-          std::vector<Product_Data_Thermal_Optical> const & product_data,
+          std::vector<Product_Data_Optical_Thermal> const & product_data,
           std::vector<Gap_Data> const & gap_values,
           window_standards::Optical_Standard const & standard,
           double width = 1.0,
@@ -124,9 +124,20 @@ namespace wincalc
           Environments const & u_environment = nfrc_u_environments(),
           Environments const & shgc_environment = nfrc_shgc_environments());
 
-        Thermal_Result shgc(double theta, double phi) const;
-        
+        Glazing_System_Thermal_And_Optical(
+          std::vector<OpticsParser::ProductData> const & product_data,
+          std::vector<Gap_Data> const & gap_values,
+          window_standards::Optical_Standard const & standard,
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & u_environment = nfrc_u_environments(),
+          Environments const & shgc_environment = nfrc_shgc_environments());
 
+        Thermal_Result shgc(double theta = 0, double phi = 0) const;
+        Thermal_Result u(double theta = 0, double phi = 0) const;
+
+    protected:
+        std::vector<Product_Data_Optical_Thermal> optical_and_thermal_data() const;
 #if 0
         std::vector<Product_Data_Thermal_Optical> product_data;
         std::vector<Gap_Data> const & gap_values;

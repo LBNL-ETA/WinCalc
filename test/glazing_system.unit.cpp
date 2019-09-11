@@ -40,7 +40,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Optical_Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -287,7 +287,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     standard_path /= "W5_NFRC_2003.std";
     Optical_Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 3.6258264794653012, 1e-14);
@@ -533,7 +533,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     standard_path /= "CENblackbody.std";
     Optical_Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
 #if 0   // CEN does not work with thermal calcs yet
     Thermal_Result u_result = glazing_system.u();
@@ -738,7 +738,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_102_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Optical_Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
@@ -774,7 +774,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9023_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -1018,7 +1018,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_21467_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -1262,7 +1262,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_9223_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
@@ -1506,7 +1506,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_6046_glazing_system)
     standard_path /= "W5_NFRC_2003.std";
     Standard standard = load_optical_standard(standard_path.string());
 
-    Glazing_System glazing_system(products, gaps, standard, 1.0, 1.0);
+    Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
     Thermal_Result u_result = glazing_system.u();
     EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);

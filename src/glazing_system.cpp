@@ -1,8 +1,9 @@
 #include <sstream>
 
 #include "glazing_system.h"
-#include "thermal_calcs_from_measured_data_source.h"
+#include "thermal_calcs.h"
 #include "optical_calcs.h"
+#include "util.h"
 
 namespace wincalc
 {
@@ -33,15 +34,20 @@ namespace wincalc
         return calc_shgc(solid_layers, gap_layers, standard, width, height, shgc_environment);
     }
 
+#endif
 
-    WCE_Simple_Result Glazing_System::all_method_values(
-      window_standards::Optical_Standard_Method_Type const & method_type) const
+#pragma warning(push)
+#pragma warning(disable : 4100)
+    WCE_Simple_Result Glazing_System_Optical::all_method_values(
+      window_standards::Optical_Standard_Method_Type const & method_type,
+      double theta,
+      double phi) const
     {
         auto method = get_method(method_type);
-        return calc_all(solid_layers, method);
+        return calc_all(solid_layers_optical, method);
     }
 
-    WCE_Color_Result Glazing_System::color() const
+    WCE_Color_Result Glazing_System_Optical::color(double theta, double phi) const
     {
         window_standards::Optical_Standard_Method tristim_x =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMX);
@@ -49,9 +55,9 @@ namespace wincalc
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMY);
         window_standards::Optical_Standard_Method tristim_z =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMZ);
-        return calc_color(solid_layers, tristim_x, tristim_y, tristim_z);
+        return calc_color(solid_layers_optical, tristim_x, tristim_y, tristim_z);
     }
-#endif
+#pragma warning(pop)
 
     window_standards::Optical_Standard_Method Glazing_System_Optical_Interface::get_method(
       window_standards::Optical_Standard_Method_Type const & method_type) const
@@ -90,7 +96,7 @@ namespace wincalc
       double height,
       Environments const & u_environment,
       Environments const & shgc_environment) :
-        products(products),
+        solid_layers_thermal(products),
         gap_layers(gap_layers),
         width(width),
         height(height),
@@ -98,21 +104,24 @@ namespace wincalc
         shgc_environment(shgc_environment)
     {}
 
+#pragma warning(push)
+#pragma warning(disable : 4100)
     Thermal_Result Glazing_System_Thermal::u(double theta, double phi) const
     {
-        return Thermal_Result();
+        throw std::runtime_error("Not yet implemented");
     }
 
     Thermal_Result Glazing_System_Thermal::shgc(std::vector<double> const & absorptances_front,
                                                 double theta,
                                                 double phi) const
     {
-        return Thermal_Result();
+        throw std::runtime_error("Not yet implemented");
     }
+#pragma warning(pop)
 
     Thermal_Result Glazing_System_Thermal::shgc(double theta, double phi) const
     {
-        std::vector<double> absorptances(products.size(), 0);
+        std::vector<double> absorptances(solid_layers_thermal.size(), 0);
         return shgc(absorptances, theta, phi);
     };
 
@@ -132,42 +141,20 @@ namespace wincalc
     Glazing_System_Optical::Glazing_System_Optical(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
       window_standards::Optical_Standard const & standard) :
-        Glazing_System_Optical_Interface(standard),
-        solid_layers(solid_layers)
+        Glazing_System_Optical_Interface(standard), solid_layers_optical(solid_layers)
     {}
 
-    std::vector<std::shared_ptr<Product_Data_Optical>>
-      get_optical_data(std::vector<Product_Data_Thermal_Optical> const & product_data)
-    {
-        std::vector<std::shared_ptr<Product_Data_Optical>> data;
-        for(auto layer : product_data)
-        {
-            data.push_back(layer.optical_data);
-        }
-        return data;
-    }
-
-    std::vector<std::shared_ptr<Product_Data_Thermal>>
-      get_thermal_data(std::vector<Product_Data_Thermal_Optical> const & product_data)
-    {
-        std::vector<std::shared_ptr<Product_Data_Thermal>> data;
-        for(auto layer : product_data)
-        {
-            data.push_back(layer.thermal_data);
-        }
-        return data;
-    }
 
     Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
-      std::vector<Product_Data_Thermal_Optical> const & product_data,
+      std::vector<Product_Data_Optical_Thermal> const & product_data,
       std::vector<Gap_Data> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
       Environments const & u_environment,
       Environments const & shgc_environment) :
-        Glazing_System_Optical(get_optical_data(product_data), standard),
-        Glazing_System_Thermal(get_thermal_data(product_data),
+        Glazing_System_Optical(get_optical_layers(product_data), standard),
+        Glazing_System_Thermal(get_thermal_layers(product_data),
                                gap_values,
                                width,
                                height,
@@ -175,9 +162,46 @@ namespace wincalc
                                shgc_environment)
     {}
 
+    Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
+      std::vector<OpticsParser::ProductData> const & product_data,
+      std::vector<Gap_Data> const & gap_values,
+      window_standards::Optical_Standard const & standard,
+      double width,
+      double height,
+      Environments const & u_environment,
+      Environments const & shgc_environment) :
+        Glazing_System_Optical(get_optical_layers(product_data), standard),
+        Glazing_System_Thermal(get_thermal_layers(product_data),
+                               gap_values,
+                               width,
+                               height,
+                               u_environment,
+                               shgc_environment)
+    {}
+
+#pragma warning(push)
+#pragma warning(disable : 4100)
     Thermal_Result Glazing_System_Thermal_And_Optical::shgc(double theta, double phi) const
     {
-        std::vector<double> calculated_absorptances;
-        return Glazing_System_Thermal::shgc(calculated_absorptances, theta, phi);
+        return calc_shgc(
+          optical_and_thermal_data(), gap_layers, standard, width, height, shgc_environment);
+    }
+    Thermal_Result Glazing_System_Thermal_And_Optical::u(double theta, double phi) const
+    {
+        return calc_u(
+          optical_and_thermal_data(), gap_layers, standard, width, height, u_environment);
+    }
+#pragma warning(pop)
+
+    std::vector<Product_Data_Optical_Thermal>
+      Glazing_System_Thermal_And_Optical::optical_and_thermal_data() const
+    {
+        std::vector<Product_Data_Optical_Thermal> layers;
+        for(size_t i = 0; i < solid_layers_optical.size(); ++i)
+        {
+            layers.push_back(
+              Product_Data_Optical_Thermal{solid_layers_optical[i], solid_layers_thermal[i]});
+        }
+        return layers;
     }
 }   // namespace wincalc
