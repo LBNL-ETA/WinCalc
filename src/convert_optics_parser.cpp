@@ -5,7 +5,7 @@ namespace wincalc
     wincalc::Wavelength_Data convert(OpticsParser::WLData const & wl_data)
     {
         return wincalc::Wavelength_Data{
-          wl_data.wavelength, wl_data.T, wl_data.frontR, wl_data.backR};
+          wl_data.wavelength, wl_data.T, wl_data.T, wl_data.frontR, wl_data.backR};
     }
 
     std::vector<wincalc::Wavelength_Data> convert(std::vector<OpticsParser::WLData> const & wl_data)
