@@ -16,7 +16,7 @@ namespace wincalc
       double phi) const
     {
         auto method = get_method(method_type);
-        return calc_all(solid_layers_optical, method);
+        return calc_all(solid_layers_optical, method, theta, phi);
     }
 
     WCE_Color_Results Glazing_System_Optical::color(double theta, double phi) const
@@ -27,7 +27,7 @@ namespace wincalc
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMY);
         window_standards::Optical_Standard_Method tristim_z =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMZ);
-        return calc_color(solid_layers_optical, tristim_x, tristim_y, tristim_z);
+        return calc_color(solid_layers_optical, tristim_x, tristim_y, tristim_z, theta, phi);
     }
 #pragma warning(pop)
 

@@ -62,9 +62,11 @@ namespace wincalc
     double calc_optical_property(MultiLayerOptics::CMultiPaneSpecular & layer,
                                  Calculated_Property_Choice property_choice,
                                  Side_Choice side_choice,
-                                 Scattering_Choice scattering_choice)
+                                 Scattering_Choice scattering_choice,
+                                 double theta,
+                                 double phi)
     {
-        return layer.getPropertySimple(property_choice, side_choice, scattering_choice);
+        return layer.getPropertySimple(property_choice, side_choice, scattering_choice, theta, phi);
     }
 
     WCE_Optical_Result_Absorptance<double>
@@ -82,12 +84,13 @@ namespace wincalc
         return absorptances;
     }
 
-    WCE_Optical_Results calc_all(MultiLayerOptics::CMultiPaneSpecular & layers)
+    WCE_Optical_Results
+      calc_all(MultiLayerOptics::CMultiPaneSpecular & layers, double theta, double phi)
     {
-        auto calc_f = [&layers](const FenestrationCommon::PropertySimple prop,
-                                const FenestrationCommon::Side side,
-                                const FenestrationCommon::Scattering scattering) {
-            return calc_optical_property(layers, prop, side, scattering);
+        auto calc_f = [=, &layers](const FenestrationCommon::PropertySimple prop,
+                                   const FenestrationCommon::Side side,
+                                   const FenestrationCommon::Scattering scattering) {
+            return calc_optical_property(layers, prop, side, scattering, theta, phi);
         };
 
         auto optical_results = do_calcs<double>(calc_f);
@@ -101,21 +104,25 @@ namespace wincalc
 
     WCE_Optical_Results
       calc_all(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-               window_standards::Optical_Standard_Method const & method)
+               window_standards::Optical_Standard_Method const & method,
+               double theta,
+               double phi)
     {
         auto layers = create_multi_pane_specular({product_data}, method);
 
-        return calc_all(*layers);
+        return calc_all(*layers, theta, phi);
     }
 
 
     WCE_Optical_Results
       calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-               window_standards::Optical_Standard_Method const & method)
+               window_standards::Optical_Standard_Method const & method,
+               double theta,
+               double phi)
     {
         auto layers = create_multi_pane_specular(product_data, method);
 
-        return calc_all(*layers);
+        return calc_all(*layers, theta, phi);
     }
 
     Color_Result
@@ -132,14 +139,14 @@ namespace wincalc
         return Color_Result(trichromatic, rgb, lab);
     }
 
-    WCE_Color_Results
-      calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props)
+    WCE_Color_Results calc_color_properties(
+      std::shared_ptr<SingleLayerOptics::ColorProperties> color_props, double theta, double phi)
     {
         auto calc_f =
-          [&color_props](const FenestrationCommon::PropertySimple prop,
-                         const FenestrationCommon::Side side,
-                         const FenestrationCommon::Scattering scattering) -> Color_Result {
-            return calc_color_properties(color_props, prop, side, scattering);
+          [=, &color_props](const FenestrationCommon::PropertySimple prop,
+                            const FenestrationCommon::Side side,
+                            const FenestrationCommon::Scattering scattering) -> Color_Result {
+            return calc_color_properties(color_props, prop, side, scattering, theta, phi);
         };
 
         return do_calcs<Color_Result>(calc_f);
@@ -150,7 +157,9 @@ namespace wincalc
       calc_color(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                  window_standards::Optical_Standard_Method const & method_x,
                  window_standards::Optical_Standard_Method const & method_y,
-                 window_standards::Optical_Standard_Method const & method_z)
+                 window_standards::Optical_Standard_Method const & method_z,
+                 double theta,
+                 double phi)
     {
         auto layer_x = create_multi_pane_specular(product_data, method_x);
         auto layer_y = create_multi_pane_specular(product_data, method_y);
@@ -196,7 +205,7 @@ namespace wincalc
                                                                                 wavelength_set);
 
 
-        return calc_color_properties(color_props);
+        return calc_color_properties(color_props, theta, phi);
     }
 
 
@@ -205,11 +214,14 @@ namespace wincalc
                             window_standards::Optical_Standard_Method const & method,
                             Calculated_Property_Choice property_choice,
                             Side_Choice side_choice,
-                            Scattering_Choice scattering_choice)
+                            Scattering_Choice scattering_choice,
+                            double theta,
+                            double phi)
     {
         auto layer = create_multi_pane_specular({product_data}, method);
 
-        return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
+        return calc_optical_property(
+          *layer, property_choice, side_choice, scattering_choice, theta, phi);
     }
 
     double calc_optical_property(
@@ -217,10 +229,13 @@ namespace wincalc
       window_standards::Optical_Standard_Method const & method,
       Calculated_Property_Choice property_choice,
       Side_Choice side_choice,
-      Scattering_Choice scattering_choice)
+      Scattering_Choice scattering_choice,
+      double theta,
+      double phi)
     {
         auto layer = create_multi_pane_specular(product_data, method);
 
-        return calc_optical_property(*layer, property_choice, side_choice, scattering_choice);
+        return calc_optical_property(
+          *layer, property_choice, side_choice, scattering_choice, theta, phi);
     }
 }   // namespace wincalc
