@@ -4,27 +4,6 @@
 
 namespace wincalc
 {
-#if 0
-    template<typename T>
-    struct WCE_Optical_Result_By_Transmittance
-    {
-        T tf;
-        T tb;
-        T rf;
-        T rb;
-		std::vector<T> absorptances_front;
-		std::vector<T> absorptances_back;
-    };
-
-
-    template<typename T>
-    struct WCE_Optical_Result
-    {
-        WCE_Optical_Result_By_Transmittance<T> direct_direct;
-        WCE_Optical_Result_By_Transmittance<T> direct_diffuse;
-        WCE_Optical_Result_By_Transmittance<T> diffuse_diffuse;
-    };
-#endif
 
     template<typename T>
     struct WCE_Optical_Result_Simple
@@ -37,8 +16,8 @@ namespace wincalc
     template<typename T>
     struct WCE_Optical_Result_Absorptance
     {
-        T direct;
-        T diffuse;
+        std::vector<T> direct;
+        std::vector<T> diffuse;
     };
 
     template<typename T>
@@ -48,10 +27,9 @@ namespace wincalc
         WCE_Optical_Result_Simple<T> tb;
         WCE_Optical_Result_Simple<T> rf;
         WCE_Optical_Result_Simple<T> rb;
-        std::vector<WCE_Optical_Result_Absorptance<T>> absorptances_front;
-        std::vector<WCE_Optical_Result_Absorptance<T>> absorptances_back;
+        WCE_Optical_Result_Absorptance<T> absorptances_front;
+        WCE_Optical_Result_Absorptance<T> absorptances_back;
     };
-
 
     using WCE_Optical_Results = WCE_Optical_Result_By_Side<double>;
 

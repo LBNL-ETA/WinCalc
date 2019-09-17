@@ -27,22 +27,6 @@ namespace wincalc
         return calc_result;
     }
 
-#if 0
-	template<>
-    WCE_Optical_Result_By_Side<Color_Result>
-      do_calc(std::function<Color_Result(const FenestrationCommon::PropertySimple prop,
-                              const FenestrationCommon::Side side)> const & f)
-    {
-        WCE_Optical_Result_By_Side<T> calc_result;
-        calc_result.tf = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front);
-        calc_result.tb = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back);
-        calc_result.rf = f(FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front);
-        calc_result.rb = f(FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back);
-
-        return calc_result;
-    }
-#endif
-
 
     template<typename T>
     WCE_Optical_Result_By_Side<T>
@@ -51,22 +35,7 @@ namespace wincalc
                                const FenestrationCommon::Scattering scattering)> const & f)
     {
         WCE_Optical_Result_By_Side<T> calc_result;
-#if 0
-        calc_result.direct_direct = do_calc<T>(
-          [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
-              return f(p, s, FenestrationCommon::Scattering::DirectDirect);
-          });
 
-        calc_result.direct_diffuse = do_calc<T>(
-          [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
-              return f(p, s, FenestrationCommon::Scattering::DirectDiffuse);
-          });
-
-        calc_result.diffuse_diffuse = do_calc<T>(
-          [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
-              return f(p, s, FenestrationCommon::Scattering::DiffuseDiffuse);
-          });
-#endif
         calc_result.tf = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
             return f(
               FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
@@ -98,34 +67,45 @@ namespace wincalc
         return layer.getPropertySimple(property_choice, side_choice, scattering_choice);
     }
 
-#if 0
-    WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data,
-                               window_standards::Optical_Standard_Method const & method)
+    WCE_Optical_Result_Absorptance<double>
+      get_layer_absorptances(MultiLayerOptics::CMultiPaneSpecular & layers,
+                             FenestrationCommon::Side side_choice,
+                             double theta = 0,
+                             double phi = 0)
     {
-        auto layer = create_multi_pane_specular({product_data}, method);
+        WCE_Optical_Result_Absorptance<double> absorptances;
+        absorptances.direct = layers.getAbsorptanceLayers(
+          side_choice, FenestrationCommon::ScatteringSimple::Direct, theta, phi);
+        absorptances.diffuse = layers.getAbsorptanceLayers(
+          side_choice, FenestrationCommon::ScatteringSimple::Diffuse, theta, phi);
 
-        auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
-                               const FenestrationCommon::Side side,
-                               const FenestrationCommon::Scattering scattering) {
-            return calc_optical_property(*layer, prop, side, scattering);
+        return absorptances;
+    }
+
+    WCE_Optical_Results calc_all(MultiLayerOptics::CMultiPaneSpecular & layers)
+    {
+        auto calc_f = [&layers](const FenestrationCommon::PropertySimple prop,
+                                const FenestrationCommon::Side side,
+                                const FenestrationCommon::Scattering scattering) {
+            return calc_optical_property(layers, prop, side, scattering);
         };
 
-        return do_calcs<double>(calc_f);
+        auto optical_results = do_calcs<double>(calc_f);
+        optical_results.absorptances_front =
+          get_layer_absorptances(layers, FenestrationCommon::Side::Front);
+        optical_results.absorptances_back =
+          get_layer_absorptances(layers, FenestrationCommon::Side::Back);
+        return optical_results;
     }
-#endif
+
+
     WCE_Optical_Results
       calc_all(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                               window_standards::Optical_Standard_Method const & method)
+               window_standards::Optical_Standard_Method const & method)
     {
-        auto layer = create_multi_pane_specular({product_data}, method);
+        auto layers = create_multi_pane_specular({product_data}, method);
 
-        auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
-                               const FenestrationCommon::Side side,
-                               const FenestrationCommon::Scattering scattering) {
-            return calc_optical_property(*layer, prop, side, scattering);
-        };
-
-        return do_calcs<double>(calc_f);
+        return calc_all(*layers);
     }
 
 
@@ -133,15 +113,9 @@ namespace wincalc
       calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                window_standards::Optical_Standard_Method const & method)
     {
-        auto layer = create_multi_pane_specular(product_data, method);
+        auto layers = create_multi_pane_specular(product_data, method);
 
-        auto calc_f = [&layer](const FenestrationCommon::PropertySimple prop,
-                               const FenestrationCommon::Side side,
-                               const FenestrationCommon::Scattering scattering) {
-            return calc_optical_property(*layer, prop, side, scattering);
-        };
-
-        return do_calcs<double>(calc_f);
+        return calc_all(*layers);
     }
 
     Color_Result

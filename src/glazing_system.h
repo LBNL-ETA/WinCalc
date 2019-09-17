@@ -52,25 +52,6 @@ namespace wincalc
         /* may have the same square matrix results for color in the future*/
     };
 
-#if 0
-    std::unique_ptr<Glazing_System_Interface> glazing_system_factory(
-      std::vector<some_other_product_data_format> const & products /*some stuff*/)
-    {}
-
-    std::unique_ptr<Glazing_System_Interface>
-      glazing_system_factory(std::vector<OpticsParser::ProductData> const & products
-                             /*some stuff*/)
-    {}
-
-    std::unique_ptr<BSDF_Glazing_System_Interface> bsdf_glazing_system_factory(
-      std::vector<OpticsParser::ProductData> const & products /*some stuff*/)
-    {}
-
-    std::unique_ptr<BSDF_Glazing_System_Interface> bsdf_glazing_system_factory(
-      std::vector<some_other_product_data_format> const & products /*some stuff*/)
-    {}
-#endif
-
     struct Glazing_System_Optical : Glazing_System_Optical_Interface
     {
         Glazing_System_Optical(
@@ -138,15 +119,6 @@ namespace wincalc
 
     protected:
         std::vector<Product_Data_Optical_Thermal> optical_and_thermal_data() const;
-#if 0
-        std::vector<Product_Data_Thermal_Optical> product_data;
-        std::vector<Gap_Data> const & gap_values;
-        window_standards::Optical_Standard standard;
-        double width;
-        double height;
-        Environments u_environment;
-        Environments shgc_environment;
-#endif
     };
 }   // namespace wincalc
 #endif

@@ -67,6 +67,10 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(solar_results.tb.diffuse_diffuse, 0.75334651440609124, 1e-14);
     EXPECT_NEAR(solar_results.rf.diffuse_diffuse, 0.13582105577994347, 1e-14);
     EXPECT_NEAR(solar_results.rb.diffuse_diffuse, 0.13591418999379981, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_front.direct[0], 0.091386111722449287, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_front.diffuse[0], 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_back.direct[0], 0.091386111722449287, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_back.diffuse[0], 0.0, 1e-14);
 
     WCE_Optical_Results photopic_results = glazing_system.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
