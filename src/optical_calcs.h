@@ -23,13 +23,13 @@ namespace wincalc
       Side_Choice side_choice,
       Scattering_Choice scattering_choice);
 
-    WCE_Simple_Result calc_all(std::shared_ptr<Product_Data_Optical> const & product_data,
+    WCE_Optical_Results calc_all(std::shared_ptr<Product_Data_Optical> const & product_data,
                                window_standards::Optical_Standard_Method const & method);
-    WCE_Simple_Result
+    WCE_Optical_Results
       calc_all(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
                window_standards::Optical_Standard_Method const & method);
 
-    WCE_Color_Result
+    WCE_Color_Results
       calc_color(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
                  window_standards::Optical_Standard_Method const & method_x,
                  window_standards::Optical_Standard_Method const & method_y,

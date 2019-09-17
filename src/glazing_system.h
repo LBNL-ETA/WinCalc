@@ -16,12 +16,12 @@ namespace wincalc
     {
         Glazing_System_Optical_Interface(window_standards::Optical_Standard const & standard);
 
-        virtual WCE_Simple_Result
+        virtual WCE_Optical_Results
           all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
                             double theta = 0,
                             double phi = 0) const = 0;
 
-        virtual WCE_Color_Result color(double theta = 0, double phi = 0) const = 0;
+        virtual WCE_Color_Results color(double theta = 0, double phi = 0) const = 0;
 
         void optical_standard(window_standards::Optical_Standard const & s);
         window_standards::Optical_Standard optical_standard();
@@ -77,12 +77,12 @@ namespace wincalc
           std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
           window_standards::Optical_Standard const & standard);
 
-        WCE_Simple_Result
+        WCE_Optical_Results
           all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
                             double theta = 0,
                             double phi = 0) const override;
 
-        WCE_Color_Result color(double theta = 0, double phi = 0) const override;
+        WCE_Color_Results color(double theta = 0, double phi = 0) const override;
 
     protected:
         std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> solid_layers_optical;

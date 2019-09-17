@@ -4,6 +4,7 @@
 
 namespace wincalc
 {
+#if 0
     template<typename T>
     struct WCE_Optical_Result_By_Transmittance
     {
@@ -11,6 +12,8 @@ namespace wincalc
         T tb;
         T rf;
         T rb;
+		std::vector<T> absorptances_front;
+		std::vector<T> absorptances_back;
     };
 
 
@@ -21,8 +24,36 @@ namespace wincalc
         WCE_Optical_Result_By_Transmittance<T> direct_diffuse;
         WCE_Optical_Result_By_Transmittance<T> diffuse_diffuse;
     };
+#endif
 
-    using WCE_Simple_Result = WCE_Optical_Result<double>;
+    template<typename T>
+    struct WCE_Optical_Result_Simple
+    {
+        T direct_direct;
+        T direct_diffuse;
+        T diffuse_diffuse;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_Absorptance
+    {
+        T direct;
+        T diffuse;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_By_Side
+    {
+        WCE_Optical_Result_Simple<T> tf;
+        WCE_Optical_Result_Simple<T> tb;
+        WCE_Optical_Result_Simple<T> rf;
+        WCE_Optical_Result_Simple<T> rb;
+        std::vector<WCE_Optical_Result_Absorptance<T>> absorptances_front;
+        std::vector<WCE_Optical_Result_Absorptance<T>> absorptances_back;
+    };
+
+
+    using WCE_Optical_Results = WCE_Optical_Result_By_Side<double>;
 
     struct Trichromatic
     {
@@ -74,7 +105,16 @@ namespace wincalc
         Lab lab;
     };
 
-    using WCE_Color_Result = WCE_Optical_Result<Color_Result>;
+    template<>
+    struct WCE_Optical_Result_By_Side<Color_Result>
+    {
+        WCE_Optical_Result_Simple<Color_Result> tf;
+        WCE_Optical_Result_Simple<Color_Result> tb;
+        WCE_Optical_Result_Simple<Color_Result> rf;
+        WCE_Optical_Result_Simple<Color_Result> rb;
+    };
+
+    using WCE_Color_Results = WCE_Optical_Result_By_Side<Color_Result>;
 
 }   // namespace wincalc
 

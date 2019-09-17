@@ -13,15 +13,27 @@
 #include "create_wce_objects.h"
 
 
-
 namespace wincalc
 {
     template<typename T>
-    WCE_Optical_Result_By_Transmittance<T>
-      do_calc(std::function<T(const FenestrationCommon::PropertySimple prop,
+    WCE_Optical_Result_Simple<T>
+      do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> const & f)
+    {
+        WCE_Optical_Result_Simple<T> calc_result;
+        calc_result.direct_direct = f(FenestrationCommon::Scattering::DirectDirect);
+        calc_result.direct_diffuse = f(FenestrationCommon::Scattering::DirectDiffuse);
+        calc_result.diffuse_diffuse = f(FenestrationCommon::Scattering::DiffuseDiffuse);
+
+        return calc_result;
+    }
+
+#if 0
+	template<>
+    WCE_Optical_Result_By_Side<Color_Result>
+      do_calc(std::function<Color_Result(const FenestrationCommon::PropertySimple prop,
                               const FenestrationCommon::Side side)> const & f)
     {
-        WCE_Optical_Result_By_Transmittance<T> calc_result;
+        WCE_Optical_Result_By_Side<T> calc_result;
         calc_result.tf = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front);
         calc_result.tb = f(FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back);
         calc_result.rf = f(FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front);
@@ -29,14 +41,17 @@ namespace wincalc
 
         return calc_result;
     }
+#endif
+
 
     template<typename T>
-    WCE_Optical_Result<T>
+    WCE_Optical_Result_By_Side<T>
       do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
                                const FenestrationCommon::Side side,
                                const FenestrationCommon::Scattering scattering)> const & f)
     {
-        WCE_Optical_Result<T> calc_result;
+        WCE_Optical_Result_By_Side<T> calc_result;
+#if 0
         calc_result.direct_direct = do_calc<T>(
           [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
               return f(p, s, FenestrationCommon::Scattering::DirectDirect);
@@ -51,6 +66,27 @@ namespace wincalc
           [&f](const FenestrationCommon::PropertySimple p, const FenestrationCommon::Side s) {
               return f(p, s, FenestrationCommon::Scattering::DiffuseDiffuse);
           });
+#endif
+        calc_result.tf = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+            return f(
+              FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
+        });
+
+        calc_result.tb = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+            return f(
+              FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back, scattering);
+        });
+
+        calc_result.rf = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+            return f(
+              FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front, scattering);
+        });
+
+        calc_result.rb = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+            return f(
+              FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back, scattering);
+        });
+
         return calc_result;
     }
 
@@ -62,7 +98,7 @@ namespace wincalc
         return layer.getPropertySimple(property_choice, side_choice, scattering_choice);
     }
 
-	#if 0
+#if 0
     WCE_Simple_Result calc_all(OpticsParser::ProductData const & product_data,
                                window_standards::Optical_Standard_Method const & method)
     {
@@ -77,7 +113,7 @@ namespace wincalc
         return do_calcs<double>(calc_f);
     }
 #endif
-    WCE_Simple_Result
+    WCE_Optical_Results
       calc_all(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                                window_standards::Optical_Standard_Method const & method)
     {
@@ -93,10 +129,9 @@ namespace wincalc
     }
 
 
-
-    WCE_Simple_Result
+    WCE_Optical_Results
       calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-                               window_standards::Optical_Standard_Method const & method)
+               window_standards::Optical_Standard_Method const & method)
     {
         auto layer = create_multi_pane_specular(product_data, method);
 
@@ -123,7 +158,7 @@ namespace wincalc
         return Color_Result(trichromatic, rgb, lab);
     }
 
-    WCE_Color_Result
+    WCE_Color_Results
       calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props)
     {
         auto calc_f =
@@ -137,11 +172,11 @@ namespace wincalc
     }
 
 
-    WCE_Color_Result
+    WCE_Color_Results
       calc_color(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-                                window_standards::Optical_Standard_Method const & method_x,
-                                window_standards::Optical_Standard_Method const & method_y,
-                                window_standards::Optical_Standard_Method const & method_z)
+                 window_standards::Optical_Standard_Method const & method_x,
+                 window_standards::Optical_Standard_Method const & method_y,
+                 window_standards::Optical_Standard_Method const & method_z)
     {
         auto layer_x = create_multi_pane_specular(product_data, method_x);
         auto layer_y = create_multi_pane_specular(product_data, method_y);
@@ -193,10 +228,10 @@ namespace wincalc
 
     double
       calc_optical_property(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                                 window_standards::Optical_Standard_Method const & method,
-                                 Calculated_Property_Choice property_choice,
-                                 Side_Choice side_choice,
-                                 Scattering_Choice scattering_choice)
+                            window_standards::Optical_Standard_Method const & method,
+                            Calculated_Property_Choice property_choice,
+                            Side_Choice side_choice,
+                            Scattering_Choice scattering_choice)
     {
         auto layer = create_multi_pane_specular({product_data}, method);
 
@@ -205,10 +240,10 @@ namespace wincalc
 
     double calc_optical_property(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-                                 window_standards::Optical_Standard_Method const & method,
-                                 Calculated_Property_Choice property_choice,
-                                 Side_Choice side_choice,
-                                 Scattering_Choice scattering_choice)
+      window_standards::Optical_Standard_Method const & method,
+      Calculated_Property_Choice property_choice,
+      Side_Choice side_choice,
+      Scattering_Choice scattering_choice)
     {
         auto layer = create_multi_pane_specular(product_data, method);
 

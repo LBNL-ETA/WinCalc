@@ -38,7 +38,7 @@ namespace wincalc
 
 #pragma warning(push)
 #pragma warning(disable : 4100)
-    WCE_Simple_Result Glazing_System_Optical::all_method_values(
+    WCE_Optical_Results Glazing_System_Optical::all_method_values(
       window_standards::Optical_Standard_Method_Type const & method_type,
       double theta,
       double phi) const
@@ -47,7 +47,7 @@ namespace wincalc
         return calc_all(solid_layers_optical, method);
     }
 
-    WCE_Color_Result Glazing_System_Optical::color(double theta, double phi) const
+    WCE_Color_Results Glazing_System_Optical::color(double theta, double phi) const
     {
         window_standards::Optical_Standard_Method tristim_x =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMX);
