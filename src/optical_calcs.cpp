@@ -95,9 +95,9 @@ namespace wincalc
 
         auto optical_results = do_calcs<double>(calc_f);
         optical_results.absorptances_front =
-          get_layer_absorptances(layers, FenestrationCommon::Side::Front);
+          get_layer_absorptances(layers, FenestrationCommon::Side::Front, theta, phi);
         optical_results.absorptances_back =
-          get_layer_absorptances(layers, FenestrationCommon::Side::Back);
+          get_layer_absorptances(layers, FenestrationCommon::Side::Back, theta, phi);
         return optical_results;
     }
 
