@@ -498,7 +498,9 @@ namespace wincalc
         type_to_wce_type[Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
         type_to_wce_type[Gas_Type::XENON] = Gases::GasDef::Xenon;
 
-        return Engine_Gap_Info{type_to_wce_type.at(data.gas), data.thickness};
+		auto gas = Gases::Gas::intance().get(type_to_wce_type.at(data.gas));
+
+        return Engine_Gap_Info{gas, data.thickness};
     }
 
     std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data)
