@@ -96,11 +96,11 @@ namespace wincalc
         Environments u_environment;
         Environments shgc_environment;
 
-        Thermal_Result u(double theta, double phi) const;
+        Thermal_Result u(double theta = 0, double phi = 0) const;
         Thermal_Result shgc(std::vector<double> const & absorptances_front,
                             double theta = 0,
                             double phi = 0) const override;
-        Thermal_Result shgc(double theta, double phi) const override;
+        Thermal_Result shgc(double theta = 0, double phi = 0) const override;
     };
 
     struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
