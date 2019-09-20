@@ -18,11 +18,7 @@
 
 namespace wincalc
 {
-    struct Engine_Gap_Info
-    {
-        Gases::GasDef gas;
-        double thickness;
-    };
+    
 
     enum class Spectal_Data_Wavelength_Range_Method
     {

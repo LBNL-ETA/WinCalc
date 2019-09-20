@@ -28,28 +28,28 @@ namespace wincalc
                          Environments const & environments);
 
     Thermal_Result calc_u(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
-                          std::vector<Gap_Data> const & gap_values,
+                          std::vector<Engine_Gap_Info> const & gap_values,
                           window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
                           Environments const & environments);
 
     Thermal_Result calc_shgc(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
-                             std::vector<Gap_Data> const & gap_values,
+                             std::vector<Engine_Gap_Info> const & gap_values,
                              window_standards::Optical_Standard const & standard,
                              double width,
                              double height,
                              Environments const & environments);
 
     Thermal_Result calc_u(std::vector<OpticsParser::ProductData> const & products,
-                          std::vector<Gap_Data> const & gap_values,
+                          std::vector<Engine_Gap_Info> const & gap_values,
                           window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
                           Environments const & environments);
 
     Thermal_Result calc_shgc(std::vector<OpticsParser::ProductData> const & products,
-                             std::vector<Gap_Data> const & gap_values,
+                             std::vector<Engine_Gap_Info> const & gap_values,
                              window_standards::Optical_Standard const & standard,
                              double width,
                              double height,

@@ -7,7 +7,6 @@
 
 namespace wincalc
 {
-
 #pragma warning(push)
 #pragma warning(disable : 4100)
     WCE_Optical_Results Glazing_System_Optical::all_method_values(
@@ -69,6 +68,21 @@ namespace wincalc
       Environments const & u_environment,
       Environments const & shgc_environment) :
         solid_layers_thermal(products),
+        gap_layers(convert(gap_layers)),
+        width(width),
+        height(height),
+        u_environment(u_environment),
+        shgc_environment(shgc_environment)
+    {}
+
+	Glazing_System_Thermal::Glazing_System_Thermal(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
+      std::vector<Engine_Gap_Info> const & gap_layers,
+      double width,
+      double height,
+      Environments const & u_environment,
+      Environments const & shgc_environment) :
+        solid_layers_thermal(products),
         gap_layers(gap_layers),
         width(width),
         height(height),
@@ -113,7 +127,8 @@ namespace wincalc
     Glazing_System_Optical::Glazing_System_Optical(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
       window_standards::Optical_Standard const & standard) :
-        Glazing_System_Optical_Interface(standard), solid_layers_optical(solid_layers)
+        Glazing_System_Optical_Interface(standard),
+        solid_layers_optical(solid_layers)
     {}
 
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <OpticsParser.hpp>
 #include <windows_standards/windows_standard.h>
+#include <WCEGases.hpp>
 #include "gap.h"
 #include "thermal_results.h"
 #include "optical_results.h"
@@ -79,7 +80,15 @@ namespace wincalc
           Environments const & u_environment = nfrc_u_environments(),
           Environments const & shgc_environment = nfrc_shgc_environments());
 
-        std::vector<Gap_Data> gap_layers;
+		Glazing_System_Thermal(
+          std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
+          std::vector<Engine_Gap_Info> const & gap_layers,
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & u_environment = nfrc_u_environments(),
+          Environments const & shgc_environment = nfrc_shgc_environments());
+
+        std::vector<Engine_Gap_Info> gap_layers;
         std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
         double width;
         double height;

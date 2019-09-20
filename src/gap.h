@@ -18,5 +18,11 @@ namespace wincalc
         Gas_Type gas;
         double thickness;
     };
+
+	struct Engine_Gap_Info
+    {
+        Gases::GasDef gas;
+        double thickness;
+    };
 }   // namespace wincalc
 #endif

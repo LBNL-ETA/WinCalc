@@ -4,8 +4,9 @@
 #include <memory>
 #include <iostream>
 #include <filesystem>
+#include <OpticsParser.hpp>
 
-#include "thermal_calcs_from_measured_data_source.h"
+#include "thermal_calcs.h"
 #include "paths.h"
 #include "environmental_conditions.h"
 
@@ -31,7 +32,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_optics)
     OpticsParser::ProductData clear_3 = parser.parseFile(clear_3_path.string());
     products.push_back(clear_3);
 
-    std::vector<Gap_Data> gaps;
+    std::vector<Engine_Gap_Info> gaps;
 
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
@@ -64,8 +65,7 @@ TEST_F(TestCalcFromDisk, Test_NFRC_102_102_optics)
     products.push_back(clear_3);
 
     Gap_Data air_gap{Gas_Type::AIR, 0.0127};
-    std::vector<Gap_Data> gaps;
-    gaps.push_back(air_gap);
+    std::vector<Engine_Gap_Info> gaps = convert({air_gap});    
 
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";

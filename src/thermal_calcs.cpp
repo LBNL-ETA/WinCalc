@@ -53,11 +53,11 @@ namespace wincalc
 
     Thermal_Result
       calc_u_iso15099(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                                   std::vector<Engine_Gap_Info> const & gaps,
-                                   double width,
-                                   double height,
-                                   window_standards::Optical_Standard const & standard,
-                                   Environments const & environments)
+                      std::vector<Engine_Gap_Info> const & gaps,
+                      double width,
+                      double height,
+                      window_standards::Optical_Standard const & standard,
+                      Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
         double u = calc_u_iso15099(igu_info.igu, environments);
@@ -66,41 +66,39 @@ namespace wincalc
 
     Thermal_Result
       calc_shgc_iso15099(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                                      std::vector<Engine_Gap_Info> const & gaps,
-                                      double width,
-                                      double height,
-                                      window_standards::Optical_Standard const & standard,
-                                      Environments const & environments)
+                         std::vector<Engine_Gap_Info> const & gaps,
+                         double width,
+                         double height,
+                         window_standards::Optical_Standard const & standard,
+                         Environments const & environments)
     {
         IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
         double shgc = calc_shgc_iso15099(igu_info.igu, igu_info.t_sol, environments);
         return assemble_thermal_result(shgc, igu_info);
     }
 
-	Thermal_Result calc_u(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
-                          std::vector<Gap_Data> const & gap_values,
+    Thermal_Result calc_u(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
+                          std::vector<Engine_Gap_Info> const & gap_values,
                           window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
                           Environments const & environments)
     {
-        std::vector<Engine_Gap_Info> gaps = convert(gap_values);
-        return calc_u_iso15099(products, gaps, width, height, standard, environments);
+        return calc_u_iso15099(products, gap_values, width, height, standard, environments);
     }
 
     Thermal_Result calc_shgc(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
-                             std::vector<Gap_Data> const & gap_values,
+                             std::vector<Engine_Gap_Info> const & gap_values,
                              window_standards::Optical_Standard const & standard,
                              double width,
                              double height,
                              Environments const & environments)
     {
-        std::vector<Engine_Gap_Info> gaps = convert(gap_values);
-        return calc_shgc_iso15099(products, gaps, width, height, standard, environments);
+        return calc_shgc_iso15099(products, gap_values, width, height, standard, environments);
     }
 
     Thermal_Result calc_u(std::vector<OpticsParser::ProductData> const & products,
-                          std::vector<Gap_Data> const & gap_values,
+                          std::vector<Engine_Gap_Info> const & gap_values,
                           window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
@@ -111,7 +109,7 @@ namespace wincalc
     }
 
     Thermal_Result calc_shgc(std::vector<OpticsParser::ProductData> const & products,
-                             std::vector<Gap_Data> const & gap_values,
+                             std::vector<Engine_Gap_Info> const & gap_values,
                              window_standards::Optical_Standard const & standard,
                              double width,
                              double height,

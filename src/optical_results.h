@@ -4,13 +4,13 @@
 
 namespace wincalc
 {
-
     template<typename T>
     struct WCE_Optical_Result_Simple
     {
         T direct_direct;
         T direct_diffuse;
         T diffuse_diffuse;
+        T hemispherical;
     };
 
     template<typename T>
@@ -18,6 +18,7 @@ namespace wincalc
     {
         std::vector<T> direct;
         std::vector<T> diffuse;
+        std::vector<T> hemispherical;
     };
 
     template<typename T>
@@ -81,6 +82,14 @@ namespace wincalc
         Trichromatic trichromatic;
         WinCalc_RGB rgb;
         Lab lab;
+    };
+
+    template<>
+    struct WCE_Optical_Result_Simple<Color_Result>
+    {
+        Color_Result direct_direct;
+        Color_Result direct_diffuse;
+        Color_Result diffuse_diffuse;
     };
 
     template<>
