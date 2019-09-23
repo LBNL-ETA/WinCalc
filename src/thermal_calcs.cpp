@@ -6,10 +6,14 @@
 #include <WCEGases.hpp>
 #include <WCETarcog.hpp>
 
-#include "create_wce_objects.h"
 #include "thermal_calcs.h"
+
+#include "create_wce_objects.h"
+
 #include "environmental_conditions.h"
 #include "convert_optics_parser.h"
+#include "util.h"
+#include "optical_calcs.h"
 
 namespace wincalc
 {
@@ -51,40 +55,81 @@ namespace wincalc
         return Thermal_Result{result, t_sol, layer_solar_absorptances};
     }
 
-    Thermal_Result
-      calc_u_iso15099(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                      std::vector<Engine_Gap_Info> const & gaps,
-                      double width,
-                      double height,
-                      window_standards::Optical_Standard const & standard,
-                      Environments const & environments)
+    double calc_u_iso15099(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & solid_layers,
+      std::vector<double> const & layer_solar_absorptances,
+      std::vector<Engine_Gap_Info> const & gaps,
+      double width,
+      double height,
+      Environments const & environments)
     {
-        IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-        double u = calc_u_iso15099(igu_info.igu, environments);
-        return assemble_thermal_result(u, igu_info);
+        auto igu = create_igu(solid_layers, layer_solar_absorptances, gaps, width, height);
+        return calc_u_iso15099(igu, environments);
     }
 
-    Thermal_Result
-      calc_shgc_iso15099(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                         std::vector<Engine_Gap_Info> const & gaps,
-                         double width,
-                         double height,
-                         window_standards::Optical_Standard const & standard,
-                         Environments const & environments)
+    double calc_shgc_iso15099(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & solid_layers,
+      std::vector<double> const & layer_solar_absorptances,
+      std::vector<Engine_Gap_Info> const & gaps,
+      double solar_transmittance,
+      double width,
+      double height,
+      Environments const & environments)
     {
-        IGU_Info igu_info = create_igu(layers, gaps, width, height, standard);
-        double shgc = calc_shgc_iso15099(igu_info.igu, igu_info.t_sol, environments);
-        return assemble_thermal_result(shgc, igu_info);
+        auto igu = create_igu(solid_layers, layer_solar_absorptances, gaps, width, height);
+        return calc_shgc_iso15099(igu, solar_transmittance, environments);
     }
+
+	double calc_u(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & solid_layers,
+		std::vector<double> const & layer_solar_absorptances,
+		std::vector<Engine_Gap_Info> const & gap_values,
+		double width,
+		double height,
+		Environments const & environments)
+	{
+            return calc_u_iso15099(
+              solid_layers, layer_solar_absorptances, gap_values, width, height, environments);
+	}
+
+	double calc_shgc(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & solid_layers,
+		std::vector<double> const & layer_solar_absorptances,
+		std::vector<Engine_Gap_Info> const & gap_values,
+		double solar_transmittance,
+		double width,
+		double height,
+		Environments const & environments)
+	{
+            return calc_shgc_iso15099(solid_layers,
+                               layer_solar_absorptances,
+                               gap_values,
+                               solar_transmittance,
+                               width,
+                               height,
+                               environments);
+	}
 
     Thermal_Result calc_u(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
                           std::vector<Engine_Gap_Info> const & gap_values,
                           window_standards::Optical_Standard const & standard,
                           double width,
                           double height,
-                          Environments const & environments)
+                          Environments const & environments,
+                          double theta,
+                          double phi)
     {
-        return calc_u_iso15099(products, gap_values, width, height, standard, environments);
+        auto optical_results = optical_results_needed_for_thermal_calcs(
+          get_optical_layers(products), standard, theta, phi);
+
+        double result = calc_u(get_thermal_layers(products),
+                                   optical_results.layer_solar_absorptances,
+                                   gap_values,
+                                   width,
+                                   height,
+                                   environments);
+
+		return Thermal_Result{result,
+                              optical_results.total_solar_transmittance,
+                              optical_results.layer_solar_absorptances};
     }
 
     Thermal_Result calc_shgc(std::vector<wincalc::Product_Data_Optical_Thermal> const & products,
@@ -92,9 +137,24 @@ namespace wincalc
                              window_standards::Optical_Standard const & standard,
                              double width,
                              double height,
-                             Environments const & environments)
+                             Environments const & environments,
+                             double theta,
+                             double phi)
     {
-        return calc_shgc_iso15099(products, gap_values, width, height, standard, environments);
+        auto optical_results = optical_results_needed_for_thermal_calcs(
+          get_optical_layers(products), standard, theta, phi);
+
+        double result = calc_shgc(get_thermal_layers(products),
+                                         optical_results.layer_solar_absorptances,
+                                         gap_values,
+                                         optical_results.total_solar_transmittance,
+                                         width,
+                                         height,
+                                         environments);
+
+        return Thermal_Result{result,
+                              optical_results.total_solar_transmittance,
+                              optical_results.layer_solar_absorptances};
     }
 
     Thermal_Result calc_u(std::vector<OpticsParser::ProductData> const & products,

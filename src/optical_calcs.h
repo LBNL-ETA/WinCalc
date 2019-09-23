@@ -9,6 +9,18 @@
 
 namespace wincalc
 {
+    struct Optical_Results_Needed_For_Thermal_Calcs
+    {
+        double total_solar_transmittance;
+        std::vector<double> layer_solar_absorptances;
+    };
+
+	Optical_Results_Needed_For_Thermal_Calcs optical_results_needed_for_thermal_calcs(
+      std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
+      window_standards::Optical_Standard const & standard,
+      double theta = 0,
+      double phi = 0);
+
     double calc_optical_property(std::shared_ptr<Product_Data_Optical> const & product_data,
                                  window_standards::Optical_Standard_Method const & method,
                                  Calculated_Property_Choice property_choice,

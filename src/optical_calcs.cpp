@@ -11,7 +11,7 @@
 
 #include "optical_calcs.h"
 #include "create_wce_objects.h"
-
+#include "util.h"
 
 namespace wincalc
 {
@@ -208,6 +208,30 @@ namespace wincalc
         return calc_color_properties(color_props, theta, phi);
     }
 
+
+    Optical_Results_Needed_For_Thermal_Calcs optical_results_needed_for_thermal_calcs(
+      std::vector<std::shared_ptr<Product_Data_Optical>> const & solid_layers,
+      window_standards::Optical_Standard const & standard,
+      double theta,
+      double phi)
+    {
+        auto solar_method =
+          standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
+
+        auto multi_pane_specular = create_multi_pane_specular(solid_layers, solar_method);
+
+        double t_sol =
+          multi_pane_specular->getPropertySimple(FenestrationCommon::PropertySimple::T,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::Scattering::DirectDirect,
+                                                 theta,
+                                                 phi);
+
+        std::vector<double> layer_absorptances = multi_pane_specular->getAbsorptanceLayers(
+          FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct, theta, phi);
+
+        return Optical_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
+    }
 
     double
       calc_optical_property(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,

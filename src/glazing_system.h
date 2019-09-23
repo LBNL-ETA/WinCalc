@@ -25,7 +25,7 @@ namespace wincalc
         virtual WCE_Color_Results color(double theta = 0, double phi = 0) const = 0;
 
         void optical_standard(window_standards::Optical_Standard const & s);
-        window_standards::Optical_Standard optical_standard();
+        window_standards::Optical_Standard optical_standard() const;
 
     protected:
         window_standards::Optical_Standard standard;
@@ -36,11 +36,12 @@ namespace wincalc
 
     struct Glazing_System_Thermal_Interface
     {
-        virtual Thermal_Result u(double theta = 0, double phi = 0) const = 0;
-        virtual Thermal_Result shgc(std::vector<double> const & absorptances,
+        virtual double u(double theta = 0, double phi = 0) const = 0;
+        virtual double
+        shgc(std::vector<double> const & absorptances,
+                                    double total_solar_transmittance,
                                     double theta = 0,
                                     double phi = 0) const = 0;
-        virtual Thermal_Result shgc(double theta = 0, double phi = 0) const = 0;
     };
 
     struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
@@ -96,11 +97,11 @@ namespace wincalc
         Environments u_environment;
         Environments shgc_environment;
 
-        Thermal_Result u(double theta = 0, double phi = 0) const;
-        Thermal_Result shgc(std::vector<double> const & absorptances_front,
+        double u(double theta = 0, double phi = 0) const;
+        double shgc(std::vector<double> const & absorptances_front,
+                            double total_solar_transmittance,
                             double theta = 0,
-                            double phi = 0) const override;
-        Thermal_Result shgc(double theta = 0, double phi = 0) const override;
+                            double phi = 0) const override;        
     };
 
     struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
@@ -123,8 +124,8 @@ namespace wincalc
           Environments const & u_environment = nfrc_u_environments(),
           Environments const & shgc_environment = nfrc_shgc_environments());
 
-        Thermal_Result shgc(double theta = 0, double phi = 0) const;
-        Thermal_Result u(double theta = 0, double phi = 0) const;
+        double shgc(double theta = 0, double phi = 0) const;
+
 
     protected:
         std::vector<Product_Data_Optical_Thermal> optical_and_thermal_data() const;

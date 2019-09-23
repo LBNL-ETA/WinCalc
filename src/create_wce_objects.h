@@ -18,8 +18,6 @@
 
 namespace wincalc
 {
-    
-
     enum class Spectal_Data_Wavelength_Range_Method
     {
         FULL,
@@ -100,11 +98,18 @@ namespace wincalc
         double t_sol;
     };
 
-    IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                        std::vector<Engine_Gap_Info> const & gaps,
-                        double width,
-                        double height,
-                        window_standards::Optical_Standard const & standard);
+    Tarcog::ISO15099::CIGU
+      create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & layers,
+                 std::vector<double> const & layer_absorptance,
+                 std::vector<Engine_Gap_Info> const & gaps,
+                 double width,
+                 double height);
+
+        IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                            std::vector<Engine_Gap_Info> const & gaps,
+                            double width,
+                            double height,
+                            window_standards::Optical_Standard const & standard);
 
     IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
                         std::vector<Engine_Gap_Info> const & gaps,

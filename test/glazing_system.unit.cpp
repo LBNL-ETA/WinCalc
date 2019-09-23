@@ -42,15 +42,15 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
 
     Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
-    Thermal_Result u_result = glazing_system.u();
-    EXPECT_NEAR(u_result.result, 5.9125145552954441, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.83384927443226908, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
+    auto u_result = glazing_system.u();
+    EXPECT_NEAR(u_result, 5.9125145552954441, 1e-14);
+//    EXPECT_NEAR(u_result.t_sol, 0.83384927443226908, 1e-14);
+//    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
-    Thermal_Result shgc_result = glazing_system.shgc();
-    EXPECT_NEAR(shgc_result.result, 0.86063405690810812, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.83384927443226908, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
+    auto shgc_result = glazing_system.shgc();
+    EXPECT_NEAR(shgc_result, 0.86063405690810812, 1e-14);
+//    EXPECT_NEAR(shgc_result.t_sol, 0.83384927443226908, 1e-14);
+//    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
     WCE_Optical_Results solar_results =
       glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
@@ -297,15 +297,15 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
 
     Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
-    Thermal_Result u_result = glazing_system.u();
-    EXPECT_NEAR(u_result.result, 3.6258264794653012, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.68430691378849040, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
+    auto u_result = glazing_system.u();
+    EXPECT_NEAR(u_result, 3.6258264794653012, 1e-14);
+//    EXPECT_NEAR(u_result.t_sol, 0.68430691378849040, 1e-14);
+//    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
 
-    Thermal_Result shgc_result = glazing_system.shgc();
-    EXPECT_NEAR(shgc_result.result, 0.72886709088851231, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.68430691378849040, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
+    auto shgc_result = glazing_system.shgc();
+    EXPECT_NEAR(shgc_result, 0.72886709088851231, 1e-14);
+//    EXPECT_NEAR(shgc_result.t_sol, 0.68430691378849040, 1e-14);
+//    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
 
     WCE_Optical_Results solar_results = glazing_system.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
@@ -748,17 +748,17 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_102_glazing_system)
 
     Glazing_System_Thermal_And_Optical glazing_system(products, gaps, standard, 1.0, 1.0);
 
-    Thermal_Result u_result = glazing_system.u();
-    EXPECT_NEAR(u_result.result, 2.7296194478984446, 1e-14);
-    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
-    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
+    auto u_result = glazing_system.u();
+    EXPECT_NEAR(u_result, 2.7296194478984446, 1e-14);
+//    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-14);
+//    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
+//    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
 
-    Thermal_Result shgc_result = glazing_system.shgc();
-    EXPECT_NEAR(shgc_result.result, 0.76330438232287146, 1e-14);
-    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
-    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
+    auto shgc_result = glazing_system.shgc();
+    EXPECT_NEAR(shgc_result, 0.76330438232287146, 1e-14);
+//    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-14);
+//    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
+//    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
 }
 
 #if 0

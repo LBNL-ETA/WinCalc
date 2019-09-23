@@ -1,5 +1,6 @@
 #include "create_wce_objects.h"
 #include "convert_optics_parser.h"
+#include "optical_calcs.h"
 #include "util.h"
 
 namespace wincalc
@@ -498,7 +499,7 @@ namespace wincalc
         type_to_wce_type[Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
         type_to_wce_type[Gas_Type::XENON] = Gases::GasDef::Xenon;
 
-		auto gas = Gases::Gas::intance().get(type_to_wce_type.at(data.gas));
+        auto gas = Gases::Gas::intance().get(type_to_wce_type.at(data.gas));
 
         return Engine_Gap_Info{gas, data.thickness};
     }
@@ -535,49 +536,24 @@ namespace wincalc
         return igu;
     }
 
-
-    IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                        std::vector<Engine_Gap_Info> const & gaps,
-                        double width,
-                        double height,
-                        window_standards::Optical_Standard const & standard)
-
+    Tarcog::ISO15099::CIGU create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & layers,
+                                      std::vector<double> const & layer_absorptance,
+                                      std::vector<Engine_Gap_Info> const & gaps,
+                                      double width,
+                                      double height)
     {
-        auto solar_method =
-          standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
-        auto optical_layers = get_optical_layers(layers);
-
-
-        auto multi_pane_specular = create_multi_pane_specular(optical_layers, solar_method);
-
-        double t_sol =
-          multi_pane_specular->getPropertySimple(FenestrationCommon::PropertySimple::T,
-                                                 FenestrationCommon::Side::Front,
-                                                 FenestrationCommon::Scattering::DirectDirect,
-                                                 0,
-                                                 0);
-
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
 
         for(size_t i = 0; i < layers.size(); ++i)
         {
-            double absorbtance =
-              multi_pane_specular->getAbsorptanceLayer(i + 1,
-                                                       FenestrationCommon::Side::Front,
-                                                       FenestrationCommon::ScatteringSimple::Direct,
-                                                       0,
-                                                       0);
-            double thickness = layers[i].thermal_data->thickness_meters;
-            double conductivity = layers[i].thermal_data->conductivity;
-
-            auto layer = Tarcog::ISO15099::Layers::solid(
-              thickness,
-              conductivity,
-              layers[i].thermal_data->emissivity_front.value(),
-              layers[i].thermal_data->ir_transmittance_front.value(),
-              layers[i].thermal_data->emissivity_back.value(),
-              layers[i].thermal_data->ir_transmittance_back.value());
-            layer->setSolarAbsorptance(absorbtance);
+            auto const & solid_layer = layers[i];
+            auto layer = Tarcog::ISO15099::Layers::solid(solid_layer->thickness_meters,
+                                                         solid_layer->conductivity,
+                                                         solid_layer->emissivity_front.value(),
+                                                         solid_layer->ir_transmittance_front.value(),
+                                                         solid_layer->emissivity_back.value(),
+                                                         solid_layer->ir_transmittance_back.value());
+            layer->setSolarAbsorptance(layer_absorptance[i]);
             tarcog_solid_layers.push_back(layer);
         }
 
@@ -588,7 +564,24 @@ namespace wincalc
               Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
         }
 
-        return IGU_Info{create_igu(tarcog_solid_layers, tarcog_gaps, width, height), t_sol};
+        return create_igu(tarcog_solid_layers, tarcog_gaps, width, height);
+    }
+
+    IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                        std::vector<Engine_Gap_Info> const & gaps,
+                        double width,
+                        double height,
+                        window_standards::Optical_Standard const & standard)
+
+    {
+        auto optical_results =
+          optical_results_needed_for_thermal_calcs(get_optical_layers(layers), standard);
+
+        auto thermal_layers = get_thermal_layers(layers);
+
+        return IGU_Info{
+          create_igu(thermal_layers, optical_results.layer_solar_absorptances, gaps, width, height),
+          optical_results.total_solar_transmittance};
     }
 
     IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
