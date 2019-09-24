@@ -65,14 +65,12 @@ namespace wincalc
       std::vector<Gap_Data> const & gap_layers,
       double width,
       double height,
-      Environments const & u_environment,
-      Environments const & shgc_environment) :
+      Environments const & environment) :
         solid_layers_thermal(products),
         gap_layers(convert(gap_layers)),
         width(width),
         height(height),
-        u_environment(u_environment),
-        shgc_environment(shgc_environment)
+        environment(environment)
     {}
 
     Glazing_System_Thermal::Glazing_System_Thermal(
@@ -80,14 +78,12 @@ namespace wincalc
       std::vector<Engine_Gap_Info> const & gap_layers,
       double width,
       double height,
-      Environments const & u_environment,
-      Environments const & shgc_environment) :
+      Environments const & environment) :
         solid_layers_thermal(products),
         gap_layers(gap_layers),
         width(width),
         height(height),
-        u_environment(u_environment),
-        shgc_environment(shgc_environment)
+        environment(environment)
     {}
 
 #pragma warning(push)
@@ -97,7 +93,7 @@ namespace wincalc
         std::vector<double> solar_absorptances(
           solid_layers_thermal.size(), 0);   // U-value calculations do not use solar absorptances
         return calc_u(
-          solid_layers_thermal, solar_absorptances, gap_layers, width, height, u_environment);
+          solid_layers_thermal, solar_absorptances, gap_layers, width, height, environment);
     }
 
     double Glazing_System_Thermal::shgc(std::vector<double> const & absorptances_front,
@@ -111,7 +107,7 @@ namespace wincalc
                          total_solar_transmittance,
                          width,
                          height,
-                         shgc_environment);
+                         environment);
     }
 #pragma warning(pop)
 
@@ -141,15 +137,13 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
-      Environments const & u_environment,
-      Environments const & shgc_environment) :
+      Environments const & environment) :
         Glazing_System_Optical(get_optical_layers(product_data), standard),
         Glazing_System_Thermal(get_thermal_layers(product_data),
                                gap_values,
                                width,
                                height,
-                               u_environment,
-                               shgc_environment)
+                               environment)
     {}
 
     Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
@@ -158,15 +152,13 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
-      Environments const & u_environment,
-      Environments const & shgc_environment) :
+      Environments const & environment) :
         Glazing_System_Optical(get_optical_layers(product_data), standard),
         Glazing_System_Thermal(get_thermal_layers(product_data),
                                gap_values,
                                width,
                                height,
-                               u_environment,
-                               shgc_environment)
+                               environment)
     {}
 
     double Glazing_System_Thermal_And_Optical::shgc(double theta, double phi) const

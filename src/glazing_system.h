@@ -78,25 +78,21 @@ namespace wincalc
           std::vector<Gap_Data> const & gap_layers,
           double width = 1.0,
           double height = 1.0,
-          Environments const & u_environment = nfrc_u_environments(),
-          Environments const & shgc_environment = nfrc_shgc_environments());
+          Environments const & environment = nfrc_u_environments());
 
 		Glazing_System_Thermal(
           std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
           std::vector<Engine_Gap_Info> const & gap_layers,
           double width = 1.0,
           double height = 1.0,
-          Environments const & u_environment = nfrc_u_environments(),
-          Environments const & shgc_environment = nfrc_shgc_environments());
+          Environments const & environment = nfrc_u_environments());
 
         std::vector<Engine_Gap_Info> gap_layers;
         std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
         double width;
         double height;
-
-        Environments u_environment;
-        Environments shgc_environment;
-
+        Environments environment;
+        
         double u(double theta = 0, double phi = 0) const;
         double shgc(std::vector<double> const & absorptances_front,
                             double total_solar_transmittance,
@@ -112,8 +108,7 @@ namespace wincalc
           window_standards::Optical_Standard const & standard,
           double width = 1.0,
           double height = 1.0,
-          Environments const & u_environment = nfrc_u_environments(),
-          Environments const & shgc_environment = nfrc_shgc_environments());
+          Environments const & environment = nfrc_u_environments());
 
         Glazing_System_Thermal_And_Optical(
           std::vector<OpticsParser::ProductData> const & product_data,
@@ -121,8 +116,7 @@ namespace wincalc
           window_standards::Optical_Standard const & standard,
           double width = 1.0,
           double height = 1.0,
-          Environments const & u_environment = nfrc_u_environments(),
-          Environments const & shgc_environment = nfrc_shgc_environments());
+          Environments const & environment = nfrc_u_environments());
 
         double shgc(double theta = 0, double phi = 0) const;
 
