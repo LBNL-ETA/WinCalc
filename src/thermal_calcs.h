@@ -1,13 +1,13 @@
 #ifndef WINCALC_THERMAL_CALCS_H
 #define WINCALC_THERMAL_CALCS_H
+#if 0
 
-#include <windows_standards/windows_standard.h>
-#include <OpticsProductData.hpp>
+#    include <windows_standards/windows_standard.h>
+#    include <OpticsProductData.hpp>
 
-#include "thermal_results.h"
+#    include "create_wce_objects.h"   // For Engine_Gap_Info, better to just expose engine gap enum
+#    include "environmental_conditions.h"
 
-#include "create_wce_objects.h"   // For Engine_Gap_Info, better to just expose engine gap enum
-#include "environmental_conditions.h"
 
 namespace wincalc
 {
@@ -76,4 +76,5 @@ namespace wincalc
                              Environments const & environments);
 
 }   // namespace wincalc
+#endif
 #endif

@@ -4,6 +4,7 @@
 #include "thermal_calcs.h"
 #include "optical_calcs.h"
 #include "util.h"
+#include "create_wce_objects.h"
 
 namespace wincalc
 {
@@ -70,7 +71,8 @@ namespace wincalc
         gap_layers(convert(gap_layers)),
         width(width),
         height(height),
-        environment(environment)
+        environment(environment),
+        igu(create_igu(products, this->gap_layers, width, height))
     {}
 
     Glazing_System_Thermal::Glazing_System_Thermal(
@@ -83,31 +85,38 @@ namespace wincalc
         gap_layers(gap_layers),
         width(width),
         height(height),
-        environment(environment)
+        environment(environment),
+        igu(create_igu(products, gap_layers, width, height))
     {}
 
 #pragma warning(push)
 #pragma warning(disable : 4100)
-    double Glazing_System_Thermal::u(double theta, double phi) const
+    double Glazing_System_Thermal::u(double theta, double phi)
     {
-        std::vector<double> solar_absorptances(
-          solid_layers_thermal.size(), 0);   // U-value calculations do not use solar absorptances
-        return calc_u(
-          solid_layers_thermal, solar_absorptances, gap_layers, width, height, environment);
+        std::vector<double> absorptances(solid_layers_thermal.size(), 0);
+        igu.setAbsorptances(absorptances);
+        Tarcog::ISO15099::CSystem system = create_system(igu, environment);
+        double u = system.getUValue();
+        return u;
     }
 
     double Glazing_System_Thermal::shgc(std::vector<double> const & absorptances_front,
                                         double total_solar_transmittance,
                                         double theta,
-                                        double phi) const
+                                        double phi)
     {
-        return calc_shgc(solid_layers_thermal,
-                         absorptances_front,
-                         gap_layers,
-                         total_solar_transmittance,
-                         width,
-                         height,
-                         environment);
+        igu.setAbsorptances(absorptances_front);
+        Tarcog::ISO15099::CSystem system = create_system(igu, environment);
+        double shgc = system.getSHGC(total_solar_transmittance);
+        return shgc;
+    }
+    std::vector<double>
+      Glazing_System_Thermal::layer_temperatures(Tarcog::ISO15099::System system_type,
+                                                 std::vector<double> const & absorptances_front)
+    {
+        igu.setAbsorptances(absorptances_front);
+        Tarcog::ISO15099::CSystem system = create_system(igu, environment);
+        return system.getTemperatures(system_type);
     }
 #pragma warning(pop)
 
@@ -161,7 +170,7 @@ namespace wincalc
                                environment)
     {}
 
-    double Glazing_System_Thermal_And_Optical::shgc(double theta, double phi) const
+    double Glazing_System_Thermal_And_Optical::shgc(double theta, double phi)
     {
         auto optical_results = optical_results_needed_for_thermal_calcs(
           solid_layers_optical, optical_standard(), theta, phi);
@@ -172,6 +181,16 @@ namespace wincalc
                     phi);
     }
 
+	std::vector<double>
+      Glazing_System_Thermal_And_Optical::layer_temperatures(Tarcog::ISO15099::System system_type, double theta, double phi)
+	{
+            auto optical_results = optical_results_needed_for_thermal_calcs(
+              solid_layers_optical, optical_standard(), theta, phi);
+
+			return Glazing_System_Thermal::layer_temperatures(
+              system_type, optical_results.layer_solar_absorptances);
+
+	}
 
     std::vector<Product_Data_Optical_Thermal>
       Glazing_System_Thermal_And_Optical::optical_and_thermal_data() const

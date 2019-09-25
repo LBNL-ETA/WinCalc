@@ -5,8 +5,8 @@
 #include <OpticsParser.hpp>
 #include <windows_standards/windows_standard.h>
 #include <WCEGases.hpp>
+#include <WCETarcog.hpp>
 #include "gap.h"
-#include "thermal_results.h"
 #include "optical_results.h"
 #include "environmental_conditions.h"
 #include "product_data.h"
@@ -36,12 +36,14 @@ namespace wincalc
 
     struct Glazing_System_Thermal_Interface
     {
-        virtual double u(double theta = 0, double phi = 0) const = 0;
-        virtual double
-        shgc(std::vector<double> const & absorptances,
-                                    double total_solar_transmittance,
-                                    double theta = 0,
-                                    double phi = 0) const = 0;
+        virtual double u(double theta = 0, double phi = 0) = 0;
+        virtual double shgc(std::vector<double> const & absorptances,
+                            double total_solar_transmittance,
+                            double theta = 0,
+                            double phi = 0) = 0;
+        virtual std::vector<double>
+          layer_temperatures(Tarcog::ISO15099::System system_type,
+                             std::vector<double> const & absorptances_front) = 0;
     };
 
     struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
@@ -80,24 +82,29 @@ namespace wincalc
           double height = 1.0,
           Environments const & environment = nfrc_u_environments());
 
-		Glazing_System_Thermal(
+        Glazing_System_Thermal(
           std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
           std::vector<Engine_Gap_Info> const & gap_layers,
           double width = 1.0,
           double height = 1.0,
           Environments const & environment = nfrc_u_environments());
 
+        double u(double theta = 0, double phi = 0);
+        double shgc(std::vector<double> const & absorptances_front,
+                    double total_solar_transmittance,
+                    double theta = 0,
+                    double phi = 0) override;
+
+        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
+                                               std::vector<double> const & absorptances_front);
+
+    protected:
         std::vector<Engine_Gap_Info> gap_layers;
         std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
         double width;
         double height;
         Environments environment;
-        
-        double u(double theta = 0, double phi = 0) const;
-        double shgc(std::vector<double> const & absorptances_front,
-                            double total_solar_transmittance,
-                            double theta = 0,
-                            double phi = 0) const override;        
+        Tarcog::ISO15099::CIGU igu;
     };
 
     struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
@@ -118,7 +125,8 @@ namespace wincalc
           double height = 1.0,
           Environments const & environment = nfrc_u_environments());
 
-        double shgc(double theta = 0, double phi = 0) const;
+        double shgc(double theta = 0, double phi = 0);
+        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
 
 
     protected:

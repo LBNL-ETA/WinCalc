@@ -536,24 +536,24 @@ namespace wincalc
         return igu;
     }
 
-    Tarcog::ISO15099::CIGU create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & layers,
-                                      std::vector<double> const & layer_absorptance,
-                                      std::vector<Engine_Gap_Info> const & gaps,
-                                      double width,
-                                      double height)
+    Tarcog::ISO15099::CIGU
+      create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & layers,
+                 std::vector<Engine_Gap_Info> const & gaps,
+                 double width,
+                 double height)
     {
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
 
         for(size_t i = 0; i < layers.size(); ++i)
         {
             auto const & solid_layer = layers[i];
-            auto layer = Tarcog::ISO15099::Layers::solid(solid_layer->thickness_meters,
-                                                         solid_layer->conductivity,
-                                                         solid_layer->emissivity_front.value(),
-                                                         solid_layer->ir_transmittance_front.value(),
-                                                         solid_layer->emissivity_back.value(),
-                                                         solid_layer->ir_transmittance_back.value());
-            layer->setSolarAbsorptance(layer_absorptance[i]);
+            auto layer =
+              Tarcog::ISO15099::Layers::solid(solid_layer->thickness_meters,
+                                              solid_layer->conductivity,
+                                              solid_layer->emissivity_front.value(),
+                                              solid_layer->ir_transmittance_front.value(),
+                                              solid_layer->emissivity_back.value(),
+                                              solid_layer->ir_transmittance_back.value());
             tarcog_solid_layers.push_back(layer);
         }
 
@@ -567,18 +567,16 @@ namespace wincalc
         return create_igu(tarcog_solid_layers, tarcog_gaps, width, height);
     }
 
-    IGU_Info create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                        std::vector<Engine_Gap_Info> const & gaps,
-                        double width,
-                        double height,
-                        window_standards::Optical_Standard const & standard)
+#if 0
+    IGU_Info
+      create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & thermal_layers,
+                 Optical_Results_Needed_For_Thermal_Calcs const & optical_results,
+                 std::vector<Engine_Gap_Info> const & gaps,
+                 double width,
+                 double height,
+                 window_standards::Optical_Standard const & standard)
 
     {
-        auto optical_results =
-          optical_results_needed_for_thermal_calcs(get_optical_layers(layers), standard);
-
-        auto thermal_layers = get_thermal_layers(layers);
-
         return IGU_Info{
           create_igu(thermal_layers, optical_results.layer_solar_absorptances, gaps, width, height),
           optical_results.total_solar_transmittance};
@@ -592,5 +590,15 @@ namespace wincalc
     {
         auto converted_layers = convert(layers);
         return create_igu(converted_layers, gaps, width, height, standard);
+    }
+#endif
+
+    Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
+                                            Environments const & environments)
+    {
+        auto indoor = create_indoor_environment(environments.inside);
+        auto outdoor = create_outdoor_environment(environments.outside);
+        auto system = Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
+        return system;
     }
 }   // namespace wincalc
