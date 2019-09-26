@@ -51,8 +51,9 @@ namespace wincalc
         virtual std::vector<double>
           gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) = 0;
 
-		virtual double
-          system_effective_conductivity(Tarcog::ISO15099::System system_type) = 0;
+        virtual double system_effective_conductivity(Tarcog::ISO15099::System system_type) = 0;
+
+        virtual double relative_heat_gain(double solar_transmittance) = 0;
     };
 
     struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
@@ -113,7 +114,9 @@ namespace wincalc
         std::vector<double>
           gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) override;
 
-		double system_effective_conductivity(Tarcog::ISO15099::System system_type) override;
+        double system_effective_conductivity(Tarcog::ISO15099::System system_type) override;
+
+		double relative_heat_gain(double solar_transmittance) override;
 
     protected:
         std::vector<Engine_Gap_Info> gap_layers;

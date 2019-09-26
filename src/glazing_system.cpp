@@ -128,6 +128,10 @@ namespace wincalc
     {
         return system.getEffectiveSystemConductivity(system_type);
     }
+    double Glazing_System_Thermal::relative_heat_gain(double solar_transmittance)
+    {
+        return system.relativeHeatGain(solar_transmittance);
+    }
 #pragma warning(pop)
 
     Glazing_System_Optical_Interface::Glazing_System_Optical_Interface(
