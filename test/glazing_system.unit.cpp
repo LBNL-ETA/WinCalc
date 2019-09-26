@@ -57,28 +57,28 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     auto u_layer_temperatues_shgc =
       glazing_system_u.layer_temperatures(Tarcog::ISO15099::System::SHGC);
 
-    EXPECT_NEAR(u_layer_temperatues_shgc[0], 263.01621462125490, 1e-14);
-    EXPECT_NEAR(u_layer_temperatues_shgc[1], 263.71904705715122, 1e-14);
+    EXPECT_NEAR(u_layer_temperatues_shgc[0], 263.01621462383559, 1e-14);
+    EXPECT_NEAR(u_layer_temperatues_shgc[1], 263.71904705531443, 1e-14);
 
     //    EXPECT_NEAR(u_result.t_sol, 0.83384927443226908, 1e-14);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.86063405690810812, 1e-14);
+    EXPECT_NEAR(shgc_result, 0.86063405698157958, 1e-14);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.83384927443226908, 1e-14);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.091386111722449287, 1e-14);
 
     auto shgc_layer_temperatues_u =
       glazing_system_shgc.layer_temperatures(Tarcog::ISO15099::System::Uvalue);
 
-	EXPECT_NEAR(shgc_layer_temperatues_u[0], 303.05518474277812, 1e-14);
+    EXPECT_NEAR(shgc_layer_temperatues_u[0], 303.05518474277812, 1e-14);
     EXPECT_NEAR(shgc_layer_temperatues_u[1], 302.92520195300676, 1e-14);
 
     auto shgc_layer_temperatues_shgc =
       glazing_system_shgc.layer_temperatures(Tarcog::ISO15099::System::SHGC);
 
-	EXPECT_NEAR(shgc_layer_temperatues_shgc[0], 305.53865134028581, 1e-14);
-    EXPECT_NEAR(shgc_layer_temperatues_shgc[1], 305.45379473304899, 1e-14);
+    EXPECT_NEAR(shgc_layer_temperatues_shgc[0], 305.53865133878355, 1e-14);
+    EXPECT_NEAR(shgc_layer_temperatues_shgc[1], 305.45379473432968, 1e-14);
 
     WCE_Optical_Results solar_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::SOLAR);
@@ -96,9 +96,9 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     EXPECT_NEAR(solar_results.rf.diffuse_diffuse, 0.13582105577994347, 1e-14);
     EXPECT_NEAR(solar_results.rb.diffuse_diffuse, 0.13591418999379981, 1e-14);
     EXPECT_NEAR(solar_results.absorptances_front.direct[0], 0.091386111722449287, 1e-14);
-    EXPECT_NEAR(solar_results.absorptances_front.diffuse[0], 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_front.diffuse[0], 0.10065783542220720, 1e-14);
     EXPECT_NEAR(solar_results.absorptances_back.direct[0], 0.091386111722449287, 1e-14);
-    EXPECT_NEAR(solar_results.absorptances_back.diffuse[0], 0.0, 1e-14);
+    EXPECT_NEAR(solar_results.absorptances_back.diffuse[0], 0.10065783542220720, 1e-14);
 
     WCE_Optical_Results solar_results_50_degrees =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::SOLAR, 50);
@@ -339,7 +339,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
 
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.72886709088851231, 1e-14);
+    EXPECT_NEAR(shgc_result, 0.72886709074334710, 1e-14);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.68430691378849040, 1e-14);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.21092409927872730, 1e-14);
 
@@ -805,8 +805,24 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_102_glazing_system)
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);
 
+    auto u_layer_effective_conductivity_solid_layers =
+      glazing_system_u.solid_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
+
+    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[0], 1, 1e-14);
+    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[1], 1, 1e-14);
+
+    auto u_layer_effective_conductivity_gap_layers =
+      glazing_system_u.gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
+
+    EXPECT_NEAR(u_layer_effective_conductivity_gap_layers[0], 0.066903670731241469, 1e-14);
+
+    auto u_layer_effective_conductivity =
+      glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
+
+    EXPECT_NEAR(u_layer_effective_conductivity, 0.095936549161484350, 1e-14);
+
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.76330438232287146, 1e-14);
+    EXPECT_NEAR(shgc_result, 0.76330438238470044, 1e-14);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-14);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-14);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-14);

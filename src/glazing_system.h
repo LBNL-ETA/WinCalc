@@ -44,6 +44,15 @@ namespace wincalc
         virtual std::vector<double>
           layer_temperatures(Tarcog::ISO15099::System system_type,
                              std::vector<double> const & absorptances_front) = 0;
+
+        virtual std::vector<double>
+          solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type) = 0;
+
+        virtual std::vector<double>
+          gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) = 0;
+
+		virtual double
+          system_effective_conductivity(Tarcog::ISO15099::System system_type) = 0;
     };
 
     struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
@@ -98,6 +107,14 @@ namespace wincalc
         std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
                                                std::vector<double> const & absorptances_front);
 
+        std::vector<double>
+          solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type) override;
+
+        std::vector<double>
+          gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) override;
+
+		double system_effective_conductivity(Tarcog::ISO15099::System system_type) override;
+
     protected:
         std::vector<Engine_Gap_Info> gap_layers;
         std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
@@ -105,6 +122,7 @@ namespace wincalc
         double height;
         Environments environment;
         Tarcog::ISO15099::CIGU igu;
+        Tarcog::ISO15099::CSystem system;
     };
 
     struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
@@ -126,7 +144,9 @@ namespace wincalc
           Environments const & environment = nfrc_u_environments());
 
         double shgc(double theta = 0, double phi = 0);
-        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
+                                               double theta = 0,
+                                               double phi = 0);
 
 
     protected:
