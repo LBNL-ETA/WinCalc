@@ -492,16 +492,22 @@ namespace wincalc
 
     Engine_Gap_Info convert(Gap_Data const & data)
     {
-        std::map<Gas_Type, Gases::GasDef> type_to_wce_type;
+        std::map<Predefined_Gas_Type, Gases::GasDef> type_to_wce_type;
         // Air, Argon, Krypton, Xenon
-        type_to_wce_type[Gas_Type::AIR] = Gases::GasDef::Air;
-        type_to_wce_type[Gas_Type::ARGON] = Gases::GasDef::Argon;
-        type_to_wce_type[Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
-        type_to_wce_type[Gas_Type::XENON] = Gases::GasDef::Xenon;
+        type_to_wce_type[Predefined_Gas_Type::AIR] = Gases::GasDef::Air;
+        type_to_wce_type[Predefined_Gas_Type::ARGON] = Gases::GasDef::Argon;
+        type_to_wce_type[Predefined_Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
+        type_to_wce_type[Predefined_Gas_Type::XENON] = Gases::GasDef::Xenon;
 
-        auto gas = Gases::Gas::intance().get(type_to_wce_type.at(data.gas));
+        std::vector<Engine_Gas_Mixture_Component> converted_gases;
 
-        return Engine_Gap_Info{gas, data.thickness};
+        for(auto gas : data.gases)
+        {
+            auto converted_gas = Gases::Gas::intance().get(type_to_wce_type.at(gas.gas));
+            converted_gases.push_back({converted_gas, gas.percent});
+        }
+
+        return Engine_Gap_Info{converted_gases, data.thickness};
     }
 
     std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data)
@@ -558,10 +564,15 @@ namespace wincalc
         }
 
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
-        for(Engine_Gap_Info Engine_Gap_Info : gaps)
+        for(Engine_Gap_Info engine_gap_info : gaps)
         {
+            std::vector<std::pair<double, Gases::CGasData>> converted_gas;
+            for(Engine_Gas_Mixture_Component gas : engine_gap_info.gases)
+            {
+                converted_gas.push_back(std::make_pair(gas.percent, gas.gas));
+            }
             tarcog_gaps.push_back(Tarcog::ISO15099::Layers::gap(
-              Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
+              engine_gap_info.thickness, Gases::CGas(converted_gas)));
         }
 
         return create_igu(tarcog_solid_layers, tarcog_gaps, width, height);
