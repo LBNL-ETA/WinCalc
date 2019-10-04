@@ -1,3 +1,4 @@
+#if 0
 #include <memory>
 #include <gtest/gtest.h>
 #include <cstdlib>
@@ -10,7 +11,7 @@
 #include "paths.h"
 #include "environmental_conditions.h"
 
-#if 0
+
 
 using namespace wincalc;
 using namespace window_standards;

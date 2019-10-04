@@ -5,31 +5,11 @@
 
 namespace wincalc
 {
-#if 0
-    enum class Predefined_Gas_Type
-    {
-        AIR,
-        ARGON,
-        KRYPTON,
-        XENON
-    };
-#endif
-
     struct Predefined_Gas_Mixture_Component
     {
         Gases::GasDef gas;
         double percent;
     };
-
-#if 0
-    struct Gap_Data
-    {
-        Gap_Data(Gases::GasDef const & gas, double thickness);
-        Gap_Data(std::vector<Predefined_Gas_Mixture_Component> const& gases, double thickness);
-        std::vector<Predefined_Gas_Mixture_Component> gases;
-        double thickness;
-    };
-#endif
 
     struct Engine_Gas_Mixture_Component
     {

@@ -1,7 +1,6 @@
 #include <sstream>
 
 #include "glazing_system.h"
-#include "thermal_calcs.h"
 #include "optical_calcs.h"
 #include "util.h"
 #include "create_wce_objects.h"
@@ -61,18 +60,6 @@ namespace wincalc
         return method_itr->second;
     }
 
-#if 0
-    Glazing_System_Thermal::Glazing_System_Thermal(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
-      std::vector<Gap_Data> const & gap_layers,
-      double width,
-      double height,
-      Environments const & environment) :
-		igu(create_igu(products, convert(gap_layers), width, height)),
-        system(create_system(igu, environment))
-    {}
-#endif
-
     Glazing_System_Thermal::Glazing_System_Thermal(
       std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
       std::vector<Engine_Gap_Info> const & gap_layers,
@@ -83,8 +70,6 @@ namespace wincalc
         system(create_system(igu, environment))
     {}
 
-#pragma warning(push)
-#pragma warning(disable : 4100)
     double Glazing_System_Thermal::u()
     {
         return system.getUValue();
@@ -122,7 +107,6 @@ namespace wincalc
     {
         return system.relativeHeatGain(solar_transmittance);
     }
-#pragma warning(pop)
 
     Glazing_System_Optical_Interface::Glazing_System_Optical_Interface(
       window_standards::Optical_Standard const & standard) :

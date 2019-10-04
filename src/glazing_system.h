@@ -85,14 +85,6 @@ namespace wincalc
 
     struct Glazing_System_Thermal : Glazing_System_Thermal_Interface
     {
-#if 0
-        Glazing_System_Thermal(
-          std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
-          std::vector<Gap_Data> const & gap_layers,
-          double width = 1.0,
-          double height = 1.0,
-          Environments const & environment = nfrc_u_environments());
-#endif
 
         Glazing_System_Thermal(
           std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,

@@ -104,22 +104,6 @@ namespace wincalc
                  double width,
                  double height);
 
-#if 0
-    IGU_Info
-      create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & thermal_layers,
-                 Optical_Results_Needed_For_Thermal_Calcs const & optical_results,
-                 std::vector<Engine_Gap_Info> const & gaps,
-                 double width,
-                 double height,
-                 window_standards::Optical_Standard const & standard);
-
-    IGU_Info create_igu(std::vector<OpticsParser::ProductData> const & layers,
-                        std::vector<Engine_Gap_Info> const & gaps,
-                        double width,
-                        double height,
-                        window_standards::Optical_Standard const & standard);
-#endif
-
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments);
 
