@@ -33,7 +33,7 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_glazing_system)
     OpticsParser::ProductData clear_3 = parser.parseJSONFile(clear_3_path.string());
     products.push_back(clear_3);
 
-    std::vector<Gap_Data> gaps;
+    std::vector<Engine_Gap_Info> gaps;
 
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
@@ -321,7 +321,7 @@ TEST_F(TestGlazingSystem, Test_nfrc_18100)
     OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
     products.push_back(product);
 
-    std::vector<Gap_Data> gaps;
+    std::vector<Engine_Gap_Info> gaps;
 
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
@@ -576,7 +576,7 @@ TEST_F(TestGlazingSystem, Test_CEN_18100)
     OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
     products.push_back(product);
 
-    std::vector<Gap_Data> gaps;
+    std::vector<Engine_Gap_Info> gaps;
 
     std::filesystem::path standard_path(test_dir);
     standard_path /= "standards";
@@ -785,8 +785,8 @@ TEST_F(TestGlazingSystem, Test_NFRC_102_102_glazing_system)
     products.push_back(clear_3);
     products.push_back(clear_3);
 
-    Gap_Data air_gap{Gas_Type::AIR, 0.0127};
-    std::vector<Gap_Data> gaps;
+    Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
+    std::vector<Engine_Gap_Info> gaps;
     gaps.push_back(air_gap);
 
     std::filesystem::path standard_path(test_dir);

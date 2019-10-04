@@ -61,20 +61,17 @@ namespace wincalc
         return method_itr->second;
     }
 
+#if 0
     Glazing_System_Thermal::Glazing_System_Thermal(
       std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
       std::vector<Gap_Data> const & gap_layers,
       double width,
       double height,
       Environments const & environment) :
-        solid_layers_thermal(products),
-        gap_layers(convert(gap_layers)),
-        width(width),
-        height(height),
-        environment(environment),
-		igu(create_igu(products, this->gap_layers, width, height)),
+		igu(create_igu(products, convert(gap_layers), width, height)),
         system(create_system(igu, environment))
     {}
+#endif
 
     Glazing_System_Thermal::Glazing_System_Thermal(
       std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
@@ -82,35 +79,28 @@ namespace wincalc
       double width,
       double height,
       Environments const & environment) :
-        solid_layers_thermal(products),
-        gap_layers(gap_layers),
-        width(width),
-        height(height),
-        environment(environment),
         igu(create_igu(products, gap_layers, width, height)),
         system(create_system(igu, environment))
     {}
 
 #pragma warning(push)
 #pragma warning(disable : 4100)
-    double Glazing_System_Thermal::u(double theta, double phi)
-    {        
+    double Glazing_System_Thermal::u()
+    {
         return system.getUValue();
     }
 
     double Glazing_System_Thermal::shgc(std::vector<double> const & absorptances_front,
-                                        double total_solar_transmittance,
-                                        double theta,
-                                        double phi)
+                                        double total_solar_transmittance)
     {
         system.setAbsorptances(absorptances_front);
-        return system.getSHGC(total_solar_transmittance);        
+        return system.getSHGC(total_solar_transmittance);
     }
     std::vector<double>
       Glazing_System_Thermal::layer_temperatures(Tarcog::ISO15099::System system_type,
                                                  std::vector<double> const & absorptances_front)
     {
-        system.setAbsorptances(absorptances_front);        
+        system.setAbsorptances(absorptances_front);
         return system.getTemperatures(system_type);
     }
     std::vector<double> Glazing_System_Thermal::solid_layers_effective_conductivities(
@@ -156,7 +146,7 @@ namespace wincalc
 
     Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
       std::vector<Product_Data_Optical_Thermal> const & product_data,
-      std::vector<Gap_Data> const & gap_values,
+      std::vector<Engine_Gap_Info> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
@@ -168,7 +158,7 @@ namespace wincalc
 
     Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
       std::vector<OpticsParser::ProductData> const & product_data,
-      std::vector<Gap_Data> const & gap_values,
+      std::vector<Engine_Gap_Info> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
@@ -184,9 +174,7 @@ namespace wincalc
           solid_layers_optical, optical_standard(), theta, phi);
 
         return Glazing_System_Thermal::shgc(optical_results.layer_solar_absorptances,
-                                            optical_results.total_solar_transmittance,
-                                            theta,
-                                            phi);
+                                            optical_results.total_solar_transmittance);
     }
 
     std::vector<double> Glazing_System_Thermal_And_Optical::layer_temperatures(
@@ -197,17 +185,5 @@ namespace wincalc
 
         return Glazing_System_Thermal::layer_temperatures(system_type,
                                                           optical_results.layer_solar_absorptances);
-    }
-
-    std::vector<Product_Data_Optical_Thermal>
-      Glazing_System_Thermal_And_Optical::optical_and_thermal_data() const
-    {
-        std::vector<Product_Data_Optical_Thermal> layers;
-        for(size_t i = 0; i < solid_layers_optical.size(); ++i)
-        {
-            layers.push_back(
-              Product_Data_Optical_Thermal{solid_layers_optical[i], solid_layers_thermal[i]});
-        }
-        return layers;
     }
 }   // namespace wincalc

@@ -36,11 +36,11 @@ namespace wincalc
 
     struct Glazing_System_Thermal_Interface
     {
-        virtual double u(double theta = 0, double phi = 0) = 0;
+        virtual double u(/*double theta = 0, double phi = 0*/) = 0;
         virtual double shgc(std::vector<double> const & absorptances,
-                            double total_solar_transmittance,
+                            double total_solar_transmittance /*,
                             double theta = 0,
-                            double phi = 0) = 0;
+                            double phi = 0*/) = 0;
         virtual std::vector<double>
           layer_temperatures(Tarcog::ISO15099::System system_type,
                              std::vector<double> const & absorptances_front) = 0;
@@ -85,12 +85,14 @@ namespace wincalc
 
     struct Glazing_System_Thermal : Glazing_System_Thermal_Interface
     {
+#if 0
         Glazing_System_Thermal(
           std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
           std::vector<Gap_Data> const & gap_layers,
           double width = 1.0,
           double height = 1.0,
           Environments const & environment = nfrc_u_environments());
+#endif
 
         Glazing_System_Thermal(
           std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
@@ -99,11 +101,9 @@ namespace wincalc
           double height = 1.0,
           Environments const & environment = nfrc_u_environments());
 
-        double u(double theta = 0, double phi = 0);
+        double u();
         double shgc(std::vector<double> const & absorptances_front,
-                    double total_solar_transmittance,
-                    double theta = 0,
-                    double phi = 0) override;
+                    double total_solar_transmittance) override;
 
         std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
                                                std::vector<double> const & absorptances_front);
@@ -116,14 +116,9 @@ namespace wincalc
 
         double system_effective_conductivity(Tarcog::ISO15099::System system_type) override;
 
-		double relative_heat_gain(double solar_transmittance) override;
+        double relative_heat_gain(double solar_transmittance) override;
 
     protected:
-        std::vector<Engine_Gap_Info> gap_layers;
-        std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> solid_layers_thermal;
-        double width;
-        double height;
-        Environments environment;
         Tarcog::ISO15099::CIGU igu;
         Tarcog::ISO15099::CSystem system;
     };
@@ -132,7 +127,7 @@ namespace wincalc
     {
         Glazing_System_Thermal_And_Optical(
           std::vector<Product_Data_Optical_Thermal> const & product_data,
-          std::vector<Gap_Data> const & gap_values,
+          std::vector<Engine_Gap_Info> const & gap_values,
           window_standards::Optical_Standard const & standard,
           double width = 1.0,
           double height = 1.0,
@@ -140,7 +135,7 @@ namespace wincalc
 
         Glazing_System_Thermal_And_Optical(
           std::vector<OpticsParser::ProductData> const & product_data,
-          std::vector<Gap_Data> const & gap_values,
+          std::vector<Engine_Gap_Info> const & gap_values,
           window_standards::Optical_Standard const & standard,
           double width = 1.0,
           double height = 1.0,
@@ -150,10 +145,6 @@ namespace wincalc
         std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
                                                double theta = 0,
                                                double phi = 0);
-
-
-    protected:
-        std::vector<Product_Data_Optical_Thermal> optical_and_thermal_data() const;
     };
 }   // namespace wincalc
 #endif

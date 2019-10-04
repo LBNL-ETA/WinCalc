@@ -490,18 +490,19 @@ namespace wincalc
         return layer;
     }
 
+#if	0
+
     Engine_Gap_Info convert(Gap_Data const & data)
     {
-        std::map<Gas_Type, Gases::GasDef> type_to_wce_type;
-        // Air, Argon, Krypton, Xenon
-        type_to_wce_type[Gas_Type::AIR] = Gases::GasDef::Air;
-        type_to_wce_type[Gas_Type::ARGON] = Gases::GasDef::Argon;
-        type_to_wce_type[Gas_Type::KRYPTON] = Gases::GasDef::Krypton;
-        type_to_wce_type[Gas_Type::XENON] = Gases::GasDef::Xenon;
+        std::vector<Engine_Gas_Mixture_Component> converted_gases;
 
-        auto gas = Gases::Gas::intance().get(type_to_wce_type.at(data.gas));
+        for(auto gas : data.gases)
+        {
+            auto converted_gas = Gases::Gas::intance().get(gas.gas);
+            converted_gases.push_back({converted_gas, gas.percent});
+        }
 
-        return Engine_Gap_Info{gas, data.thickness};
+        return Engine_Gap_Info{converted_gases, data.thickness};
     }
 
     std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data)
@@ -513,6 +514,7 @@ namespace wincalc
         }
         return result;
     }
+#endif
 
     Tarcog::ISO15099::CIGU create_igu(
       std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> const & solid_layers,
@@ -558,16 +560,21 @@ namespace wincalc
         }
 
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
-        for(Engine_Gap_Info Engine_Gap_Info : gaps)
+        for(Engine_Gap_Info engine_gap_info : gaps)
         {
-            tarcog_gaps.push_back(Tarcog::ISO15099::Layers::gap(
-              Engine_Gap_Info.thickness, Gases::CGas({{1.0, Engine_Gap_Info.gas}})));
+            std::vector<std::pair<double, Gases::CGasData>> converted_gas;
+            for(Engine_Gas_Mixture_Component gas : engine_gap_info.gases)
+            {
+                converted_gas.push_back(std::make_pair(gas.percent, gas.gas));
+            }
+            tarcog_gaps.push_back(
+              Tarcog::ISO15099::Layers::gap(engine_gap_info.thickness, Gases::CGas(converted_gas)));
         }
 
         return create_igu(tarcog_solid_layers, tarcog_gaps, width, height);
     }
 
-#if 0
+#    if 0
     IGU_Info
       create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & thermal_layers,
                  Optical_Results_Needed_For_Thermal_Calcs const & optical_results,
@@ -591,7 +598,7 @@ namespace wincalc
         auto converted_layers = convert(layers);
         return create_igu(converted_layers, gaps, width, height, standard);
     }
-#endif
+#    endif
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments)
