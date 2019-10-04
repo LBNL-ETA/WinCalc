@@ -5,9 +5,6 @@ add_library( ${LIB_NAME}
 		optical_calcs.h
 		optical_calcs.cpp
 		optical_results.h
-		thermal_calcs.h
-		thermal_calcs.cpp       
-		thermal_results.h
 		create_wce_objects.h
 		create_wce_objects.cpp
 		glazing_system.h
