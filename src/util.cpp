@@ -28,27 +28,27 @@ namespace wincalc
     }
 
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
-      get_optical_layers(std::vector<OpticsParser::ProductData> const & layers)
+      get_optical_layers(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & layers)
     {
         std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> optical_layers;
 
         for(auto layer : layers)
         {
             optical_layers.push_back(
-              std::make_shared<Product_Data_N_Band_Optical>(convert_optical(layer)));
+              std::make_shared<Product_Data_N_Band_Optical>(convert_optical(*layer)));
         }
 
         return optical_layers;
     }
 
     std::vector<std::shared_ptr<Product_Data_Thermal>>
-      get_thermal_layers(std::vector<OpticsParser::ProductData> const & layers)
+      get_thermal_layers(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & layers)
     {
         std::vector<std::shared_ptr<Product_Data_Thermal>> thermal_layers;
         for(auto layer : layers)
         {
             thermal_layers.push_back(
-              std::make_shared<Product_Data_Thermal>(convert_thermal(layer)));
+              std::make_shared<Product_Data_Thermal>(convert_thermal(*layer)));
         }
         return thermal_layers;
     }
@@ -78,4 +78,5 @@ namespace wincalc
     {
         return all_optical_layers_the_same(get_optical_layers(layers));
     }
+    
 }   // namespace wincalc

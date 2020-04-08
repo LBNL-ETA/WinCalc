@@ -141,7 +141,7 @@ namespace wincalc
     {}
 
     Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
-      std::vector<OpticsParser::ProductData> const & product_data,
+      std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
       std::vector<Engine_Gap_Info> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,

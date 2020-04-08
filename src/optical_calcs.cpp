@@ -72,20 +72,35 @@ namespace wincalc
     WCE_Optical_Result_Absorptance<double>
       get_layer_absorptances(MultiLayerOptics::CMultiPaneSpecular & layers,
                              FenestrationCommon::Side side_choice,
+                             double min_lambda,
+                             double max_lambda,
                              double theta = 0,
                              double phi = 0)
     {
         WCE_Optical_Result_Absorptance<double> absorptances;
-        absorptances.direct = layers.getAbsorptanceLayers(
-          side_choice, FenestrationCommon::ScatteringSimple::Direct, theta, phi);
-        absorptances.diffuse = layers.getAbsorptanceLayers(
-          side_choice, FenestrationCommon::ScatteringSimple::Diffuse, theta, phi);
+        absorptances.direct =
+          layers.getAbsorptanceLayers(min_lambda,
+                                      max_lambda,
+                                      side_choice,
+                                      FenestrationCommon::ScatteringSimple::Direct,
+                                      theta,
+                                      phi);
+        absorptances.diffuse =
+          layers.getAbsorptanceLayers(min_lambda,
+                                      max_lambda,
+                                      side_choice,
+                                      FenestrationCommon::ScatteringSimple::Diffuse,
+                                      theta,
+                                      phi);
 
         return absorptances;
     }
 
-    WCE_Optical_Results
-      calc_all(MultiLayerOptics::CMultiPaneSpecular & layers, double theta, double phi)
+    WCE_Optical_Results calc_all(MultiLayerOptics::CMultiPaneSpecular & layers,
+                                 double min_lambda,
+                                 double max_lambda,
+                                 double theta,
+                                 double phi)
     {
         auto calc_f = [=, &layers](const FenestrationCommon::PropertySimple prop,
                                    const FenestrationCommon::Side side,
@@ -94,25 +109,23 @@ namespace wincalc
         };
 
         auto optical_results = do_calcs<double>(calc_f);
-        optical_results.absorptances_front =
-          get_layer_absorptances(layers, FenestrationCommon::Side::Front, theta, phi);
-        optical_results.absorptances_back =
-          get_layer_absorptances(layers, FenestrationCommon::Side::Back, theta, phi);
+        optical_results.absorptances_front = get_layer_absorptances(
+          layers, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
+        optical_results.absorptances_back = get_layer_absorptances(
+          layers, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
         return optical_results;
     }
 
-
+#if 0
     WCE_Optical_Results
       calc_all(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                window_standards::Optical_Standard_Method const & method,
                double theta,
                double phi)
     {
-        auto layers = create_multi_pane_specular({product_data}, method);
-
-        return calc_all(*layers, theta, phi);
+        return calc_all({product_data}, method, theta, phi);
     }
-
+#endif
 
     WCE_Optical_Results
       calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
@@ -121,8 +134,8 @@ namespace wincalc
                double phi)
     {
         auto layers = create_multi_pane_specular(product_data, method);
-
-        return calc_all(*layers, theta, phi);
+        auto lambda_range = get_lambda_range(product_data, method);
+        return calc_all(*layers, lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
     }
 
     Color_Result
@@ -227,8 +240,15 @@ namespace wincalc
                                                  theta,
                                                  phi);
 
-        std::vector<double> layer_absorptances = multi_pane_specular->getAbsorptanceLayers(
-          FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct, theta, phi);
+        auto lambda_range = get_lambda_range(solid_layers, solar_method);
+
+        std::vector<double> layer_absorptances =
+          multi_pane_specular->getAbsorptanceLayers(lambda_range.min_lambda,
+                                                    lambda_range.max_lambda,
+                                                    FenestrationCommon::Side::Front,
+                                                    FenestrationCommon::ScatteringSimple::Direct,
+                                                    theta,
+                                                    phi);
 
         return Optical_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }

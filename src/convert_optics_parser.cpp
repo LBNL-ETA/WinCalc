@@ -4,8 +4,11 @@ namespace wincalc
 {
     wincalc::Wavelength_Data convert(OpticsParser::WLData const & wl_data)
     {
-        return wincalc::Wavelength_Data{
-          wl_data.wavelength, wl_data.T, wl_data.T, wl_data.frontR, wl_data.backR};
+        return wincalc::Wavelength_Data{wl_data.wavelength,
+                                        wl_data.directComponent.tf,
+                                        wl_data.directComponent.tf,
+                                        wl_data.directComponent.rf,
+                                        wl_data.directComponent.rb};
     }
 
     std::vector<wincalc::Wavelength_Data> convert(std::vector<OpticsParser::WLData> const & wl_data)
@@ -20,22 +23,22 @@ namespace wincalc
 
     Product_Data_N_Band_Optical convert_optical(OpticsParser::ProductData const & product)
     {
-        std::vector<Wavelength_Data> converted_wavelengths = convert(product.measurements);
+        std::vector<Wavelength_Data> converted_wavelengths = convert(product.measurements.value());
         // TODO WCE Fix this to use actual type and not always monolithic
         Product_Data_N_Band_Optical converted{FenestrationCommon::MaterialType::Monolithic,
-                                              product.thickness / 1000.0,
+                                              product.thickness.value() / 1000.0,
                                               converted_wavelengths};
         return converted;
     }
 
     wincalc::Product_Data_Thermal convert_thermal(OpticsParser::ProductData const & product)
     {
-        return wincalc::Product_Data_Thermal(*product.conductivity,
-                                             product.thickness / 1000.0,
-                                             product.IRTransmittance,
-                                             product.IRTransmittance,
-                                             product.frontEmissivity,
-                                             product.backEmissivity,
+        return wincalc::Product_Data_Thermal(product.conductivity.value(),
+                                             product.thickness.value() / 1000.0,
+                                             product.IRTransmittance.value(),
+                                             product.IRTransmittance.value(),
+                                             product.frontEmissivity.value(),
+                                             product.backEmissivity.value(),
                                              false);
     }
 
