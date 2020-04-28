@@ -6,8 +6,10 @@
 
 namespace wincalc
 {
-    wincalc::Product_Data_N_Band_Optical convert_optical(OpticsParser::ProductData const & product);
-    wincalc::Product_Data_Thermal convert_thermal(OpticsParser::ProductData const & product);
+    std::shared_ptr<Product_Data_Optical>
+      convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product);
+    wincalc::Product_Data_Thermal
+      convert_thermal(std::shared_ptr<OpticsParser::ProductData> const & product);
     std::vector<wincalc::Product_Data_Optical_Thermal>
-      convert(std::vector < OpticsParser::ProductData> const & product);
-}
+      convert(std::vector < std::shared_ptr<OpticsParser::ProductData> > const & product);
+}   // namespace wincalc

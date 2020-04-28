@@ -10,7 +10,7 @@ namespace wincalc
         T direct_direct;
         T direct_diffuse;
         T diffuse_diffuse;
-        T hemispherical;
+        T direct_hemispherical;
     };
 
     template<typename T>
@@ -18,7 +18,7 @@ namespace wincalc
     {
         std::vector<T> direct;
         std::vector<T> diffuse;
-        std::vector<T> hemispherical;
+        //std::vector<T> hemispherical;
     };
 
     template<typename T>
@@ -90,6 +90,7 @@ namespace wincalc
         Color_Result direct_direct;
         Color_Result direct_diffuse;
         Color_Result diffuse_diffuse;
+        Color_Result direct_hemispherical;
     };
 
     template<>

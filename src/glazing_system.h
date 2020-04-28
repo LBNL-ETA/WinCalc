@@ -10,133 +10,90 @@
 #include "optical_results.h"
 #include "environmental_conditions.h"
 #include "product_data.h"
+#include "create_wce_objects.h"
 
 namespace wincalc
 {
-    struct Glazing_System_Optical_Interface
+    struct Glazing_System
     {
-        Glazing_System_Optical_Interface(window_standards::Optical_Standard const & standard);
+        Glazing_System(std::vector<Product_Data_Optical_Thermal> const & product_data,
+                       std::vector<Engine_Gap_Info> const & gap_values,
+                       window_standards::Optical_Standard const & standard,
+                       double width = 1.0,
+                       double height = 1.0,
+                       Environments const & environment = nfrc_u_environments(),
+                       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
+                         std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                       Spectal_Data_Wavelength_Range_Method const & type =
+                         Spectal_Data_Wavelength_Range_Method::FULL,
+                       int number_visible_bands = 5,
+                       int number_solar_bands = 10);
 
-        virtual WCE_Optical_Results
+        Glazing_System(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+                       std::vector<Engine_Gap_Info> const & gap_values,
+                       window_standards::Optical_Standard const & standard,
+                       double width = 1.0,
+                       double height = 1.0,
+                       Environments const & environment = nfrc_u_environments(),
+                       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
+                         std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                       Spectal_Data_Wavelength_Range_Method const & type =
+                         Spectal_Data_Wavelength_Range_Method::FULL,
+                       int number_visible_bands = 5,
+                       int number_solar_bands = 10);
+
+        double u(double theta = 0, double phi = 0);
+
+        double shgc(double theta = 0, double phi = 0);
+        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
+                                               double theta = 0,
+                                               double phi = 0);
+
+        WCE_Optical_Results
           all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
                             double theta = 0,
-                            double phi = 0) const = 0;
+                            double phi = 0) const;
 
-        virtual WCE_Color_Results color(double theta = 0, double phi = 0) const = 0;
+        WCE_Color_Results color(double theta = 0, double phi = 0) const;
+
+
+        std::vector<double> solid_layers_effective_conductivities(
+          Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+
+        std::vector<double> gap_layers_effective_conductivities(
+          Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+
+        double system_effective_conductivity(Tarcog::ISO15099::System system_type,
+                                             double theta = 0,
+                                             double phi = 0);
+
+        double relative_heat_gain(double theta = 0, double phi = 0);
 
         void optical_standard(window_standards::Optical_Standard const & s);
         window_standards::Optical_Standard optical_standard() const;
 
     protected:
         window_standards::Optical_Standard standard;
+        std::vector<Product_Data_Optical_Thermal> product_data;
+        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
+        std::vector<Engine_Gap_Info> gap_values;
+        double width;
+        double height;
+        Environments environment;
+        Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
+        int number_visible_bands;
+        int number_solar_bands;
+
+        Tarcog::ISO15099::CIGU & get_igu(double theta, double phi);
+        Tarcog::ISO15099::CSystem & get_system(double theta, double phi);
+
+        std::optional<Tarcog::ISO15099::CIGU> current_igu;
+        std::optional<Tarcog::ISO15099::CSystem> current_system;
+        double last_theta;
+        double last_phi;
 
         window_standards::Optical_Standard_Method
           get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
-    };
-
-    struct Glazing_System_Thermal_Interface
-    {
-        virtual double u(/*double theta = 0, double phi = 0*/) = 0;
-        virtual double shgc(std::vector<double> const & absorptances,
-                            double total_solar_transmittance /*,
-                            double theta = 0,
-                            double phi = 0*/) = 0;
-        virtual std::vector<double>
-          layer_temperatures(Tarcog::ISO15099::System system_type,
-                             std::vector<double> const & absorptances_front) = 0;
-
-        virtual std::vector<double>
-          solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type) = 0;
-
-        virtual std::vector<double>
-          gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) = 0;
-
-        virtual double system_effective_conductivity(Tarcog::ISO15099::System system_type) = 0;
-
-        virtual double relative_heat_gain(double solar_transmittance) = 0;
-    };
-
-    struct Glazing_System_Optical_BSDF_Interface : Glazing_System_Optical_Interface
-    {
-#if 0
-        /* override the calls in Glazing_System_Interface*/
-        virtual square_matrix matrix_method_results(
-          window_standards::Optical_Standard_Method_Type const & method_type) const = 0;
-#endif
-        /* may have the same square matrix results for color in the future*/
-    };
-
-    struct Glazing_System_Optical : Glazing_System_Optical_Interface
-    {
-        Glazing_System_Optical(
-          std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
-          window_standards::Optical_Standard const & standard);
-
-        WCE_Optical_Results
-          all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
-                            double theta = 0,
-                            double phi = 0) const override;
-
-        WCE_Color_Results color(double theta = 0, double phi = 0) const override;
-
-    protected:
-        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> solid_layers_optical;
-    };
-
-    struct Glazing_System_Thermal : Glazing_System_Thermal_Interface
-    {
-
-        Glazing_System_Thermal(
-          std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
-          std::vector<Engine_Gap_Info> const & gap_layers,
-          double width = 1.0,
-          double height = 1.0,
-          Environments const & environment = nfrc_u_environments());
-
-        double u();
-        double shgc(std::vector<double> const & absorptances_front,
-                    double total_solar_transmittance) override;
-
-        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
-                                               std::vector<double> const & absorptances_front);
-
-        std::vector<double>
-          solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type) override;
-
-        std::vector<double>
-          gap_layers_effective_conductivities(Tarcog::ISO15099::System system_type) override;
-
-        double system_effective_conductivity(Tarcog::ISO15099::System system_type) override;
-
-        double relative_heat_gain(double solar_transmittance) override;
-
-    protected:
-        Tarcog::ISO15099::CIGU igu;
-        Tarcog::ISO15099::CSystem system;
-    };
-
-    struct Glazing_System_Thermal_And_Optical : Glazing_System_Thermal, Glazing_System_Optical
-    {
-        Glazing_System_Thermal_And_Optical(
-          std::vector<Product_Data_Optical_Thermal> const & product_data,
-          std::vector<Engine_Gap_Info> const & gap_values,
-          window_standards::Optical_Standard const & standard,
-          double width = 1.0,
-          double height = 1.0,
-          Environments const & environment = nfrc_u_environments());
-
-        Glazing_System_Thermal_And_Optical(
-          std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
-          std::vector<Engine_Gap_Info> const & gap_values,
-          window_standards::Optical_Standard const & standard,
-          double width = 1.0,
-          double height = 1.0,
-          Environments const & environment = nfrc_u_environments());
-
-        double shgc(double theta = 0, double phi = 0);
-        std::vector<double> layer_temperatures(Tarcog::ISO15099::System system_type,
-                                               double theta = 0,
-                                               double phi = 0);
     };
 }   // namespace wincalc
 #endif

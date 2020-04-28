@@ -4,21 +4,20 @@
 #include "optical_calcs.h"
 #include "util.h"
 #include "create_wce_objects.h"
+#include "convert_optics_parser.h"
 
 namespace wincalc
 {
-#pragma warning(push)
-#pragma warning(disable : 4100)
-    WCE_Optical_Results Glazing_System_Optical::all_method_values(
+    WCE_Optical_Results Glazing_System::all_method_values(
       window_standards::Optical_Standard_Method_Type const & method_type,
       double theta,
       double phi) const
     {
         auto method = get_method(method_type);
-        return calc_all(solid_layers_optical, method, theta, phi);
+        return calc_all(get_optical_layers(product_data), method, theta, phi, bsdf_hemisphere);
     }
 
-    WCE_Color_Results Glazing_System_Optical::color(double theta, double phi) const
+    WCE_Color_Results Glazing_System::color(double theta, double phi) const
     {
         window_standards::Optical_Standard_Method tristim_x =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMX);
@@ -26,11 +25,16 @@ namespace wincalc
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMY);
         window_standards::Optical_Standard_Method tristim_z =
           get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMZ);
-        return calc_color(solid_layers_optical, tristim_x, tristim_y, tristim_z, theta, phi);
+        return calc_color(get_optical_layers(product_data),
+                          tristim_x,
+                          tristim_y,
+                          tristim_z,
+                          theta,
+                          phi,
+                          bsdf_hemisphere);
     }
-#pragma warning(pop)
 
-    window_standards::Optical_Standard_Method Glazing_System_Optical_Interface::get_method(
+    window_standards::Optical_Standard_Method Glazing_System::get_method(
       window_standards::Optical_Standard_Method_Type const & method_type) const
     {
         auto method_itr = standard.methods.find(method_type);
@@ -60,114 +64,156 @@ namespace wincalc
         return method_itr->second;
     }
 
-    Glazing_System_Thermal::Glazing_System_Thermal(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & products,
-      std::vector<Engine_Gap_Info> const & gap_layers,
-      double width,
-      double height,
-      Environments const & environment) :
-        igu(create_igu(products, gap_layers, width, height)),
-        system(create_system(igu, environment))
-    {}
-
-    double Glazing_System_Thermal::u()
+    Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
+        if(current_igu.has_value() && theta == last_theta && phi == last_phi)
+        {
+            return current_igu.value();
+        }
+        else
+        {
+            current_igu = create_igu(product_data,
+                                     gap_values,
+                                     width,
+                                     height,
+                                     standard,
+                                     theta,
+                                     phi,
+                                     bsdf_hemisphere,
+                                     spectral_data_wavelength_range_method,
+                                     number_visible_bands,
+                                     number_solar_bands);
+            return current_igu.value();
+        }
+    }
+
+    Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
+    {
+        if(current_system.has_value() && theta == last_theta && phi == last_phi)
+        {
+            return current_system.value();
+        }
+        else
+        {
+            auto & igu = get_igu(theta, phi);
+            current_system = create_system(igu, environment);
+            last_theta = theta;
+            last_phi = phi;
+            return current_system.value();
+        }
+    }
+
+    double Glazing_System::u(double theta, double phi)
+    {
+        auto & system = get_system(theta, phi);
         return system.getUValue();
     }
 
-    double Glazing_System_Thermal::shgc(std::vector<double> const & absorptances_front,
-                                        double total_solar_transmittance)
+    double Glazing_System::shgc(double theta, double phi)
     {
-        system.setAbsorptances(absorptances_front);
-        return system.getSHGC(total_solar_transmittance);
-    }
-    std::vector<double>
-      Glazing_System_Thermal::layer_temperatures(Tarcog::ISO15099::System system_type,
-                                                 std::vector<double> const & absorptances_front)
-    {
-        system.setAbsorptances(absorptances_front);
-        return system.getTemperatures(system_type);
-    }
-    std::vector<double> Glazing_System_Thermal::solid_layers_effective_conductivities(
-      Tarcog::ISO15099::System system_type)
-    {
-        return system.getSolidEffectiveLayerConductivities(system_type);
-    }
-    std::vector<double> Glazing_System_Thermal::gap_layers_effective_conductivities(
-      Tarcog::ISO15099::System system_type)
-    {
-        return system.getGapEffectiveLayerConductivities(system_type);
-    }
-    double
-      Glazing_System_Thermal::system_effective_conductivity(Tarcog::ISO15099::System system_type)
-    {
-        return system.getEffectiveSystemConductivity(system_type);
-    }
-    double Glazing_System_Thermal::relative_heat_gain(double solar_transmittance)
-    {
-        return system.relativeHeatGain(solar_transmittance);
+        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
+          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+
+        auto & system = get_system(theta, phi);
+
+        system.setAbsorptances(optical_results.layer_solar_absorptances);
+        return system.getSHGC(optical_results.total_solar_transmittance);
+
+
+        // return shgc(optical_results.layer_solar_absorptances,
+        //            optical_results.total_solar_transmittance);
     }
 
-    Glazing_System_Optical_Interface::Glazing_System_Optical_Interface(
-      window_standards::Optical_Standard const & standard) :
-        standard(standard)
-    {}
-    void Glazing_System_Optical_Interface::optical_standard(
-      window_standards::Optical_Standard const & s)
+    std::vector<double>
+      Glazing_System::layer_temperatures(Tarcog::ISO15099::System system_type,
+                                         double theta,
+                                         double phi)
+    {
+        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
+          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+        auto & system = get_system(theta, phi);
+        system.setAbsorptances(optical_results.layer_solar_absorptances);
+        return system.getTemperatures(system_type);
+    }
+    std::vector<double>
+      Glazing_System::solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type, double theta, double phi)
+    {
+        auto & system = get_system(theta, phi);
+        return system.getSolidEffectiveLayerConductivities(system_type);
+    }
+    std::vector<double> Glazing_System::gap_layers_effective_conductivities(
+      Tarcog::ISO15099::System system_type, double theta, double phi)
+    {
+        auto & system = get_system(theta, phi);
+        return system.getGapEffectiveLayerConductivities(system_type);
+    }
+    double Glazing_System::system_effective_conductivity(Tarcog::ISO15099::System system_type,
+                                                         double theta,
+                                                         double phi)
+    {
+        auto & system = get_system(theta, phi);
+        return system.getEffectiveSystemConductivity(system_type);
+    }
+    double Glazing_System::relative_heat_gain(double theta, double phi)
+    {
+        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
+          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+        auto & system = get_system(theta, phi);
+        return system.relativeHeatGain(optical_results.total_solar_transmittance);
+    }
+
+    void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
     {
         standard = s;
     }
-    window_standards::Optical_Standard Glazing_System_Optical_Interface::optical_standard() const
+    window_standards::Optical_Standard Glazing_System::optical_standard() const
     {
         return standard;
     }
-    Glazing_System_Optical::Glazing_System_Optical(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & solid_layers,
-      window_standards::Optical_Standard const & standard) :
-        Glazing_System_Optical_Interface(standard), solid_layers_optical(solid_layers)
-    {}
 
-
-    Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
+    Glazing_System::Glazing_System(
       std::vector<Product_Data_Optical_Thermal> const & product_data,
       std::vector<Engine_Gap_Info> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
-      Environments const & environment) :
-        Glazing_System_Optical(get_optical_layers(product_data), standard),
-        Glazing_System_Thermal(
-          get_thermal_layers(product_data), gap_values, width, height, environment)
+      Environments const & environment,
+      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
+      int number_visible_bands,
+      int number_solar_bands) :
+        product_data(product_data),
+        gap_values(gap_values),
+        standard(standard),
+        width(width),
+        height(height),
+        environment(environment),
+        bsdf_hemisphere(bsdf_hemisphere),
+        spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
+        number_visible_bands(number_visible_bands),
+        number_solar_bands(number_solar_bands)
     {}
 
-    Glazing_System_Thermal_And_Optical::Glazing_System_Thermal_And_Optical(
+    Glazing_System::Glazing_System(
       std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
       std::vector<Engine_Gap_Info> const & gap_values,
       window_standards::Optical_Standard const & standard,
       double width,
       double height,
-      Environments const & environment) :
-        Glazing_System_Optical(get_optical_layers(product_data), standard),
-        Glazing_System_Thermal(
-          get_thermal_layers(product_data), gap_values, width, height, environment)
+      Environments const & environment,
+      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
+      int number_visible_bands,
+      int number_solar_bands) :
+        product_data(convert(product_data)),
+        gap_values(gap_values),
+        standard(standard),
+        width(width),
+        height(height),
+        environment(environment),
+        bsdf_hemisphere(bsdf_hemisphere),
+        spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
+        number_visible_bands(number_visible_bands),
+        number_solar_bands(number_solar_bands)
     {}
-
-    double Glazing_System_Thermal_And_Optical::shgc(double theta, double phi)
-    {
-        auto optical_results = optical_results_needed_for_thermal_calcs(
-          solid_layers_optical, optical_standard(), theta, phi);
-
-        return Glazing_System_Thermal::shgc(optical_results.layer_solar_absorptances,
-                                            optical_results.total_solar_transmittance);
-    }
-
-    std::vector<double> Glazing_System_Thermal_And_Optical::layer_temperatures(
-      Tarcog::ISO15099::System system_type, double theta, double phi)
-    {
-        auto optical_results = optical_results_needed_for_thermal_calcs(
-          solid_layers_optical, optical_standard(), theta, phi);
-
-        return Glazing_System_Thermal::layer_temperatures(system_type,
-                                                          optical_results.layer_solar_absorptances);
-    }
 }   // namespace wincalc

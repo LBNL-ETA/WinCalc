@@ -92,10 +92,11 @@ namespace wincalc
                             int number_visible_bands = 5,
                             int number_solar_bands = 10);
 
-
-    std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular> create_multi_pane_specular(
+    std::unique_ptr<SingleLayerOptics::IScatteringLayer> create_multi_pane(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
       window_standards::Optical_Standard_Method const & method,
+      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
+        std::optional<SingleLayerOptics::CBSDFHemisphere>(),
       Spectal_Data_Wavelength_Range_Method const & type =
         Spectal_Data_Wavelength_Range_Method::FULL,
       int number_visible_bands = 5,
@@ -110,16 +111,6 @@ namespace wincalc
                         int number_visible_bands = 5,
                         int number_solar_bands = 10);
 
-    std::unique_ptr<MultiLayerOptics::CMultiPaneBSDF> create_multi_pane_bsdf(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical_With_Material>> const &
-        product_optical_data,
-      window_standards::Optical_Standard_Method const & method,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type =
-        Spectal_Data_Wavelength_Range_Method::FULL,
-      int number_visible_bands = 5,
-      int number_solar_bands = 10);
-
     struct IGU_Info
     {
         Tarcog::ISO15099::CIGU igu;
@@ -127,10 +118,19 @@ namespace wincalc
     };
 
     Tarcog::ISO15099::CIGU
-      create_igu(std::vector<std::shared_ptr<wincalc::Product_Data_Thermal>> const & layers,
+      create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
                  std::vector<Engine_Gap_Info> const & gaps,
                  double width,
-                 double height);
+                 double height,
+                 window_standards::Optical_Standard const & standard,
+                 double theta = 0,
+                 double phi = 0,
+                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
+                   std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                 Spectal_Data_Wavelength_Range_Method const & type =
+                   Spectal_Data_Wavelength_Range_Method::FULL,
+                 int number_visible_bands = 5,
+                 int number_solar_bands = 10);
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments);
@@ -143,15 +143,18 @@ namespace wincalc
 
     Lambda_Range get_lambda_range(wincalc::Product_Data_N_Band_Optical const & product_data,
                                   window_standards::Optical_Standard_Method const & method);
-#if 0
-	Lambda_Range
-      get_lambda_range(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                       window_standards::Optical_Standard_Method const & method);
-#endif
 
     Lambda_Range get_lambda_range(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
       window_standards::Optical_Standard_Method const & method);
+
+    double get_minimum_wavelength(window_standards::Optical_Standard_Method const & method,
+                                  Product_Data_N_Band_Optical const & product_data,
+                                  FenestrationCommon::CSeries const & source_spectrum);
+
+    double get_maximum_wavelength(window_standards::Optical_Standard_Method const & method,
+                                  Product_Data_N_Band_Optical const & product_data,
+                                  FenestrationCommon::CSeries const & source_spectrum);
 
 }   // namespace wincalc
 #endif
