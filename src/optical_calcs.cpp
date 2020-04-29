@@ -29,32 +29,36 @@ namespace wincalc
 
 
     template<typename T>
-    WCE_Optical_Result_By_Side<T>
+    WCE_Optical_Results_Template<T>
       do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
                                const FenestrationCommon::Side side,
                                const FenestrationCommon::Scattering scattering)> const & f)
     {
-        WCE_Optical_Result_By_Side<T> calc_result;
+        WCE_Optical_Results_Template<T> calc_result;
 
-        calc_result.tf = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
-            return f(
-              FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
-        });
+        calc_result.system_results.front.transmittance =
+          do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+              return f(
+                FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
+          });
 
-        calc_result.tb = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
-            return f(
-              FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back, scattering);
-        });
+        calc_result.system_results.back.transmittance =
+          do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+              return f(
+                FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back, scattering);
+          });
 
-        calc_result.rf = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
-            return f(
-              FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front, scattering);
-        });
+        calc_result.system_results.front.reflectance =
+          do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+              return f(
+                FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front, scattering);
+          });
 
-        calc_result.rb = do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
-            return f(
-              FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back, scattering);
-        });
+        calc_result.system_results.back.reflectance =
+          do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
+              return f(
+                FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back, scattering);
+          });
 
         return calc_result;
     }
@@ -72,7 +76,7 @@ namespace wincalc
           min_lambda, max_lambda, property_choice, side_choice, scattering_choice, theta, phi);
     }
 
-    WCE_Optical_Result_Absorptance<double>
+    std::vector<WCE_Optical_Result_Absorptance<double>>
       get_layer_absorptances(std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
                              FenestrationCommon::Side side_choice,
                              double min_lambda,
@@ -80,21 +84,27 @@ namespace wincalc
                              double theta = 0,
                              double phi = 0)
     {
-        WCE_Optical_Result_Absorptance<double> absorptances;
-        absorptances.direct =
+        std::vector<WCE_Optical_Result_Absorptance<double>> absorptances;
+        auto direct_absorptances =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
                                        side_choice,
                                        FenestrationCommon::ScatteringSimple::Direct,
                                        theta,
                                        phi);
-        absorptances.diffuse =
+        auto diffuse_absorptances =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
                                        side_choice,
                                        FenestrationCommon::ScatteringSimple::Diffuse,
                                        theta,
                                        phi);
+
+        for(size_t i = 0; i < direct_absorptances.size(); ++i)
+        {
+            absorptances.push_back(WCE_Optical_Result_Absorptance<double>{direct_absorptances[i],
+                                                                          diffuse_absorptances[i]});
+        }
 
         return absorptances;
     }
@@ -116,10 +126,25 @@ namespace wincalc
               system, prop, side, scattering, min_lambda, max_lambda, theta, phi);
         };
         auto optical_results = do_calcs<double>(calc_f);
+#if 0
         optical_results.absorptances_front = get_layer_absorptances(
           system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
         optical_results.absorptances_back = get_layer_absorptances(
           system, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
+#endif
+        auto absorptancs_front = get_layer_absorptances(
+          system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
+        auto absorptances_back = get_layer_absorptances(
+          system, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
+
+        for(size_t i = 0; i < absorptancs_front.size(); ++i)
+        {
+            optical_results.layer_results.push_back(
+              WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<double>>{
+                WCE_Optical_Result_Absorptance<double>{absorptancs_front[i]},
+                WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}});
+        }
+
         return optical_results;
     }
 
@@ -252,10 +277,10 @@ namespace wincalc
                                    number_visible_bands,
                                    number_solar_bands);
 
-        double tf = ir_results.tf.diffuse_diffuse;
-        double tb = ir_results.tb.diffuse_diffuse;
-        double absorptance_front = ir_results.absorptances_front.direct[0];
-        double absorptance_back = ir_results.absorptances_front.direct[0];
+        double tf = ir_results.system_results.front.transmittance.diffuse_diffuse;
+        double tb = ir_results.system_results.back.transmittance.diffuse_diffuse;
+        double absorptance_front = ir_results.layer_results[0].front.absorptance.direct;
+        double absorptance_back = ir_results.layer_results[0].back.absorptance.direct;
         return Layer_Optical_IR_Results_Needed_For_Thermal_Calcs{
           tf, tb, absorptance_front, absorptance_back};
     }
@@ -309,13 +334,14 @@ namespace wincalc
                                         number_visible_bands,
                                         number_solar_bands);
 
-        double t_sol = layers->getPropertySimple(lambda_range.min_lambda,
-                                                 lambda_range.max_lambda,
-                                                 FenestrationCommon::PropertySimple::T,
-                                                 FenestrationCommon::Side::Front,
-                                                 FenestrationCommon::Scattering::DirectHemispherical,
-                                                 theta,
-                                                 phi);
+        double t_sol =
+          layers->getPropertySimple(lambda_range.min_lambda,
+                                    lambda_range.max_lambda,
+                                    FenestrationCommon::PropertySimple::T,
+                                    FenestrationCommon::Side::Front,
+                                    FenestrationCommon::Scattering::DirectHemispherical,
+                                    theta,
+                                    phi);
 
         std::vector<double> layer_absorptances =
           layers->getAbsorptanceLayers(lambda_range.min_lambda,

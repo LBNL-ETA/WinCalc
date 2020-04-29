@@ -910,10 +910,10 @@ namespace wincalc
                                            number_visible_bands,
                                            number_solar_bands);
 
-                ir_transmittance_front = ir_results.tf.diffuse_diffuse;
-                ir_transmittance_back = ir_results.tb.diffuse_diffuse;
-                ir_absorptance_front = ir_results.absorptances_front.diffuse[0];
-                ir_absorptance_back = ir_results.absorptances_back.diffuse[0];
+                ir_transmittance_front = ir_results.system_results.front.transmittance.diffuse_diffuse;
+                ir_transmittance_back = ir_results.system_results.back.transmittance.diffuse_diffuse;
+                ir_absorptance_front = ir_results.layer_results[0].front.absorptance.diffuse;
+                ir_absorptance_back = ir_results.layer_results[0].back.absorptance.diffuse;
             }
             else
             {

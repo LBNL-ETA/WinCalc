@@ -16,11 +16,40 @@ namespace wincalc
     template<typename T>
     struct WCE_Optical_Result_Absorptance
     {
-        std::vector<T> direct;
-        std::vector<T> diffuse;
-        //std::vector<T> hemispherical;
+        T direct;
+        T diffuse;
+        // T hemispherical;
     };
 
+    template<typename T>
+	struct WCE_Optical_Result_Layer
+	{
+        WCE_Optical_Result_Absorptance<T> absorptance;
+	};
+
+    template<typename T>
+    struct WCE_Transmission_Result
+    {
+        T transmittance;
+        T reflectance;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_By_Side
+    {
+        T front;
+        T back;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Results_Template
+    {
+        WCE_Optical_Result_By_Side<WCE_Transmission_Result<WCE_Optical_Result_Simple<T>>>
+          system_results;
+        std::vector<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> layer_results;
+    };
+
+#if 0
     template<typename T>
     struct WCE_Optical_Result_By_Side
     {
@@ -31,8 +60,9 @@ namespace wincalc
         WCE_Optical_Result_Absorptance<T> absorptances_front;
         WCE_Optical_Result_Absorptance<T> absorptances_back;
     };
+#endif
 
-    using WCE_Optical_Results = WCE_Optical_Result_By_Side<double>;
+    using WCE_Optical_Results = WCE_Optical_Results_Template<double>;
 
     struct Trichromatic
     {
@@ -85,15 +115,13 @@ namespace wincalc
     };
 
     template<>
-    struct WCE_Optical_Result_By_Side<Color_Result>
+    struct WCE_Optical_Results_Template<Color_Result>
     {
-        WCE_Optical_Result_Simple<Color_Result> tf;
-        WCE_Optical_Result_Simple<Color_Result> tb;
-        WCE_Optical_Result_Simple<Color_Result> rf;
-        WCE_Optical_Result_Simple<Color_Result> rb;
+        WCE_Optical_Result_By_Side<WCE_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
+          system_results;
     };
 
-    using WCE_Color_Results = WCE_Optical_Result_By_Side<Color_Result>;
+    using WCE_Color_Results = WCE_Optical_Results_Template<Color_Result>;
 
 }   // namespace wincalc
 
