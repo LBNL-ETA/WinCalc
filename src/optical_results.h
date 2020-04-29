@@ -85,15 +85,6 @@ namespace wincalc
     };
 
     template<>
-    struct WCE_Optical_Result_Simple<Color_Result>
-    {
-        Color_Result direct_direct;
-        Color_Result direct_diffuse;
-        Color_Result diffuse_diffuse;
-        Color_Result direct_hemispherical;
-    };
-
-    template<>
     struct WCE_Optical_Result_By_Side<Color_Result>
     {
         WCE_Optical_Result_Simple<Color_Result> tf;
