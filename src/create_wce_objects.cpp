@@ -749,8 +749,6 @@ namespace wincalc
               number_solar_bands);
             auto tf = layer->getResults()->DirHem(FenestrationCommon::Side::Front,
                                                   FenestrationCommon::PropertySimple::T);
-            int q{0};
-            q;
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
                   product_data))
