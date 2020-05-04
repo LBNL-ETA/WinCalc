@@ -28,7 +28,7 @@ namespace wincalc
 	};
 
     template<typename T>
-    struct WCE_Transmission_Result
+    struct WCE_Optical_Transmission_Result
     {
         T transmittance;
         T reflectance;
@@ -44,7 +44,7 @@ namespace wincalc
     template<typename T>
     struct WCE_Optical_Results_Template
     {
-        WCE_Optical_Result_By_Side<WCE_Transmission_Result<WCE_Optical_Result_Simple<T>>>
+        WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<T>>>
           system_results;
         std::vector<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> layer_results;
     };
@@ -117,7 +117,7 @@ namespace wincalc
     template<>
     struct WCE_Optical_Results_Template<Color_Result>
     {
-        WCE_Optical_Result_By_Side<WCE_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
+        WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
           system_results;
     };
 
