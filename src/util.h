@@ -4,6 +4,7 @@
 #include <OpticsParser.hpp>
 #include "product_data.h"
 
+
 namespace wincalc
 {
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
@@ -15,7 +16,7 @@ namespace wincalc
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
       get_optical_layers(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & layers);
 
-	std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
+    std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
       get_optical_layers(std::vector<std::shared_ptr<Product_Data_Optical_Thermal>> const & layers);
 
     std::vector<std::shared_ptr<Product_Data_Thermal>>
@@ -27,4 +28,5 @@ namespace wincalc
     bool all_optical_layers_the_same(
       std::vector<wincalc::Product_Data_Optical_Thermal> const & layers);
 
+    std::string to_lower(std::string s);
 }   // namespace wincalc
