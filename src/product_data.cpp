@@ -203,7 +203,7 @@ namespace wincalc
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
-          width, height, material_optical_data->thickness_meters, openness);
+          width, height, shade_thickness, openness);
     }
 
     Product_Data_Optical_Thermal::Product_Data_Optical_Thermal(
