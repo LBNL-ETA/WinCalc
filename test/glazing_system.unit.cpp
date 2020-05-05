@@ -881,32 +881,28 @@ TEST_F(TestGlazingSystem, Test_CGDB_3000_NFRC_102_glazing_system)
     std::cout << "Start u results for Exterior Venetian on NFRC 102 as a glazing system."
               << std::endl;
     auto u_result = glazing_system_u.u();
-    EXPECT_NEAR(u_result, 3.23967981338501, 1e-6);
+    EXPECT_NEAR(u_result, 3.2396918787544662, 1e-6);
     //    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
 
     auto u_layer_effective_conductivity_solid_layers =
       glazing_system_u.solid_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[0], 1.87809121608734, 1e-6);
+    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[0], 1.8780638541433032, 1e-6);
     EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[1], 1, 1e-6);
 
     auto u_layer_effective_conductivity_gap_layers =
       glazing_system_u.gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_layer_effective_conductivity_gap_layers[0], 0.0764862895011902, 1e-6);
+    EXPECT_NEAR(u_layer_effective_conductivity_gap_layers[0], 0.076489623038027671, 1e-6);
 
     auto u_system_effective_conductivity =
       glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
     EXPECT_NEAR(u_system_effective_conductivity, 0.102941773831844, 1e-6);
 
-    auto u_system_effective_conductivity_from_shgc =
-      glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::SHGC);
-    EXPECT_NEAR(u_system_effective_conductivity_from_shgc, 0.102941773831844, 1e-6);
-
     std::cout << "Start shgc results for Exterior Venetian on NFRC 102 as a glazing system."
               << std::endl;
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.841569364070892, 1e-6);
+    EXPECT_NEAR(shgc_result, 0.8415736990516316, 1e-6);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
@@ -916,20 +912,29 @@ TEST_F(TestGlazingSystem, Test_CGDB_3000_NFRC_102_glazing_system)
     WCE_Optical_Results solar_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
-    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical, 0.789682567119598, 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical,
+                0.78968932199996555,
+                1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_direct, 0.7867, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical, 0.0930001735687256, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical, 0.0917635932564735, 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical,
+                0.093007851995787302,
+                1e-6);
+    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical,
+                0.091859351033763165,
+                1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_diffuse, 0.786517, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_diffuse, 0.073785, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse, 0.63794508795388927, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676,
+    // 1e-6); EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.63794508795388927, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.diffuse_diffuse, 0.138815, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse, 0.14709734859263215, 1e-6);
-    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.0306222271174192, 1e-6);
-    EXPECT_NEAR(solar_results.layer_results[1].front.absorptance.direct, 0.0866950526833534, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.14709734859263215, 1e-6);
+    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.03060936143662869, 1e-6);
+    EXPECT_NEAR(
+      solar_results.layer_results[1].front.absorptance.direct, 0.086693464567618075, 1e-6);
     // EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.diffuse, 0.0306, 1e-6);
     // EXPECT_NEAR(solar_results.absorptances_front.diffuse[1], 0.0867, 1e-6);
 
@@ -938,25 +943,36 @@ TEST_F(TestGlazingSystem, Test_CGDB_3000_NFRC_102_glazing_system)
     WCE_Optical_Results photopic_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
-    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical, 0.853257298469543, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical,
+                0.85326534421545952,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_direct, 0.8502, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical, 0.103227593004704, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical, 0.104665458202362, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical,
+                0.10323814248919577,
+                1e-6);
+    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical,
+                0.10467287892455968,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
 
     std::cout << "Start uv results for Exterior Venetian on NFRC 102 as a glazing system."
               << std::endl;
     WCE_Optical_Results tuv_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::TUV);
 
-    EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_hemispherical, 0.66982889175415, 1e-6);
+    EXPECT_NEAR(
+      tuv_results.system_results.front.transmittance.direct_hemispherical, 0.66982889175415, 1e-6);
 #    if 0
     EXPECT_NEAR(tuv_results.system_results.back.transmittance.direct_direct, 0.58733483792234731, 1e-6);
     EXPECT_NEAR(tuv_results.system_results.front.reflectance.direct_direct, 0.062256898186217748, 1e-6);
@@ -1138,7 +1154,7 @@ TEST_F(TestGlazingSystem, Test_CGDB_18000_NFRC_102_glazing_system)
     std::cout << "Start u results Exterior Perforated on NFRC 102 as a glazing system."
               << std::endl;
     auto u_result = glazing_system_u.u();
-    EXPECT_NEAR(u_result, 3.14115428924561, 1e-6);
+    EXPECT_NEAR(u_result, 3.1411595607437874, 1e-6);
     //    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
@@ -1159,7 +1175,7 @@ TEST_F(TestGlazingSystem, Test_CGDB_18000_NFRC_102_glazing_system)
     std::cout << "Start shgc results Exterior Perforated on NFRC 102 as a glazing system."
               << std::endl;
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.34882065653801, 1e-6);
+    EXPECT_NEAR(shgc_result, 0.34881892160578121, 1e-6);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
@@ -1169,19 +1185,28 @@ TEST_F(TestGlazingSystem, Test_CGDB_18000_NFRC_102_glazing_system)
     WCE_Optical_Results solar_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
-    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical, 0.315235286951065, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_hemispherical, 0.7867, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical, 0.543412625789642, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical, 0.277264833450317, 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical,
+                0.315235286951065,
+                1e-6);
+    // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_hemispherical, 0.7867,
+    // 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical,
+                0.54342776212029142,
+                1e-6);
+    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical,
+                0.27735812445735147,
+                1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_diffuse, 0.786517, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_diffuse, 0.073785, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse, 0.63794508795388927, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676,
+    // 1e-6); EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.63794508795388927, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.diffuse_diffuse, 0.138815, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse, 0.14709734859263215, 1e-6);
-    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.106674179434776, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.14709734859263215, 1e-6);
+    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.10665923252381561, 1e-6);
     EXPECT_NEAR(solar_results.layer_results[1].front.absorptance.direct, 0.0346778891980648, 1e-6);
     // EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.diffuse, 0.056829, 1e-6);
     // EXPECT_NEAR(solar_results.absorptances_front.diffuse[1], 0.095680, 1e-6);
@@ -1191,24 +1216,35 @@ TEST_F(TestGlazingSystem, Test_CGDB_18000_NFRC_102_glazing_system)
     WCE_Optical_Results photopic_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
-    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical, 0.340711891651154, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical,
+                0.340711891651154,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_direct, 0.8502, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical, 0.559640407562256, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical, 0.316915452480316, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical,
+                0.559640407562256,
+                1e-6);
+    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical,
+                0.316915452480316,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
 
     std::cout << "Start uv results Exterior Perforated on NFRC 102 as a glazing system."
               << std::endl;
     WCE_Optical_Results tuv_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::TUV);
-    EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_hemispherical, 0.265386551618576, 1e-6);
+    EXPECT_NEAR(
+      tuv_results.system_results.front.transmittance.direct_hemispherical, 0.265386551618576, 1e-6);
 
 #    if 0
     EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_direct, 0.58733483792234731, 1e-6);
@@ -1369,7 +1405,7 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
     auto clear_3 = parser.parseJSONFile(clear_3_path.string());
     auto venetian_layer = parser.parseJSONFile(venetian_path.string());
     auto shade_material = venetian_layer->composedProduct();
-    auto shade_geometry = std::make_shared<OpticsParser::WovenGeometry>(0.001, 0.002, 0.002);
+    auto shade_geometry = std::make_shared<OpticsParser::WovenGeometry>(0.002, 0.003, 0.002);
     auto shade_composition_info = std::shared_ptr<OpticsParser::CompositionInformation>(
       new OpticsParser::CompositionInformation{shade_material, shade_geometry});
     OpticsParser::ProductData shade_layer_info(
@@ -1401,19 +1437,19 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
 
     std::cout << "Start u results exterior woven on NFRC 102 as a glazing system." << std::endl;
     auto u_result = glazing_system_u.u();
-    EXPECT_NEAR(u_result, 3.06628727912903, 1e-6);
+    EXPECT_NEAR(u_result, 2.9148823179439018, 1e-6);
     //    EXPECT_NEAR(u_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(u_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
 
     auto u_layer_effective_conductivity_solid_layers =
       glazing_system_u.solid_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[0], 135.041809082031, 1e-6);
+    EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[0], 146.74330655757495, 1e-6);
     EXPECT_NEAR(u_layer_effective_conductivity_solid_layers[1], 1, 1e-6);
 
     auto u_layer_effective_conductivity_gap_layers =
       glazing_system_u.gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_layer_effective_conductivity_gap_layers[0], 0.0723807141184807, 1e-6);
+    EXPECT_NEAR(u_layer_effective_conductivity_gap_layers[0], 0.070327899269384583, 1e-6);
 
     auto u_system_effective_conductivity =
       glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
@@ -1421,7 +1457,7 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
 
     std::cout << "Start shgc results exterior woven on NFRC 102 as a glazing system." << std::endl;
     auto shgc_result = glazing_system_shgc.shgc();
-    EXPECT_NEAR(shgc_result, 0.269030928611755, 1e-6);
+    EXPECT_NEAR(shgc_result, 0.14718304092197346, 1e-6);
     //    EXPECT_NEAR(shgc_result.t_sol, 0.70329763318245331, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[0], 0.096487646903148996, 1e-6);
     //    EXPECT_NEAR(shgc_result.layer_solar_absorptances[1], 0.072256097417367798, 1e-6);
@@ -1431,47 +1467,69 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
     WCE_Optical_Results solar_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::SOLAR);
 
-    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical, 0.221016958355904, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_hemispherical, 0.7867, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical, 0.511726677417755, 1e-6);
-    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical, 0.428247153759003, 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_hemispherical,
+                0.098171536948485016,
+                1e-6);
+    // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_hemispherical, 0.7867,
+    // 1e-6);
+    EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_hemispherical,
+                0.6065899265825383,
+                1e-6);
+    EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_hemispherical,
+                0.50146963524036026,
+                1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.transmittance.direct_diffuse, 0.786517, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.direct_diffuse, 0.073785, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse, 0.63794508795388927, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.front.transmittance.diffuse_diffuse, 0.708676,
+    // 1e-6); EXPECT_NEAR(solar_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.63794508795388927, 1e-6);
     // EXPECT_NEAR(solar_results.system_results.front.reflectance.diffuse_diffuse, 0.138815, 1e-6);
-    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse, 0.14709734859263215, 1e-6);
-    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.242863357067108, 1e-6);
-    EXPECT_NEAR(solar_results.layer_results[1].front.absorptance.direct, 0.024392994120717, 1e-6);
+    // EXPECT_NEAR(solar_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.14709734859263215, 1e-6);
+    EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.direct, 0.28441079217097104, 1e-6);
+    EXPECT_NEAR(
+      solar_results.layer_results[1].front.absorptance.direct, 0.010827744298005591, 1e-6);
     // EXPECT_NEAR(solar_results.layer_results[0].front.absorptance.diffuse, 0.056829, 1e-6);
     // EXPECT_NEAR(solar_results.absorptances_front.diffuse[1], 0.095680, 1e-6);
 
-	std::cout << "Start photopic results exterior woven on NFRC 102 as a glazing system."
+    std::cout << "Start photopic results exterior woven on NFRC 102 as a glazing system."
               << std::endl;
     WCE_Optical_Results photopic_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::PHOTOPIC);
 
-    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical, 0.24127995967865, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_hemispherical,
+                0.10723787565441972,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_direct, 0.8502, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical, 0.558521032333374, 1e-6);
-    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical, 0.5371133685112, 1e-6);
+    EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_hemispherical,
+                0.66231650848248969,
+                1e-6);
+    EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_hemispherical,
+                0.63235320261454742,
+                1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.transmittance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.front.reflectance.direct_diffuse, 0.0, 1e-6);
     // EXPECT_NEAR(photopic_results.system_results.back.reflectance.direct_diffuse, 0.0, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse, 0.78935221564455493, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
-    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse, 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.transmittance.diffuse_diffuse,
+    // 0.78935221564455493, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.front.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
+    // EXPECT_NEAR(photopic_results.system_results.back.reflectance.diffuse_diffuse,
+    // 0.13525667684831866, 1e-6);
 
     std::cout << "Start uv results exterior woven on NFRC 102 as a glazing system." << std::endl;
     WCE_Optical_Results tuv_results =
       glazing_system_u.all_method_values(Optical_Standard_Method_Type::TUV);
-    EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_hemispherical, 0.179512813687325, 1e-6);
+    EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_hemispherical,
+                0.079820547642344905,
+                1e-6);
 
-#        if 0
+#    if 0
     EXPECT_NEAR(tuv_results.system_results.front.transmittance.direct_direct, 0.58733483792234731, 1e-6);
     EXPECT_NEAR(tuv_results.system_results.back.transmittance.direct_direct, 0.58733483792234731, 1e-6);
     EXPECT_NEAR(tuv_results.system_results.front.reflectance.direct_direct, 0.062256898186217748, 1e-6);
