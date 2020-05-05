@@ -4,6 +4,7 @@
 #include <WCESingleLayerOptics.hpp>
 #include <WCETarcog.hpp>
 #include <optical_standard.h>
+#include <OpticsParser.hpp>
 
 
 namespace wincalc
@@ -52,7 +53,12 @@ namespace wincalc
         // to be analagous to other properties used in thermal calculations that are actually
         // derived from optical data, e.g. solar absorptance in SHGC calculations.
         virtual std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width, double height, double gap_width_top, double gap_width_bottom, double gap_width_left, double gap_width_right) const;
+          effective_thermal_values(double width,
+                                   double height,
+                                   double gap_width_top,
+                                   double gap_width_bottom,
+                                   double gap_width_left,
+                                   double gap_width_right) const;
         std::optional<double> ir_transmittance_front;
         std::optional<double> ir_transmittance_back;
         std::optional<double> emissivity_front;
@@ -72,7 +78,7 @@ namespace wincalc
         double rb_visible;
     };
 
-
+#if 0
     struct Wavelength_Data
     {
         double wavelength;
@@ -81,6 +87,7 @@ namespace wincalc
         double reflectance_front;
         double reflectance_back;
     };
+#endif
 
 
     struct Product_Data_N_Band_Optical : Product_Data_Optical
@@ -88,14 +95,14 @@ namespace wincalc
         Product_Data_N_Band_Optical(
           FenestrationCommon::MaterialType material_type,
           double thickness_meteres,
-          std::vector<Wavelength_Data> wavelength_data,
+          std::vector<OpticsParser::WLData> wavelength_data,
           std::optional<double> ir_transmittance_front = std::optional<double>(),
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
-        std::vector<Wavelength_Data> wavelength_data;
+        std::vector<OpticsParser::WLData> wavelength_data;
     };
 
     struct Product_Data_Optical_Thermal
@@ -146,7 +153,7 @@ namespace wincalc
                                    double gap_width_left,
                                    double gap_width_right) const override;
 
-		double slat_tilt;
+        double slat_tilt;
         double slat_width;
         double slat_spacing;
         double slat_curvature;

@@ -48,7 +48,7 @@ namespace wincalc
     Product_Data_N_Band_Optical::Product_Data_N_Band_Optical(
       FenestrationCommon::MaterialType material_type,
       double thickness_meters,
-      std::vector<Wavelength_Data> wavelength_data,
+      std::vector<OpticsParser::WLData> wavelength_data,
       std::optional<double> ir_transmittance_front,
       std::optional<double> ir_transmittance_back,
       std::optional<double> emissivity_front,

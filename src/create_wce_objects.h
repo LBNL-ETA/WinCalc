@@ -35,12 +35,12 @@ namespace wincalc
 
 
     // SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
-    SpectralAveraging::MeasuredRow convert(wincalc::Wavelength_Data const & data);
+    SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
 
     // std::vector<SpectralAveraging::MeasuredRow> convert(std::vector<OpticsParser::WLData> const &
     // data);
     std::vector<SpectralAveraging::MeasuredRow>
-      convert(std::vector<wincalc::Wavelength_Data> const & data);
+      convert(std::vector<OpticsParser::WLData> const & data);
 
     FenestrationCommon::CSeries convert(std::vector<std::pair<double, double>> const & v);
 

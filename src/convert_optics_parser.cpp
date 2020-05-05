@@ -4,6 +4,7 @@
 
 namespace wincalc
 {
+#if 0
     wincalc::Wavelength_Data convert(OpticsParser::WLData const & wl_data)
     {
         return wincalc::Wavelength_Data{wl_data.wavelength,
@@ -22,6 +23,7 @@ namespace wincalc
         }
         return converted_data;
     }
+#endif
 
     std::shared_ptr<Product_Data_Optical>
       convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product)
@@ -31,8 +33,8 @@ namespace wincalc
 
         if(composed_product)
         {
-            std::vector<Wavelength_Data> converted_wavelengths =
-              convert(composed_product->compositionInformation->material->measurements.value());
+            // std::vector<Wavelength_Data> converted_wavelengths =
+            //  convert(composed_product->compositionInformation->material->measurements.value());
             auto material = convert_optical(composed_product->compositionInformation->material);
             auto subtype = to_lower(composed_product->subtype.value());
             if(subtype == "venetian")
@@ -42,7 +44,7 @@ namespace wincalc
                     composed_product->compositionInformation->geometry);
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Venetian{material,
-                                                    geometry->slatTilt,   
+                                                    geometry->slatTilt,
                                                     geometry->slatWidth,
                                                     geometry->slatSpacing,
                                                     geometry->slatCurvature,
@@ -102,13 +104,12 @@ namespace wincalc
         }
         else
         {
-            std::vector<Wavelength_Data> converted_wavelengths =
-              convert(product->measurements.value());
+            auto wavelength_measured_values = product->measurements.value();
             // TODO WCE Fix this to use actual type and not always monolithic
             std::shared_ptr<Product_Data_Optical> converted(
               new Product_Data_N_Band_Optical{FenestrationCommon::MaterialType::Monolithic,
                                               product->thickness.value() / 1000.0,
-                                              converted_wavelengths,
+                                              wavelength_measured_values,
                                               product->IRTransmittance.value(),
                                               product->IRTransmittance.value(),
                                               product->frontEmissivity.value(),

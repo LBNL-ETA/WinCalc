@@ -34,19 +34,21 @@ namespace wincalc
     }
 
 
-    SpectralAveraging::MeasuredRow convert(wincalc::Wavelength_Data const & data)
+    SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
-        SpectralAveraging::MeasuredRow converted(
-          data.wavelength, data.transmittance_front, data.reflectance_front, data.reflectance_back);
+        SpectralAveraging::MeasuredRow converted(data.wavelength,
+                                                 data.directComponent.tf,
+                                                 data.directComponent.rf,
+                                                 data.directComponent.rb);
         return converted;
     }
 
     std::vector<SpectralAveraging::MeasuredRow>
-      convert(std::vector<wincalc::Wavelength_Data> const & data)
+      convert(std::vector<OpticsParser::WLData> const & data)
     {
         std::vector<SpectralAveraging::MeasuredRow> converted;
 
-        for(wincalc::Wavelength_Data const & row : data)
+        for(auto const & row : data)
         {
             converted.push_back(convert(row));
         }
@@ -105,11 +107,11 @@ namespace wincalc
     }
 
     template<>
-    std::vector<double> get_first_val(std::vector<wincalc::Wavelength_Data> const & wl_data)
+    std::vector<double> get_first_val(std::vector<OpticsParser::WLData> const & wavelength_data)
     {
         std::vector<double> res;
 
-        for(wincalc::Wavelength_Data const & row : wl_data)
+        for(auto const & row : wavelength_data)
         {
             res.push_back(row.wavelength);
         }
