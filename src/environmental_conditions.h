@@ -6,7 +6,7 @@ namespace wincalc
 {
     struct Environment
     {
-        double air_tempareature;
+        double air_temperature;
         double pressure;
         double convection_coefficient;
         Tarcog::ISO15099::BoundaryConditionsCoeffModel coefficient_model;

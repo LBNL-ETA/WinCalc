@@ -1,5 +1,6 @@
 #include "convert_optics_parser.h"
 #include <sstream>
+#include "util.h"
 
 namespace wincalc
 {
@@ -33,8 +34,8 @@ namespace wincalc
             std::vector<Wavelength_Data> converted_wavelengths =
               convert(composed_product->compositionInformation->material->measurements.value());
             auto material = convert_optical(composed_product->compositionInformation->material);
-
-            if(_stricmp(composed_product->subtype.value().c_str(), "venetian") == 0)
+            auto subtype = to_lower(composed_product->subtype.value());
+            if(subtype == "venetian")
             {
                 std::shared_ptr<OpticsParser::VenetianGeometry> geometry =
                   std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(
@@ -48,7 +49,7 @@ namespace wincalc
                                                     geometry->numberSegments});
                 return converted;
             }
-            else if(_stricmp(composed_product->subtype.value().c_str(), "woven") == 0)
+            else if(subtype == "woven")
             {
                 std::shared_ptr<OpticsParser::WovenGeometry> geometry =
                   std::dynamic_pointer_cast<OpticsParser::WovenGeometry>(
@@ -60,21 +61,22 @@ namespace wincalc
                                                        geometry->shadeThickness});
                 return converted;
             }
-            else if(_stricmp(composed_product->subtype.value().c_str(), "perforated-screen") == 0)
+            else if(subtype == "perforated-screen")
             {
                 std::shared_ptr<OpticsParser::PerforatedGeometry> geometry =
                   std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(
                     composed_product->compositionInformation->geometry);
                 Product_Data_Optical_Perforated_Screen::Type perforation_type;
-                if(_stricmp(geometry->perforationType.c_str(), "Circular") == 0)
+                auto perforation_type_str = to_lower(geometry->perforationType);
+                if(perforation_type_str == "circular")
                 {
                     perforation_type = Product_Data_Optical_Perforated_Screen::Type::CIRCULAR;
                 }
-                else if(_stricmp(geometry->perforationType.c_str(), "Square") == 0)
+                else if(perforation_type_str == "square")
                 {
                     perforation_type = Product_Data_Optical_Perforated_Screen::Type::SQUARE;
                 }
-                else if(_stricmp(geometry->perforationType.c_str(), "Rectangular") == 0)
+                else if(perforation_type_str == "rectangular")
                 {
                     perforation_type = Product_Data_Optical_Perforated_Screen::Type::RECTANGULAR;
                 }

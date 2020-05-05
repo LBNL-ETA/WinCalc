@@ -146,10 +146,10 @@ namespace wincalc
                                    double gap_width_left,
                                    double gap_width_right) const override;
 
+		double slat_tilt;
         double slat_width;
         double slat_spacing;
         double slat_curvature;
-        double slat_tilt;
         int number_slats;
         SingleLayerOptics::DistributionMethod distribution_method;
     };

@@ -1,4 +1,5 @@
 #include "util.h"
+#include <algorithm>
 #include "convert_optics_parser.h"
 
 namespace wincalc
@@ -83,6 +84,24 @@ namespace wincalc
             optical_layers.push_back(layer->optical_data);
         }
         return optical_layers;
+    }
+
+    std::string to_lower(std::string s)
+    {
+        /*
+                This has issues with unicode but there will be many of those to deal
+                with if this ever needs to really be internationalized.
+                Until then this should be good enough
+        */
+#ifdef _MSC_VER
+#    pragma warning(push)
+#    pragma warning(disable : 4244)
+#endif
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
+        return s;
     }
 
 }   // namespace wincalc

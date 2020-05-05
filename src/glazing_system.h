@@ -73,14 +73,14 @@ namespace wincalc
         window_standards::Optical_Standard optical_standard() const;
 
     protected:
-        window_standards::Optical_Standard standard;
         std::vector<Product_Data_Optical_Thermal> product_data;
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
         std::vector<Engine_Gap_Info> gap_values;
-        double width;
+        window_standards::Optical_Standard standard;
+		double width;
         double height;
         Environments environment;
-        Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
+        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
+ 		Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
 

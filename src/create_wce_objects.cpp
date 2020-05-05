@@ -11,8 +11,7 @@ namespace wincalc
       create_indoor_environment(Environment const & environment)
     {
         std::shared_ptr<Tarcog::ISO15099::CIndoorEnvironment> indoor =
-          Tarcog::ISO15099::Environments::indoor(environment.air_tempareature,
-                                                 environment.pressure);
+          Tarcog::ISO15099::Environments::indoor(environment.air_temperature, environment.pressure);
 
         indoor->setHCoeffModel(environment.coefficient_model, environment.convection_coefficient);
 
@@ -23,7 +22,7 @@ namespace wincalc
       create_outdoor_environment(Environment const & environment)
     {
         std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment> outdoor =
-          Tarcog::ISO15099::Environments::outdoor(environment.air_tempareature,
+          Tarcog::ISO15099::Environments::outdoor(environment.air_temperature,
                                                   environment.air_speed,
                                                   environment.direct_solar_radiation,
                                                   environment.radiation_temperature,
@@ -390,18 +389,15 @@ namespace wincalc
         }
     }
 
-#pragma warning(push)
-#pragma warning(disable : 4100)
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_Dual_Band_Optical const & product_data,
-                      window_standards::Optical_Standard_Method const & method,
-                      Spectal_Data_Wavelength_Range_Method const & type,
-                      int number_visible_bands,
-                      int number_solar_bands)
+      create_material(wincalc::Product_Data_Dual_Band_Optical const &,
+                      window_standards::Optical_Standard_Method const &,
+                      Spectal_Data_Wavelength_Range_Method const &,
+                      int,
+                      int)
     {
         throw std::runtime_error("Dual band not yet supported.");
     }
-#pragma warning(pop)
 
     Lambda_Range get_lambda_range(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
@@ -707,7 +703,7 @@ namespace wincalc
                      std::underlying_type<Product_Data_Optical_Perforated_Screen::Type>::type>(
                      product_data->perforation_type);
             throw std::runtime_error(msg.str());
-			}
+        }
     }
 
 
@@ -752,9 +748,7 @@ namespace wincalc
               number_visible_bands,
               number_solar_bands);
             auto tf = layer->getResults()->DirHem(FenestrationCommon::Side::Front,
-                                        FenestrationCommon::PropertySimple::T);
-            int q{0};           
-			q;
+                                                  FenestrationCommon::PropertySimple::T);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
                   product_data))
@@ -910,8 +904,10 @@ namespace wincalc
                                            number_visible_bands,
                                            number_solar_bands);
 
-                ir_transmittance_front = ir_results.system_results.front.transmittance.diffuse_diffuse;
-                ir_transmittance_back = ir_results.system_results.back.transmittance.diffuse_diffuse;
+                ir_transmittance_front =
+                  ir_results.system_results.front.transmittance.diffuse_diffuse;
+                ir_transmittance_back =
+                  ir_results.system_results.back.transmittance.diffuse_diffuse;
                 ir_absorptance_front = ir_results.layer_results[0].front.absorptance.diffuse;
                 ir_absorptance_back = ir_results.layer_results[0].back.absorptance.diffuse;
             }
