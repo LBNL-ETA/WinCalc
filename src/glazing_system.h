@@ -50,7 +50,7 @@ namespace wincalc
                                                double phi = 0);
 
         WCE_Optical_Results
-          all_method_values(window_standards::Optical_Standard_Method_Type const & method_type,
+          optical_method_results(window_standards::Optical_Standard_Method_Type const & method_type,
                             double theta = 0,
                             double phi = 0) const;
 

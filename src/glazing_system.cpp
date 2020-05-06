@@ -8,7 +8,7 @@
 
 namespace wincalc
 {
-    WCE_Optical_Results Glazing_System::all_method_values(
+    WCE_Optical_Results Glazing_System::optical_method_results(
       window_standards::Optical_Standard_Method_Type const & method_type,
       double theta,
       double phi) const

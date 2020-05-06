@@ -78,17 +78,6 @@ namespace wincalc
         double rb_visible;
     };
 
-#if 0
-    struct Wavelength_Data
-    {
-        double wavelength;
-        double transmittance_front;
-        double transmittance_back;
-        double reflectance_front;
-        double reflectance_back;
-    };
-#endif
-
 
     struct Product_Data_N_Band_Optical : Product_Data_Optical
     {
