@@ -897,7 +897,7 @@ TEST_F(TestGlazingSystem, Test_CGDB_3000_NFRC_102_glazing_system)
 
     auto u_system_effective_conductivity =
       glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_system_effective_conductivity, 0.102941773831844, 1e-6);
+    EXPECT_NEAR(u_system_effective_conductivity, 0.106426000595093, 1e-6);
 
     std::cout << "Start shgc results for Exterior Venetian on NFRC 102 as a glazing system."
               << std::endl;
@@ -1453,7 +1453,7 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
 
     auto u_system_effective_conductivity =
       glazing_system_u.system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_NEAR(u_system_effective_conductivity, 0.107671052217484, 1e-6);
+    EXPECT_NEAR(u_system_effective_conductivity, 0.10040701238466257, 1e-6);
 
     std::cout << "Start shgc results exterior woven on NFRC 102 as a glazing system." << std::endl;
     auto shgc_result = glazing_system_shgc.shgc();
