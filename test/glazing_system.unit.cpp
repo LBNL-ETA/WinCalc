@@ -856,7 +856,7 @@ TEST_F(TestGlazingSystem, Test_CGDB_3000_NFRC_102_glazing_system)
     parsed_products.push_back(venetian);
     parsed_products.push_back(clear_3);
 
-    auto converted_products = convert(parsed_products);
+    auto converted_products = convert_to_solid_layers(parsed_products);
     std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(
       converted_products[0].optical_data)
       ->distribution_method = SingleLayerOptics::DistributionMethod::UniformDiffuse;
@@ -1132,7 +1132,7 @@ TEST_F(TestGlazingSystem, Test_CGDB_18000_NFRC_102_glazing_system)
     parsed_products.push_back(shade);
     parsed_products.push_back(clear_3);
 
-    auto converted_products = convert(parsed_products);
+    auto converted_products = convert_to_solid_layers(parsed_products);
 
     Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
     std::vector<Engine_Gap_Info> gaps;
@@ -1415,7 +1415,7 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
     parsed_products.push_back(woven_shade);
     parsed_products.push_back(clear_3);
 
-    auto converted_products = convert(parsed_products);
+    auto converted_products = convert_to_solid_layers(parsed_products);
 
     Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
     std::vector<Engine_Gap_Info> gaps;

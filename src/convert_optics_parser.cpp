@@ -54,7 +54,6 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(woven_geometry)
             {
-                
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Woven_Shade{material,
                                                        woven_geometry->threadDiameter,
@@ -67,7 +66,7 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(perforated_geometry)
             {
-				Product_Data_Optical_Perforated_Screen::Type perforation_type;
+                Product_Data_Optical_Perforated_Screen::Type perforation_type;
                 auto perforation_type_str = to_lower(perforated_geometry->perforationType);
                 if(perforation_type_str == "circular")
                 {
@@ -96,9 +95,9 @@ namespace wincalc
                                                              perforation_type});
                 return converted;
             }
-			// If this point is reached then the product is either missing a geometry or
-			// has a geometry that is not yet supported in WinCalc
-			throw std::runtime_error("Composed product with missing or unsupported geometry");
+            // If this point is reached then the product is either missing a geometry or
+            // has a geometry that is not yet supported in WinCalc
+            throw std::runtime_error("Composed product with missing or unsupported geometry");
         }
         else
         {
@@ -133,15 +132,21 @@ namespace wincalc
           data->conductivity.value(), data->thickness.value() / 1000.0, false);
     }
 
-    std::vector<wincalc::Product_Data_Optical_Thermal>
-      convert(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product)
+    wincalc::Product_Data_Optical_Thermal
+      convert_to_solid_layer(std::shared_ptr<OpticsParser::ProductData> const & product)
+    {
+        auto optical = convert_optical(product);
+        auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(product));
+        return wincalc::Product_Data_Optical_Thermal{optical, thermal};
+    }
+
+    std::vector<wincalc::Product_Data_Optical_Thermal> convert_to_solid_layers(
+      std::vector<std::shared_ptr<OpticsParser::ProductData>> const & products)
     {
         std::vector<wincalc::Product_Data_Optical_Thermal> converted;
-        for(auto layer : product)
+        for(auto product : products)
         {
-            auto optical = convert_optical(layer);
-            auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(layer));
-            converted.push_back(wincalc::Product_Data_Optical_Thermal{optical, thermal});
+            converted.push_back(convert_to_solid_layer(product));
         }
 
         return converted;

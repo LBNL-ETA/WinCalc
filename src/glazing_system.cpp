@@ -222,7 +222,7 @@ namespace wincalc
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :
-        product_data(convert(product_data)),
+        product_data(convert_to_solid_layers(product_data)),
         gap_values(gap_values),
         standard(standard),
         width(width),
