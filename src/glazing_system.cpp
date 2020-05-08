@@ -34,6 +34,12 @@ namespace wincalc
                           bsdf_hemisphere);
     }
 
+    void Glazing_System::reset_system()
+    {
+        current_igu = std::nullopt;
+        current_system = std::nullopt;
+    }
+
     window_standards::Optical_Standard_Method Glazing_System::get_method(
       window_standards::Optical_Standard_Method_Type const & method_type) const
     {
@@ -124,10 +130,9 @@ namespace wincalc
         //            optical_results.total_solar_transmittance);
     }
 
-    std::vector<double>
-      Glazing_System::layer_temperatures(Tarcog::ISO15099::System system_type,
-                                         double theta,
-                                         double phi)
+    std::vector<double> Glazing_System::layer_temperatures(Tarcog::ISO15099::System system_type,
+                                                           double theta,
+                                                           double phi)
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
@@ -135,8 +140,8 @@ namespace wincalc
         system.setAbsorptances(optical_results.layer_solar_absorptances);
         return system.getTemperatures(system_type);
     }
-    std::vector<double>
-      Glazing_System::solid_layers_effective_conductivities(Tarcog::ISO15099::System system_type, double theta, double phi)
+    std::vector<double> Glazing_System::solid_layers_effective_conductivities(
+      Tarcog::ISO15099::System system_type, double theta, double phi)
     {
         auto & system = get_system(theta, phi);
         return system.getSolidEffectiveLayerConductivities(system_type);
@@ -164,13 +169,23 @@ namespace wincalc
 
     void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
     {
-        current_igu = std::nullopt;
-        current_system = std::nullopt;
+        reset_system();
         standard = s;
     }
     window_standards::Optical_Standard Glazing_System::optical_standard() const
     {
         return standard;
+    }
+
+    void Glazing_System::solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers)
+    {
+        reset_system();
+        product_data = layers;
+    }
+
+    std::vector<Product_Data_Optical_Thermal> Glazing_System::solid_layers() const
+    {
+        return product_data;
     }
 
     Glazing_System::Glazing_System(

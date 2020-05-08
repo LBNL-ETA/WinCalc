@@ -51,8 +51,8 @@ namespace wincalc
 
         WCE_Optical_Results
           optical_method_results(window_standards::Optical_Standard_Method_Type const & method_type,
-                            double theta = 0,
-                            double phi = 0) const;
+                                 double theta = 0,
+                                 double phi = 0) const;
 
         WCE_Color_Results color(double theta = 0, double phi = 0) const;
 
@@ -71,15 +71,19 @@ namespace wincalc
         void optical_standard(window_standards::Optical_Standard const & s);
         window_standards::Optical_Standard optical_standard() const;
 
+        void solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers);
+        std::vector<Product_Data_Optical_Thermal> solid_layers() const;
+
+
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<Engine_Gap_Info> gap_values;
         window_standards::Optical_Standard standard;
-		double width;
+        double width;
         double height;
         Environments environment;
         std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
- 		Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
+        Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
 
@@ -90,6 +94,7 @@ namespace wincalc
         std::optional<Tarcog::ISO15099::CSystem> current_system;
         double last_theta;
         double last_phi;
+        void reset_system();
 
         window_standards::Optical_Standard_Method
           get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
