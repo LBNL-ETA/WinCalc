@@ -2,6 +2,7 @@
 #define WINCALC_GLAZING_SYSTEM_H_
 
 #include <vector>
+#include <variant>
 #include <OpticsParser.hpp>
 #include <windows_standards/windows_standard.h>
 #include <WCEGases.hpp>
@@ -30,6 +31,21 @@ namespace wincalc
                        int number_solar_bands = 10);
 
         Glazing_System(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+                       std::vector<Engine_Gap_Info> const & gap_values,
+                       window_standards::Optical_Standard const & standard,
+                       double width = 1.0,
+                       double height = 1.0,
+                       Environments const & environment = nfrc_u_environments(),
+                       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
+                         std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                       Spectal_Data_Wavelength_Range_Method const & type =
+                         Spectal_Data_Wavelength_Range_Method::FULL,
+                       int number_visible_bands = 5,
+                       int number_solar_bands = 10);
+
+		// Constructor with vector of variants added for ease of use in python
+        Glazing_System(std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+                                                Product_Data_Optical_Thermal>> const & product_data,
                        std::vector<Engine_Gap_Info> const & gap_values,
                        window_standards::Optical_Standard const & standard,
                        double width = 1.0,

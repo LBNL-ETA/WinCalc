@@ -233,4 +233,54 @@ namespace wincalc
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
     {}
+
+    std::vector<Product_Data_Optical_Thermal> create_solid_layers(
+      std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+                               Product_Data_Optical_Thermal>> const & product_data)
+    {
+        std::vector<Product_Data_Optical_Thermal> solid_layers;
+        for(auto product : product_data)
+        {
+            Product_Data_Optical_Thermal * solid_layer =
+              std::get_if<Product_Data_Optical_Thermal>(&product);
+            if(solid_layer)
+            {
+                // If the variant was already holding a converted object use it
+                solid_layers.push_back(*solid_layer);
+            }
+            else
+            {
+                // Otherwise the variant was holding OpticsParser::ProductData
+                // Convert that and use it
+                auto converted_layer = convert_to_solid_layer(
+                  std::get<std::shared_ptr<OpticsParser::ProductData>>(product));
+                solid_layers.push_back(converted_layer);
+            }
+        }
+        return solid_layers;
+    }
+
+    Glazing_System::Glazing_System(
+      std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+                               Product_Data_Optical_Thermal>> const & product_data,
+      std::vector<Engine_Gap_Info> const & gap_values,
+      window_standards::Optical_Standard const & standard,
+      double width,
+      double height,
+      Environments const & environment,
+      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
+      int number_visible_bands,
+      int number_solar_bands) :
+        product_data(create_solid_layers(product_data)),
+        gap_values(gap_values),
+        standard(standard),
+        width(width),
+        height(height),
+        environment(environment),
+        bsdf_hemisphere(bsdf_hemisphere),
+        spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
+        number_visible_bands(number_visible_bands),
+        number_solar_bands(number_solar_bands)
+    {}
 }   // namespace wincalc
