@@ -56,7 +56,6 @@ namespace wincalc
 
         WCE_Color_Results color(double theta = 0, double phi = 0) const;
 
-
         std::vector<double> solid_layers_effective_conductivities(
           Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
 

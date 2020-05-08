@@ -11,5 +11,5 @@ namespace wincalc
     wincalc::Product_Data_Thermal
       convert_thermal(std::shared_ptr<OpticsParser::ProductData> const & product);
     std::vector<wincalc::Product_Data_Optical_Thermal>
-      convert(std::vector < std::shared_ptr<OpticsParser::ProductData> > const & product);
+      convert(std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product);
 }   // namespace wincalc

@@ -164,6 +164,8 @@ namespace wincalc
 
     void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
     {
+        current_igu = std::nullopt;
+        current_system = std::nullopt;
         standard = s;
     }
     window_standards::Optical_Standard Glazing_System::optical_standard() const
