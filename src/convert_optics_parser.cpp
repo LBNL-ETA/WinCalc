@@ -33,43 +33,42 @@ namespace wincalc
 
         if(composed_product)
         {
-            // std::vector<Wavelength_Data> converted_wavelengths =
-            //  convert(composed_product->compositionInformation->material->measurements.value());
             auto material = convert_optical(composed_product->compositionInformation->material);
-            auto subtype = to_lower(composed_product->subtype.value());
-            if(subtype == "venetian")
+
+            std::shared_ptr<OpticsParser::VenetianGeometry> venetian_geometry =
+              std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(
+                composed_product->compositionInformation->geometry);
+            if(venetian_geometry)
             {
-                std::shared_ptr<OpticsParser::VenetianGeometry> geometry =
-                  std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(
-                    composed_product->compositionInformation->geometry);
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Venetian{material,
-                                                    geometry->slatTilt,
-                                                    geometry->slatWidth,
-                                                    geometry->slatSpacing,
-                                                    geometry->slatCurvature,
-                                                    geometry->numberSegments});
+                                                    venetian_geometry->slatTilt,
+                                                    venetian_geometry->slatWidth,
+                                                    venetian_geometry->slatSpacing,
+                                                    venetian_geometry->slatCurvature,
+                                                    venetian_geometry->numberSegments});
                 return converted;
             }
-            else if(subtype == "woven")
+            std::shared_ptr<OpticsParser::WovenGeometry> woven_geometry =
+              std::dynamic_pointer_cast<OpticsParser::WovenGeometry>(
+                composed_product->compositionInformation->geometry);
+            if(woven_geometry)
             {
-                std::shared_ptr<OpticsParser::WovenGeometry> geometry =
-                  std::dynamic_pointer_cast<OpticsParser::WovenGeometry>(
-                    composed_product->compositionInformation->geometry);
+                
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Woven_Shade{material,
-                                                       geometry->threadDiameter,
-                                                       geometry->threadSpacing,
-                                                       geometry->shadeThickness});
+                                                       woven_geometry->threadDiameter,
+                                                       woven_geometry->threadSpacing,
+                                                       woven_geometry->shadeThickness});
                 return converted;
             }
-            else if(subtype == "perforated-screen")
+            std::shared_ptr<OpticsParser::PerforatedGeometry> perforated_geometry =
+              std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(
+                composed_product->compositionInformation->geometry);
+            if(perforated_geometry)
             {
-                std::shared_ptr<OpticsParser::PerforatedGeometry> geometry =
-                  std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(
-                    composed_product->compositionInformation->geometry);
-                Product_Data_Optical_Perforated_Screen::Type perforation_type;
-                auto perforation_type_str = to_lower(geometry->perforationType);
+				Product_Data_Optical_Perforated_Screen::Type perforation_type;
+                auto perforation_type_str = to_lower(perforated_geometry->perforationType);
                 if(perforation_type_str == "circular")
                 {
                     perforation_type = Product_Data_Optical_Perforated_Screen::Type::CIRCULAR;
@@ -85,22 +84,21 @@ namespace wincalc
                 else
                 {
                     std::stringstream msg;
-                    msg << "Unsupported perforation type: " << geometry->perforationType;
+                    msg << "Unsupported perforation type: " << perforated_geometry->perforationType;
                     throw std::runtime_error(msg.str());
                 }
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Perforated_Screen{material,
-                                                             geometry->spacingX,
-                                                             geometry->spacingY,
-                                                             geometry->dimensionX,
-                                                             geometry->dimensionY,
+                                                             perforated_geometry->spacingX,
+                                                             perforated_geometry->spacingY,
+                                                             perforated_geometry->dimensionX,
+                                                             perforated_geometry->dimensionY,
                                                              perforation_type});
                 return converted;
             }
-            else
-            {
-                throw std::runtime_error("Unsupported subtype");
-            }
+			// If this point is reached then the product is either missing a geometry or
+			// has a geometry that is not yet supported in WinCalc
+			throw std::runtime_error("Composed product with missing or unsupported geometry");
         }
         else
         {

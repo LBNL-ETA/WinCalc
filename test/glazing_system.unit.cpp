@@ -1396,20 +1396,19 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
 
 
     // Use the same material as in the venetian test above for consistancy with WCE tests
-    std::filesystem::path venetian_path(test_dir);
-    venetian_path /= "products";
-    venetian_path /= "igsdb_12149.json";
+    std::filesystem::path venetian_material_path(test_dir);
+    venetian_material_path /= "products";
+    venetian_material_path /= "igsdb_12852.json";
 
     std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
     OpticsParser::Parser parser;
     auto clear_3 = parser.parseJSONFile(clear_3_path.string());
-    auto venetian_layer = parser.parseJSONFile(venetian_path.string());
-    auto shade_material = venetian_layer->composedProduct();
+    auto shade_material = parser.parseJSONFile(venetian_material_path.string());
     auto shade_geometry = std::make_shared<OpticsParser::WovenGeometry>(0.002, 0.003, 0.002);
     auto shade_composition_info = std::shared_ptr<OpticsParser::CompositionInformation>(
       new OpticsParser::CompositionInformation{shade_material, shade_geometry});
     OpticsParser::ProductData shade_layer_info(
-      "User Woven Shade", "shading", "woven", "User Manufacturer");
+      "User Woven Shade", "shading", "User Manufacturer");
     auto woven_shade =
       std::make_shared<OpticsParser::ComposedProductData>(shade_layer_info, shade_composition_info);
 
