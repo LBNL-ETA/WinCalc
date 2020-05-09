@@ -24,11 +24,6 @@ namespace wincalc
         return shared_from_this();
     }
 
-    void Product_Data_Optical::set_slat_tilt(double)
-    {
-        throw std::runtime_error("Can only set slat tilt for Venetian products.");
-    }
-
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical::effective_thermal_values(double width,
                                                      double height,
@@ -150,11 +145,6 @@ namespace wincalc
     }
 
 #endif
-
-    void Product_Data_Optical_Venetian::set_slat_tilt(double tilt)
-    {
-        slat_tilt = tilt;
-    }
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical_Venetian::effective_thermal_values(double width,
