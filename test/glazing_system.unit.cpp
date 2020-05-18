@@ -1817,7 +1817,6 @@ TEST_F(TestGlazingSystem, Test_User_Woven_NFRC_102_glazing_system)
     clear_3_path /= "products";
     clear_3_path /= "CLEAR_3.json";
 
-
     // Use the same material as in the venetian test above for consistancy with WCE tests
     std::filesystem::path venetian_material_path(test_dir);
     venetian_material_path /= "products";
