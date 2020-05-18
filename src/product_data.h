@@ -45,7 +45,6 @@ namespace wincalc
                              bool flipped = false);
         virtual ~Product_Data_Optical();
         virtual std::shared_ptr<Product_Data_Optical> optical_data();
-        virtual void set_slat_tilt(double tilt);
         // The optical section seems a strange place to put this since it has "thermal" in
         // the name but when thermal openness is calculated it is done using the geometry
         // of the product, e.g. for venetians it uses slat tilt angle, slat spacing, etc...
@@ -133,7 +132,6 @@ namespace wincalc
           SingleLayerOptics::DistributionMethod distribution_method =
             SingleLayerOptics::DistributionMethod::DirectionalDiffuse);
 
-        void set_slat_tilt(double tilt) override;
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
                                    double height,
