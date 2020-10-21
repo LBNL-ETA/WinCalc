@@ -25,6 +25,30 @@ namespace wincalc
     }
 #endif
 
+    FenestrationCommon::MaterialType convert_material_type(std::string const & material_type)
+    {
+        std::map<std::string, FenestrationCommon::MaterialType> material_type_mappings{
+          {"monolithic", FenestrationCommon::MaterialType::Monolithic},
+          {"coated-glass", FenestrationCommon::MaterialType::Coated},
+          {"coated", FenestrationCommon::MaterialType::Coated},
+          {"applied-film", FenestrationCommon::MaterialType::AppliedFilm},
+          {"applied film", FenestrationCommon::MaterialType::AppliedFilm},
+          {"laminate", FenestrationCommon::MaterialType::Laminate}
+          //{"other", FenestrationCommon::MaterialType::Monolithic}
+		};
+
+        auto itr = material_type_mappings.find(to_lower(material_type));
+        if(itr == material_type_mappings.end())
+        {
+            std::stringstream msg;
+            msg << "Material type " << material_type << " is not supported.";
+            throw std::runtime_error(msg.str());
+        }
+
+        return itr->second;
+    }
+
+
     std::shared_ptr<Product_Data_Optical>
       convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
@@ -102,9 +126,11 @@ namespace wincalc
         else
         {
             auto wavelength_measured_values = product->measurements.value();
+            FenestrationCommon::MaterialType material_type =
+              convert_material_type(product->subtype.value());
             // TODO WCE Fix this to use actual type and not always monolithic
             std::shared_ptr<Product_Data_Optical> converted(
-              new Product_Data_N_Band_Optical{FenestrationCommon::MaterialType::Monolithic,
+              new Product_Data_N_Band_Optical{material_type,
                                               product->thickness.value() / 1000.0,
                                               wavelength_measured_values,
                                               product->IRTransmittance.value(),
@@ -151,4 +177,6 @@ namespace wincalc
 
         return converted;
     }
+
+
 }   // namespace wincalc

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include <WCECommon.hpp>
 #include <WCESpectralAveraging.hpp>
@@ -155,6 +156,8 @@ namespace wincalc
     double get_maximum_wavelength(window_standards::Optical_Standard_Method const & method,
                                   Product_Data_N_Band_Optical const & product_data,
                                   FenestrationCommon::CSeries const & source_spectrum);
+
+	
 
 }   // namespace wincalc
 #endif

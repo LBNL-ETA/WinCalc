@@ -179,6 +179,8 @@ namespace wincalc
         return result;
     }
 
+    
+
 
     FenestrationCommon::CSeries
       get_spectum_values(window_standards::Spectrum const & spectrum,
@@ -466,7 +468,7 @@ namespace wincalc
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
                                                      product_data.thickness_meters,
-                                                     FenestrationCommon::MaterialType::Monolithic,
+                                                     product_data.material_type,
                                                      lambda_range.min_lambda,
                                                      lambda_range.max_lambda,
                                                      integration_rule,
