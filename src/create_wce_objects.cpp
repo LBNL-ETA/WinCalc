@@ -94,34 +94,8 @@ namespace wincalc
     }
 
 
-    template<typename T>
-    std::vector<double> get_first_val(std::vector<T> const & vec)
-    {
-        // returns a vector of the first of each tuple in the input vector
-        std::vector<double> res;
-        for(T const & val : vec)
-        {
-            res.push_back(std::get<0>(val));
-        }
-        return res;
-    }
-
-    template<>
-    std::vector<double> get_first_val(std::vector<OpticsParser::WLData> const & wavelength_data)
-    {
-        std::vector<double> res;
-
-        for(auto const & row : wavelength_data)
-        {
-            res.push_back(row.wavelength);
-        }
-
-        return res;
-    }
-
-
     double get_minimum_wavelength(window_standards::Optical_Standard_Method const & method,
-                                  wincalc::Product_Data_N_Band_Optical const & product_data,
+                                  double product_data_min_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
         double result = std::numeric_limits<double>::quiet_NaN();
@@ -138,7 +112,7 @@ namespace wincalc
             }
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
-                result = product_data.wavelength_data[0].wavelength;
+                result = product_data_min_wavelength;
             }
         }
         else if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
@@ -151,7 +125,7 @@ namespace wincalc
 
 
     double get_maximum_wavelength(window_standards::Optical_Standard_Method const & method,
-                                  wincalc::Product_Data_N_Band_Optical const & product_data,
+                                  double product_data_max_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
         double result = std::numeric_limits<double>::quiet_NaN();
@@ -168,7 +142,7 @@ namespace wincalc
             }
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
-                result = product_data.wavelength_data.back().wavelength;
+                result = product_data_max_wavelength;
             }
         }
         else if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
@@ -179,16 +153,13 @@ namespace wincalc
         return result;
     }
 
-    
-
 
     FenestrationCommon::CSeries
       get_spectum_values(window_standards::Spectrum const & spectrum,
                          window_standards::Optical_Standard_Method const & method,
-                         wincalc::Product_Data_N_Band_Optical const & product_data)
+                         std::vector<double> const & product_wavelengths)
     {
         FenestrationCommon::CSeries result;
-
         switch(spectrum.type)
         {
             case window_standards::Spectrum_Type::UV_ACTION:
@@ -197,8 +168,8 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::UVAction(
-                          get_first_val(product_data.wavelength_data), spectrum.a, spectrum.b));
+                        result = convert(
+                          SpectralAveraging::UVAction(product_wavelengths, spectrum.a, spectrum.b));
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
@@ -219,8 +190,7 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::Krochmann(
-                          get_first_val(product_data.wavelength_data)));
+                        result = convert(SpectralAveraging::Krochmann(product_wavelengths));
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
@@ -241,8 +211,8 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::BlackBodySpectrum(
-                          get_first_val(product_data.wavelength_data), spectrum.t));
+                        result = convert(
+                          SpectralAveraging::BlackBodySpectrum(product_wavelengths, spectrum.t));
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
@@ -271,55 +241,24 @@ namespace wincalc
         return result;
     }
 
-
     FenestrationCommon::CSeries
       get_spectum_values(window_standards::Spectrum const & spectrum,
                          window_standards::Optical_Standard_Method const & method,
-                         std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
+                         std::vector<std::vector<double>> const & products_wavelengths)
     {
-        if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
+        FenestrationCommon::CCommonWavelengths wavelength_combiner;
+        for(auto & product_wavelengths : products_wavelengths)
         {
-            return get_spectum_values(
-              spectrum,
-              method,
-              *std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data));
+            wavelength_combiner.addWavelength(product_wavelengths);
         }
-        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
-                  product_data))
-        {
-            return get_spectum_values(
-              spectrum,
-              method,
-              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product_data)
-                ->material_optical_data);
-        }
-        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data))
-        {
-            throw std::runtime_error("Dual band products not yet supported");
-        }
-        else
-        {
-            throw std::runtime_error("Unsupported optical data structure.");
-        }
+        auto common_wavelengths =
+          wavelength_combiner.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
+        return get_spectum_values(spectrum, method, common_wavelengths);
     }
-
-    FenestrationCommon::CSeries get_spectum_values(
-      window_standards::Spectrum const & spectrum,
-      window_standards::Optical_Standard_Method const & method,
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data)
-    {
-        if(!all_optical_layers_the_same(product_data))
-        {
-            throw std::runtime_error("Not sure how to get spectrum values for systems that "
-                                     "are a mix of nband and dual band");
-        }
-        return get_spectum_values(spectrum, method, product_data[0]);
-    }
-
 
     std::vector<double>
       get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
-                                wincalc::Product_Data_N_Band_Optical const & product_data)
+                                std::vector<double> const & product_wavelengths)
     {
         std::vector<double> result;
 
@@ -341,7 +280,7 @@ namespace wincalc
             }
             else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
-                result = get_first_val(product_data.wavelength_data);
+                result = product_wavelengths;
             }
         }
 
@@ -349,27 +288,7 @@ namespace wincalc
     }
 
     std::vector<double>
-      get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
-                                std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
-    {
-        if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
-        {
-            return get_wavelength_set_to_use(
-              method,
-              *std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data));
-        }
-        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data))
-        {
-            throw std::runtime_error("Dual band products not yet supported");
-        }
-        else
-        {
-            throw std::runtime_error("Unsupported optical data structure.");
-        }
-    }
-
-    std::vector<double>
-      wavelength_range_factory(wincalc::Product_Data_N_Band_Optical const & product_data,
+      wavelength_range_factory(std::vector<double> const & product_wavelengths,
                                window_standards::Optical_Standard_Method const & method,
                                Spectal_Data_Wavelength_Range_Method const & type,
                                int number_visible_bands,
@@ -385,7 +304,7 @@ namespace wincalc
         }
         else if(type == Spectal_Data_Wavelength_Range_Method::FULL)
         {
-            return get_wavelength_set_to_use(method, product_data);
+            return get_wavelength_set_to_use(method, product_wavelengths);
         }
         else
         {
@@ -394,37 +313,51 @@ namespace wincalc
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_Dual_Band_Optical const &,
+      create_material(wincalc::Product_Data_Dual_Band_Optical_Specular const &,
                       window_standards::Optical_Standard_Method const &,
                       Spectal_Data_Wavelength_Range_Method const &,
                       int,
                       int)
     {
-        throw std::runtime_error("Dual band not yet supported.");
+        throw std::runtime_error("Dual band specular materials not yet supported.");
     }
 
-    Lambda_Range get_lambda_range(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-      window_standards::Optical_Standard_Method const & method)
+    std::shared_ptr<SingleLayerOptics::CMaterial>
+      create_material(wincalc::Product_Data_Dual_Band_Optical_BSDF const & product,
+                      window_standards::Optical_Standard_Method const &,
+                      Spectal_Data_Wavelength_Range_Method const &,
+                      int,
+                      int)
     {
-        auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
+        std::shared_ptr<SingleLayerOptics::CMaterial> material =
+          SingleLayerOptics::Material::dualBandBSDFMaterial(product.tf_solar,
+                                                            product.tb_solar,
+                                                            product.rf_solar,
+                                                            product.rb_solar,
+                                                            product.tf_visible,
+                                                            product.tb_visible,
+                                                            product.rf_visible,
+                                                            product.rb_visible,
+                                                            product.bsdf_hemisphere,
+                                                            0.49);   // TODO, replace 0.49 ratio
+
+        return material;
+    }
+
+
+    Lambda_Range get_lambda_range(std::vector<std::vector<double>> const & products_wavelengths,
+                                  window_standards::Optical_Standard_Method const & method)
+    {
+        auto source_spectrum =
+          get_spectum_values(method.source_spectrum, method, products_wavelengths);
         std::vector<double> min_wavelengths;
         std::vector<double> max_wavelengths;
-        for(auto product : product_data)
+        for(auto product_wavelengths : products_wavelengths)
         {
-            std::shared_ptr<wincalc::Product_Data_N_Band_Optical> n_band_data =
-              std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(
-                product->optical_data());
-
-            if(!n_band_data)
-            {
-                throw std::runtime_error(
-                  "Only N-Band data is currently supported for lambda ranges.");
-            }
             min_wavelengths.push_back(
-              get_minimum_wavelength(method, *n_band_data, source_spectrum));
+              get_minimum_wavelength(method, product_wavelengths[0], source_spectrum));
             max_wavelengths.push_back(
-              get_maximum_wavelength(method, *n_band_data, source_spectrum));
+              get_maximum_wavelength(method, product_wavelengths.back(), source_spectrum));
         }
         // The min and max lambda should be the tighest boundary not the loosest
         //  So it should be the largest minimum and smallest maximum
@@ -434,16 +367,6 @@ namespace wincalc
     }
 
 
-    Lambda_Range get_lambda_range(wincalc::Product_Data_N_Band_Optical const & product_data,
-                                  window_standards::Optical_Standard_Method const & method)
-    {
-        auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
-
-        double min_wavelength = get_minimum_wavelength(method, product_data, source_spectrum);
-        double max_wavelength = get_maximum_wavelength(method, product_data, source_spectrum);
-        return Lambda_Range{min_wavelength, max_wavelength};
-    }
-
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(wincalc::Product_Data_N_Band_Optical const & product_data,
                       window_standards::Optical_Standard_Method const & method,
@@ -452,7 +375,7 @@ namespace wincalc
                       int number_solar_bands)
     {
         auto wavelength_set = wavelength_range_factory(
-          product_data, method, type, number_visible_bands, number_solar_bands);
+          product_data.wavelengths(), method, type, number_visible_bands, number_solar_bands);
 
         std::shared_ptr<std::vector<double>> converted_wavelengths =
           std::make_shared<std::vector<double>>(wavelength_set);
@@ -463,7 +386,7 @@ namespace wincalc
         auto spectral_sample_data =
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
 
-        auto lambda_range = get_lambda_range(product_data, method);
+        auto lambda_range = get_lambda_range({product_data.wavelengths()}, method);
 
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
@@ -486,70 +409,92 @@ namespace wincalc
                       int number_solar_bands)
     {
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
-        if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data))
+        auto wavelengths = product_data->wavelengths();
+        double material_min_wavelength = wavelengths.front();
+        double material_max_wavelength = wavelengths.back();
+        auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
+        auto min_wavelength =
+          get_minimum_wavelength(method, material_min_wavelength, source_spectrum);
+        auto max_wavelength =
+          get_maximum_wavelength(method, material_max_wavelength, source_spectrum);
+        // Need to check max wavelength > min wavelength because the way methods are setup it is
+        // possible to have min wavelength > max wavelength based on definitions.
+        // e.g. the NFRC Thermal IR standard has min wavelength: 5 and max wavelength:
+        // wavelength set and wavelength set: Data.  So if the data only goes up to 2.5 then
+        // based on the definitions max wavelength = 5 and min wavelength = 2.5
+        if(max_wavelength > min_wavelength && material_min_wavelength <= min_wavelength
+           && material_max_wavelength >= max_wavelength)
         {
-            material = create_material(
-              *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical>(product_data),
-              method,
-              type,
-              number_visible_bands,
-              number_solar_bands);
-        }
-        else if(std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data))
-        {
-            auto n_band_data =
-              std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data);
-            auto source_spectrum = get_spectum_values(method.source_spectrum, method, n_band_data);
-            auto min_wavelength = get_minimum_wavelength(method, *n_band_data, source_spectrum);
-            auto max_wavelength = get_maximum_wavelength(method, *n_band_data, source_spectrum);
-            // Need to check max wavelength > min wavelength because the way methods are setup it is
-            // possible to have min wavelength > max wavelength based on definitions.
-            // e.g. the NFRC Thermal IR standard has min wavelength: 5 and max wavelength:
-            // wavelength set and wavelength set: Data.  So if the data only goes up to 2.5 then
-            // based on the definitions max wavelength = 5 and min wavelength = 2.5
-            if(max_wavelength > min_wavelength
-               && n_band_data->wavelength_data.front().wavelength <= min_wavelength
-               && n_band_data->wavelength_data.back().wavelength >= max_wavelength)
+            // has the required wavelength ranges to calculate from measured values, priortize
+            // this case
+
+            if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
             {
-                // has the required wavelength ranges to calculate from measured values, priortize
-                // this case
                 material = create_material(
-                  *n_band_data, method, type, number_visible_bands, number_solar_bands);
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data),
+                  method,
+                  type,
+                  number_visible_bands,
+                  number_solar_bands);
+            }
+            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
+                      product_data))
+            {
+                material = create_material(
+                  *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
+                    product_data),
+                  method,
+                  type,
+                  number_visible_bands,
+                  number_solar_bands);
+            }
+            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Specular>(
+                      product_data))
+            {
+                material = create_material(
+                  *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Specular>(
+                    product_data),
+                  method,
+                  type,
+                  number_visible_bands,
+                  number_solar_bands);
             }
             else
             {
-                if(method.type == window_standards::Optical_Standard_Method_Type::THERMAL_IR)
-                {
-                    // Thermal IR is a special case where we calculate values even if the individual
-                    // measured wavelength values does not extend into the wavelength range defined
-                    // in the standard method.  To do the calculation in that case a single band
-                    // material is created NOTE:  Since the method defines the max wavelength as the
-                    // max measured value
-                    // this will be less than the minimum wavelength as defined in the method.
-                    // Since this is a single band material it doesn't matter what the max lambda
-                    // is so long as it is greater than min lambda.  So define max_lambda =
-                    // min_lambda + 1
-                    double tf = product_data->ir_transmittance_front.value();
-                    double tb = product_data->ir_transmittance_back.value();
-                    double rf = 1.0 - tf - product_data->emissivity_front.value();
-                    double rb = 1.0 - tb - product_data->emissivity_back.value();
-                    material = SingleLayerOptics::Material::singleBandMaterial(
-                      tf, tb, rf, rb, FenestrationCommon::WavelengthRange::IR);
-                }
-                else
-                {
-                    std::stringstream msg;
-                    msg << "N-Band product without measured data for entire wavelength range in "
-                           "method: "
-                        << static_cast<std::underlying_type<
-                             window_standards::Optical_Standard_Method_Type>::type>(method.type);
-                    throw std::runtime_error(msg.str());
-                }
+                throw std::runtime_error("Unsupported optical data format");
             }
         }
         else
         {
-            throw std::runtime_error("Unsupported optical data format");
+            if(method.type == window_standards::Optical_Standard_Method_Type::THERMAL_IR)
+            {
+                // Thermal IR is a special case where we calculate values even if the individual
+                // measured wavelength values does not extend into the wavelength range defined
+                // in the standard method.  To do the calculation in that case a single band
+                // material is created NOTE:  Since the method defines the max wavelength as the
+                // max measured value
+                // this will be less than the minimum wavelength as defined in the method.
+                // Since this is a single band material it doesn't matter what the max lambda
+                // is so long as it is greater than min lambda.  So define max_lambda =
+                // min_lambda + 1
+                double tf = product_data->ir_transmittance_front.value();
+                double tb = product_data->ir_transmittance_back.value();
+                double rf = 1.0 - tf - product_data->emissivity_front.value();
+                double rb = 1.0 - tb - product_data->emissivity_back.value();
+                material = SingleLayerOptics::Material::singleBandMaterial(
+                  tf, tb, rf, rb, FenestrationCommon::WavelengthRange::IR);
+            }
+            else
+            {
+                std::stringstream msg;
+                msg
+                  << "N-Band product without measured data for entire wavelength range in "
+                     "method: "
+                  << static_cast<
+                       std::underlying_type<window_standards::Optical_Standard_Method_Type>::type>(
+                       method.type);
+                throw std::runtime_error(msg.str());
+            }
         }
 
         return material;
@@ -583,9 +528,9 @@ namespace wincalc
               product, method, type, number_visible_bands, number_solar_bands));
         }
 
-        auto source_spectrum = get_spectum_values(method.source_spectrum, method, product_data);
-
-        auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, product_data);
+		std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
+        auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
 
         auto layer =
           MultiLayerOptics::CMultiPaneSpecular::create(layers, source_spectrum, detector_spectrum);
@@ -605,6 +550,21 @@ namespace wincalc
           create_material(product_data, method, type, number_visible_bands, number_solar_bands);
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
+        return layer;
+    }
+
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_preloaded_matrices(
+      std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & type,
+      int number_visible_bands,
+      int number_solar_bands)
+    {
+        auto material =
+          create_material(product_data, method, type, number_visible_bands, number_solar_bands);
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
         return layer;
     }
 
@@ -766,6 +726,17 @@ namespace wincalc
               number_visible_bands,
               number_solar_bands);
         }
+        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
+                  product_data))
+        {
+            layer = create_bsdf_layer_preloaded_matrices(
+              std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product_data),
+              method,
+              bsdf_hemisphere,
+              type,
+              number_visible_bands,
+              number_solar_bands);
+        }
         else
         {
             layer = create_bsdf_layer_specular(product_data,
@@ -789,19 +760,19 @@ namespace wincalc
       int number_solar_bands)
     {
         std::vector<std::shared_ptr<SingleLayerOptics::CBSDFLayer>> layers;
-        std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> optical_data_only;
-        for(auto const & product : products)
+		std::vector<std::vector<double>> wavelengths;
+		for(auto const & product : products)
         {
             layers.push_back(create_bsdf_layer(
               product, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands));
-            optical_data_only.push_back(product->optical_data());
+			wavelengths.push_back(product->wavelengths());
         }
 
         auto source_spectrum =
-          get_spectum_values(method.source_spectrum, method, optical_data_only);
+          get_spectum_values(method.source_spectrum, method, wavelengths);
 
         auto detector_spectrum =
-          get_spectum_values(method.detector_spectrum, method, optical_data_only);
+          get_spectum_values(method.detector_spectrum, method, wavelengths);
 
         auto layer =
           MultiLayerOptics::CMultiPaneBSDF::create(layers, source_spectrum, detector_spectrum);

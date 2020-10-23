@@ -51,31 +51,19 @@ namespace wincalc
     FenestrationCommon::IntegrationType
       convert(window_standards::Integration_Rule_Type integration_rule_type);
 
+    FenestrationCommon::CSeries
+      get_spectum_values(window_standards::Spectrum const & spectrum,
+                         window_standards::Optical_Standard_Method const & method,
+                         std::vector<double> const & product_wavelengths);
 
     FenestrationCommon::CSeries
       get_spectum_values(window_standards::Spectrum const & spectrum,
                          window_standards::Optical_Standard_Method const & method,
-                         wincalc::Product_Data_N_Band_Optical const & product_data);
-
-
-    FenestrationCommon::CSeries
-      get_spectum_values(window_standards::Spectrum const & spectrum,
-                         window_standards::Optical_Standard_Method const & method,
-                         std::shared_ptr<wincalc::Product_Data_Optical> const & product_data);
-
-    FenestrationCommon::CSeries get_spectum_values(
-      window_standards::Spectrum const & spectrum,
-      window_standards::Optical_Standard_Method const & method,
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data);
-
-    std::vector<double> get_wavelength_set_to_use(
-      window_standards::Optical_Standard_Method const & method,
-      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data);
+                         std::vector<std::vector<double>> const & products_wavelengths);
 
     std::vector<double>
       get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
-                                wincalc::Product_Data_N_Band_Optical const & product_data);
-
+                                std::vector<double> const & product_wavelengths);
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
@@ -142,22 +130,18 @@ namespace wincalc
         double max_lambda;
     };
 
-    Lambda_Range get_lambda_range(wincalc::Product_Data_N_Band_Optical const & product_data,
+
+    Lambda_Range get_lambda_range(std::vector<std::vector<double>> const & products_wavelengths,
                                   window_standards::Optical_Standard_Method const & method);
 
-    Lambda_Range get_lambda_range(
-      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-      window_standards::Optical_Standard_Method const & method);
-
     double get_minimum_wavelength(window_standards::Optical_Standard_Method const & method,
-                                  Product_Data_N_Band_Optical const & product_data,
+                                  double product_data_minumum_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum);
 
     double get_maximum_wavelength(window_standards::Optical_Standard_Method const & method,
-                                  Product_Data_N_Band_Optical const & product_data,
+                                  double product_data_maximum_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum);
 
-	
 
 }   // namespace wincalc
 #endif

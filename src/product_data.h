@@ -62,19 +62,92 @@ namespace wincalc
         std::optional<double> ir_transmittance_back;
         std::optional<double> emissivity_front;
         std::optional<double> emissivity_back;
+
+        virtual std::vector<double> wavelengths() const = 0;
     };
+
 
     struct Product_Data_Dual_Band_Optical : Product_Data_Optical
     {
+        Product_Data_Dual_Band_Optical(
+          double thickness_meters,
+          std::optional<double> ir_transmittance_front = std::optional<double>(),
+          std::optional<double> ir_transmittance_back = std::optional<double>(),
+          std::optional<double> emissivity_front = std::optional<double>(),
+          std::optional<double> emissivity_back = std::optional<double>(),
+          bool flipped = false) :
+            Product_Data_Optical(thickness_meters,
+                                 ir_transmittance_front,
+                                 ir_transmittance_back,
+                                 emissivity_front,
+                                 emissivity_back,
+                                 flipped)
+        {}
+
+
+        virtual std::vector<double> wavelengths() const override
+        {
+            return {0.3, 0.32, 0.38, 0.78, 2.5};
+        }
+    };
+
+    struct Product_Data_Dual_Band_Optical_Specular : Product_Data_Dual_Band_Optical
+    {
+        Product_Data_Dual_Band_Optical_Specular(
+          double tf_solar,
+          double tb_solar,
+          double rf_solar,
+          double rb_solar,
+          double tf_visible,
+          double tb_visible,
+          double rf_visible,
+          double rb_visible,
+          double thickness_meteres,
+          std::optional<double> ir_transmittance_front = std::optional<double>(),
+          std::optional<double> ir_transmittance_back = std::optional<double>(),
+          std::optional<double> emissivity_front = std::optional<double>(),
+          std::optional<double> emissivity_back = std::optional<double>(),
+          bool flipped = false);
+
         double tf_solar;
         double tb_solar;
         double rf_solar;
         double rb_solar;
-
         double tf_visible;
         double tb_visible;
         double rf_visible;
         double rb_visible;
+    };
+
+    struct Product_Data_Dual_Band_Optical_BSDF : Product_Data_Dual_Band_Optical
+    {
+        Product_Data_Dual_Band_Optical_BSDF(
+          std::vector<std::vector<double>> const & tf_solar,
+          std::vector<std::vector<double>> const & tb_solar,
+          std::vector<std::vector<double>> const & rf_solar,
+          std::vector<std::vector<double>> const & rb_solar,
+          std::vector<std::vector<double>> const & tf_visible,
+          std::vector<std::vector<double>> const & tb_visible,
+          std::vector<std::vector<double>> const & rf_visible,
+          std::vector<std::vector<double>> const & rb_visible,
+          SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+          double thickness_meteres,
+          std::optional<double> ir_transmittance_front = std::optional<double>(),
+          std::optional<double> ir_transmittance_back = std::optional<double>(),
+          std::optional<double> emissivity_front = std::optional<double>(),
+          std::optional<double> emissivity_back = std::optional<double>(),
+          bool flipped = false);
+
+        SingleLayerOptics::CBSDFHemisphere bsdf_hemisphere;
+
+        std::vector<std::vector<double>> tf_solar;
+        std::vector<std::vector<double>> tb_solar;
+        std::vector<std::vector<double>> rf_solar;
+        std::vector<std::vector<double>> rb_solar;
+        std::vector<std::vector<double>> tf_visible;
+        std::vector<std::vector<double>> tb_visible;
+        std::vector<std::vector<double>> rf_visible;
+        std::vector<std::vector<double>> rb_visible;
     };
 
 
@@ -91,6 +164,7 @@ namespace wincalc
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
         std::vector<OpticsParser::WLData> wavelength_data;
+		virtual std::vector<double> wavelengths() const override;
     };
 
     struct Product_Data_Optical_Thermal
@@ -108,16 +182,8 @@ namespace wincalc
           std::shared_ptr<Product_Data_Optical> const & material_optical_data);
         virtual ~Product_Data_Optical_With_Material() = default;
         virtual std::shared_ptr<Product_Data_Optical> optical_data() override;
-#if 0
-        virtual std::shared_ptr<SingleLayerOptics::CBSDFLayer>
-          create_layer(window_standards::Optical_Standard_Method const & method,
-                       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-                       Spectal_Data_Wavelength_Range_Method const & type =
-                         Spectal_Data_Wavelength_Range_Method::FULL,
-                       int number_visible_bands = 5,
-                       int number_solar_bands = 10) const;
-#endif
         std::shared_ptr<Product_Data_Optical> material_optical_data;
+		virtual std::vector<double> wavelengths() const override;
     };
 
     struct Product_Data_Optical_Venetian : Product_Data_Optical_With_Material

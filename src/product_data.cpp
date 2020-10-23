@@ -1,6 +1,7 @@
+#include <sstream>
 #include "product_data.h"
 #include "create_wce_objects.h"
-#include <sstream>
+#include "util.h"
 
 namespace wincalc
 {
@@ -59,6 +60,11 @@ namespace wincalc
         wavelength_data(wavelength_data)
     {}
 
+	std::vector<double> Product_Data_N_Band_Optical::wavelengths() const
+	{
+		return get_first_val(wavelength_data);
+	}
+
     Flippable_Solid_Layer::Flippable_Solid_Layer(double thickness_meters, bool flipped) :
         thickness_meters(thickness_meters), flipped(flipped)
     {}
@@ -90,21 +96,11 @@ namespace wincalc
     {
         return material_optical_data;
     }
-#if 0
-    std::shared_ptr<SingleLayerOptics::CBSDFLayer> Product_Data_Optical_With_Material::create_layer(
-      window_standards::Optical_Standard_Method const & method,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands) const
-    {
-        auto material =
-          create_material(optical_data, method, type, number_visible_bands, number_solar_bands);
-        auto layer =
-          SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
-        return layer;
-    }
-#endif
+	std::vector<double> Product_Data_Optical_With_Material::wavelengths() const
+	{
+		return material_optical_data->wavelengths();
+	}
+
 
     Product_Data_Optical_Venetian::Product_Data_Optical_Venetian(
       std::shared_ptr<Product_Data_Optical> const & optical_data,
@@ -225,7 +221,6 @@ namespace wincalc
                                                                        double gap_width_left,
                                                                        double gap_width_right) const
     {
-
         std::map<Product_Data_Optical_Perforated_Screen::Type, std::function<double(void)>>
           front_openness_calcs;
         front_openness_calcs[Product_Data_Optical_Perforated_Screen::Type::CIRCULAR] = [=]() {
@@ -269,7 +264,7 @@ namespace wincalc
             throw std::runtime_error(msg.str());
         }
 
-		double front_openness = front_openness_calc->second();
+        double front_openness = front_openness_calc->second();
 
         EffectiveLayers::ShadeOpenness openness{
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
@@ -277,5 +272,69 @@ namespace wincalc
         return std::make_unique<EffectiveLayers::EffectiveLayerPerforated>(
           width, height, material_optical_data->thickness_meters, openness);
     }
+
+    Product_Data_Dual_Band_Optical_BSDF::Product_Data_Dual_Band_Optical_BSDF(
+      std::vector<std::vector<double>> const & tf_solar,
+      std::vector<std::vector<double>> const & tb_solar,
+      std::vector<std::vector<double>> const & rf_solar,
+      std::vector<std::vector<double>> const & rb_solar,
+      std::vector<std::vector<double>> const & tf_visible,
+      std::vector<std::vector<double>> const & tb_visible,
+      std::vector<std::vector<double>> const & rf_visible,
+      std::vector<std::vector<double>> const & rb_visible,
+      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+      double thickness_meteres,
+      std::optional<double> ir_transmittance_front,
+      std::optional<double> ir_transmittance_back,
+      std::optional<double> emissivity_front,
+      std::optional<double> emissivity_back,
+      bool flipped) :
+        Product_Data_Dual_Band_Optical(thickness_meteres,
+                                       ir_transmittance_front,
+                                       ir_transmittance_back,
+                                       emissivity_front,
+                                       emissivity_back,
+                                       flipped),
+        bsdf_hemisphere(bsdf_hemisphere),
+        tf_solar(tf_solar),
+        tb_solar(tb_solar),
+        rf_solar(rf_solar),
+        rb_solar(rb_solar),
+        tf_visible(tf_visible),
+        tb_visible(tb_visible),
+        rf_visible(rf_visible),
+        rb_visible(rb_visible)
+    {}
+
+    Product_Data_Dual_Band_Optical_Specular::Product_Data_Dual_Band_Optical_Specular(
+      double tf_solar,
+      double tb_solar,
+      double rf_solar,
+      double rb_solar,
+      double tf_visible,
+      double tb_visible,
+      double rf_visible,
+      double rb_visible,
+      double thickness_meteres,
+      std::optional<double> ir_transmittance_front,
+      std::optional<double> ir_transmittance_back,
+      std::optional<double> emissivity_front,
+      std::optional<double> emissivity_back,
+      bool flipped) :
+        Product_Data_Dual_Band_Optical(thickness_meteres,
+                                       ir_transmittance_front,
+                                       ir_transmittance_back,
+                                       emissivity_front,
+                                       emissivity_back,
+                                       flipped),
+        tf_solar(tf_solar),
+        tb_solar(tb_solar),
+        rf_solar(rf_solar),
+        rb_solar(rb_solar),
+        tf_visible(tf_visible),
+        tb_visible(tb_visible),
+        rf_visible(rf_visible),
+        rb_visible(rb_visible)
+    {}
 
 }   // namespace wincalc

@@ -79,4 +79,26 @@ namespace wincalc
         return s;
     }
 
+	std::vector<std::vector<double>> get_wavelengths(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data)
+	{
+		std::vector<std::vector<double>> wavelengths;
+		for(auto & product : product_data)
+		{
+			wavelengths.push_back(product->wavelengths());
+		}
+		return wavelengths;
+	}
+
+	template<>
+	std::vector<double> get_first_val(std::vector<OpticsParser::WLData> const & wavelength_data)
+	{
+		std::vector<double> res;
+
+		for(auto const & row : wavelength_data)
+		{
+			res.push_back(row.wavelength);
+		}
+
+		return res;
+	}
 }   // namespace wincalc
