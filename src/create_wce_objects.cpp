@@ -488,8 +488,7 @@ namespace wincalc
             {
                 std::stringstream msg;
                 msg
-                  << "N-Band product without measured data for entire wavelength range in "
-                     "method: "
+                  << "Product without measured data for entire wavelength range in method: "
                   << static_cast<
                        std::underlying_type<window_standards::Optical_Standard_Method_Type>::type>(
                        method.type);
@@ -528,7 +527,7 @@ namespace wincalc
               product, method, type, number_visible_bands, number_solar_bands));
         }
 
-		std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
         auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
 
@@ -550,6 +549,21 @@ namespace wincalc
           create_material(product_data, method, type, number_visible_bands, number_solar_bands);
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
+        return layer;
+    }
+
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_perfectly_diffuse(
+      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & type,
+      int number_visible_bands,
+      int number_solar_bands)
+    {
+        auto material =
+          create_material(product_data, method, type, number_visible_bands, number_solar_bands);
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getPerfectlyDiffuseLayer(material, bsdf_hemisphere);
         return layer;
     }
 
@@ -729,13 +743,29 @@ namespace wincalc
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                   product_data))
         {
-            layer = create_bsdf_layer_preloaded_matrices(
-              std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product_data),
-              method,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
+            if(method.type == window_standards::Optical_Standard_Method_Type::THERMAL_IR)
+            {
+                // Thermal IR is a special case that can be calculated despite a lack of
+                // BSDF data.  Since there is no BSDF for the IR range yet the IR range
+                // is instead modeled as a perfectly diffusing shade
+                layer = create_bsdf_layer_perfectly_diffuse(product_data,
+                                                            method,
+                                                            bsdf_hemisphere,
+                                                            type,
+                                                            number_visible_bands,
+                                                            number_solar_bands);
+            }
+            else
+            {
+                layer = create_bsdf_layer_preloaded_matrices(
+                  std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
+                    product_data),
+                  method,
+                  bsdf_hemisphere,
+                  type,
+                  number_visible_bands,
+                  number_solar_bands);
+            }
         }
         else
         {
@@ -760,19 +790,17 @@ namespace wincalc
       int number_solar_bands)
     {
         std::vector<std::shared_ptr<SingleLayerOptics::CBSDFLayer>> layers;
-		std::vector<std::vector<double>> wavelengths;
-		for(auto const & product : products)
+        std::vector<std::vector<double>> wavelengths;
+        for(auto const & product : products)
         {
             layers.push_back(create_bsdf_layer(
               product, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands));
-			wavelengths.push_back(product->wavelengths());
+            wavelengths.push_back(product->wavelengths());
         }
 
-        auto source_spectrum =
-          get_spectum_values(method.source_spectrum, method, wavelengths);
+        auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
 
-        auto detector_spectrum =
-          get_spectum_values(method.detector_spectrum, method, wavelengths);
+        auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
 
         auto layer =
           MultiLayerOptics::CMultiPaneBSDF::create(layers, source_spectrum, detector_spectrum);
@@ -791,7 +819,8 @@ namespace wincalc
         bool as_bsdf = false;
         for(auto product : product_data)
         {
-            if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product))
+            if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product)
+               || std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product))
             {
                 as_bsdf = true;
                 break;

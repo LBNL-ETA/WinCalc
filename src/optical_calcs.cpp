@@ -322,6 +322,8 @@ namespace wincalc
         return result;
     }
 
+#include <iostream>
+
     Optical_Solar_Results_Needed_For_Thermal_Calcs optical_solar_results_needed_for_thermal_calcs(
       std::vector<Product_Data_Optical_Thermal> const & product_data,
       window_standards::Optical_Standard const & standard,
@@ -364,8 +366,7 @@ namespace wincalc
                                        theta,
                                        phi);
 
-
-        return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
+		return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }
 
     double calc_optical_property(

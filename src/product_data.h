@@ -42,6 +42,7 @@ namespace wincalc
                              std::optional<double> ir_transmittance_back = std::optional<double>(),
                              std::optional<double> emissivity_front = std::optional<double>(),
                              std::optional<double> emissivity_back = std::optional<double>(),
+                             double permeability_factor = 0,
                              bool flipped = false);
         virtual ~Product_Data_Optical();
         virtual std::shared_ptr<Product_Data_Optical> optical_data();
@@ -62,7 +63,7 @@ namespace wincalc
         std::optional<double> ir_transmittance_back;
         std::optional<double> emissivity_front;
         std::optional<double> emissivity_back;
-
+        double permeability_factor;
         virtual std::vector<double> wavelengths() const = 0;
     };
 
@@ -75,12 +76,14 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
+          double permeability_factor = 0,
           bool flipped = false) :
             Product_Data_Optical(thickness_meters,
                                  ir_transmittance_front,
                                  ir_transmittance_back,
                                  emissivity_front,
                                  emissivity_back,
+                                 permeability_factor,
                                  flipped)
         {}
 
@@ -107,6 +110,7 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
+          double permeability_factor = 0,
           bool flipped = false);
 
         double tf_solar;
@@ -136,6 +140,7 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
+          double permeability_factor = 0,
           bool flipped = false);
 
         SingleLayerOptics::CBSDFHemisphere bsdf_hemisphere;
@@ -148,6 +153,14 @@ namespace wincalc
         std::vector<std::vector<double>> tb_visible;
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
+
+		std::unique_ptr<EffectiveLayers::EffectiveLayer>
+			effective_thermal_values(double width,
+				double height,
+				double gap_width_top,
+				double gap_width_bottom,
+				double gap_width_left,
+				double gap_width_right) const override;
     };
 
 
@@ -161,10 +174,11 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
+          double permeability_factor = 0,
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
         std::vector<OpticsParser::WLData> wavelength_data;
-		virtual std::vector<double> wavelengths() const override;
+        virtual std::vector<double> wavelengths() const override;
     };
 
     struct Product_Data_Optical_Thermal
@@ -183,7 +197,7 @@ namespace wincalc
         virtual ~Product_Data_Optical_With_Material() = default;
         virtual std::shared_ptr<Product_Data_Optical> optical_data() override;
         std::shared_ptr<Product_Data_Optical> material_optical_data;
-		virtual std::vector<double> wavelengths() const override;
+        virtual std::vector<double> wavelengths() const override;
     };
 
     struct Product_Data_Optical_Venetian : Product_Data_Optical_With_Material

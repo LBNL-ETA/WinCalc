@@ -48,24 +48,28 @@ namespace wincalc
         return itr->second;
     }
 
-	void validate_bsdf(OpticsParser::BSDF const& bsdf)
-	{
-		if(bsdf.rowAngleBasisName != "LBNL/Klems Full" || bsdf.columnAngleBasisName != "LBNL/Klems Full")
-		{
-			throw std::runtime_error("Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
-		}
-		if(bsdf.data.size() != 145)
-		{
-			throw std::runtime_error("Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
-		}
-		for(size_t i = 0; i < 145; ++i)
-		{
-			if(bsdf.data[i].size() != 145)
-			{
-				throw std::runtime_error("Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
-			}
-		}
-	}
+    void validate_bsdf(OpticsParser::BSDF const & bsdf)
+    {
+        if(bsdf.rowAngleBasisName != "LBNL/Klems Full"
+           || bsdf.columnAngleBasisName != "LBNL/Klems Full")
+        {
+            throw std::runtime_error(
+              "Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
+        }
+        if(bsdf.data.size() != 145)
+        {
+            throw std::runtime_error(
+              "Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
+        }
+        for(size_t i = 0; i < 145; ++i)
+        {
+            if(bsdf.data[i].size() != 145)
+            {
+                throw std::runtime_error(
+                  "Only \"LBNL/Klems Full\" is currently supported for a BSDF angle basis.");
+            }
+        }
+    }
 
     std::shared_ptr<Product_Data_Optical>
       convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product)
@@ -142,14 +146,14 @@ namespace wincalc
             throw std::runtime_error("Composed product with missing or unsupported geometry");
         }
         else
-        {            
+        {
             auto wavelength_measured_values = product->measurements.value();
             std::shared_ptr<Product_Data_Optical> converted;
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
-				FenestrationCommon::MaterialType material_type =
-					convert_material_type(product->subtype.value());
+                FenestrationCommon::MaterialType material_type =
+                  convert_material_type(product->subtype.value());
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product->thickness.value() / 1000.0,
@@ -167,14 +171,14 @@ namespace wincalc
                   std::get<OpticsParser::MultiBandBSDF>(wavelength_measured_values);
                 auto solar = wavelengthValues.at("solar");
                 auto visible = wavelengthValues.at("visible");
-				validate_bsdf(solar.tf);
-				validate_bsdf(solar.tb);
-				validate_bsdf(solar.rf);
-				validate_bsdf(solar.rb);
-				validate_bsdf(visible.tf);
-				validate_bsdf(visible.tb);
-				validate_bsdf(visible.rf);
-				validate_bsdf(visible.rb);
+                validate_bsdf(solar.tf);
+                validate_bsdf(solar.tb);
+                validate_bsdf(solar.rf);
+                validate_bsdf(solar.rb);
+                validate_bsdf(visible.tf);
+                validate_bsdf(visible.tb);
+                validate_bsdf(visible.rf);
+                validate_bsdf(visible.rb);
                 converted.reset(
                   new Product_Data_Dual_Band_Optical_BSDF(solar.tf.data,
                                                           solar.tb.data,
@@ -189,7 +193,8 @@ namespace wincalc
                                                           product->IRTransmittance,
                                                           product->IRTransmittance,
                                                           product->frontEmissivity,
-                                                          product->backEmissivity));
+                                                          product->backEmissivity,
+                                                          product->permeabilityFactor.value_or(0))); // If permeability factor is not defined assume it is zero
             }
             return converted;
         }
