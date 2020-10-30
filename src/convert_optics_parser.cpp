@@ -163,14 +163,14 @@ namespace wincalc
                   product->frontEmissivity,
                   product->backEmissivity));
             }
-            else if(std::holds_alternative<OpticsParser::MultiBandBSDF>(wavelength_measured_values))
+            else if(std::holds_alternative<OpticsParser::DualBandBSDF>(wavelength_measured_values))
             {
                 auto bsdfHemisphere =
                   SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
                 auto wavelengthValues =
-                  std::get<OpticsParser::MultiBandBSDF>(wavelength_measured_values);
-                auto solar = wavelengthValues.at("solar");
-                auto visible = wavelengthValues.at("visible");
+                  std::get<OpticsParser::DualBandBSDF>(wavelength_measured_values);
+                auto solar = wavelengthValues.solar;
+                auto visible = wavelengthValues.visible;
                 validate_bsdf(solar.tf);
                 validate_bsdf(solar.tb);
                 validate_bsdf(solar.rf);
