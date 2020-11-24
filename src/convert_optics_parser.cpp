@@ -147,11 +147,23 @@ namespace wincalc
         }
         else
         {
+			if(!product->measurements.has_value())
+			{
+				throw std::runtime_error("Missing wavelength measurements");
+			}
+			if(!product->thickness.has_value())
+			{
+				throw std::runtime_error("Missing product thickness");
+			}
             auto wavelength_measured_values = product->measurements.value();
             std::shared_ptr<Product_Data_Optical> converted;
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
+				if(!product->subtype.has_value())
+				{
+					throw std::runtime_error("Missing product subtype");
+				}
                 FenestrationCommon::MaterialType material_type =
                   convert_material_type(product->subtype.value());
                 converted.reset(new Product_Data_N_Band_Optical(
@@ -163,14 +175,14 @@ namespace wincalc
                   product->frontEmissivity,
                   product->backEmissivity));
             }
-            else if(std::holds_alternative<OpticsParser::MultiBandBSDF>(wavelength_measured_values))
+            else if(std::holds_alternative<OpticsParser::DualBandBSDF>(wavelength_measured_values))
             {
                 auto bsdfHemisphere =
                   SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
                 auto wavelengthValues =
-                  std::get<OpticsParser::MultiBandBSDF>(wavelength_measured_values);
-                auto solar = wavelengthValues.at("solar");
-                auto visible = wavelengthValues.at("visible");
+                  std::get<OpticsParser::DualBandBSDF>(wavelength_measured_values);
+                auto solar = wavelengthValues.solar;
+                auto visible = wavelengthValues.visible;
                 validate_bsdf(solar.tf);
                 validate_bsdf(solar.tb);
                 validate_bsdf(solar.rf);
@@ -212,6 +224,16 @@ namespace wincalc
         {
             data = composed_product->compositionInformation->material;
         }
+
+		if(!data->conductivity.has_value())
+		{
+			throw std::runtime_error("Missing conductivity");
+		}
+
+		if(!data->thickness.has_value())
+		{
+			throw std::runtime_error("Missing thickness");
+		}
 
         return wincalc::Product_Data_Thermal(
           data->conductivity.value(), data->thickness.value() / 1000.0, false);
