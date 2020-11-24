@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME} 
+		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
 		calc_from_disk.unit.cpp          
 		calc_from_json.unit.cpp
 		nfrc_102.unit.cpp
@@ -39,7 +40,6 @@ add_executable(${PROJECT_TEST_NAME}
 		cgdb_3000_nfrc_102.unit.cpp
 		cgdb_18000_nfrc_102.unit.cpp
 		user_woven_nfrc_102.unit.cpp
-		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
 		main.cpp
 		paths.h 
 		util.h
