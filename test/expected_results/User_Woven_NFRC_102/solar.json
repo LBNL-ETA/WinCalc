@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.22494857904910706,
+                    "direct": 0.23092024184065188
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.24609523751448262,
+                    "direct": 0.22824183309557824
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.033939638939395195,
+                    "direct": 0.03204473959062077
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.0010749567144315412,
+                    "direct": 0.0022037837727555223
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6929108894595435,
+                "direct_diffuse": 0.5349182728876754,
+                "direct_direct": 0.09743491804677264,
+                "direct_hemispherical": 0.632353190934448
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.04820089255195187,
+                "direct_diffuse": 0.004547794351565132,
+                "direct_direct": 0.10013403328271422,
+                "direct_hemispherical": 0.10468182763427936
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.7049648751206344,
+                "direct_diffuse": 0.6451127882951035,
+                "direct_direct": 0.017203720177207803,
+                "direct_hemispherical": 0.6623165084723114
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.04786493065044861,
+                "direct_diffuse": 0.007122097915032377,
+                "direct_direct": 0.10011577674432248,
+                "direct_hemispherical": 0.10723787465935486
+            }
+        }
+    }
+}

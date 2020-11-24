@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.2535452440735066,
+                    "direct": 0.031074189655007075
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.36484938097129005,
+                    "direct": 0.04061491866687599
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.08279577657319859,
+                    "direct": 0.07696581871263285
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.035392570231443606,
+                    "direct": 0.07205144054929177
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.2512300679132994,
+                "direct_diffuse": 0.013998324411164054,
+                "direct_direct": 0.08220826321250632,
+                "direct_hemispherical": 0.09620658762367038
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.41242891143999616,
+                "direct_diffuse": 0.007157637142090056,
+                "direct_direct": 0.7885957668666004,
+                "direct_hemispherical": 0.7957534040086904
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.19000489290919934,
+                "direct_diffuse": 0.01987183101684048,
+                "direct_direct": 0.07216511383466016,
+                "direct_hemispherical": 0.09203694485150064
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.4097531558880643,
+                "direct_diffuse": 0.006704983938057296,
+                "direct_direct": 0.7885917119942759,
+                "direct_hemispherical": 0.7952966959323332
+            }
+        }
+    }
+}

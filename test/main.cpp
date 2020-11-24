@@ -3,6 +3,7 @@
 #include "paths.h" 
 
 std::string test_dir;
+bool update_results;
 
 int main( int argc, char* argv[] ) {
 #ifdef ENABLE_GTEST_DEBUG_MODE
@@ -11,6 +12,7 @@ int main( int argc, char* argv[] ) {
 #endif
 	::testing::InitGoogleTest( &argc, argv );
 	test_dir = argv[1];
+	update_results = true;
 	return RUN_ALL_TESTS();
 }
 
