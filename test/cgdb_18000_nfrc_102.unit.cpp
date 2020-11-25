@@ -16,7 +16,7 @@
 using namespace wincalc;
 using namespace window_standards;
 
-class TestCGDB18000NFRC102 : public testing::Test
+class Test_CGDB_18000_NFRC_102 : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
@@ -30,7 +30,7 @@ protected:
 
         std::filesystem::path shade_path(test_dir);
         shade_path /= "products";
-        shade_path /= "igsdb_12295.json";
+        shade_path /= "cgdb_18000.json";
 
         std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
         OpticsParser::Parser parser;
@@ -60,13 +60,13 @@ protected:
     }
 };
 
-TEST_F(TestCGDB18000NFRC102, Test_Thermal)
+TEST_F(Test_CGDB_18000_NFRC_102, Test_Thermal)
 {
 	test_thermal_results("CGDB_18000_NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
 	test_thermal_results("CGDB_18000_NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
-TEST_F(TestCGDB18000NFRC102, Test_Optical)
+TEST_F(Test_CGDB_18000_NFRC_102, Test_Optical)
 {
 	test_optical_results("CGDB_18000_NFRC_102", glazing_system_u, update_results);
 }
