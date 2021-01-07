@@ -160,12 +160,12 @@ namespace wincalc
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
-				if(!product->subtype.has_value())
+				if(!product->productSubtype.has_value())
 				{
 					throw std::runtime_error("Missing product subtype");
 				}
                 FenestrationCommon::MaterialType material_type =
-                  convert_material_type(product->subtype.value());
+                  convert_material_type(product->productSubtype.value());
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product->thickness.value() / 1000.0,
