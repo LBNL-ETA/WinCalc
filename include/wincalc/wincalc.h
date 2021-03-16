@@ -3,5 +3,6 @@
 
 #include "../../src/glazing_system.h"
 #include "../../src/convert_optics_parser.h"
+#include "../../src/cma.h"
 
 #endif

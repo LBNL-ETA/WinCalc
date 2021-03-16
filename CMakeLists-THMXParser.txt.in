@@ -1,0 +1,19 @@
+cmake_minimum_required( VERSION 2.8.7 )
+
+include(ExternalProject)
+
+ExternalProject_Add(THMXParser
+    GIT_REPOSITORY https://github.com/LBNL-ETA/THMXParser.git
+    GIT_TAG "main"
+    
+    UPDATE_COMMAND ""
+    PATCH_COMMAND ""
+  	
+    SOURCE_DIR "${CMAKE_BINARY_DIR}/THMXParser-src"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/THMXParser-build"
+  	
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    TEST_COMMAND ""
+    INSTALL_COMMAND ""
+)

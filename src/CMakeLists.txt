@@ -19,7 +19,9 @@ add_library( ${LIB_NAME}
 		convert_optics_parser.h
 		convert_optics_parser.cpp
 		util.h
-		util.cpp)
+		util.cpp
+		cma.h
+		cma.cpp)
 
 
 
@@ -39,7 +41,7 @@ if ( MSVC )
 endif()
 
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
-target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser Windows-CalcEngine)
+target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine)
 
 
 

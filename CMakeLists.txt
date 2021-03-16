@@ -30,6 +30,7 @@ set(BUILD_WCE_TESTING OFF CACHE BOOL "")
 
 include(CMakeLists-Windows-Standards.txt)
 include(CMakeLists-OpticalMeasurementParser.txt)
+include(CMakeLists-THMXParser.txt)
 include(CMakeLists-Windows-CalcEngine.txt)
 
 add_subdirectory(src)
