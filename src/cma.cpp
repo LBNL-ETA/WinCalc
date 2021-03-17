@@ -4,21 +4,10 @@
 #include <map>
 #include <sstream>
 
+#include "util.h"
+
 namespace wincalc
 {
-    std::string to_lower(std::string s)
-    {
-#ifdef _MSC_VER
-#    pragma warning(push)
-#    pragma warning(disable : 4244)
-#endif
-        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
-        return s;
-    }
-
     using BestWorstSpacerIGU = std::pair<CMA::Option, CMA::Option>;
 
     CMA::Option get_cma_option(std::string const & s)
@@ -43,21 +32,21 @@ namespace wincalc
         const double absorptance = 0.3;   // Absorptance is alwasys 0.3 for now at least
         std::map<BestWorstSpacerIGU, Tarcog::ISO15099::FrameData> results;
 
-        for(auto const & cma_result : frame.cmaResults)
+        for(auto const & result : frame.results)
         {
             std::optional<double> u_value;
             std::optional<double> u_edge;
             std::optional<double> projected_frame_dimension;
             std::optional<double> wetted_length;
 
-            if(to_lower(cma_result.modelType) != "cma")
+            if(to_lower(result.modelType) != "cma")
             {
                 // skip non-cma results
                 continue;
             }
-            auto spacer_option = get_cma_option(cma_result.spacerCase);
-            auto glazing_option = get_cma_option(cma_result.glazingCase);
-            for(auto const & u_result : cma_result.ufactorResults)
+            auto spacer_option = get_cma_option(result.spacerCase);
+            auto glazing_option = get_cma_option(result.glazingCase);
+            for(auto const & u_result : result.ufactorResults)
             {
                 if(to_lower(u_result.tag) == "frame")
                 {
@@ -65,10 +54,10 @@ namespace wincalc
                     {
                         if(to_lower(projection_result.lengthType) == "projected in glass plane")
                         {
-                            u_value = projection_result.ufactor;
+                            u_value = std::stod(projection_result.ufactor);
                             projected_frame_dimension = projection_result.length;
                         }
-                        else if(to_lower(projection_result.lengthType) == "total_length")
+                        else if(to_lower(projection_result.lengthType) == "total length")
                         {
                             wetted_length = projection_result.length;
                         }
@@ -80,7 +69,7 @@ namespace wincalc
                     {
                         if(to_lower(projection_result.lengthType) == "projected in glass plane")
                         {
-                            u_edge = projection_result.ufactor;
+                            u_edge = std::stod(projection_result.ufactor);
                         }
                     }
                 }
@@ -109,7 +98,46 @@ namespace wincalc
 
     double get_spacer_keff(thmxParser::ThmxFileContents const & spacer)
     {
-        return 1;   // TODO: Implement
+		std::optional<double> u_factor;
+		std::optional<double> spacer_width;
+
+		for(auto const & result : spacer.results)
+		{
+			if(to_lower(result.modelType) != "u-factor")
+			{
+				// only interested in u-factor model results for spacer in CMA
+				continue;
+			}
+
+			for(auto const & u_result : result.ufactorResults)
+			{
+				if(to_lower(u_result.tag) == "spacerwidth")
+				{
+					for(auto const & projection_result : u_result.projectionResults)
+					{
+						if(to_lower(projection_result.lengthType) == "total length")
+						{
+							spacer_width = projection_result.length;
+						}
+					}
+				}
+				else if(to_lower(u_result.tag) == "spacerinteriortag")
+				{
+					for(auto const & projection_result : u_result.projectionResults)
+					{
+						if(to_lower(projection_result.lengthType) == "total length")
+						{
+							u_factor = std::stod(projection_result.ufactor);
+						}
+					}
+				}
+			}
+		}
+
+		double ho = 9999; // outdoor heat transfer is fixed to 9999 w/m2k for spacer keff calculation
+		double hi = 9999; // indoor heat transfer is fixed to 9999 w/m2k for spacer keff calculation
+
+		return spacer_width.value() / (1 / u_factor.value() - 1 / ho - 1 / hi);
     }
 
     CMAResult cmaSingleVision(thmxParser::ThmxFileContents const & top_frame,

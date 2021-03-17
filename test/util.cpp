@@ -245,7 +245,7 @@ void test_optical_results(std::string const & system_name,
                           bool update)
 {
     auto solar_results = glazing_system->optical_method_results(
-      window_standards::Optical_Standard_Method_Type::PHOTOPIC);
+      window_standards::Optical_Standard_Method_Type::SOLAR);
     test_optical_results(system_name + "/solar", solar_results, update_results);
 
     auto photopic_results = glazing_system->optical_method_results(
