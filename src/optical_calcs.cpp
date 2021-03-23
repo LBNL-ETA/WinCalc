@@ -126,6 +126,35 @@ namespace wincalc
               system, prop, side, scattering, min_lambda, max_lambda, theta, phi);
         };
         auto optical_results = do_calcs<double>(calc_f);
+        auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(system);
+        if(bsdf_system)
+        {
+            // Include matrix results for BSDF systems
+            optical_results.system_results.front.transmittance.matrix =
+              bsdf_system->getMatrix(min_lambda,
+                                     max_lambda,
+                                     FenestrationCommon::Side::Front,
+                                     FenestrationCommon::PropertySimple::T).getMatrix();
+
+			optical_results.system_results.front.reflectance.matrix =
+				bsdf_system->getMatrix(min_lambda,
+					max_lambda,
+					FenestrationCommon::Side::Front,
+					FenestrationCommon::PropertySimple::R).getMatrix();
+
+			optical_results.system_results.back.transmittance.matrix =
+				bsdf_system->getMatrix(min_lambda,
+					max_lambda,
+					FenestrationCommon::Side::Back,
+					FenestrationCommon::PropertySimple::T).getMatrix();
+
+			optical_results.system_results.back.reflectance.matrix =
+				bsdf_system->getMatrix(min_lambda,
+					max_lambda,
+					FenestrationCommon::Side::Back,
+					FenestrationCommon::PropertySimple::R).getMatrix();
+        }
+
 #if 0
         optical_results.absorptances_front = get_layer_absorptances(
           system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
@@ -160,7 +189,7 @@ namespace wincalc
     {
         auto layers = create_multi_pane(
           product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-		std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
         auto lambda_range = get_lambda_range(wavelengths, method);
         return calc_all(
           std::move(layers), lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
@@ -230,19 +259,19 @@ namespace wincalc
             throw std::runtime_error(err_msg.str());
         }
 
-		std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
 
         auto detector_x = get_spectum_values(method_x.detector_spectrum, method_x, wavelengths);
         auto detector_y = get_spectum_values(method_y.detector_spectrum, method_y, wavelengths);
         auto detector_z = get_spectum_values(method_z.detector_spectrum, method_z, wavelengths);
 
-		FenestrationCommon::CCommonWavelengths wavelength_combiner;
-		for(auto & wavelength_set : wavelengths)
-		{
-			wavelength_combiner.addWavelength(wavelength_set);
-		}
-		auto common_wavelengths =
-			wavelength_combiner.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
+        FenestrationCommon::CCommonWavelengths wavelength_combiner;
+        for(auto & wavelength_set : wavelengths)
+        {
+            wavelength_combiner.addWavelength(wavelength_set);
+        }
+        auto common_wavelengths =
+          wavelength_combiner.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
 
 
         // All methods must have the same source
@@ -251,7 +280,8 @@ namespace wincalc
           get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
 
         // and the same wavelength set?
-        std::vector<double> wavelength_set = get_wavelength_set_to_use(method_x, common_wavelengths);
+        std::vector<double> wavelength_set =
+          get_wavelength_set_to_use(method_x, common_wavelengths);
 
         auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
                                                                                 std::move(layer_y),
@@ -338,7 +368,7 @@ namespace wincalc
         auto solar_method =
           standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
 
-		std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
 
         auto lambda_range = get_lambda_range(wavelengths, solar_method);
 
@@ -366,7 +396,7 @@ namespace wincalc
                                        theta,
                                        phi);
 
-		return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
+        return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }
 
     double calc_optical_property(
@@ -384,7 +414,7 @@ namespace wincalc
     {
         auto layers = create_multi_pane(
           product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-		std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
         auto lambda_range = get_lambda_range(wavelengths, method);
 
         return calc_optical_property(std::move(layers),

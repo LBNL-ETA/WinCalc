@@ -1,6 +1,8 @@
-
 #ifndef WINCALC_RESULTS_H_
 #define WINCALC_RESULTS_H_
+
+#include <vector>
+#include <optional>
 
 namespace wincalc
 {
@@ -11,6 +13,7 @@ namespace wincalc
         T direct_diffuse;
         T diffuse_diffuse;
         T direct_hemispherical;
+		std::optional<std::vector<std::vector<T>>> matrix;
     };
 
     template<typename T>
