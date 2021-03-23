@@ -143,6 +143,99 @@ namespace wincalc
         return spacer_width_m / (1 / u_factor.value() - 1 / ho - 1 / hi);
     }
 
+    std::unique_ptr<CMA::CMAWindow>
+      get_cma_window_single_vision(thmxParser::ThmxFileContents const & top_frame,
+                                   thmxParser::ThmxFileContents const & bottom_frame,
+                                   thmxParser::ThmxFileContents const & left_frame,
+                                   thmxParser::ThmxFileContents const & right_frame,
+                                   double window_width,
+                                   double window_height)
+    {
+        auto top_cma_frame = get_cma_frame(cma_frame_parameters(top_frame));
+        auto bottom_cma_frame = get_cma_frame(cma_frame_parameters(bottom_frame));
+        auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
+        auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
+
+        std::unique_ptr<CMA::CMAWindowSingleVision> cma_window(
+          new CMA::CMAWindowSingleVision(window_width, window_height));
+        cma_window->setFrameTop(top_cma_frame);
+        cma_window->setFrameBottom(bottom_cma_frame);
+        cma_window->setFrameLeft(left_cma_frame);
+        cma_window->setFrameRight(right_cma_frame);
+        return cma_window;
+    }
+
+    std::unique_ptr<CMA::CMAWindow>
+      get_cma_window_double_vision_vertical(thmxParser::ThmxFileContents const & top_frame,
+                                            thmxParser::ThmxFileContents const & bottom_frame,
+                                            thmxParser::ThmxFileContents const & top_left_frame,
+                                            thmxParser::ThmxFileContents const & top_right_frame,
+                                            thmxParser::ThmxFileContents const & bottom_left_frame,
+                                            thmxParser::ThmxFileContents const & bottom_right_frame,
+                                            thmxParser::ThmxFileContents const & meeting_rail,
+                                            double window_width,
+                                            double window_height)
+    {
+        auto top_cma_frame = get_cma_frame(cma_frame_parameters(top_frame));
+        auto bottom_cma_frame = get_cma_frame(cma_frame_parameters(bottom_frame));
+        auto top_left_cma_frame = get_cma_frame(cma_frame_parameters(top_left_frame));
+        auto top_right_cma_frame = get_cma_frame(cma_frame_parameters(top_right_frame));
+        auto bottom_left_cma_frame = get_cma_frame(cma_frame_parameters(bottom_left_frame));
+        auto bottom_right_cma_frame = get_cma_frame(cma_frame_parameters(bottom_right_frame));
+        auto meeting_rail_cma_frame = get_cma_frame(cma_frame_parameters(meeting_rail));
+
+        std::unique_ptr<CMA::CMAWindowDualVisionVertical> cma_window(
+          new CMA::CMAWindowDualVisionVertical(window_width, window_height));
+        cma_window->setFrameTop(top_cma_frame);
+        cma_window->setFrameBottom(bottom_cma_frame);
+        cma_window->setFrameTopLeft(top_left_cma_frame);
+        cma_window->setFrameTopRight(top_right_cma_frame);
+        cma_window->setFrameBottomLeft(bottom_left_cma_frame);
+        cma_window->setFrameBottomRight(bottom_right_cma_frame);
+        cma_window->setFrameMettingRail(meeting_rail_cma_frame);
+        return cma_window;
+    }
+
+    std::unique_ptr<CMA::CMAWindow> get_cma_window_double_vision_horizontal(
+      thmxParser::ThmxFileContents const & top_left_frame,
+      thmxParser::ThmxFileContents const & top_right_frame,
+      thmxParser::ThmxFileContents const & bottom_left_frame,
+      thmxParser::ThmxFileContents const & bottom_right_frame,
+      thmxParser::ThmxFileContents const & left_frame,
+      thmxParser::ThmxFileContents const & right_frame,
+      thmxParser::ThmxFileContents const & meeting_rail,
+      double window_width,
+      double window_height)
+    {
+        auto top_left_cma_frame = get_cma_frame(cma_frame_parameters(top_left_frame));
+        auto top_right_cma_frame = get_cma_frame(cma_frame_parameters(top_right_frame));
+        auto bottom_left_cma_frame = get_cma_frame(cma_frame_parameters(bottom_left_frame));
+        auto bottom_right_cma_frame = get_cma_frame(cma_frame_parameters(bottom_right_frame));
+        auto meeting_rail_cma_frame = get_cma_frame(cma_frame_parameters(meeting_rail));
+        auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
+        auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
+
+        std::unique_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
+          new CMA::CMAWindowDualVisionHorizontal(window_width, window_height));
+        cma_window->setFrameTopLeft(top_left_cma_frame);
+        cma_window->setFrameTopRight(top_right_cma_frame);
+        cma_window->setFrameBottomLeft(bottom_left_cma_frame);
+        cma_window->setFrameBottomRight(bottom_right_cma_frame);
+        cma_window->setFrameLeft(left_cma_frame);
+        cma_window->setFrameRight(right_cma_frame);
+        cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
+		return cma_window;
+    }
+
+	CMAResult calc_cma(std::shared_ptr<CMA::CMAWindow> window, double glazing_system_u, double glazing_system_shgc, double glazing_system_visible_front_direct_hemispheric_transmittance, double spacer_keff)
+	{
+		auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
+		auto u = window->uValue(glazing_system_u, spacer_keff);
+		auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+		return CMAResult{u, shgc, tvis};
+	}
+
+#if 0
     CMAResult
       cma_single_vision(thmxParser::ThmxFileContents const & top_frame,
                         thmxParser::ThmxFileContents const & bottom_frame,
@@ -173,6 +266,7 @@ namespace wincalc
         auto shgc = cma_window.shgc(glazing_system_shgc, spacer_keff);
         return CMAResult{u, shgc, tvis};
     }
+
     CMAResult cma_double_vision_vertical(
       thmxParser::ThmxFileContents const & top_frame,
       thmxParser::ThmxFileContents const & bottom_frame,
@@ -251,4 +345,5 @@ namespace wincalc
         auto shgc = cma_window.shgc(glazing_system_shgc, spacer_keff);
         return CMAResult{u, shgc, tvis};
     }
+#endif
 }   // namespace wincalc

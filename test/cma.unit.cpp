@@ -57,17 +57,12 @@ TEST_F(TestCMA, Test_CMA_Single_Vision)
     double tvis = 0.53500;   // direct-hemispheric visible front transmittance
     double width = 1.2;
     double height = 1.5;
+    std::shared_ptr<CMA::CMAWindow> cma_window = wincalc::get_cma_window_single_vision(
+      top_frame, bottom_frame, jamb_frame, jamb_frame, width, height);
+    auto spacer_keff = wincalc::get_spacer_keff(spacer);
 
-    auto results = wincalc::cma_single_vision(top_frame,
-                                              bottom_frame,
-                                              jamb_frame,
-                                              jamb_frame,
-                                              spacer,
-                                              width,
-                                              height,
-                                              glazing_system_u,
-                                              glazing_system_shgc,
-                                              tvis);
+    auto results =
+      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
     EXPECT_NEAR(results.u, 1.451714, 1e-6);
     EXPECT_NEAR(results.shgc, 0.299620, 1e-6);
     EXPECT_NEAR(results.vt, 0.468371, 1e-6);
@@ -83,19 +78,22 @@ TEST_F(TestCMA, Test_CMA_Double_Vision_Vertical)
     double width = 1.2;
     double height = 1.5;
 
-    auto results = wincalc::cma_double_vision_vertical(top_frame,
-                                                       bottom_frame,
-                                                       jamb_frame,
-                                                       jamb_frame,
-                                                       jamb_frame,
-                                                       jamb_frame,
-                                                       jamb_frame,
-                                                       spacer,
-                                                       width,
-                                                       height,
-                                                       glazing_system_u,
-                                                       glazing_system_shgc,
-                                                       tvis);
+    auto spacer_keff = wincalc::get_spacer_keff(spacer);
+
+    std::shared_ptr<CMA::CMAWindow> cma_window =
+      wincalc::get_cma_window_double_vision_vertical(top_frame,
+                                                     bottom_frame,
+                                                     jamb_frame,
+                                                     jamb_frame,
+                                                     jamb_frame,
+                                                     jamb_frame,
+                                                     jamb_frame,
+                                                     width,
+                                                     height);
+
+    auto results =
+      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
+
     EXPECT_NEAR(results.u, 1.511768, 1e-6);
     EXPECT_NEAR(results.shgc, 0.290800, 1e-6);
     EXPECT_NEAR(results.vt, 0.454171, 1e-6);
@@ -111,19 +109,22 @@ TEST_F(TestCMA, Test_CMA_Double_Vision_Horizontal)
     double width = 1.5;
     double height = 1.2;
 
-    auto results = wincalc::cma_double_vision_horizontal(top_frame,
-                                                         top_frame,
-                                                         bottom_frame,
-                                                         bottom_frame,
-                                                         jamb_frame,
-                                                         jamb_frame,
-                                                         jamb_frame,
-                                                         spacer,
-                                                         width,
-                                                         height,
-                                                         glazing_system_u,
-                                                         glazing_system_shgc,
-                                                         tvis);
+    auto spacer_keff = wincalc::get_spacer_keff(spacer);
+
+    std::shared_ptr<CMA::CMAWindow> cma_window =
+      wincalc::get_cma_window_double_vision_horizontal(top_frame,
+                                                       top_frame,
+                                                       bottom_frame,
+                                                       bottom_frame,
+                                                       jamb_frame,
+                                                       jamb_frame,
+                                                       jamb_frame,
+                                                       width,
+                                                       height);
+
+    auto results =
+      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
+
     EXPECT_NEAR(results.u, 1.512250, 1e-6);
     EXPECT_NEAR(results.shgc, 0.290802, 1e-6);
     EXPECT_NEAR(results.vt, 0.454171, 1e-6);
