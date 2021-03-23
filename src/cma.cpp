@@ -192,7 +192,7 @@ namespace wincalc
         cma_window->setFrameTopRight(top_right_cma_frame);
         cma_window->setFrameBottomLeft(bottom_left_cma_frame);
         cma_window->setFrameBottomRight(bottom_right_cma_frame);
-        cma_window->setFrameMettingRail(meeting_rail_cma_frame);
+        cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
         return cma_window;
     }
 
