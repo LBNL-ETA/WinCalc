@@ -3,14 +3,14 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.083614240293685,
-                    "direct": 0.0758143180538006
+                    "diffuse": 0.20515872322457337,
+                    "direct": 0.21092409735265616
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.083614240293685,
-                    "direct": 0.0758143180538006
+                    "diffuse": 0.20515872322457337,
+                    "direct": 0.21092409735265616
                 }
             }
         }
@@ -18,30 +18,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.13795952069082204,
+                "diffuse_diffuse": 0.1663176051364957,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.07394106169710116,
-                "direct_hemispherical": 0.07394106169710116
+                "direct_direct": 0.1047689866545729,
+                "direct_hemispherical": 0.1047689866545729
             },
             "transmittance": {
-                "diffuse_diffuse": 0.7846280832182024,
+                "diffuse_diffuse": 0.6183490772471725,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.8683225116445695,
-                "direct_hemispherical": 0.8683225116445695
+                "direct_direct": 0.6843069159927712,
+                "direct_hemispherical": 0.6843069159927712
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.13795952069082204,
+                "diffuse_diffuse": 0.1663176051364957,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.07394106169710116,
-                "direct_hemispherical": 0.07394106169710116
+                "direct_direct": 0.1047689866545729,
+                "direct_hemispherical": 0.1047689866545729
             },
             "transmittance": {
-                "diffuse_diffuse": 0.7846280832182024,
+                "diffuse_diffuse": 0.6183490772471725,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.8683225116445695,
-                "direct_hemispherical": 0.8683225116445695
+                "direct_direct": 0.6843069159927712,
+                "direct_hemispherical": 0.6843069159927712
             }
         }
     }
