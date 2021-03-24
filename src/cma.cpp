@@ -85,6 +85,44 @@ namespace wincalc
         return results;
     }
 
+    struct BestWorstUFactors
+    {
+        CMA::CMABestWorstUFactors best;
+        CMA::CMABestWorstUFactors worst;
+    };
+
+    BestWorstUFactors get_best_worst_u_factors(thmxParser::ThmxFileContents const & thmx)
+    {
+        auto options = thmx.cmaOptions.value();
+        auto best = options.bestWorstOptions.at("Low");
+        auto worst = options.bestWorstOptions.at("High");
+        CMA::CMABestWorstUFactors best_u_factors(best.insideConvectiveFilmCoefficient,
+                                                 best.outsideConvectiveFilmCoefficient,
+                                                 best.glazingGapConductance,
+                                                 options.interiorLayerThickness / 1000.0,
+                                                 options.interiorLayerConductivity,
+                                                 options.interiorLayerEmissivity,
+                                                 options.exteriorLayerThickness / 1000.0,
+                                                 options.exteriorLayerConductivity,
+                                                 options.exteriorLayerEmissivity,
+                                                 options.interiorTemperature,
+                                                 options.exteriorTemperature);
+
+        CMA::CMABestWorstUFactors worst_u_factors(worst.insideConvectiveFilmCoefficient,
+                                                  worst.outsideConvectiveFilmCoefficient,
+                                                  worst.glazingGapConductance,
+                                                  options.interiorLayerThickness / 1000.0,
+                                                  options.interiorLayerConductivity,
+                                                  options.interiorLayerEmissivity,
+                                                  options.exteriorLayerThickness / 1000.0,
+                                                  options.exteriorLayerConductivity,
+                                                  options.exteriorLayerEmissivity,
+                                                  options.interiorTemperature,
+                                                  options.exteriorTemperature);
+
+        return BestWorstUFactors{best_u_factors, worst_u_factors};
+    }
+
     CMA::CMAFrame
       get_cma_frame(std::map<BestWorstSpacerIGU, Tarcog::ISO15099::FrameData> const & frame_data)
     {
@@ -156,8 +194,19 @@ namespace wincalc
         auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
         auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
 
+        auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
+        auto best_spacer_keff =
+          top_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
+        auto worst_spacer_keff =
+          top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
+
         std::unique_ptr<CMA::CMAWindowSingleVision> cma_window(
-          new CMA::CMAWindowSingleVision(window_width, window_height));
+          new CMA::CMAWindowSingleVision(window_width,
+                                         window_height,
+                                         best_spacer_keff,
+                                         worst_spacer_keff,
+                                         best_worst_u_factors.best,
+                                         best_worst_u_factors.worst));
         cma_window->setFrameTop(top_cma_frame);
         cma_window->setFrameBottom(bottom_cma_frame);
         cma_window->setFrameLeft(left_cma_frame);
@@ -184,8 +233,19 @@ namespace wincalc
         auto bottom_right_cma_frame = get_cma_frame(cma_frame_parameters(bottom_right_frame));
         auto meeting_rail_cma_frame = get_cma_frame(cma_frame_parameters(meeting_rail));
 
+        auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
+        auto best_spacer_keff =
+          top_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
+        auto worst_spacer_keff =
+          top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
+
         std::unique_ptr<CMA::CMAWindowDualVisionVertical> cma_window(
-          new CMA::CMAWindowDualVisionVertical(window_width, window_height));
+          new CMA::CMAWindowDualVisionVertical(window_width,
+                                               window_height,
+                                               best_spacer_keff,
+                                               worst_spacer_keff,
+                                               best_worst_u_factors.best,
+                                               best_worst_u_factors.worst));
         cma_window->setFrameTop(top_cma_frame);
         cma_window->setFrameBottom(bottom_cma_frame);
         cma_window->setFrameTopLeft(top_left_cma_frame);
@@ -215,8 +275,19 @@ namespace wincalc
         auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
         auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
 
+        auto best_worst_u_factors = get_best_worst_u_factors(top_left_frame);
+        auto best_spacer_keff =
+          top_left_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
+        auto worst_spacer_keff =
+          top_left_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
+
         std::unique_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
-          new CMA::CMAWindowDualVisionHorizontal(window_width, window_height));
+          new CMA::CMAWindowDualVisionHorizontal(window_width,
+                                                 window_height,
+                                                 best_spacer_keff,
+                                                 worst_spacer_keff,
+                                                 best_worst_u_factors.best,
+                                                 best_worst_u_factors.worst));
         cma_window->setFrameTopLeft(top_left_cma_frame);
         cma_window->setFrameTopRight(top_right_cma_frame);
         cma_window->setFrameBottomLeft(bottom_left_cma_frame);
@@ -224,15 +295,19 @@ namespace wincalc
         cma_window->setFrameLeft(left_cma_frame);
         cma_window->setFrameRight(right_cma_frame);
         cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
-		return cma_window;
+        return cma_window;
     }
 
-	CMAResult calc_cma(std::shared_ptr<CMA::CMAWindow> window, double glazing_system_u, double glazing_system_shgc, double glazing_system_visible_front_direct_hemispheric_transmittance, double spacer_keff)
-	{
-		auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
-		auto u = window->uValue(glazing_system_u, spacer_keff);
-		auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
-		return CMAResult{u, shgc, tvis};
-	}
+    CMAResult calc_cma(std::shared_ptr<CMA::CMAWindow> window,
+                       double glazing_system_u,
+                       double glazing_system_shgc,
+                       double glazing_system_visible_front_direct_hemispheric_transmittance,
+                       double spacer_keff)
+    {
+        auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
+        auto u = window->uValue(glazing_system_u, spacer_keff);
+        auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+        return CMAResult{u, shgc, tvis};
+    }
 
 }   // namespace wincalc
