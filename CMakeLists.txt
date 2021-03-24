@@ -27,6 +27,7 @@ endif()
 set(BUILD_Windows_CalcStandards_tests OFF CACHE BOOL "")
 set(BUILD_Optical_Measurement_Parser_Tests OFF CACHE BOOL "")
 set(BUILD_WCE_TESTING OFF CACHE BOOL "")
+set(BUILD_THMX_Parser_Tests OFF CACHE BOOL "")
 
 include(CMakeLists-Windows-Standards.txt)
 include(CMakeLists-OpticalMeasurementParser.txt)
