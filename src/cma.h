@@ -16,7 +16,7 @@ namespace wincalc
 
 	double get_spacer_keff(thmxParser::ThmxFileContents const & spacer);
 
-    std::unique_ptr<CMA::CMAWindow>
+    std::unique_ptr<CMA::CMAWindowSingleVision>
       get_cma_window_single_vision(thmxParser::ThmxFileContents const & top_frame,
                                    thmxParser::ThmxFileContents const & bottom_frame,
                                    thmxParser::ThmxFileContents const & left_frame,
@@ -24,7 +24,7 @@ namespace wincalc
                                    double window_width,
                                    double window_height);
 
-    std::unique_ptr<CMA::CMAWindow>
+    std::unique_ptr<CMA::CMAWindowDualVisionVertical>
       get_cma_window_double_vision_vertical(thmxParser::ThmxFileContents const & top_frame,
                                             thmxParser::ThmxFileContents const & bottom_frame,
                                             thmxParser::ThmxFileContents const & top_left_frame,
@@ -35,7 +35,7 @@ namespace wincalc
                                             double window_width,
                                             double window_height);
 
-    std::unique_ptr<CMA::CMAWindow> get_cma_window_double_vision_horizontal(
+    std::unique_ptr<CMA::CMAWindowDualVisionHorizontal> get_cma_window_double_vision_horizontal(
       thmxParser::ThmxFileContents const & top_left_frame,
       thmxParser::ThmxFileContents const & top_right_frame,
       thmxParser::ThmxFileContents const & bottom_left_frame,
@@ -46,7 +46,7 @@ namespace wincalc
       double window_width,
       double window_height);
 
-    CMAResult calc_cma(std::shared_ptr<CMA::CMAWindow> window,
+    CMAResult calc_cma(std::shared_ptr<CMA::ICMAWindow> window,
                        double glazing_system_u,
                        double glazing_system_shgc,
                        double glazing_system_visible_front_direct_hemispheric_transmittance,
