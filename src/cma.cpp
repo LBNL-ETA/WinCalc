@@ -195,16 +195,12 @@ namespace wincalc
         auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
         auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
 
-		std::cout << "done making cma frames" << std::endl;
-
-        auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
-		std::cout << "done getting best worst u values" << std::endl;
-        auto best_spacer_keff =
+		auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
+		auto best_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
         auto worst_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
-		std::cout << "done getting best worst spacer keff" << std::endl;
-
+		
         std::shared_ptr<CMA::CMAWindowSingleVision> cma_window(
           new CMA::CMAWindowSingleVision(window_width,
                                          window_height,
@@ -212,13 +208,11 @@ namespace wincalc
                                          worst_spacer_keff,
                                          best_worst_u_factors.best,
                                          best_worst_u_factors.worst));
-		std::cout << "done calling CMA::CMAWindowSingleVision" << std::endl;
-        cma_window->setFrameTop(top_cma_frame);
+		cma_window->setFrameTop(top_cma_frame);
         cma_window->setFrameBottom(bottom_cma_frame);
         cma_window->setFrameLeft(left_cma_frame);
         cma_window->setFrameRight(right_cma_frame);
-		std::cout << "done setting frames" << std::endl;
-        return cma_window;
+		return cma_window;
     }
 
     std::shared_ptr<CMA::CMAWindowDualVisionVertical>
@@ -312,12 +306,9 @@ namespace wincalc
                        double spacer_keff)
     {
 		auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
-		std::cout << "Done calling vt.  Result: " << tvis << std::endl;
-        auto u = window->uValue(glazing_system_u, spacer_keff);
-		std::cout << "Done calling u.  Result: " << u << std::endl;
-        auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
-		std::cout << "Done calling shgc.  Result: " << shgc << std::endl;
-        return CMAResult{u, shgc, tvis};
+		auto u = window->uValue(glazing_system_u, spacer_keff);
+		auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+		return CMAResult{u, shgc, tvis};
     }
 
 }   // namespace wincalc
