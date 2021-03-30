@@ -182,7 +182,7 @@ namespace wincalc
         return spacer_width_m / (1 / u_factor.value() - 1 / ho - 1 / hi);
     }
 
-    std::unique_ptr<CMA::CMAWindowSingleVision>
+    std::shared_ptr<CMA::CMAWindowSingleVision>
       get_cma_window_single_vision(thmxParser::ThmxFileContents const & top_frame,
                                    thmxParser::ThmxFileContents const & bottom_frame,
                                    thmxParser::ThmxFileContents const & left_frame,
@@ -213,7 +213,7 @@ namespace wincalc
           top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
 		std::cout << "done getting best worst spacer keff" << std::endl;
 
-        std::unique_ptr<CMA::CMAWindowSingleVision> cma_window(
+        std::shared_ptr<CMA::CMAWindowSingleVision> cma_window(
           new CMA::CMAWindowSingleVision(window_width,
                                          window_height,
                                          best_spacer_keff,
@@ -229,7 +229,7 @@ namespace wincalc
         return cma_window;
     }
 
-    std::unique_ptr<CMA::CMAWindowDualVisionVertical>
+    std::shared_ptr<CMA::CMAWindowDualVisionVertical>
       get_cma_window_double_vision_vertical(thmxParser::ThmxFileContents const & top_frame,
                                             thmxParser::ThmxFileContents const & bottom_frame,
                                             thmxParser::ThmxFileContents const & top_left_frame,
@@ -254,7 +254,7 @@ namespace wincalc
         auto worst_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
 
-        std::unique_ptr<CMA::CMAWindowDualVisionVertical> cma_window(
+        std::shared_ptr<CMA::CMAWindowDualVisionVertical> cma_window(
           new CMA::CMAWindowDualVisionVertical(window_width,
                                                window_height,
                                                best_spacer_keff,
@@ -271,7 +271,7 @@ namespace wincalc
         return cma_window;
     }
 
-    std::unique_ptr<CMA::CMAWindowDualVisionHorizontal> get_cma_window_double_vision_horizontal(
+    std::shared_ptr<CMA::CMAWindowDualVisionHorizontal> get_cma_window_double_vision_horizontal(
       thmxParser::ThmxFileContents const & top_left_frame,
       thmxParser::ThmxFileContents const & top_right_frame,
       thmxParser::ThmxFileContents const & bottom_left_frame,
@@ -296,7 +296,7 @@ namespace wincalc
         auto worst_spacer_keff =
           top_left_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
 
-        std::unique_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
+        std::shared_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
           new CMA::CMAWindowDualVisionHorizontal(window_width,
                                                  window_height,
                                                  best_spacer_keff,
