@@ -3,6 +3,7 @@
 #include <WCETarcog.hpp>
 #include <map>
 #include <sstream>
+#include <iostream>
 
 #include "util.h"
 
@@ -189,16 +190,28 @@ namespace wincalc
                                    double window_width,
                                    double window_height)
     {
+		std::cout << "get_cma_window_single_vision called" << std::endl;
+		std::cout << "top frame address " << &top_frame << std::endl;
+		std::cout << "bottom frame address " << &top_frame << std::endl;
+		std::cout << "left frame address " << &top_frame << std::endl;
+		std::cout << "right frame address " << &top_frame << std::endl;
+		std::cout << "width " << window_width << std::endl;
+		std::cout << "height " << window_height << std::endl;
+
         auto top_cma_frame = get_cma_frame(cma_frame_parameters(top_frame));
         auto bottom_cma_frame = get_cma_frame(cma_frame_parameters(bottom_frame));
         auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
         auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
 
+		std::cout << "done making cma frames" << std::endl;
+
         auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
+		std::cout << "done getting best worst u values" << std::endl;
         auto best_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
         auto worst_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
+		std::cout << "done getting best worst spacer keff" << std::endl;
 
         std::unique_ptr<CMA::CMAWindowSingleVision> cma_window(
           new CMA::CMAWindowSingleVision(window_width,
@@ -207,10 +220,12 @@ namespace wincalc
                                          worst_spacer_keff,
                                          best_worst_u_factors.best,
                                          best_worst_u_factors.worst));
+		std::cout << "done calling CMA::CMAWindowSingleVision" << std::endl;
         cma_window->setFrameTop(top_cma_frame);
         cma_window->setFrameBottom(bottom_cma_frame);
         cma_window->setFrameLeft(left_cma_frame);
         cma_window->setFrameRight(right_cma_frame);
+		std::cout << "done setting frames" << std::endl;
         return cma_window;
     }
 
@@ -304,9 +319,17 @@ namespace wincalc
                        double glazing_system_visible_front_direct_hemispheric_transmittance,
                        double spacer_keff)
     {
+		std::cout << "calc_cma called" << std::endl;
+        std::cout << "with window at address << " << window.get()
+                  << " u: " << glazing_system_u << " shgc: " << glazing_system_shgc
+                  << " vt: " << glazing_system_visible_front_direct_hemispheric_transmittance
+                  << " spacer_keff: " << spacer_keff << std::endl;
         auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
+		std::cout << "Done calling vt.  Result: " << tvis << std::endl;
         auto u = window->uValue(glazing_system_u, spacer_keff);
+		std::cout << "Done calling u.  Result: " << u << std::endl;
         auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+		std::cout << "Done calling shgc.  Result: " << shgc << std::endl;
         return CMAResult{u, shgc, tvis};
     }
 
