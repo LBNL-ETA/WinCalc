@@ -91,6 +91,8 @@ namespace wincalc
         void solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers);
         std::vector<Product_Data_Optical_Thermal> solid_layers() const;
 
+        Environments environments() const;
+        void environments(Environments const & environment);
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
@@ -112,6 +114,7 @@ namespace wincalc
         double last_theta;
         double last_phi;
         void reset_system();
+        void reset_igu();
 
         window_standards::Optical_Standard_Method
           get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;

@@ -34,9 +34,14 @@ namespace wincalc
                           bsdf_hemisphere);
     }
 
-    void Glazing_System::reset_system()
+    void Glazing_System::reset_igu()
     {
         current_igu = std::nullopt;
+        reset_system();
+    }
+
+    void Glazing_System::reset_system()
+    {
         current_system = std::nullopt;
     }
 
@@ -169,7 +174,7 @@ namespace wincalc
 
     void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
     {
-        reset_system();
+        reset_igu();
         standard = s;
     }
     window_standards::Optical_Standard Glazing_System::optical_standard() const
@@ -179,7 +184,7 @@ namespace wincalc
 
     void Glazing_System::solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers)
     {
-        reset_system();
+        reset_igu();
         product_data = layers;
     }
 
@@ -297,4 +302,15 @@ namespace wincalc
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
     {}
+
+    Environments Glazing_System::environments() const
+    {
+        return environment;
+    }
+
+    void Glazing_System::environments(Environments const & environments)
+    {
+        environment = environments;
+        reset_system();
+    }
 }   // namespace wincalc
