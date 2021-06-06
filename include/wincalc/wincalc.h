@@ -4,5 +4,6 @@
 #include "../../src/glazing_system.h"
 #include "../../src/convert_optics_parser.h"
 #include "../../src/cma.h"
+#include "../../src/thermal_ir.h"
 
 #endif
