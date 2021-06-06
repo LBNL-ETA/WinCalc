@@ -12,6 +12,7 @@
 #include "optical_calcs.h"
 #include "create_wce_objects.h"
 #include "util.h"
+#include "thermal_ir.h"
 
 namespace wincalc
 {
@@ -131,28 +132,36 @@ namespace wincalc
         {
             // Include matrix results for BSDF systems
             optical_results.system_results.front.transmittance.matrix =
-              bsdf_system->getMatrix(min_lambda,
-                                     max_lambda,
-                                     FenestrationCommon::Side::Front,
-                                     FenestrationCommon::PropertySimple::T).getMatrix();
+              bsdf_system
+                ->getMatrix(min_lambda,
+                            max_lambda,
+                            FenestrationCommon::Side::Front,
+                            FenestrationCommon::PropertySimple::T)
+                .getMatrix();
 
-			optical_results.system_results.front.reflectance.matrix =
-				bsdf_system->getMatrix(min_lambda,
-					max_lambda,
-					FenestrationCommon::Side::Front,
-					FenestrationCommon::PropertySimple::R).getMatrix();
+            optical_results.system_results.front.reflectance.matrix =
+              bsdf_system
+                ->getMatrix(min_lambda,
+                            max_lambda,
+                            FenestrationCommon::Side::Front,
+                            FenestrationCommon::PropertySimple::R)
+                .getMatrix();
 
-			optical_results.system_results.back.transmittance.matrix =
-				bsdf_system->getMatrix(min_lambda,
-					max_lambda,
-					FenestrationCommon::Side::Back,
-					FenestrationCommon::PropertySimple::T).getMatrix();
+            optical_results.system_results.back.transmittance.matrix =
+              bsdf_system
+                ->getMatrix(min_lambda,
+                            max_lambda,
+                            FenestrationCommon::Side::Back,
+                            FenestrationCommon::PropertySimple::T)
+                .getMatrix();
 
-			optical_results.system_results.back.reflectance.matrix =
-				bsdf_system->getMatrix(min_lambda,
-					max_lambda,
-					FenestrationCommon::Side::Back,
-					FenestrationCommon::PropertySimple::R).getMatrix();
+            optical_results.system_results.back.reflectance.matrix =
+              bsdf_system
+                ->getMatrix(min_lambda,
+                            max_lambda,
+                            FenestrationCommon::Side::Back,
+                            FenestrationCommon::PropertySimple::R)
+                .getMatrix();
         }
 
 #if 0
@@ -299,29 +308,18 @@ namespace wincalc
     Layer_Optical_IR_Results_Needed_For_Thermal_Calcs optical_ir_results_needed_for_thermal_calcs(
       Product_Data_Optical_Thermal const & product_data,
       window_standards::Optical_Standard const & standard,
-      double theta,
-      double phi,
       std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
     {
-        auto ir_method =
-          standard.methods.at(window_standards::Optical_Standard_Method_Type::THERMAL_IR);
+        auto ir_results =
+          calc_thermal_ir(standard, product_data, type, number_visible_bands, number_solar_bands);
 
-        auto ir_results = calc_all({product_data.optical_data},
-                                   ir_method,
-                                   theta,
-                                   phi,
-                                   bsdf_hemisphere,
-                                   type,
-                                   number_visible_bands,
-                                   number_solar_bands);
-
-        double tf = ir_results.system_results.front.transmittance.diffuse_diffuse;
-        double tb = ir_results.system_results.back.transmittance.diffuse_diffuse;
-        double absorptance_front = ir_results.layer_results[0].front.absorptance.direct;
-        double absorptance_back = ir_results.layer_results[0].back.absorptance.direct;
+        double tf = ir_results.transmittance_front_direct_direct;
+        double tb = ir_results.transmittance_back_direct_direct;
+        double absorptance_front = ir_results.hemispheric_emissivity_front;
+        double absorptance_back = ir_results.hemispheric_emissivity_back;
         return Layer_Optical_IR_Results_Needed_For_Thermal_Calcs{
           tf, tb, absorptance_front, absorptance_back};
     }
@@ -330,8 +328,6 @@ namespace wincalc
       optical_ir_results_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
         window_standards::Optical_Standard const & standard,
-        double theta,
-        double phi,
         std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
         Spectal_Data_Wavelength_Range_Method const & type,
         int number_visible_bands,
@@ -340,14 +336,8 @@ namespace wincalc
         std::vector<Layer_Optical_IR_Results_Needed_For_Thermal_Calcs> result;
         for(auto product : product_data)
         {
-            result.push_back(optical_ir_results_needed_for_thermal_calcs(product,
-                                                                         standard,
-                                                                         theta,
-                                                                         phi,
-                                                                         bsdf_hemisphere,
-                                                                         type,
-                                                                         number_visible_bands,
-                                                                         number_solar_bands));
+            result.push_back(optical_ir_results_needed_for_thermal_calcs(
+              product, standard, bsdf_hemisphere, type, number_visible_bands, number_solar_bands));
         }
         return result;
     }
@@ -365,8 +355,7 @@ namespace wincalc
       int number_solar_bands)
     {
         auto optical_layers = get_optical_layers(product_data);
-        auto solar_method =
-          standard.methods.at(window_standards::Optical_Standard_Method_Type::SOLAR);
+        auto solar_method = standard.methods.at("SOLAR");
 
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
 

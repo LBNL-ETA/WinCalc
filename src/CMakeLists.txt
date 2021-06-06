@@ -21,7 +21,9 @@ add_library( ${LIB_NAME}
 		util.h
 		util.cpp
 		cma.h
-		cma.cpp)
+		cma.cpp
+		thermal_ir.h
+		thermal_ir.cpp)
 
 
 

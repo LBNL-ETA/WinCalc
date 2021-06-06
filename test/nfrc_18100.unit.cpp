@@ -49,14 +49,13 @@ protected:
 
 TEST_F(TestCGDB18100, Test_Thermal)
 {
-	test_thermal_results("CGDB_18100/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("CGDB_18100/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results("CGDB_18100/thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "CGDB_18100/thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestCGDB18100, Test_Optical)
 {
-	WCE_Optical_Results solar_results =
-		glazing_system_u->optical_method_results(Optical_Standard_Method_Type::SOLAR);
-	test_optical_results("CGDB_18100", glazing_system_u, update_results);
+    WCE_Optical_Results solar_results = glazing_system_u->optical_method_results("SOLAR");
+    test_optical_results("CGDB_18100", glazing_system_u, update_results);
 }
-

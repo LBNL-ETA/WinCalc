@@ -244,28 +244,21 @@ void test_optical_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
-    auto solar_results = glazing_system->optical_method_results(
-      window_standards::Optical_Standard_Method_Type::SOLAR);
+    auto solar_results = glazing_system->optical_method_results("SOLAR");
     test_optical_results(system_name + "/solar", solar_results, update_results);
 
-    auto photopic_results = glazing_system->optical_method_results(
-      window_standards::Optical_Standard_Method_Type::PHOTOPIC);
+    auto photopic_results = glazing_system->optical_method_results("PHOTOPIC");
     test_optical_results(system_name + "/photopic", photopic_results, update_results);
 
-    EXPECT_THROW(
-      glazing_system->optical_method_results(window_standards::Optical_Standard_Method_Type::SPF),
-      std::runtime_error);
+    EXPECT_THROW(glazing_system->optical_method_results("SPF"), std::runtime_error);
 
-    auto tdw_results =
-      glazing_system->optical_method_results(window_standards::Optical_Standard_Method_Type::TDW);
+    auto tdw_results = glazing_system->optical_method_results("TDW");
     test_optical_results(system_name + "/tdw", tdw_results, update_results);
 
-    auto tkr_results =
-      glazing_system->optical_method_results(window_standards::Optical_Standard_Method_Type::TKR);
+    auto tkr_results = glazing_system->optical_method_results("TKR");
     test_optical_results(system_name + "/tkr", tdw_results, update_results);
 
-    auto tuv_results =
-      glazing_system->optical_method_results(window_standards::Optical_Standard_Method_Type::TUV);
+    auto tuv_results = glazing_system->optical_method_results("TUV");
     test_optical_results(system_name + "/tuv", tdw_results, update_results);
 
     auto color_results = glazing_system->color();

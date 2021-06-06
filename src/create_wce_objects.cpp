@@ -466,7 +466,7 @@ namespace wincalc
         }
         else
         {
-            if(method.type == window_standards::Optical_Standard_Method_Type::THERMAL_IR)
+            if(method.name == "THERMAL IR")
             {
                 // Thermal IR is a special case where we calculate values even if the individual
                 // measured wavelength values does not extend into the wavelength range defined
@@ -487,11 +487,8 @@ namespace wincalc
             else
             {
                 std::stringstream msg;
-                msg
-                  << "Product without measured data for entire wavelength range in method: "
-                  << static_cast<
-                       std::underlying_type<window_standards::Optical_Standard_Method_Type>::type>(
-                       method.type);
+                msg << "Product without measured data for entire wavelength range in method: "
+                    << method.name;
                 throw std::runtime_error(msg.str());
             }
         }
@@ -743,7 +740,7 @@ namespace wincalc
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                   product_data))
         {
-            if(method.type == window_standards::Optical_Standard_Method_Type::THERMAL_IR)
+            if(method.name == "THERMAL IR")
             {
                 // Thermal IR is a special case that can be calculated despite a lack of
                 // BSDF data.  Since there is no BSDF for the IR range yet the IR range
@@ -888,8 +885,7 @@ namespace wincalc
                  int number_solar_bands)
     {
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
-        auto ir_method =
-          standard.methods.at(window_standards::Optical_Standard_Method_Type::THERMAL_IR);
+        auto ir_method = standard.methods.at("THERMAL IR");
 
         for(auto const & layer : layers)
         {

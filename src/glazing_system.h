@@ -67,7 +67,7 @@ namespace wincalc
                                                double phi = 0);
 
         WCE_Optical_Results
-          optical_method_results(window_standards::Optical_Standard_Method_Type const & method_type,
+          optical_method_results(std::string const & method_name,
                                  double theta = 0,
                                  double phi = 0) const;
 
@@ -117,7 +117,7 @@ namespace wincalc
         void reset_igu();
 
         window_standards::Optical_Standard_Method
-          get_method(window_standards::Optical_Standard_Method_Type const & method_type) const;
+          get_method(std::string const & method_name) const;
     };
 }   // namespace wincalc
 #endif

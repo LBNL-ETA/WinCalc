@@ -8,23 +8,19 @@
 
 namespace wincalc
 {
-    WCE_Optical_Results Glazing_System::optical_method_results(
-      window_standards::Optical_Standard_Method_Type const & method_type,
-      double theta,
-      double phi) const
+    WCE_Optical_Results Glazing_System::optical_method_results(std::string const & method_name,
+                                                               double theta,
+                                                               double phi) const
     {
-        auto method = get_method(method_type);
+        auto method = get_method(method_name);
         return calc_all(get_optical_layers(product_data), method, theta, phi, bsdf_hemisphere);
     }
 
     WCE_Color_Results Glazing_System::color(double theta, double phi) const
     {
-        window_standards::Optical_Standard_Method tristim_x =
-          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMX);
-        window_standards::Optical_Standard_Method tristim_y =
-          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMY);
-        window_standards::Optical_Standard_Method tristim_z =
-          get_method(window_standards::Optical_Standard_Method_Type::COLOR_TRISTIMZ);
+        window_standards::Optical_Standard_Method tristim_x = get_method("COLOR_TRISTIMX");
+        window_standards::Optical_Standard_Method tristim_y = get_method("COLOR_TRISTIMY");
+        window_standards::Optical_Standard_Method tristim_z = get_method("COLOR_TRISTIMZ");
         return calc_color(get_optical_layers(product_data),
                           tristim_x,
                           tristim_y,
@@ -45,32 +41,16 @@ namespace wincalc
         current_system = std::nullopt;
     }
 
-    window_standards::Optical_Standard_Method Glazing_System::get_method(
-      window_standards::Optical_Standard_Method_Type const & method_type) const
+    window_standards::Optical_Standard_Method
+      Glazing_System::get_method(std::string const & method_name) const
     {
-        auto method_itr = standard.methods.find(method_type);
+        auto method_itr = standard.methods.find(method_name);
         if(method_itr == standard.methods.end())
         {
-            std::map<window_standards::Optical_Standard_Method_Type, std::string> method_names =
-              window_standards::method_type_to_name();
-            auto method_name = method_names.find(method_type);
-            if(method_name != method_names.end())
-            {
-                std::stringstream err_msg;
-                err_msg << "Standard " << standard.name << " does not include a "
-                        << method_name->second << " method";
-                throw std::runtime_error(err_msg.str());
-            }
-            else
-            {
-                std::stringstream err_msg;
-                err_msg
-                  << "Unknown method type: "
-                  << static_cast<
-                       std::underlying_type<window_standards::Optical_Standard_Method_Type>::type>(
-                       method_type);
-                throw std::runtime_error(err_msg.str());
-            }
+            std::stringstream err_msg;
+            err_msg << "Standard " << standard.name << " does not include a " << method_name
+                    << " method";
+            throw std::runtime_error(err_msg.str());
         }
         return method_itr->second;
     }
