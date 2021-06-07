@@ -19,8 +19,6 @@ namespace wincalc
 	{
 		double transmittance_front_direct_direct;
 		double transmittance_back_direct_direct;
-		double reflectance_front_direct_direct;
-		double reflectance_back_direct_direct;
 		double hemispheric_emissivity_front;
 		double hemispheric_emissivity_back;
 	};

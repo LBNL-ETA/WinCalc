@@ -13,52 +13,46 @@ wincalc::ThermalIRResults
       product_data.optical_data, method, type, number_visible_bands, number_solar_bands);
     auto layer = SingleLayerOptics::CScatteringLayer::createSpecularLayer(material);
     layer.setBlackBodySource(method.source_spectrum.t);
-    std::vector<std::vector<double>> wavelengths;
-    wavelengths.push_back(product_data.optical_data->wavelengths());
-    auto lambda_range = get_lambda_range(wavelengths, method);
-    auto tf = layer.getPropertySimple(lambda_range.min_lambda,
-                                      lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::T,
-                                      FenestrationCommon::Side::Front,
-                                      FenestrationCommon::Scattering::DirectDirect);
-    auto tb = layer.getPropertySimple(lambda_range.min_lambda,
-                                      lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::T,
-                                      FenestrationCommon::Side::Back,
-                                      FenestrationCommon::Scattering::DirectDirect);
-    auto rf = layer.getPropertySimple(lambda_range.min_lambda,
-                                      lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::R,
-                                      FenestrationCommon::Side::Front,
-                                      FenestrationCommon::Scattering::DirectDirect);
-    auto rb = layer.getPropertySimple(lambda_range.min_lambda,
-                                      lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::R,
-                                      FenestrationCommon::Side::Back,
-                                      FenestrationCommon::Scattering::DirectDirect);
 
-    double emissivty_front = -1;
-    double emissivty_back = -1;
-
+	// If there is nband data try to calculate values
     auto nband_data =
       std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product_data.optical_data);
     if(nband_data)
     {
-        auto polynomial = nband_data->material_type == FenestrationCommon::MaterialType::Coated
-                            ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
-                            : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
-        emissivty_front =
-          layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial);
-        emissivty_back =
-          layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial);
-    }
-    else
-    {
-        emissivty_front = product_data.optical_data->emissivity_front.value();
-        emissivty_back = product_data.optical_data->emissivity_back.value();
+        std::vector<std::vector<double>> wavelengths;
+        wavelengths.push_back(product_data.optical_data->wavelengths());
+        auto lambda_range = get_lambda_range(wavelengths, method);
+		// Can only calculate values if the wavelengths cover the lambda range.
+        if(lambda_range.min_lambda >= wavelengths[0].front() && lambda_range.max_lambda <= wavelengths[0].back())
+        {
+            auto tf = layer.getPropertySimple(lambda_range.min_lambda,
+                                              lambda_range.max_lambda,
+                                              FenestrationCommon::PropertySimple::T,
+                                              FenestrationCommon::Side::Front,
+                                              FenestrationCommon::Scattering::DirectDirect);
+            auto tb = layer.getPropertySimple(lambda_range.min_lambda,
+                                              lambda_range.max_lambda,
+                                              FenestrationCommon::PropertySimple::T,
+                                              FenestrationCommon::Side::Back,
+                                              FenestrationCommon::Scattering::DirectDirect);
+
+            auto polynomial = nband_data->material_type == FenestrationCommon::MaterialType::Coated
+                                ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
+                                : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+            auto emissivty_front =
+              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial);
+            auto emissivty_back =
+              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial);
+            return wincalc::ThermalIRResults{tf, tb, emissivty_front, emissivty_back};
+        }
     }
 
-    return wincalc::ThermalIRResults{tf, tb, rf, rb, emissivty_front, emissivty_back};
+	// If any of the above fail fall back to trying to get "header" values.  These values
+	// are calculated by the manufacturers or other measurement facilities
+    return wincalc::ThermalIRResults{product_data.optical_data->ir_transmittance_front.value(),
+                                     product_data.optical_data->ir_transmittance_front.value(),
+                                     product_data.optical_data->emissivity_front.value(),
+                                     product_data.optical_data->emissivity_back.value()};
 }
 
 wincalc::ThermalIRResults
@@ -69,5 +63,5 @@ wincalc::ThermalIRResults
                            int number_solar_bands)
 {
     auto layer = wincalc::convert_to_solid_layer(product_data);
-	return calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
+    return calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
 }
