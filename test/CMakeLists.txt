@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME} 
+		igsdb_14025.cpp
 		cma.unit.cpp
 		nfrc_102.unit.cpp
 		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp

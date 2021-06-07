@@ -23,7 +23,7 @@ wincalc::ThermalIRResults
         wavelengths.push_back(product_data.optical_data->wavelengths());
         auto lambda_range = get_lambda_range(wavelengths, method);
 		// Can only calculate values if the wavelengths cover the lambda range.
-        if(lambda_range.min_lambda >= wavelengths[0].front() && lambda_range.max_lambda <= wavelengths[0].back())
+        if(wavelengths[0].back() > 5)
         {
             auto tf = layer.getPropertySimple(lambda_range.min_lambda,
                                               lambda_range.max_lambda,
