@@ -55,6 +55,7 @@ wincalc::ThermalIRResults
                                      product_data.optical_data->emissivity_back.value()};
 }
 
+#if 0
 wincalc::ThermalIRResults
   wincalc::calc_thermal_ir(window_standards::Optical_Standard const & standard,
                            std::shared_ptr<OpticsParser::ProductData> const & product_data,
@@ -65,3 +66,4 @@ wincalc::ThermalIRResults
     auto layer = wincalc::convert_to_solid_layer(product_data);
     return calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
 }
+#endif
