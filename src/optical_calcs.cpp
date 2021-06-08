@@ -318,8 +318,8 @@ namespace wincalc
 
         double tf = ir_results.transmittance_front_direct_direct;
         double tb = ir_results.transmittance_back_direct_direct;
-        double absorptance_front = ir_results.hemispheric_emissivity_front;
-        double absorptance_back = ir_results.hemispheric_emissivity_back;
+        double absorptance_front = ir_results.emissivity_front_hemispheric;
+        double absorptance_back = ir_results.emissivity_back_hemispheric;
         return Layer_Optical_IR_Results_Needed_For_Thermal_Calcs{
           tf, tb, absorptance_front, absorptance_back};
     }
