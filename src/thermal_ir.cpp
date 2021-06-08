@@ -58,6 +58,8 @@ wincalc::ThermalIRResults
     // are calculated by the manufacturers or other measurement facilities
     return wincalc::ThermalIRResults{product_data.optical_data->ir_transmittance_front.value(),
                                      product_data.optical_data->ir_transmittance_front.value(),
+                                     std::optional<double>(),  // "Header" values only have hemispheric emissivity
+                                     std::optional<double>(),  // And there is not currently a way to calculate direct emissivty
                                      product_data.optical_data->emissivity_front.value(),
                                      product_data.optical_data->emissivity_back.value()};
 }
