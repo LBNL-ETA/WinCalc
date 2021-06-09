@@ -308,7 +308,6 @@ namespace wincalc
     Layer_Optical_IR_Results_Needed_For_Thermal_Calcs optical_ir_results_needed_for_thermal_calcs(
       Product_Data_Optical_Thermal const & product_data,
       window_standards::Optical_Standard const & standard,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -328,7 +327,6 @@ namespace wincalc
       optical_ir_results_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
         window_standards::Optical_Standard const & standard,
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
         Spectal_Data_Wavelength_Range_Method const & type,
         int number_visible_bands,
         int number_solar_bands)
@@ -337,7 +335,7 @@ namespace wincalc
         for(auto product : product_data)
         {
             result.push_back(optical_ir_results_needed_for_thermal_calcs(
-              product, standard, bsdf_hemisphere, type, number_visible_bands, number_solar_bands));
+              product, standard, type, number_visible_bands, number_solar_bands));
         }
         return result;
     }

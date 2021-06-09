@@ -22,8 +22,6 @@ namespace wincalc
       optical_ir_results_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
         window_standards::Optical_Standard const & standard,
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-          std::optional<SingleLayerOptics::CBSDFHemisphere>(),
         Spectal_Data_Wavelength_Range_Method const & type =
           Spectal_Data_Wavelength_Range_Method::FULL,
         int number_visible_bands = 5,
