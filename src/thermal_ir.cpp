@@ -23,7 +23,7 @@ wincalc::ThermalIRResults
         wavelengths.push_back(product_data.optical_data->wavelengths());
         auto lambda_range = get_lambda_range(wavelengths, method);
         // Can only calculate values if the wavelengths cover the lambda range.
-        if(wavelengths[0].back() > 5)
+        if(wavelengths[0].back() > method.min_wavelength.value)
         {
             auto tf = layer.getPropertySimple(lambda_range.min_lambda,
                                               lambda_range.max_lambda,
@@ -36,11 +36,13 @@ wincalc::ThermalIRResults
                                               FenestrationCommon::Side::Back,
                                               FenestrationCommon::Scattering::DirectDirect);
 
+            auto emissivity_front_direct = layer.getAbsorptance(
+              FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct);
+            auto emissivity_back_direct = layer.getAbsorptance(
+              FenestrationCommon::Side::Back, FenestrationCommon::ScatteringSimple::Direct);
             auto polynomial = nband_data->material_type == FenestrationCommon::MaterialType::Coated
                                 ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
                                 : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
-            auto emissivity_front_direct = layer.getAbsorptance(FenestrationCommon::Side::Front);
-            auto emissivity_back_direct = layer.getAbsorptance(FenestrationCommon::Side::Back);
             auto emissivity_front_hemispheric =
               layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial);
             auto emissivity_back_hemispheric =
@@ -56,12 +58,13 @@ wincalc::ThermalIRResults
 
     // If any of the above fail fall back to trying to get "header" values.  These values
     // are calculated by the manufacturers or other measurement facilities
-    return wincalc::ThermalIRResults{product_data.optical_data->ir_transmittance_front.value(),
-                                     product_data.optical_data->ir_transmittance_front.value(),
-                                     std::optional<double>(),  // "Header" values only have hemispheric emissivity
-                                     std::optional<double>(),  // And there is not currently a way to calculate direct emissivty
-                                     product_data.optical_data->emissivity_front.value(),
-                                     product_data.optical_data->emissivity_back.value()};
+    return wincalc::ThermalIRResults{
+      product_data.optical_data->ir_transmittance_front.value(),
+      product_data.optical_data->ir_transmittance_front.value(),
+      std::optional<double>(),   // "Header" values only have hemispheric emissivity
+      std::optional<double>(),   // And there is not currently a way to calculate direct emissivty
+      product_data.optical_data->emissivity_front.value(),
+      product_data.optical_data->emissivity_back.value()};
 }
 
 #if 0
