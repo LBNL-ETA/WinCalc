@@ -175,20 +175,13 @@ namespace wincalc
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
-
       std::vector<Product_Data_Optical_Thermal> const & product_data,
-      std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
-
+      std::vector<Engine_Gap_Info> const & gap_values,
       double width,
-
       double height,
-
       Environments const & environment,
-
       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
-
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
-
       int number_visible_bands,
       int number_solar_bands) :
         product_data(product_data),
@@ -205,20 +198,13 @@ namespace wincalc
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
-
       std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
-      std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
-
+      std::vector<Engine_Gap_Info> const & gap_values,
       double width,
-
       double height,
-
       Environments const & environment,
-
       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
-
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
-
       int number_visible_bands,
       int number_solar_bands) :
         product_data(convert_to_solid_layers(product_data)),

@@ -19,7 +19,7 @@ namespace wincalc
     {
         Glazing_System(window_standards::Optical_Standard const & standard,
                        std::vector<Product_Data_Optical_Thermal> const & product_data,
-                       std::vector<Engine_Gap_Info> const & gap_values,
+                       std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
                        double width = 1.0,
                        double height = 1.0,
                        Environments const & environment = nfrc_u_environments(),
@@ -32,7 +32,7 @@ namespace wincalc
 
         Glazing_System(window_standards::Optical_Standard const & standard,
                        std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
-                       std::vector<Engine_Gap_Info> const & gap_values,
+                       std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
                        double width = 1.0,
                        double height = 1.0,
                        Environments const & environment = nfrc_u_environments(),
