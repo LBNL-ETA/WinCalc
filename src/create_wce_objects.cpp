@@ -935,6 +935,7 @@ namespace wincalc
                                                 ir_transmittance_front,
                                                 ir_absorptance_back,
                                                 ir_transmittance_back);
+			tarcog_layer = Tarcog::ISO15099::Layers::updateDeflectionCoefficients(tarcog_layer, layer.thermal_data->youngs_modulus);
             tarcog_solid_layers.push_back(tarcog_layer);
         }
 

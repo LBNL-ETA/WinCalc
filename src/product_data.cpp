@@ -87,7 +87,8 @@ namespace wincalc
         opening_bottom(opening_bottom),
         opening_left(opening_left),
         opening_right(opening_right),
-        opening_front(opening_front)
+        opening_front(opening_front),
+		youngs_modulus(Tarcog::DeflectionConstants::YOUNGSMODULUS)
     {}
 
     Product_Data_Optical_With_Material::Product_Data_Optical_With_Material(

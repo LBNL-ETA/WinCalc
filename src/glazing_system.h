@@ -66,6 +66,10 @@ namespace wincalc
                                                double theta = 0,
                                                double phi = 0);
 
+		void set_deflection_properties(double temperature_initial, double pressure_initial);
+		std::vector<double> deflection_max(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+		std::vector<double> deflection_mean(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+
         WCE_Optical_Results
           optical_method_results(std::string const & method_name,
                                  double theta = 0,
@@ -94,6 +98,8 @@ namespace wincalc
         Environments environments() const;
         void environments(Environments const & environment);
 
+		void set_model_deflection(bool model);
+
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<Engine_Gap_Info> gap_values;
@@ -105,6 +111,11 @@ namespace wincalc
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
+		bool model_deflection = false;
+		double initial_temperature;
+		double initial_pressure;
+
+		void do_deflection_updates(double theta, double phi);
 
         Tarcog::ISO15099::CIGU & get_igu(double theta, double phi);
         Tarcog::ISO15099::CSystem & get_system(double theta, double phi);

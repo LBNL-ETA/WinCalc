@@ -26,12 +26,14 @@ namespace wincalc
                              double opening_left = 0,
                              double opening_right = 0,
                              double opening_front = 0);
+
         double conductivity;
         double opening_top;
         double opening_bottom;
         double opening_left;
         double opening_right;
         double opening_front;
+		double youngs_modulus;
     };
 
     struct Product_Data_Optical : Flippable_Solid_Layer,

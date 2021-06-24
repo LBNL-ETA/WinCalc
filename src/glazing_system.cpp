@@ -96,6 +96,7 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getUValue();
     }
@@ -105,8 +106,8 @@ namespace wincalc
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
 
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
-
         system.setAbsorptances(optical_results.layer_solar_absorptances);
         return system.getSHGC(optical_results.total_solar_transmittance);
 
@@ -121,19 +122,58 @@ namespace wincalc
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
-        system.setAbsorptances(optical_results.layer_solar_absorptances);
+        system.setAbsorptances(optical_results.layer_solar_absorptances);	
         return system.getTemperatures(system_type);
     }
+
+	void Glazing_System::set_deflection_properties(double temperature_initial, double pressure_initial)
+	{
+		initial_pressure = pressure_initial;
+		initial_temperature = temperature_initial;
+		do_deflection_updates(last_theta, last_phi);
+	}
+
+	std::vector<double> Glazing_System::deflection_max(Tarcog::ISO15099::System system_type, double theta, double phi)
+	{
+		do_deflection_updates(theta, phi);
+		auto & system = get_system(theta, phi);
+		return system.getMaxDeflections(system_type);
+	}
+
+	void Glazing_System::do_deflection_updates(double theta, double phi)
+	{
+		auto & igu = get_igu(theta, phi);
+		if(model_deflection)
+		{
+			igu.setDeflectionProperties(initial_temperature, initial_pressure);
+		}
+		else
+		{
+			igu.clearDeflection();
+		}
+	}
+
+	std::vector<double> Glazing_System::deflection_mean(Tarcog::ISO15099::System system_type, double theta, double phi)
+	{
+		auto & igu = get_igu(theta, phi);
+		igu.setDeflectionProperties(initial_temperature, initial_pressure);
+		auto & system = get_system(theta, phi);
+		return system.getMeanDeflections(system_type);
+	}
+
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getSolidEffectiveLayerConductivities(system_type);
     }
     std::vector<double> Glazing_System::gap_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getGapEffectiveLayerConductivities(system_type);
     }
@@ -141,6 +181,7 @@ namespace wincalc
                                                          double theta,
                                                          double phi)
     {
+		do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getEffectiveSystemConductivity(system_type);
     }
@@ -148,7 +189,8 @@ namespace wincalc
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
-        auto & system = get_system(theta, phi);
+		do_deflection_updates(theta, phi);
+		auto & system = get_system(theta, phi);
         return system.relativeHeatGain(optical_results.total_solar_transmittance);
     }
 
@@ -193,7 +235,9 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands)
+        number_solar_bands(number_solar_bands),
+		initial_pressure(101325),
+		initial_temperature(293.15)
     {}
 
     Glazing_System::Glazing_System(
@@ -216,7 +260,9 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands)
+        number_solar_bands(number_solar_bands),
+		initial_pressure(101325),
+		initial_temperature(293.15)
     {}
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
@@ -266,7 +312,9 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands)
+        number_solar_bands(number_solar_bands),
+		initial_pressure(101325),
+		initial_temperature(293.15)
     {}
 
     Environments Glazing_System::environments() const
@@ -279,4 +327,12 @@ namespace wincalc
         environment = environments;
         reset_system();
     }
+	void Glazing_System::set_model_deflection(bool model)
+	{
+		model_deflection = model;
+		if(model_deflection)
+		{
+			set_deflection_properties(initial_temperature, initial_pressure);
+		}
+	}
 }   // namespace wincalc
