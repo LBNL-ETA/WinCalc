@@ -40,13 +40,16 @@ wincalc::ThermalIRResults
               FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct);
             auto emissivity_back_direct = layer.getAbsorptance(
               FenestrationCommon::Side::Back, FenestrationCommon::ScatteringSimple::Direct);
-            auto polynomial = nband_data->material_type == FenestrationCommon::MaterialType::Coated
+			auto surface_type = FenestrationCommon::coatingType.at(nband_data->material_type);
+			
+            auto polynomial = surface_type == FenestrationCommon::SurfaceType::Coated
                                 ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
                                 : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+			auto ir_layer = SingleLayerOptics::CScatteringLayerIR(layer);
             auto emissivity_front_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial);
+				ir_layer.emissivity(FenestrationCommon::Side::Front, polynomial);
             auto emissivity_back_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial);
+				ir_layer.emissivity(FenestrationCommon::Side::Back, polynomial);
             return wincalc::ThermalIRResults{tf,
                                              tb,
                                              emissivity_front_direct,
