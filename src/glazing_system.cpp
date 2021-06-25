@@ -79,6 +79,10 @@ namespace wincalc
                                      spectral_data_wavelength_range_method,
                                      number_visible_bands,
                                      number_solar_bands);
+			if(!applied_loads.empty())
+			{
+				current_igu.value().setAppliedLoad(applied_loads);
+			}
             return current_igu.value();
         }
     }
@@ -140,6 +144,15 @@ namespace wincalc
         initial_temperature = temperature_initial;
         do_deflection_updates(last_theta, last_phi);
     }
+
+	void Glazing_System::set_applied_loads(std::vector<double> const & loads)
+	{
+		applied_loads = loads;
+		if(current_igu)
+		{
+			current_igu.value().setAppliedLoad(applied_loads);
+		}
+	}
 
     Deflection_Results
       Glazing_System::calc_deflection_properties(Tarcog::ISO15099::System system_type, double theta, double phi)

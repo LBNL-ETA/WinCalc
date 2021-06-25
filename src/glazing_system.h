@@ -74,6 +74,7 @@ namespace wincalc
 
         void enable_deflection(bool model);
         void set_deflection_properties(double temperature_initial, double pressure_initial);
+		void set_applied_loads(std::vector<double> const& loads);
         Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
                                                       double theta = 0,
                                                       double phi = 0);
@@ -128,6 +129,7 @@ namespace wincalc
         bool model_deflection = false;
         double initial_temperature;
         double initial_pressure;
+		std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
 
