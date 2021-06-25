@@ -17,31 +17,33 @@ namespace wincalc
 {
     struct Glazing_System
     {
-        Glazing_System(window_standards::Optical_Standard const & standard,
-                       std::vector<Product_Data_Optical_Thermal> const & product_data,
-                       std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
-                       double width = 1.0,
-                       double height = 1.0,
-                       Environments const & environment = nfrc_u_environments(),
-                       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-                         std::optional<SingleLayerOptics::CBSDFHemisphere>(),
-                       Spectal_Data_Wavelength_Range_Method const & type =
-                         Spectal_Data_Wavelength_Range_Method::FULL,
-                       int number_visible_bands = 5,
-                       int number_solar_bands = 10);
+        Glazing_System(
+          window_standards::Optical_Standard const & standard,
+          std::vector<Product_Data_Optical_Thermal> const & product_data,
+          std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & environment = nfrc_u_environments(),
+          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          Spectal_Data_Wavelength_Range_Method const & type =
+            Spectal_Data_Wavelength_Range_Method::FULL,
+          int number_visible_bands = 5,
+          int number_solar_bands = 10);
 
-        Glazing_System(window_standards::Optical_Standard const & standard,
-                       std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
-                       std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
-                       double width = 1.0,
-                       double height = 1.0,
-                       Environments const & environment = nfrc_u_environments(),
-                       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-                         std::optional<SingleLayerOptics::CBSDFHemisphere>(),
-                       Spectal_Data_Wavelength_Range_Method const & type =
-                         Spectal_Data_Wavelength_Range_Method::FULL,
-                       int number_visible_bands = 5,
-                       int number_solar_bands = 10);
+        Glazing_System(
+          window_standards::Optical_Standard const & standard,
+          std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+          std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
+          double width = 1.0,
+          double height = 1.0,
+          Environments const & environment = nfrc_u_environments(),
+          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          Spectal_Data_Wavelength_Range_Method const & type =
+            Spectal_Data_Wavelength_Range_Method::FULL,
+          int number_visible_bands = 5,
+          int number_solar_bands = 10);
 
         // Constructor with vector of variants added for ease of use in python
         Glazing_System(
@@ -66,16 +68,21 @@ namespace wincalc
                                                double theta = 0,
                                                double phi = 0);
 
-		void set_deflection_properties(double temperature_initial, double pressure_initial);
-		std::vector<double> deflection_max(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
-		std::vector<double> deflection_mean(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+        void set_deflection_properties(double temperature_initial, double pressure_initial);
+        std::vector<double>
+          deflection_max(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+        std::vector<double>
+          deflection_mean(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
 
-        WCE_Optical_Results
-          optical_method_results(std::string const & method_name,
-                                 double theta = 0,
-                                 double phi = 0) const;
+        WCE_Optical_Results optical_method_results(std::string const & method_name,
+                                                   double theta = 0,
+                                                   double phi = 0) const;
 
-        WCE_Color_Results color(double theta = 0, double phi = 0) const;
+        WCE_Color_Results color(double theta = 0,
+                                double phi = 0,
+                                std::string const & tristimulus_x_method = "COLOR_TRISTIMX",
+                                std::string const & tristimulus_y_method = "COLOR_TRISTIMY",
+                                std::string const & tristimulus_z_method = "COLOR_TRISTIMZ") const;
 
         std::vector<double> solid_layers_effective_conductivities(
           Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
@@ -98,7 +105,7 @@ namespace wincalc
         Environments environments() const;
         void environments(Environments const & environment);
 
-		void set_model_deflection(bool model);
+        void set_model_deflection(bool model);
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
@@ -111,11 +118,11 @@ namespace wincalc
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
-		bool model_deflection = false;
-		double initial_temperature;
-		double initial_pressure;
+        bool model_deflection = false;
+        double initial_temperature;
+        double initial_pressure;
 
-		void do_deflection_updates(double theta, double phi);
+        void do_deflection_updates(double theta, double phi);
 
         Tarcog::ISO15099::CIGU & get_igu(double theta, double phi);
         Tarcog::ISO15099::CSystem & get_system(double theta, double phi);
@@ -127,8 +134,7 @@ namespace wincalc
         void reset_system();
         void reset_igu();
 
-        window_standards::Optical_Standard_Method
-          get_method(std::string const & method_name) const;
+        window_standards::Optical_Standard_Method get_method(std::string const & method_name) const;
     };
 }   // namespace wincalc
 #endif
