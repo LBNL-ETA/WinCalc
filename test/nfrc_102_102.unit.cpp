@@ -69,8 +69,8 @@ TEST_F(TestNFRC102_102, Test_Deflection_Off)
 
 TEST_F(TestNFRC102_102, Test_Deflection_On)
 {
-	glazing_system_u->set_model_deflection(true);
-	glazing_system_shgc->set_model_deflection(true);
+	glazing_system_u->enable_deflection(true);
+	glazing_system_shgc->enable_deflection(true);
 	auto deflection_max_u = glazing_system_u->deflection_max(Tarcog::ISO15099::System::Uvalue);
 	auto deflection_max_shgc = glazing_system_shgc->deflection_max(Tarcog::ISO15099::System::SHGC);
 	auto deflection_mean_u = glazing_system_u->deflection_mean(Tarcog::ISO15099::System::Uvalue);

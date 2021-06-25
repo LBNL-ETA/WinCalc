@@ -335,9 +335,9 @@ namespace wincalc
         environment = environments;
         reset_system();
     }
-    void Glazing_System::set_model_deflection(bool model)
+    void Glazing_System::enable_deflection(bool enable)
     {
-        model_deflection = model;
+        model_deflection = enable;
         if(model_deflection)
         {
             set_deflection_properties(initial_temperature, initial_pressure);

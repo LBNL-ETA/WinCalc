@@ -68,6 +68,7 @@ namespace wincalc
                                                double theta = 0,
                                                double phi = 0);
 
+		void enable_deflection(bool model);
         void set_deflection_properties(double temperature_initial, double pressure_initial);
         std::vector<double>
           deflection_max(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
@@ -104,8 +105,6 @@ namespace wincalc
 
         Environments environments() const;
         void environments(Environments const & environment);
-
-        void set_model_deflection(bool model);
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
