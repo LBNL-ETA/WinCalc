@@ -853,9 +853,10 @@ namespace wincalc
       std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> const & solid_layers,
       std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gaps,
       double width,
-      double height)
+      double height,
+      double tilt)
     {
-        Tarcog::ISO15099::CIGU igu(width, height);
+        Tarcog::ISO15099::CIGU igu(width, height, tilt);
         igu.addLayer(solid_layers[0]);
         if(!gaps.empty())
         {
@@ -876,6 +877,7 @@ namespace wincalc
                  std::vector<Engine_Gap_Info> const & gaps,
                  double width,
                  double height,
+                 double tilt,
                  window_standards::Optical_Standard const & standard,
                  double theta,
                  double phi,
@@ -935,7 +937,8 @@ namespace wincalc
                                                 ir_transmittance_front,
                                                 ir_absorptance_back,
                                                 ir_transmittance_back);
-			tarcog_layer = Tarcog::ISO15099::Layers::updateDeflectionCoefficients(tarcog_layer, layer.thermal_data->youngs_modulus);
+            tarcog_layer = Tarcog::ISO15099::Layers::updateMaterialData(
+              tarcog_layer, layer.thermal_data->density, layer.thermal_data->youngs_modulus);
             tarcog_solid_layers.push_back(tarcog_layer);
         }
 
@@ -951,7 +954,7 @@ namespace wincalc
               Tarcog::ISO15099::Layers::gap(engine_gap_info.thickness, Gases::CGas(converted_gas)));
         }
 
-        return create_igu(tarcog_solid_layers, tarcog_gaps, width, height);
+        return create_igu(tarcog_solid_layers, tarcog_gaps, width, height, tilt);
     }
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,

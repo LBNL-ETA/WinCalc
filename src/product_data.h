@@ -33,7 +33,8 @@ namespace wincalc
         double opening_left;
         double opening_right;
         double opening_front;
-		double youngs_modulus;
+        double youngs_modulus;
+        double density;
     };
 
     struct Product_Data_Optical : Flippable_Solid_Layer,
@@ -156,13 +157,13 @@ namespace wincalc
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
 
-		std::unique_ptr<EffectiveLayers::EffectiveLayer>
-			effective_thermal_values(double width,
-				double height,
-				double gap_width_top,
-				double gap_width_bottom,
-				double gap_width_left,
-				double gap_width_right) const override;
+        std::unique_ptr<EffectiveLayers::EffectiveLayer>
+          effective_thermal_values(double width,
+                                   double height,
+                                   double gap_width_top,
+                                   double gap_width_bottom,
+                                   double gap_width_left,
+                                   double gap_width_right) const override;
     };
 
 

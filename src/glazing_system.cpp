@@ -71,6 +71,7 @@ namespace wincalc
                                      gap_values,
                                      width,
                                      height,
+                                     tilt,
                                      standard,
                                      theta,
                                      phi,
@@ -140,12 +141,15 @@ namespace wincalc
         do_deflection_updates(last_theta, last_phi);
     }
 
-    std::vector<double>
-      Glazing_System::deflection_max(Tarcog::ISO15099::System system_type, double theta, double phi)
+    Deflection_Results
+      Glazing_System::calc_deflection_properties(Tarcog::ISO15099::System system_type, double theta, double phi)
     {
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
-        return system.getMaxDeflections(system_type);
+        auto deflection_max = system.getMaxDeflections(system_type);
+		auto deflection_mean = system.getMeanDeflections(system_type);
+		auto pressure_differences = system.getPressureDifference(system_type);
+		return {deflection_max, deflection_mean, pressure_differences};
     }
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
@@ -161,15 +165,7 @@ namespace wincalc
         }
     }
 
-    std::vector<double> Glazing_System::deflection_mean(Tarcog::ISO15099::System system_type,
-                                                        double theta,
-                                                        double phi)
-    {
-        auto & igu = get_igu(theta, phi);
-        igu.setDeflectionProperties(initial_temperature, initial_pressure);
-        auto & system = get_system(theta, phi);
-        return system.getMeanDeflections(system_type);
-    }
+    
 
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
@@ -229,6 +225,7 @@ namespace wincalc
       std::vector<Engine_Gap_Info> const & gap_values,
       double width,
       double height,
+      double tilt,
       Environments const & environment,
       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
@@ -239,6 +236,7 @@ namespace wincalc
         standard(standard),
         width(width),
         height(height),
+        tilt(tilt),
         environment(environment),
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
@@ -254,6 +252,7 @@ namespace wincalc
       std::vector<Engine_Gap_Info> const & gap_values,
       double width,
       double height,
+      double tilt,
       Environments const & environment,
       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
@@ -264,6 +263,7 @@ namespace wincalc
         standard(standard),
         width(width),
         height(height),
+        tilt(tilt),
         environment(environment),
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
@@ -306,6 +306,7 @@ namespace wincalc
       std::vector<Engine_Gap_Info> const & gap_values,
       double width,
       double height,
+      double tilt,
       Environments const & environment,
       std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
@@ -316,6 +317,7 @@ namespace wincalc
         standard(standard),
         width(width),
         height(height),
+        tilt(tilt),
         environment(environment),
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
@@ -335,6 +337,34 @@ namespace wincalc
         environment = environments;
         reset_system();
     }
+
+    void Glazing_System::set_width(double w)
+    {
+        width = w;
+		if(current_igu)
+		{
+			current_igu.value().setWidth(width);
+		}
+    }
+
+    void Glazing_System::set_height(double h)
+    {
+        height = h;
+		if(current_igu)
+		{
+			current_igu.value().setHeight(height);
+		}
+    }
+
+    void Glazing_System::set_tilt(double t)
+    {
+        tilt = t;
+		if(current_igu)
+		{
+			current_igu.value().setTilt(tilt);
+		}
+    }
+
     void Glazing_System::enable_deflection(bool enable)
     {
         model_deflection = enable;

@@ -12,6 +12,7 @@
 #include "environmental_conditions.h"
 #include "product_data.h"
 #include "create_wce_objects.h"
+#include "deflection_results.h"
 
 namespace wincalc
 {
@@ -23,6 +24,7 @@ namespace wincalc
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
+          double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
           std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
             std::optional<SingleLayerOptics::CBSDFHemisphere>(),
@@ -37,6 +39,7 @@ namespace wincalc
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
+          double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
           std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
             std::optional<SingleLayerOptics::CBSDFHemisphere>(),
@@ -53,6 +56,7 @@ namespace wincalc
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
+          double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
           std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
             std::optional<SingleLayerOptics::CBSDFHemisphere>(),
@@ -68,12 +72,11 @@ namespace wincalc
                                                double theta = 0,
                                                double phi = 0);
 
-		void enable_deflection(bool model);
+        void enable_deflection(bool model);
         void set_deflection_properties(double temperature_initial, double pressure_initial);
-        std::vector<double>
-          deflection_max(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
-        std::vector<double>
-          deflection_mean(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
+        Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
+                                                      double theta = 0,
+                                                      double phi = 0);
 
         WCE_Optical_Results optical_method_results(std::string const & method_name,
                                                    double theta = 0,
@@ -106,12 +109,17 @@ namespace wincalc
         Environments environments() const;
         void environments(Environments const & environment);
 
+        void set_width(double width);
+        void set_height(double height);
+        void set_tilt(double tilt);
+
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<Engine_Gap_Info> gap_values;
         window_standards::Optical_Standard standard;
         double width;
         double height;
+        double tilt;
         Environments environment;
         std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;

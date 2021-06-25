@@ -23,7 +23,8 @@ add_library( ${LIB_NAME}
 		cma.h
 		cma.cpp
 		thermal_ir.h
-		thermal_ir.cpp)
+		thermal_ir.cpp
+		deflection_results.h)
 
 
 

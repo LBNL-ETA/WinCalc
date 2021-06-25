@@ -19,6 +19,7 @@ namespace wincalc
         emissivity_back(emissivity_back),
         permeability_factor(permeability_factor)
     {}
+
     Product_Data_Optical::~Product_Data_Optical()
     {}
 
@@ -36,7 +37,7 @@ namespace wincalc
                                                      double gap_width_right) const
     {
         EffectiveLayers::ShadeOpenness openness{
-         permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+          permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
           width, height, thickness_meters, openness);
@@ -88,7 +89,8 @@ namespace wincalc
         opening_left(opening_left),
         opening_right(opening_right),
         opening_front(opening_front),
-		youngs_modulus(Tarcog::DeflectionConstants::YOUNGSMODULUS)
+        youngs_modulus(Tarcog::DeflectionConstants::YOUNGSMODULUS),
+        density(Tarcog::MaterialConstants::GLASSDENSITY)
     {}
 
     Product_Data_Optical_With_Material::Product_Data_Optical_With_Material(
@@ -313,14 +315,20 @@ namespace wincalc
         rb_visible(rb_visible)
     {}
 
-	std::unique_ptr<EffectiveLayers::EffectiveLayer> Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(double width, double height, double gap_width_top, double gap_width_bottom, double gap_width_left, double gap_width_right) const
-	{
-		EffectiveLayers::ShadeOpenness openness{
-		 permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+      Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(double width,
+                                                                    double height,
+                                                                    double gap_width_top,
+                                                                    double gap_width_bottom,
+                                                                    double gap_width_left,
+                                                                    double gap_width_right) const
+    {
+        EffectiveLayers::ShadeOpenness openness{
+          permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
-		return std::make_unique<EffectiveLayers::EffectiveLayerBSDF>(
-			width, height, thickness_meters, openness);
-	}
+        return std::make_unique<EffectiveLayers::EffectiveLayerBSDF>(
+          width, height, thickness_meters, openness);
+    }
 
     Product_Data_Dual_Band_Optical_Specular::Product_Data_Dual_Band_Optical_Specular(
       double tf_solar,

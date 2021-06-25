@@ -111,6 +111,7 @@ namespace wincalc
                  std::vector<Engine_Gap_Info> const & gaps,
                  double width,
                  double height,
+                 double tilt,
                  window_standards::Optical_Standard const & standard,
                  double theta = 0,
                  double phi = 0,
