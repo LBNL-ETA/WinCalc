@@ -41,9 +41,9 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         glazing_system_u = std::make_shared<Glazing_System>(
-          standard, products, gaps, 1.0, 1.0, nfrc_u_environments());
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
         glazing_system_shgc =
-			std::make_shared<Glazing_System>(standard, products, gaps, 1.0, 1.0, nfrc_shgc_environments());
+			std::make_shared<Glazing_System>(standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
     }
 };
 

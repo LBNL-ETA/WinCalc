@@ -235,8 +235,19 @@ namespace wincalc
 			throw std::runtime_error("Missing thickness");
 		}
 
-        return wincalc::Product_Data_Thermal(
+        auto thermal_data = wincalc::Product_Data_Thermal(
           data->conductivity.value(), data->thickness.value() / 1000.0, false);
+
+		if(data->density.has_value())
+		{
+			thermal_data.density = data->density.value();
+		}
+
+		if(data->youngs_modulus.has_value())
+		{
+			thermal_data.youngs_modulus = data->youngs_modulus.value();
+		}
+		return thermal_data;
     }
 
     wincalc::Product_Data_Optical_Thermal
