@@ -9,7 +9,7 @@ namespace wincalc
     {
         std::vector<double> deflection_max;
         std::vector<double> deflection_mean;
-		std::vector<double> pressure_difference;
+		std::vector<double> panes_load;
     };
 }   // namespace wincalc
 

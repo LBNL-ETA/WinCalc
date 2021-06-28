@@ -148,9 +148,9 @@ namespace wincalc
 	void Glazing_System::set_applied_loads(std::vector<double> const & loads)
 	{
 		applied_loads = loads;
-		if(current_igu)
+		if(current_system)
 		{
-			current_igu.value().setAppliedLoad(applied_loads);
+			current_system.value().setAppliedLoad(applied_loads);
 		}
 	}
 
@@ -161,20 +161,20 @@ namespace wincalc
         auto & system = get_system(theta, phi);
         auto deflection_max = system.getMaxDeflections(system_type);
 		auto deflection_mean = system.getMeanDeflections(system_type);
-		auto pressure_differences = system.getPressureDifference(system_type);
-		return {deflection_max, deflection_mean, pressure_differences};
+		auto panes_load = system.getPanesLoad(system_type);
+		return {deflection_max, deflection_mean, panes_load};
     }
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
     {
-        auto & igu = get_igu(theta, phi);
+        auto & system = get_system(theta, phi);
         if(model_deflection)
         {
-            igu.setDeflectionProperties(initial_temperature, initial_pressure);
+			system.setDeflectionProperties(initial_temperature, initial_pressure);
         }
         else
         {
-            igu.clearDeflection();
+			system.clearDeflection();
         }
     }
 
@@ -354,36 +354,33 @@ namespace wincalc
     void Glazing_System::set_width(double w)
     {
         width = w;
-		if(current_igu)
+		if(current_system)
 		{
-			current_igu.value().setWidth(width);
+			current_system.value().setWidth(width);
 		}
     }
 
     void Glazing_System::set_height(double h)
     {
         height = h;
-		if(current_igu)
+		if(current_system)
 		{
-			current_igu.value().setHeight(height);
+			current_system.value().setHeight(height);
 		}
     }
 
     void Glazing_System::set_tilt(double t)
     {
         tilt = t;
-		if(current_igu)
+		if(current_system)
 		{
-			current_igu.value().setTilt(tilt);
+			current_system.value().setTilt(tilt);
 		}
     }
 
     void Glazing_System::enable_deflection(bool enable)
     {
         model_deflection = enable;
-        if(model_deflection)
-        {
-            set_deflection_properties(initial_temperature, initial_pressure);
-        }
+		do_deflection_updates(last_theta, last_phi);
     }
 }   // namespace wincalc

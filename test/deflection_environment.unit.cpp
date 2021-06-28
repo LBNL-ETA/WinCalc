@@ -57,8 +57,8 @@ TEST_F(TestDeflectionEnvironment, Test_Deflection_Off)
 	EXPECT_NEAR(0.0, deflection_results.deflection_max[1], 1e-6);
 	EXPECT_NEAR(0.0, deflection_results.deflection_mean[0], 1e-6);
 	EXPECT_NEAR(0.0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.pressure_difference[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.pressure_difference[1], 1e-6);
+	EXPECT_NEAR(0.0, deflection_results.panes_load[0], 1e-6);
+	EXPECT_NEAR(0.0, deflection_results.panes_load[1], 1e-6);
 }
 
 TEST_F(TestDeflectionEnvironment, Test_Deflection_On)
@@ -66,12 +66,12 @@ TEST_F(TestDeflectionEnvironment, Test_Deflection_On)
 	glazing_system->enable_deflection(true);
 	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
 
-	EXPECT_NEAR(0.00044850958847475459, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(-0.00044850958847463153, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.00018789233554336596, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(-0.00018789233554331440, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(20.528391356654740, deflection_results.pressure_difference[0], 1e-6);
-	EXPECT_NEAR(-20.528391356648967, deflection_results.pressure_difference[1], 1e-6);
+	EXPECT_NEAR(0.00044869611940125310, deflection_results.deflection_max[0], 1e-6);
+	EXPECT_NEAR(-0.00044869611940139090, deflection_results.deflection_max[1], 1e-6);
+	EXPECT_NEAR(0.00018797047820147514, deflection_results.deflection_mean[0], 1e-6);
+	EXPECT_NEAR(-0.00018797047820153287, deflection_results.deflection_mean[1], 1e-6);
+	EXPECT_NEAR(20.537140176295242, deflection_results.panes_load[0], 1e-6);
+	EXPECT_NEAR(-20.537140176301705, deflection_results.panes_load[1], 1e-6);
 
 	//change environment pressure, make sure deflection results change
 	auto new_env = nfrc_shgc_environments();
@@ -80,11 +80,11 @@ TEST_F(TestDeflectionEnvironment, Test_Deflection_On)
 	glazing_system->environments(new_env);
 	deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
 	
-	EXPECT_NEAR(0.00044868691081281808, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(-0.00044868691081287256, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.00018796662048419868, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(-0.00018796662048422151, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(20.536708267866576, deflection_results.pressure_difference[0], 1e-6);
-	EXPECT_NEAR(-20.536708267869130, deflection_results.pressure_difference[1], 1e-6);
+	EXPECT_NEAR(0.00044887407140061213, deflection_results.deflection_max[0], 1e-6);
+	EXPECT_NEAR(-0.00044887407140068884, deflection_results.deflection_max[1], 1e-6);
+	EXPECT_NEAR(0.00018804502692380655, deflection_results.deflection_mean[0], 1e-6);
+	EXPECT_NEAR(-0.00018804502692383867, deflection_results.deflection_mean[1], 1e-6);
+	EXPECT_NEAR(20.545486620374426, deflection_results.panes_load[0], 1e-6);
+	EXPECT_NEAR(-20.545486620378028, deflection_results.panes_load[1], 1e-6);
 
 }

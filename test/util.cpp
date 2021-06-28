@@ -4,6 +4,8 @@
 #include <gtest/gtest.h>
 #include "paths.h"
 
+const double TEST_TOLARANCE = 1e-6;
+
 nlohmann::json & get_json_field(nlohmann::json & json, std::string const & field, bool update)
 {
     if(update && json.count(field) == 0)
@@ -50,9 +52,9 @@ void test_trichromatic_result(nlohmann::json & expected,
                               wincalc::Trichromatic const & results,
                               bool update)
 {
-    EXPECT_EQ(results.X, expected.value("X", -1.0));
-    EXPECT_EQ(results.Y, expected.value("Y", -1.0));
-    EXPECT_EQ(results.Z, expected.value("Z", -1.0));
+    EXPECT_NEAR(results.X, expected.value("X", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.Y, expected.value("Y", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.Z, expected.value("Z", -1.0), TEST_TOLARANCE);
     if(update)
     {
         expected["X"] = results.X;
@@ -63,9 +65,9 @@ void test_trichromatic_result(nlohmann::json & expected,
 
 void test_lab_result(nlohmann::json & expected, wincalc::Lab const & results, bool update)
 {
-    EXPECT_EQ(results.L, expected.value("L", -1.0));
-    EXPECT_EQ(results.a, expected.value("a", -1.0));
-    EXPECT_EQ(results.b, expected.value("b", -1.0));
+    EXPECT_NEAR(results.L, expected.value("L", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.a, expected.value("a", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.b, expected.value("b", -1.0), TEST_TOLARANCE);
     if(update)
     {
         expected["L"] = results.L;
@@ -76,9 +78,9 @@ void test_lab_result(nlohmann::json & expected, wincalc::Lab const & results, bo
 
 void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & results, bool update)
 {
-    EXPECT_EQ(results.R, expected.value("R", -1.0));
-    EXPECT_EQ(results.G, expected.value("G", -1.0));
-    EXPECT_EQ(results.B, expected.value("B", -1.0));
+    EXPECT_NEAR(results.R, expected.value("R", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.G, expected.value("G", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.B, expected.value("B", -1.0), TEST_TOLARANCE);
     if(update)
     {
         expected["R"] = results.R;
@@ -91,10 +93,11 @@ void test_wce_optical_result_simple(nlohmann::json & expected,
                                     wincalc::WCE_Optical_Result_Simple<double> const & results,
                                     bool update)
 {
-    EXPECT_EQ(results.direct_direct, expected.value("direct_direct", -1.0));
-    EXPECT_EQ(results.direct_diffuse, expected.value("direct_diffuse", -1.0));
-    EXPECT_EQ(results.direct_hemispherical, expected.value("direct_hemispherical", -1.0));
-    EXPECT_EQ(results.diffuse_diffuse, expected.value("diffuse_diffuse", -1.0));
+    EXPECT_NEAR(results.direct_direct, expected.value("direct_direct", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.direct_diffuse, expected.value("direct_diffuse", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(
+      results.direct_hemispherical, expected.value("direct_hemispherical", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.diffuse_diffuse, expected.value("diffuse_diffuse", -1.0), TEST_TOLARANCE);
     if(update)
     {
         expected["direct_direct"] = results.direct_direct;
@@ -152,8 +155,8 @@ void test_wce_absorptances(nlohmann::json & expected,
 {
     auto expected_direct = expected.value("direct", -1.0);
     auto expected_diffuse = expected.value("diffuse", -1.0);
-    EXPECT_EQ(results.direct, expected_direct);
-    EXPECT_EQ(results.diffuse, expected_diffuse);
+    EXPECT_NEAR(results.direct, expected_direct, TEST_TOLARANCE);
+    EXPECT_NEAR(results.diffuse, expected_diffuse, TEST_TOLARANCE);
     if(update)
     {
         expected["direct"] = results.direct;
@@ -279,7 +282,7 @@ void test_thermal_results(std::string const & results_name,
     auto relative_heat_gain = glazing_system->relative_heat_gain();
 
     auto expected_u = expected.value("U", -1.0);
-    EXPECT_EQ(u, expected_u);
+    EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
 
     if(expected.count("SHGC"))
     {
@@ -293,15 +296,17 @@ void test_thermal_results(std::string const & results_name,
         else
         {
             auto expected_shgc = expected.value("SHGC", -1.0);
-            EXPECT_EQ(shgc, expected_shgc);
+            EXPECT_NEAR(shgc, expected_shgc, TEST_TOLARANCE);
         }
     }
 
 
-    EXPECT_EQ(system_effective_conductivity_u,
-              expected.value("system_effective_conductivity_u", -1.0));
-    EXPECT_EQ(system_effective_conductivity_shgc,
-              expected.value("system_effective_conductivity_shgc", -1.0));
+    EXPECT_NEAR(system_effective_conductivity_u,
+                expected.value("system_effective_conductivity_u", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(system_effective_conductivity_shgc,
+                expected.value("system_effective_conductivity_shgc", -1.0),
+                TEST_TOLARANCE);
 
     if(expected.count("relative_heat_gain"))
     {
@@ -315,7 +320,7 @@ void test_thermal_results(std::string const & results_name,
         else
         {
             auto expected_relative_heat_gain = expected.value("relative_heat_gain", -1.0);
-            EXPECT_EQ(relative_heat_gain, expected_relative_heat_gain);
+            EXPECT_NEAR(relative_heat_gain, expected_relative_heat_gain, TEST_TOLARANCE);
         }
     }
     auto solid_layer_effective_conductivities_u =
@@ -328,9 +333,9 @@ void test_thermal_results(std::string const & results_name,
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
       expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
     EXPECT_EQ(solid_layer_effective_conductivities_u,
-              expected_solid_layer_effective_conductivities_u);
-    EXPECT_EQ(solid_layer_effective_conductivities_shgc,
-              expected_solid_layer_effective_conductivities_shgc);
+                expected_solid_layer_effective_conductivities_u);
+	EXPECT_EQ(solid_layer_effective_conductivities_shgc,
+                expected_solid_layer_effective_conductivities_shgc);
 
     auto gap_layer_effective_conductivities_u =
       glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
@@ -341,9 +346,10 @@ void test_thermal_results(std::string const & results_name,
       expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_gap_layer_effective_conductivities_shgc =
       expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
-    EXPECT_EQ(gap_layer_effective_conductivities_u, expected_gap_layer_effective_conductivities_u);
-    EXPECT_EQ(gap_layer_effective_conductivities_shgc,
-              expected_gap_layer_effective_conductivities_shgc);
+	EXPECT_EQ(gap_layer_effective_conductivities_u,
+                expected_gap_layer_effective_conductivities_u);
+	EXPECT_EQ(gap_layer_effective_conductivities_shgc,
+                expected_gap_layer_effective_conductivities_shgc);
 
     auto layer_temperatures_u =
       glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
@@ -354,8 +360,8 @@ void test_thermal_results(std::string const & results_name,
       expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
       expected.value("layer_temperatures_shgc", std::vector<double>());
-    EXPECT_EQ(layer_temperatures_u, expected_layer_temperatures_u);
-    EXPECT_EQ(layer_temperatures_shgc, expected_layer_temperatures_shgc);
+	EXPECT_EQ(layer_temperatures_u, expected_layer_temperatures_u);
+	EXPECT_EQ(layer_temperatures_shgc, expected_layer_temperatures_shgc);
 
 
     if(update)

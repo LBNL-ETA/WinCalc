@@ -58,8 +58,8 @@ TEST_F(TestDeflectionYoungsModulus, Test_Deflection_Off)
 	EXPECT_NEAR(0.0, deflection_results.deflection_max[1], 1e-6);
 	EXPECT_NEAR(0.0, deflection_results.deflection_mean[0], 1e-6);
 	EXPECT_NEAR(0.0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.pressure_difference[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.pressure_difference[1], 1e-6);
+	EXPECT_NEAR(0.0, deflection_results.panes_load[0], 1e-6);
+	EXPECT_NEAR(0.0, deflection_results.panes_load[1], 1e-6);
 }
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_On)
@@ -71,6 +71,6 @@ TEST_F(TestDeflectionYoungsModulus, Test_Deflection_On)
 	EXPECT_NEAR(0, deflection_results.deflection_max[1], 1e-6);
 	EXPECT_NEAR(0, deflection_results.deflection_mean[0], 1e-6);
 	EXPECT_NEAR(0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(8.2712000637214000, deflection_results.pressure_difference[0], 1e-6);
-	EXPECT_NEAR(-8.2712000637213947, deflection_results.pressure_difference[1], 1e-6);
+	EXPECT_NEAR(8.2712000637214000, deflection_results.panes_load[0], 1e-6);
+	EXPECT_NEAR(-8.2712000637213947, deflection_results.panes_load[1], 1e-6);
 }
