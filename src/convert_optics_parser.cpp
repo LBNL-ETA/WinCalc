@@ -243,9 +243,9 @@ namespace wincalc
 			thermal_data.density = data->density.value();
 		}
 
-		if(data->youngs_modulus.has_value())
+		if(data->youngsModulus.has_value())
 		{
-			thermal_data.youngs_modulus = data->youngs_modulus.value();
+			thermal_data.youngs_modulus = data->youngsModulus.value();
 		}
 		return thermal_data;
     }
