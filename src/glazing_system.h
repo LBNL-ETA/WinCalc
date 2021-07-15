@@ -113,6 +113,7 @@ namespace wincalc
         void set_width(double width);
         void set_height(double height);
         void set_tilt(double tilt);
+		void flip_layer(size_t layer_index, bool flipped);
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;

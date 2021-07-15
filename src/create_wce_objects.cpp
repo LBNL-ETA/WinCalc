@@ -506,6 +506,7 @@ namespace wincalc
         auto material =
           create_material(product_data, method, type, number_visible_bands, number_solar_bands);
         auto specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
+		specular_layer->Flipped(product_data->flipped);
         return specular_layer;
     }   // namespace wincalc
 
