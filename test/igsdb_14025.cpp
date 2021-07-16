@@ -43,6 +43,6 @@ TEST_F(TestIGSDB_14025, Test_IR)
     auto ir_results = calc_thermal_ir(standard, layer);
     EXPECT_EQ(ir_results.transmittance_front_direct_direct, 0);
     EXPECT_EQ(ir_results.transmittance_back_direct_direct, 0);
-    EXPECT_NEAR(ir_results.emissivity_front_hemispheric, 0.84337714961619636, 1e-6);
+    EXPECT_NEAR(ir_results.emissivity_front_hemispheric, 0.84026278241669772, 1e-6);
     EXPECT_NEAR(ir_results.emissivity_back_hemispheric, 0.037321857598487045, 1e-6);
 }

@@ -1,6 +1,7 @@
 #include "thermal_ir.h"
 #include "convert_optics_parser.h"
 
+
 wincalc::ThermalIRResults
   wincalc::calc_thermal_ir(window_standards::Optical_Standard const & standard,
                            Product_Data_Optical_Thermal const & product_data,
@@ -40,13 +41,26 @@ wincalc::ThermalIRResults
               FenestrationCommon::Side::Front, FenestrationCommon::ScatteringSimple::Direct);
             auto emissivity_back_direct = layer.getAbsorptance(
               FenestrationCommon::Side::Back, FenestrationCommon::ScatteringSimple::Direct);
-            auto polynomial = nband_data->material_type == FenestrationCommon::MaterialType::Coated
-                                ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
-                                : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+
+			// Emissivity polynomial can vary by side depending on if the side is coated
+			// If "coated side" is front or both then use the coated polynomial for the
+			// front hemispheric emissivity.  Else use uncoated
+            auto polynomial_front = (nband_data->coated_side == CoatedSide::FRONT
+                                        || nband_data->coated_side == CoatedSide::BOTH)
+                                      ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
+                                      : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+
+			// If "coated side" is back or both then use the coated polynomial for the
+			// back hemispheric emissivity.  Else use uncoated
+			auto polynomial_back = (nband_data->coated_side == CoatedSide::BACK
+				|| nband_data->coated_side == CoatedSide::BOTH)
+				? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
+				: SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+
             auto emissivity_front_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial);
+              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial_front);
             auto emissivity_back_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial);
+              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial_back);
             return wincalc::ThermalIRResults{tf,
                                              tb,
                                              emissivity_front_direct,

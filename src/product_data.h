@@ -154,15 +154,22 @@ namespace wincalc
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
 
-		std::unique_ptr<EffectiveLayers::EffectiveLayer>
-			effective_thermal_values(double width,
-				double height,
-				double gap_width_top,
-				double gap_width_bottom,
-				double gap_width_left,
-				double gap_width_right) const override;
+        std::unique_ptr<EffectiveLayers::EffectiveLayer>
+          effective_thermal_values(double width,
+                                   double height,
+                                   double gap_width_top,
+                                   double gap_width_bottom,
+                                   double gap_width_left,
+                                   double gap_width_right) const override;
     };
 
+    enum class CoatedSide
+    {
+        FRONT,
+        BACK,
+        BOTH,
+        NEITHER
+    };
 
     struct Product_Data_N_Band_Optical : Product_Data_Optical
     {
@@ -170,6 +177,7 @@ namespace wincalc
           FenestrationCommon::MaterialType material_type,
           double thickness_meteres,
           std::vector<OpticsParser::WLData> wavelength_data,
+          CoatedSide coatedSide = CoatedSide::NEITHER,
           std::optional<double> ir_transmittance_front = std::optional<double>(),
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
@@ -178,6 +186,7 @@ namespace wincalc
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
         std::vector<OpticsParser::WLData> wavelength_data;
+		CoatedSide coated_side;
         virtual std::vector<double> wavelengths() const override;
     };
 
