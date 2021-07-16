@@ -42,25 +42,33 @@ wincalc::ThermalIRResults
             auto emissivity_back_direct = layer.getAbsorptance(
               FenestrationCommon::Side::Back, FenestrationCommon::ScatteringSimple::Direct);
 
-			// Emissivity polynomial can vary by side depending on if the side is coated
-			// If "coated side" is front or both then use the coated polynomial for the
-			// front hemispheric emissivity.  Else use uncoated
-            auto polynomial_front = (nband_data->coated_side == CoatedSide::FRONT
-                                        || nband_data->coated_side == CoatedSide::BOTH)
-                                      ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
-                                      : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+            if(!nband_data->coated_side.has_value())
+            {
+                throw std::runtime_error("No coated side specified.  Coated side must be one of: "
+                                         "FRONT, BACK, BOTH, or Neither.");
+            }
 
-			// If "coated side" is back or both then use the coated polynomial for the
-			// back hemispheric emissivity.  Else use uncoated
-			auto polynomial_back = (nband_data->coated_side == CoatedSide::BACK
-				|| nband_data->coated_side == CoatedSide::BOTH)
-				? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
-				: SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+            auto coated_side = nband_data->coated_side.value();
 
-            auto emissivity_front_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Front, polynomial_front);
-            auto emissivity_back_hemispheric =
-              layer.normalToHemisphericalEmissivity(FenestrationCommon::Side::Back, polynomial_back);
+            // Emissivity polynomial can vary by side depending on if the side is coated
+            // If "coated side" is front or both then use the coated polynomial for the
+            // front hemispheric emissivity.  Else use uncoated
+            auto polynomial_front =
+              (coated_side == CoatedSide::FRONT || coated_side == CoatedSide::BOTH)
+                ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
+                : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+
+            // If "coated side" is back or both then use the coated polynomial for the
+            // back hemispheric emissivity.  Else use uncoated
+            auto polynomial_back =
+              (coated_side == CoatedSide::BACK || coated_side == CoatedSide::BOTH)
+                ? SingleLayerOptics::EmissivityPolynomials::NFRC_301_Coated
+                : SingleLayerOptics::EmissivityPolynomials::NFRC_301_Uncoated;
+
+            auto emissivity_front_hemispheric = layer.normalToHemisphericalEmissivity(
+              FenestrationCommon::Side::Front, polynomial_front);
+            auto emissivity_back_hemispheric = layer.normalToHemisphericalEmissivity(
+              FenestrationCommon::Side::Back, polynomial_back);
             return wincalc::ThermalIRResults{tf,
                                              tb,
                                              emissivity_front_direct,

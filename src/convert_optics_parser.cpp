@@ -186,7 +186,13 @@ namespace wincalc
                 }
                 FenestrationCommon::MaterialType material_type =
                   convert_material_type(product->subtype.value());
-                CoatedSide coated_side = convert_coated_side(product->coatedSide.value_or("neither"));
+
+				std::optional<CoatedSide> coated_side;
+				if(product->coatedSide.has_value())
+				{
+					coated_side = convert_coated_side(product->coatedSide.value());
+				}
+                
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product->thickness.value() / 1000.0,

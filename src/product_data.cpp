@@ -47,7 +47,7 @@ namespace wincalc
       FenestrationCommon::MaterialType material_type,
       double thickness_meters,
       std::vector<OpticsParser::WLData> wavelength_data,
-      CoatedSide coated_side,
+      std::optional<CoatedSide> coated_side,
       std::optional<double> ir_transmittance_front,
       std::optional<double> ir_transmittance_back,
       std::optional<double> emissivity_front,
