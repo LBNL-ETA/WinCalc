@@ -3,6 +3,7 @@
 #include "convert_optics_parser.h"
 #include "optical_calcs.h"
 #include "util.h"
+#include "thermal_ir.h"
 
 
 namespace wincalc
@@ -506,7 +507,7 @@ namespace wincalc
         auto material =
           create_material(product_data, method, type, number_visible_bands, number_solar_bands);
         auto specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
-		specular_layer->Flipped(product_data->flipped);
+        specular_layer->Flipped(product_data->flipped);
         return specular_layer;
     }   // namespace wincalc
 
@@ -887,40 +888,14 @@ namespace wincalc
                  int number_visible_bands,
                  int number_solar_bands)
     {
+		std::ignore = theta;
+		std::ignore = phi;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
         auto ir_method = standard.methods.at("THERMAL IR");
 
         for(auto const & layer : layers)
         {
-            double ir_transmittance_front;
-            double ir_transmittance_back;
-            double ir_absorptance_front;
-            double ir_absorptance_back;
-            if(bsdf_hemisphere.has_value())
-            {
-                auto ir_results = calc_all({layer.optical_data},
-                                           ir_method,
-                                           theta,
-                                           phi,
-                                           bsdf_hemisphere,
-                                           type,
-                                           number_visible_bands,
-                                           number_solar_bands);
-
-                ir_transmittance_front =
-                  ir_results.system_results.front.transmittance.diffuse_diffuse;
-                ir_transmittance_back =
-                  ir_results.system_results.back.transmittance.diffuse_diffuse;
-                ir_absorptance_front = ir_results.layer_results[0].front.absorptance.diffuse;
-                ir_absorptance_back = ir_results.layer_results[0].back.absorptance.diffuse;
-            }
-            else
-            {
-                ir_transmittance_front = layer.optical_data->ir_transmittance_front.value();
-                ir_transmittance_back = layer.optical_data->ir_transmittance_back.value();
-                ir_absorptance_front = layer.optical_data->emissivity_front.value();
-                ir_absorptance_back = layer.optical_data->emissivity_back.value();
-            }
+            auto ir_results = calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
 
             auto effective_thermal_values =
               layer.optical_data->effective_thermal_values(width,
@@ -934,10 +909,10 @@ namespace wincalc
               Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),
                                                 layer.thermal_data->conductivity,
                                                 effective_openness,
-                                                ir_absorptance_front,
-                                                ir_transmittance_front,
-                                                ir_absorptance_back,
-                                                ir_transmittance_back);
+                                                ir_results.emissivity_front_hemispheric,
+                                                ir_results.transmittance_front_direct_direct,
+                                                ir_results.emissivity_back_hemispheric,
+                                                ir_results.transmittance_back_direct_direct);
             tarcog_layer = Tarcog::ISO15099::Layers::updateMaterialData(
               tarcog_layer, layer.thermal_data->density, layer.thermal_data->youngs_modulus);
             tarcog_solid_layers.push_back(tarcog_layer);
