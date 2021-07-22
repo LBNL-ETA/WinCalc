@@ -910,9 +910,9 @@ namespace wincalc
                                                 layer.thermal_data->conductivity,
                                                 effective_openness,
                                                 ir_results.emissivity_front_hemispheric,
-                                                ir_results.transmittance_front_direct_direct,
+                                                ir_results.transmittance_front_diffuse_diffuse,
                                                 ir_results.emissivity_back_hemispheric,
-                                                ir_results.transmittance_back_direct_direct);
+                                                ir_results.transmittance_back_diffuse_diffuse);
             tarcog_layer = Tarcog::ISO15099::Layers::updateMaterialData(
               tarcog_layer, layer.thermal_data->density, layer.thermal_data->youngs_modulus);
             tarcog_solid_layers.push_back(tarcog_layer);
