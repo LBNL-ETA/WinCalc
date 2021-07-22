@@ -888,8 +888,9 @@ namespace wincalc
                  int number_visible_bands,
                  int number_solar_bands)
     {
-		std::ignore = theta;
-		std::ignore = phi;
+        std::ignore = theta;
+        std::ignore = phi;
+        std::ignore = bsdf_hemisphere;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
         auto ir_method = standard.methods.at("THERMAL IR");
 
