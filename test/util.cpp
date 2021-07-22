@@ -264,11 +264,40 @@ void test_optical_results(std::string const & system_name,
     auto tuv_results = glazing_system->optical_method_results("TUV");
     test_optical_results(system_name + "/tuv", tdw_results, update_results);
 
-	auto tir_results = glazing_system->optical_method_results("THERMAL IR");
-	test_optical_results(system_name + "/tir", tir_results, update_results);
-
     auto color_results = glazing_system->color();
     test_optical_results(system_name + "/color", color_results, update_results);
+}
+
+void test_deflection_results(std::string const & results_name,
+                             std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                             bool update)
+{
+    auto expected = parse_expected_results(results_name);
+
+    auto deflection_results =
+      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
+
+    auto & expected_max = expected.value("max_deflection_system_u", std::vector<double>());
+    auto & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
+    auto & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
+
+    EXPECT_EQ(expected_max, deflection_results.deflection_max);
+    EXPECT_EQ(expected_mean, deflection_results.deflection_mean);
+    EXPECT_EQ(expected_panes_load, deflection_results.panes_load);
+
+    auto & expected_layer_temperatures =
+      expected.value("layer_temperatures_system_u", std::vector<double>());
+    auto temperatures = glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
+    EXPECT_EQ(expected_layer_temperatures, temperatures);
+
+    if(update)
+    {
+        expected["max_deflection_system_u"] = deflection_results.deflection_max;
+        expected["mean_deflection_system_u"] = deflection_results.deflection_mean;
+        expected["panes_load_system_u"] = deflection_results.panes_load;
+        expected["layer_temperatures_system_u"] = temperatures;
+        update_expected_results(results_name, expected);
+    }
 }
 
 void test_thermal_results(std::string const & results_name,
@@ -336,9 +365,9 @@ void test_thermal_results(std::string const & results_name,
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
       expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
     EXPECT_EQ(solid_layer_effective_conductivities_u,
-                expected_solid_layer_effective_conductivities_u);
-	EXPECT_EQ(solid_layer_effective_conductivities_shgc,
-                expected_solid_layer_effective_conductivities_shgc);
+              expected_solid_layer_effective_conductivities_u);
+    EXPECT_EQ(solid_layer_effective_conductivities_shgc,
+              expected_solid_layer_effective_conductivities_shgc);
 
     auto gap_layer_effective_conductivities_u =
       glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
@@ -349,13 +378,12 @@ void test_thermal_results(std::string const & results_name,
       expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_gap_layer_effective_conductivities_shgc =
       expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
-	EXPECT_EQ(gap_layer_effective_conductivities_u,
-                expected_gap_layer_effective_conductivities_u);
-	EXPECT_EQ(gap_layer_effective_conductivities_shgc,
-                expected_gap_layer_effective_conductivities_shgc);
+    EXPECT_EQ(gap_layer_effective_conductivities_u, expected_gap_layer_effective_conductivities_u);
+    EXPECT_EQ(gap_layer_effective_conductivities_shgc,
+              expected_gap_layer_effective_conductivities_shgc);
 
-	auto layer_temperatures_u =
-		glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
+    auto layer_temperatures_u =
+      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
     auto layer_temperatures_shgc =
       glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC);
 
@@ -363,8 +391,8 @@ void test_thermal_results(std::string const & results_name,
       expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
       expected.value("layer_temperatures_shgc", std::vector<double>());
-	EXPECT_EQ(layer_temperatures_u, expected_layer_temperatures_u);
-	EXPECT_EQ(layer_temperatures_shgc, expected_layer_temperatures_shgc);
+    EXPECT_EQ(layer_temperatures_u, expected_layer_temperatures_u);
+    EXPECT_EQ(layer_temperatures_shgc, expected_layer_temperatures_shgc);
 
 
     if(update)

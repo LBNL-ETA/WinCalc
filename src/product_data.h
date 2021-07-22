@@ -166,6 +166,13 @@ namespace wincalc
                                    double gap_width_right) const override;
     };
 
+    enum class CoatedSide
+    {
+        FRONT,
+        BACK,
+        BOTH,
+        NEITHER
+    };
 
     struct Product_Data_N_Band_Optical : Product_Data_Optical
     {
@@ -173,6 +180,7 @@ namespace wincalc
           FenestrationCommon::MaterialType material_type,
           double thickness_meteres,
           std::vector<OpticsParser::WLData> wavelength_data,
+          std::optional<CoatedSide> coatedSide = std::optional<CoatedSide>(),
           std::optional<double> ir_transmittance_front = std::optional<double>(),
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
@@ -181,6 +189,7 @@ namespace wincalc
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
         std::vector<OpticsParser::WLData> wavelength_data;
+        std::optional<CoatedSide> coated_side;
         virtual std::vector<double> wavelengths() const override;
     };
 

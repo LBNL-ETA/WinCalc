@@ -49,42 +49,18 @@ protected:
 
 TEST_F(TestDeflectionEnvironment, Test_Deflection_Off)
 {
-	// test to make sure nothing affects results with deflection turned off.
-	// test is not completed, need to test other results later.
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-
-	EXPECT_NEAR(0.0, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.panes_load[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.panes_load[1], 1e-6);
+	test_deflection_results("deflection_off_double_clear_environment", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionEnvironment, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-
-	EXPECT_NEAR(0.00044869611940125310, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(-0.00044869611940139090, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.00018797047820147514, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(-0.00018797047820153287, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(20.537140176295242, deflection_results.panes_load[0], 1e-6);
-	EXPECT_NEAR(-20.537140176301705, deflection_results.panes_load[1], 1e-6);
-
+	test_deflection_results("deflection_on_double_clear_environment_1", glazing_system, update_results);
 	//change environment pressure, make sure deflection results change
 	auto new_env = nfrc_shgc_environments();
 	new_env.inside.pressure = 99000;
 	new_env.outside.pressure = 110000;
 	glazing_system->environments(new_env);
-	deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-	
-	EXPECT_NEAR(0.00044887407140061213, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(-0.00044887407140068884, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.00018804502692380655, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(-0.00018804502692383867, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(20.545486620374426, deflection_results.panes_load[0], 1e-6);
-	EXPECT_NEAR(-20.545486620378028, deflection_results.panes_load[1], 1e-6);
 
+	test_deflection_results("deflection_on_double_clear_change_environment", glazing_system, update_results);
 }

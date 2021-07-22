@@ -1,27 +1,33 @@
 {
     "SHGC": 0.0,
-    "U": 2.692687517611361,
+    "U": 2.8198667507962263,
     "gap_layer_effective_conductivities_shgc": [
-        0.07032789808454144
+        0.06959092678852888
     ],
     "gap_layer_effective_conductivities_u": [
-        0.07032789806260799
+        0.06959092678850454
     ],
     "layer_temperatures_shgc": [
-        0.07032789808454144
+        258.7867078479579,
+        258.7880414420406,
+        278.85789920664826,
+        279.1931024179108
     ],
     "layer_temperatures_u": [
-        0.07032789806260799
+        258.7867078479576,
+        258.7880414420403,
+        278.8578992066472,
+        279.19310241790976
     ],
-    "relative_heat_gain": 20.949108906556223,
+    "relative_heat_gain": 21.938563331749357,
     "solid_layer_effective_conductivities_shgc": [
-        146.74331223060835,
+        164.92995097164618,
         1.0
     ],
     "solid_layer_effective_conductivities_u": [
-        146.7433107486224,
-        1.0
+        164.929950959441,
+        0.9999999999999999
     ],
-    "system_effective_conductivity_shgc": 0.10040701127766079,
-    "system_effective_conductivity_u": 0.10040701124244547
+    "system_effective_conductivity_shgc": 0.09564809763804286,
+    "system_effective_conductivity_u": 0.0956480976320658
 }

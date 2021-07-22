@@ -28,8 +28,9 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		nfrc_102.unit.cpp
+		nfrc_102_as_bsdf.unit.cpp
 		deflection_triple_clear.unit.cpp 
- 		nfrc_102_as_bsdf.unit.cpp
 		WINDOW_issue_1216.unit.cpp
  		deflection.unit.cpp
  		deflection_environment.unit.cpp
@@ -39,7 +40,6 @@ add_executable(${PROJECT_TEST_NAME}
  		deflection_density.unit.cpp
  		igsdb_14025.cpp
  		cma.unit.cpp
- 		nfrc_102.unit.cpp
  		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
  		nfrc_6046.unit.cpp
  		nfrc_9023.unit.cpp

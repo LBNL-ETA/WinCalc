@@ -16,7 +16,7 @@
 using namespace wincalc;
 using namespace window_standards;
 
-class TestDeflection : public testing::Test
+class TestDeflectionTripleClear : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system;
@@ -32,30 +32,35 @@ protected:
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
         products.push_back(clear_3);
 		products.push_back(clear_3);
+		products.push_back(clear_3);
 
-		Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
+		Engine_Gap_Info air_gap_1(Gases::GasDef::Air, 0.006);
+		Engine_Gap_Info air_gap_2(Gases::GasDef::Air, 0.025);
 		std::vector<Engine_Gap_Info> gaps;
-		gaps.push_back(air_gap);
+		gaps.push_back(air_gap_1);
+		gaps.push_back(air_gap_2);
 
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";
         standard_path /= "W5_NFRC_2003.std";
         Optical_Standard standard = load_optical_standard(standard_path.string());
-
+		
+		auto environments = nfrc_u_environments();
+		environments.outside.air_temperature = 250;
+		environments.inside.air_temperature = 293;
         glazing_system = std::make_shared<Glazing_System>(
-          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
+          standard, products, gaps, 1.0, 1.0, 90, environments);
     }
 };
 
-TEST_F(TestDeflection, Test_Deflection_Off)
+TEST_F(TestDeflectionTripleClear, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_double_clear", glazing_system, update_results);
+	test_deflection_results("deflection_off_triple_clear", glazing_system, update_results);
 }
 
-TEST_F(TestDeflection, Test_Deflection_On)
+TEST_F(TestDeflectionTripleClear, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-
-	test_deflection_results("deflection_on_double_clear", glazing_system, update_results);
+	glazing_system->set_deflection_properties(273, 101325);
+	test_deflection_results("deflection_on_triple_clear", glazing_system, update_results);
 }

@@ -48,6 +48,26 @@ namespace wincalc
         return itr->second;
     }
 
+    CoatedSide convert_coated_side(std::string const & coated_side)
+    {
+        std::map<std::string, CoatedSide> mappings{
+          {"front", CoatedSide::FRONT},
+          {"back", CoatedSide::BACK},
+          {"both", CoatedSide::BOTH},
+          {"neither", CoatedSide::NEITHER},
+        };
+
+        auto itr = mappings.find(to_lower(coated_side));
+        if(itr == mappings.end())
+        {
+            std::stringstream msg;
+            msg << "Coated side " << coated_side << " is not supported.";
+            throw std::runtime_error(msg.str());
+        }
+
+        return itr->second;
+    }
+
     void validate_bsdf(OpticsParser::BSDF const & bsdf)
     {
         if(bsdf.rowAngleBasisName != "LBNL/Klems Full"
@@ -147,29 +167,37 @@ namespace wincalc
         }
         else
         {
-			if(!product->measurements.has_value())
-			{
-				throw std::runtime_error("Missing wavelength measurements");
-			}
-			if(!product->thickness.has_value())
-			{
-				throw std::runtime_error("Missing product thickness");
-			}
+            if(!product->measurements.has_value())
+            {
+                throw std::runtime_error("Missing wavelength measurements");
+            }
+            if(!product->thickness.has_value())
+            {
+                throw std::runtime_error("Missing product thickness");
+            }
             auto wavelength_measured_values = product->measurements.value();
             std::shared_ptr<Product_Data_Optical> converted;
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
-				if(!product->productSubtype.has_value())
-				{
-					throw std::runtime_error("Missing product subtype");
-				}
+                if(!product->productSubtype.has_value())
+                {
+                    throw std::runtime_error("Missing product subtype");
+                }
                 FenestrationCommon::MaterialType material_type =
                   convert_material_type(product->productSubtype.value());
+
+				std::optional<CoatedSide> coated_side;
+				if(product->coatedSide.has_value())
+				{
+					coated_side = convert_coated_side(product->coatedSide.value());
+				}
+                
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product->thickness.value() / 1000.0,
                   std::get<std::vector<OpticsParser::WLData>>(wavelength_measured_values),
+                  coated_side,
                   product->IRTransmittance,
                   product->IRTransmittance,
                   product->frontEmissivity,
@@ -191,22 +219,23 @@ namespace wincalc
                 validate_bsdf(visible.tb);
                 validate_bsdf(visible.rf);
                 validate_bsdf(visible.rb);
-                converted.reset(
-                  new Product_Data_Dual_Band_Optical_BSDF(solar.tf.data,
-                                                          solar.tb.data,
-                                                          solar.rf.data,
-                                                          solar.rb.data,
-                                                          visible.tf.data,
-                                                          visible.tb.data,
-                                                          visible.rf.data,
-                                                          visible.rb.data,
-                                                          bsdfHemisphere,
-                                                          product->thickness.value() / 1000.0,
-                                                          product->IRTransmittance,
-                                                          product->IRTransmittance,
-                                                          product->frontEmissivity,
-                                                          product->backEmissivity,
-                                                          product->permeabilityFactor.value_or(0))); // If permeability factor is not defined assume it is zero
+                converted.reset(new Product_Data_Dual_Band_Optical_BSDF(
+                  solar.tf.data,
+                  solar.tb.data,
+                  solar.rf.data,
+                  solar.rb.data,
+                  visible.tf.data,
+                  visible.tb.data,
+                  visible.rf.data,
+                  visible.rb.data,
+                  bsdfHemisphere,
+                  product->thickness.value() / 1000.0,
+                  product->IRTransmittance,
+                  product->IRTransmittance,
+                  product->frontEmissivity,
+                  product->backEmissivity,
+                  product->permeabilityFactor.value_or(
+                    0)));   // If permeability factor is not defined assume it is zero
             }
             return converted;
         }
@@ -225,15 +254,15 @@ namespace wincalc
             data = composed_product->compositionInformation->material;
         }
 
-		if(!data->conductivity.has_value())
-		{
-			throw std::runtime_error("Missing conductivity");
-		}
+        if(!data->conductivity.has_value())
+        {
+            throw std::runtime_error("Missing conductivity");
+        }
 
-		if(!data->thickness.has_value())
-		{
-			throw std::runtime_error("Missing thickness");
-		}
+        if(!data->thickness.has_value())
+        {
+            throw std::runtime_error("Missing thickness");
+        }
 
         auto thermal_data = wincalc::Product_Data_Thermal(
           data->conductivity.value(), data->thickness.value() / 1000.0, false);

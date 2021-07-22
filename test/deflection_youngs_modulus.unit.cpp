@@ -50,27 +50,11 @@ protected:
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_Off)
 {
-	// test to make sure nothing affects results with deflection turned off.
-	// test is not completed, need to test other results later.
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-
-	EXPECT_NEAR(0.0, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.panes_load[0], 1e-6);
-	EXPECT_NEAR(0.0, deflection_results.panes_load[1], 1e-6);
+	test_deflection_results("deflection_off_double_clear_youngs_modulus", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
-
-	EXPECT_NEAR(0, deflection_results.deflection_max[0], 1e-6);
-	EXPECT_NEAR(0, deflection_results.deflection_max[1], 1e-6);
-	EXPECT_NEAR(0, deflection_results.deflection_mean[0], 1e-6);
-	EXPECT_NEAR(0, deflection_results.deflection_mean[1], 1e-6);
-	EXPECT_NEAR(8.2712000637214000, deflection_results.panes_load[0], 1e-6);
-	EXPECT_NEAR(-8.2712000637213947, deflection_results.panes_load[1], 1e-6);
+	test_deflection_results("deflection_on_double_clear_youngs_modulus_1", glazing_system, update_results);
 }
