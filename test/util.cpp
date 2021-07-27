@@ -277,15 +277,15 @@ void test_deflection_results(std::string const & results_name,
     auto deflection_results =
       glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
 
-    auto & expected_max = expected.value("max_deflection_system_u", std::vector<double>());
-    auto & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
-    auto & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
+    auto const & expected_max = expected.value("max_deflection_system_u", std::vector<double>());
+    auto const & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
+    auto const & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
 
     EXPECT_EQ(expected_max, deflection_results.deflection_max);
     EXPECT_EQ(expected_mean, deflection_results.deflection_mean);
     EXPECT_EQ(expected_panes_load, deflection_results.panes_load);
 
-    auto & expected_layer_temperatures =
+    auto const & expected_layer_temperatures =
       expected.value("layer_temperatures_system_u", std::vector<double>());
     auto temperatures = glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
     EXPECT_EQ(expected_layer_temperatures, temperatures);
