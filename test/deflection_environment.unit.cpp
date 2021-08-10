@@ -49,18 +49,18 @@ protected:
 
 TEST_F(TestDeflectionEnvironment, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_double_clear_environment", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/environment/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionEnvironment, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	test_deflection_results("deflection_on_double_clear_environment_1", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/environment/deflection_on_environment_1", glazing_system, update_results);
 	//change environment pressure, make sure deflection results change
 	auto new_env = nfrc_shgc_environments();
 	new_env.inside.pressure = 99000;
 	new_env.outside.pressure = 110000;
 	glazing_system->environments(new_env);
 
-	test_deflection_results("deflection_on_double_clear_change_environment", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/environment/deflection_on_environment_2", glazing_system, update_results);
 }

@@ -50,11 +50,11 @@ protected:
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_double_clear_youngs_modulus", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/youngs_modulus/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	test_deflection_results("deflection_on_double_clear_youngs_modulus_1", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/youngs_modulus/deflection_on", glazing_system, update_results);
 }

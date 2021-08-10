@@ -42,10 +42,23 @@ void update_expected_results(std::string const & test_name, nlohmann::json const
     auto directory = path.parent_path();
     if(!std::filesystem::exists(directory))
     {
-        std::filesystem::create_directory(directory);
+        std::filesystem::create_directories(directory);
     }
     std::ofstream fout(path);
     fout << std::setw(4) << updated_results << std::endl;
+}
+
+void compare_vectors(std::vector < double > const& v1, std::vector<double> const& v2)
+{
+	EXPECT_EQ(v1.size(), v2.size());
+	if(v1.size() != v2.size())
+	{
+		return;
+	}
+	for(size_t i = 0; i < v1.size(); ++i)
+	{
+		EXPECT_NEAR(v1[i], v2[i], TEST_TOLARANCE);
+	}
 }
 
 void test_trichromatic_result(nlohmann::json & expected,
@@ -281,14 +294,14 @@ void test_deflection_results(std::string const & results_name,
     auto const & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
     auto const & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
 
-    EXPECT_EQ(expected_max, deflection_results.deflection_max);
-    EXPECT_EQ(expected_mean, deflection_results.deflection_mean);
-    EXPECT_EQ(expected_panes_load, deflection_results.panes_load);
+    compare_vectors(expected_max, deflection_results.deflection_max);
+	compare_vectors(expected_mean, deflection_results.deflection_mean);
+	compare_vectors(expected_panes_load, deflection_results.panes_load);
 
     auto const & expected_layer_temperatures =
       expected.value("layer_temperatures_system_u", std::vector<double>());
     auto temperatures = glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
-    EXPECT_EQ(expected_layer_temperatures, temperatures);
+	compare_vectors(expected_layer_temperatures, temperatures);
 
     if(update)
     {
@@ -364,9 +377,9 @@ void test_thermal_results(std::string const & results_name,
       expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
       expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
-    EXPECT_EQ(solid_layer_effective_conductivities_u,
+	compare_vectors(solid_layer_effective_conductivities_u,
               expected_solid_layer_effective_conductivities_u);
-    EXPECT_EQ(solid_layer_effective_conductivities_shgc,
+	compare_vectors(solid_layer_effective_conductivities_shgc,
               expected_solid_layer_effective_conductivities_shgc);
 
     auto gap_layer_effective_conductivities_u =
@@ -378,8 +391,8 @@ void test_thermal_results(std::string const & results_name,
       expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_gap_layer_effective_conductivities_shgc =
       expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
-    EXPECT_EQ(gap_layer_effective_conductivities_u, expected_gap_layer_effective_conductivities_u);
-    EXPECT_EQ(gap_layer_effective_conductivities_shgc,
+	compare_vectors(gap_layer_effective_conductivities_u, expected_gap_layer_effective_conductivities_u);
+	compare_vectors(gap_layer_effective_conductivities_shgc,
               expected_gap_layer_effective_conductivities_shgc);
 
     auto layer_temperatures_u =
@@ -391,8 +404,8 @@ void test_thermal_results(std::string const & results_name,
       expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
       expected.value("layer_temperatures_shgc", std::vector<double>());
-    EXPECT_EQ(layer_temperatures_u, expected_layer_temperatures_u);
-    EXPECT_EQ(layer_temperatures_shgc, expected_layer_temperatures_shgc);
+	compare_vectors(layer_temperatures_u, expected_layer_temperatures_u);
+	compare_vectors(layer_temperatures_shgc, expected_layer_temperatures_shgc);
 
 
     if(update)

@@ -139,8 +139,8 @@ namespace wincalc
 
         std::optional<Tarcog::ISO15099::CIGU> current_igu;
         std::optional<Tarcog::ISO15099::CSystem> current_system;
-        double last_theta;
-        double last_phi;
+        double last_theta = 0;
+        double last_phi = 0;
         void reset_system();
         void reset_igu();
 

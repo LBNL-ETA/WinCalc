@@ -52,7 +52,7 @@ TEST_F(TestDeflectionLoad, Test_Deflection_Off)
 	// test to make sure nothing affects results with deflection turned off.
 	// test is not completed, need to test other results later.
 	glazing_system->set_applied_loads({12, 23});
-	test_deflection_results("deflection_off_double_clear_applied_loads", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/applied_loads/deflection_off", glazing_system, update_results);
 
 }
 
@@ -61,8 +61,8 @@ TEST_F(TestDeflectionLoad, Test_Deflection_On)
 	glazing_system->enable_deflection(true);
 	glazing_system->set_applied_loads({12, 23});
 
-	test_deflection_results("deflection_on_double_clear_applied_loads", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/applied_loads/deflection_on_applied_loads_1", glazing_system, update_results);
 	//change applied loads, make sure results change
 	glazing_system->set_applied_loads({1, 1000});
-	test_deflection_results("deflection_on_double_clear_changed_applied_loads", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/applied_loads/deflection_on_applied_loads_2", glazing_system, update_results);
 }
