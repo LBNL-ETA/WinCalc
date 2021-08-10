@@ -1,4 +1,5 @@
 #include "util.h"
+#include <math.h>
 #include <fstream>
 #include <filesystem>
 #include <gtest/gtest.h>
