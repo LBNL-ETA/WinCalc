@@ -49,15 +49,15 @@ protected:
 
 TEST_F(TestDeflectionTilt, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_double_clear_tilt", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/tilt/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionTilt, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
-	test_deflection_results("deflection_on_double_clear_tilt_1", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/tilt/deflection_on_tilt_1", glazing_system, update_results);
 	//change tilt, make sure results change
 	glazing_system->set_tilt(10);
 
-	test_deflection_results("deflection_on_double_clear_change_tilt", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/tilt/deflection_on_tilt_2", glazing_system, update_results);
 }

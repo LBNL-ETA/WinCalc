@@ -49,7 +49,7 @@ protected:
 
 TEST_F(TestDeflection, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_double_clear", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflection, Test_Deflection_On)
@@ -57,5 +57,5 @@ TEST_F(TestDeflection, Test_Deflection_On)
 	glazing_system->enable_deflection(true);
 	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
 
-	test_deflection_results("deflection_on_double_clear", glazing_system, update_results);
+	test_deflection_results("deflection/double_clear/deflection_on", glazing_system, update_results);
 }

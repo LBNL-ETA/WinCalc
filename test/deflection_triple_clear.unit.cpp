@@ -55,12 +55,12 @@ protected:
 
 TEST_F(TestDeflectionTripleClear, Test_Deflection_Off)
 {
-	test_deflection_results("deflection_off_triple_clear", glazing_system, update_results);
+	test_deflection_results("deflection/triple_clear/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflectionTripleClear, Test_Deflection_On)
 {
 	glazing_system->enable_deflection(true);
 	glazing_system->set_deflection_properties(273, 101325);
-	test_deflection_results("deflection_on_triple_clear", glazing_system, update_results);
+	test_deflection_results("deflection/triple_clear/deflection_on", glazing_system, update_results);
 }

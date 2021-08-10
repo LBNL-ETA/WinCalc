@@ -79,10 +79,10 @@ namespace wincalc
                                      spectral_data_wavelength_range_method,
                                      number_visible_bands,
                                      number_solar_bands);
-			if(!applied_loads.empty())
-			{
-				current_igu.value().setAppliedLoad(applied_loads);
-			}
+            if(!applied_loads.empty())
+            {
+                current_igu.value().setAppliedLoad(applied_loads);
+            }
             return current_igu.value();
         }
     }
@@ -131,9 +131,25 @@ namespace wincalc
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
-        do_deflection_updates(theta, phi);
+        
+		// Don't do deflection updates if theta and phi are unchanged.  If this check is not
+		// present then the CSystem m_solved value will get set to false causing the deflection 
+		// solver to go through another iteration resulting in slightly differnt temperatures
+		// While these results are not incorrect they will not match the results from 
+		// Windows-CalcEngine unit tests.  And also if those temperates from the extra
+		// iteration are used in the Stephen Morse code it will not result in the same
+		// deflection values.
+		//
+		// The whole interaction involving do_deflection_updates needs to be refactored
+		if(theta != last_theta || phi != last_phi)
+        {
+            do_deflection_updates(theta, phi);
+        }
         auto & system = get_system(theta, phi);
-        system.setAbsorptances(optical_results.layer_solar_absorptances);
+        if(system_type == Tarcog::ISO15099::System::SHGC)
+        {
+            system.setAbsorptances(optical_results.layer_solar_absorptances);
+        }
         return system.getTemperatures(system_type);
     }
 
@@ -145,24 +161,24 @@ namespace wincalc
         do_deflection_updates(last_theta, last_phi);
     }
 
-	void Glazing_System::set_applied_loads(std::vector<double> const & loads)
-	{
-		applied_loads = loads;
-		if(current_system)
-		{
-			current_system.value().setAppliedLoad(applied_loads);
-		}
-	}
+    void Glazing_System::set_applied_loads(std::vector<double> const & loads)
+    {
+        applied_loads = loads;
+        if(current_system)
+        {
+            current_system.value().setAppliedLoad(applied_loads);
+        }
+    }
 
-    Deflection_Results
-      Glazing_System::calc_deflection_properties(Tarcog::ISO15099::System system_type, double theta, double phi)
+    Deflection_Results Glazing_System::calc_deflection_properties(
+      Tarcog::ISO15099::System system_type, double theta, double phi)
     {
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         auto deflection_max = system.getMaxDeflections(system_type);
-		auto deflection_mean = system.getMeanDeflections(system_type);
-		auto panes_load = system.getPanesLoad(system_type);
-		return {deflection_max, deflection_mean, panes_load};
+        auto deflection_mean = system.getMeanDeflections(system_type);
+        auto panes_load = system.getPanesLoad(system_type);
+        return {deflection_max, deflection_mean, panes_load};
     }
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
@@ -170,15 +186,14 @@ namespace wincalc
         auto & system = get_system(theta, phi);
         if(model_deflection)
         {
-			system.setDeflectionProperties(initial_temperature, initial_pressure);
+            system.setDeflectionProperties(initial_temperature, initial_pressure);
         }
         else
         {
-			system.clearDeflection();
+            system.clearDeflection();
         }
     }
 
-    
 
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
@@ -354,39 +369,39 @@ namespace wincalc
     void Glazing_System::set_width(double w)
     {
         width = w;
-		if(current_system)
-		{
-			current_system.value().setWidth(width);
-		}
+        if(current_system)
+        {
+            current_system.value().setWidth(width);
+        }
     }
 
     void Glazing_System::set_height(double h)
     {
         height = h;
-		if(current_system)
-		{
-			current_system.value().setHeight(height);
-		}
+        if(current_system)
+        {
+            current_system.value().setHeight(height);
+        }
     }
 
     void Glazing_System::set_tilt(double t)
     {
         tilt = t;
-		if(current_system)
-		{
-			current_system.value().setTilt(tilt);
-		}
+        if(current_system)
+        {
+            current_system.value().setTilt(tilt);
+        }
     }
 
-	void Glazing_System::flip_layer(size_t layer_index, bool flipped)
-	{
-		product_data.at(layer_index).optical_data->flipped = flipped;
-		reset_igu();
-	}
+    void Glazing_System::flip_layer(size_t layer_index, bool flipped)
+    {
+        product_data.at(layer_index).optical_data->flipped = flipped;
+        reset_igu();
+    }
 
     void Glazing_System::enable_deflection(bool enable)
     {
         model_deflection = enable;
-		do_deflection_updates(last_theta, last_phi);
+        do_deflection_updates(last_theta, last_phi);
     }
 }   // namespace wincalc
