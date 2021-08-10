@@ -128,9 +128,9 @@ namespace wincalc
         int number_visible_bands;
         int number_solar_bands;
         bool model_deflection = false;
-        double initial_temperature;
-        double initial_pressure;
-		std::vector<double> applied_loads;
+        double initial_temperature = 293.15;
+        double initial_pressure = 101325;
+        std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
 

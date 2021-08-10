@@ -315,8 +315,8 @@ namespace wincalc
         auto ir_results =
           calc_thermal_ir(standard, product_data, type, number_visible_bands, number_solar_bands);
 
-        double tf = ir_results.transmittance_front_direct_direct;
-        double tb = ir_results.transmittance_back_direct_direct;
+        double tf = ir_results.transmittance_front_diffuse_diffuse;
+        double tb = ir_results.transmittance_back_diffuse_diffuse;
         double absorptance_front = ir_results.emissivity_front_hemispheric;
         double absorptance_back = ir_results.emissivity_back_hemispheric;
         return Layer_Optical_IR_Results_Needed_For_Thermal_Calcs{

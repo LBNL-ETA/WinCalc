@@ -17,8 +17,8 @@ namespace wincalc
 {
     struct ThermalIRResults
     {
-        double transmittance_front_direct_direct;
-        double transmittance_back_direct_direct;
+        double transmittance_front_diffuse_diffuse;
+        double transmittance_back_diffuse_diffuse;
         double emissivity_front_hemispheric;
         double emissivity_back_hemispheric;
     };

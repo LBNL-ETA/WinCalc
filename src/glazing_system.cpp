@@ -269,9 +269,7 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands),
-        initial_pressure(101325),
-        initial_temperature(293.15)
+        number_solar_bands(number_solar_bands)
     {}
 
     Glazing_System::Glazing_System(
@@ -296,9 +294,7 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands),
-        initial_pressure(101325),
-        initial_temperature(293.15)
+        number_solar_bands(number_solar_bands)
     {}
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
@@ -350,9 +346,7 @@ namespace wincalc
         bsdf_hemisphere(bsdf_hemisphere),
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
-        number_solar_bands(number_solar_bands),
-        initial_pressure(101325),
-        initial_temperature(293.15)
+        number_solar_bands(number_solar_bands)
     {}
 
     Environments Glazing_System::environments() const
