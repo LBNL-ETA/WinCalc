@@ -423,8 +423,9 @@ namespace wincalc
         // e.g. the NFRC Thermal IR standard has min wavelength: 5 and max wavelength:
         // wavelength set and wavelength set: Data.  So if the data only goes up to 2.5 then
         // based on the definitions max wavelength = 5 and min wavelength = 2.5
-        if(max_wavelength > min_wavelength && material_min_wavelength <= min_wavelength
-           && material_max_wavelength >= max_wavelength)
+        if(max_wavelength > min_wavelength
+           && material_min_wavelength <= (min_wavelength + ConstantsData::wavelengthErrorTolerance)
+           && (material_max_wavelength + ConstantsData::wavelengthErrorTolerance) >= max_wavelength)
         {
             // has the required wavelength ranges to calculate from measured values, priortize
             // this case
