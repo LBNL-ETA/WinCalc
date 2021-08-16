@@ -73,6 +73,7 @@ namespace wincalc
 
     struct Product_Data_Dual_Band_Optical : Product_Data_Optical
     {
+        virtual ~Product_Data_Dual_Band_Optical() = 0;
         Product_Data_Dual_Band_Optical(
           double thickness_meters,
           std::optional<double> ir_transmittance_front = std::optional<double>(),
@@ -97,9 +98,9 @@ namespace wincalc
         }
     };
 
-    struct Product_Data_Dual_Band_Optical_Specular : Product_Data_Dual_Band_Optical
+    struct Product_Data_Dual_Band_Optical_Hemispheric : Product_Data_Dual_Band_Optical
     {
-        Product_Data_Dual_Band_Optical_Specular(
+        Product_Data_Dual_Band_Optical_Hemispheric(
           double tf_solar,
           double tb_solar,
           double rf_solar,

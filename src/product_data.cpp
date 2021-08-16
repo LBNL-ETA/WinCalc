@@ -332,7 +332,7 @@ namespace wincalc
           width, height, thickness_meters, openness);
     }
 
-    Product_Data_Dual_Band_Optical_Specular::Product_Data_Dual_Band_Optical_Specular(
+    Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(
       double tf_solar,
       double tb_solar,
       double rf_solar,
