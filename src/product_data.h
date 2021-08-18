@@ -97,9 +97,9 @@ namespace wincalc
         }
     };
 
-    struct Product_Data_Dual_Band_Optical_Specular : Product_Data_Dual_Band_Optical
+    struct Product_Data_Dual_Band_Optical_Hemispheric : Product_Data_Dual_Band_Optical
     {
-        Product_Data_Dual_Band_Optical_Specular(
+        Product_Data_Dual_Band_Optical_Hemispheric(
           double tf_solar,
           double tb_solar,
           double rf_solar,

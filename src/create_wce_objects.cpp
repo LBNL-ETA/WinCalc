@@ -314,13 +314,23 @@ namespace wincalc
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_Dual_Band_Optical_Specular const &,
+      create_material(wincalc::Product_Data_Dual_Band_Optical_Hemispheric const & product,
                       window_standards::Optical_Standard_Method const &,
                       Spectal_Data_Wavelength_Range_Method const &,
                       int,
                       int)
     {
-        throw std::runtime_error("Dual band specular materials not yet supported.");
+        std::shared_ptr<SingleLayerOptics::CMaterial> material =
+          SingleLayerOptics::Material::dualBandMaterial(product.tf_solar,
+                                                        product.tb_solar,
+                                                        product.rf_solar,
+                                                        product.rb_solar,
+                                                        product.tf_visible,
+                                                        product.tb_visible,
+                                                        product.rf_visible,
+                                                        product.rb_visible);
+        return material;
+        //throw std::runtime_error("Dual band specular materials not yet supported.");
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
@@ -450,11 +460,11 @@ namespace wincalc
                   number_visible_bands,
                   number_solar_bands);
             }
-            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Specular>(
+            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
                       product_data))
             {
                 material = create_material(
-                  *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Specular>(
+                  *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
                     product_data),
                   method,
                   type,
