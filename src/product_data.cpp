@@ -117,18 +117,6 @@ namespace wincalc
         permeability_factor = material_data->permeability_factor;
     }
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical_Perfectly_Diffuse::effective_thermal_values(double width,
-                                                                       double height,
-                                                                       double gap_width_top,
-                                                                       double gap_width_bottom,
-                                                                       double gap_width_left,
-                                                                       double gap_width_right) const
-    {
-        return Product_Data_Optical::effective_thermal_values(
-          width, height, gap_width_top, gap_width_bottom, gap_width_left, gap_width_right);
-    }
-
     Product_Data_Optical_Venetian::Product_Data_Optical_Venetian(
       std::shared_ptr<Product_Data_Optical> const & optical_data,
       double slat_tilt,
