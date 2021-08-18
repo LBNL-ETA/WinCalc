@@ -217,13 +217,6 @@ namespace wincalc
     {
         Product_Data_Optical_Perfectly_Diffuse(
           std::shared_ptr<Product_Data_Optical> const & material_optical_data);
-
-        std::unique_ptr<EffectiveLayers::EffectiveLayer> effective_thermal_values(double width,
-                                                                         double height,
-                                                                         double gap_width_top,
-                                                                         double gap_width_bottom,
-                                                                         double gap_width_left,
-                                                                         double gap_width_right) const override;
     };
 
     struct Product_Data_Optical_Venetian : Product_Data_Optical_With_Material
