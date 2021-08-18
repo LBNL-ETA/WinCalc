@@ -208,8 +208,22 @@ namespace wincalc
           std::shared_ptr<Product_Data_Optical> const & material_optical_data);
         virtual ~Product_Data_Optical_With_Material() = default;
         virtual std::shared_ptr<Product_Data_Optical> optical_data() override;
-        std::shared_ptr<Product_Data_Optical> material_optical_data;
         virtual std::vector<double> wavelengths() const override;
+
+        std::shared_ptr<Product_Data_Optical> material_optical_data;
+    };
+
+    struct Product_Data_Optical_Perfectly_Diffuse : Product_Data_Optical_With_Material
+    {
+        Product_Data_Optical_Perfectly_Diffuse(
+          std::shared_ptr<Product_Data_Optical> const & material_optical_data);
+
+        std::unique_ptr<EffectiveLayers::EffectiveLayer> effective_thermal_values(double width,
+                                                                         double height,
+                                                                         double gap_width_top,
+                                                                         double gap_width_bottom,
+                                                                         double gap_width_left,
+                                                                         double gap_width_right) const override;
     };
 
     struct Product_Data_Optical_Venetian : Product_Data_Optical_With_Material

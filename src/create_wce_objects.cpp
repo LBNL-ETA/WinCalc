@@ -694,7 +694,17 @@ namespace wincalc
                         int number_solar_bands)
     {
         std::shared_ptr<SingleLayerOptics::CBSDFLayer> layer;
-        if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(product_data))
+        if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data))
+        {
+            layer = create_bsdf_layer_perfectly_diffuse(
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data),
+              method,
+              bsdf_hemisphere,
+              type,
+              number_visible_bands,
+              number_solar_bands);
+        }
+        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(product_data))
         {
             layer = create_bsdf_layer_venetian(
               std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(product_data),
