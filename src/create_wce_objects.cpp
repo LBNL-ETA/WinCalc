@@ -707,7 +707,7 @@ namespace wincalc
         if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data))
         {
             layer = create_bsdf_layer_perfectly_diffuse(
-              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data),
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data)->material_optical_data,
               method,
               bsdf_hemisphere,
               type,
