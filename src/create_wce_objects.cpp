@@ -315,11 +315,14 @@ namespace wincalc
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(wincalc::Product_Data_Dual_Band_Optical_Hemispheric const & product,
-                      window_standards::Optical_Standard_Method const &,
-                      Spectal_Data_Wavelength_Range_Method const &,
-                      int,
-                      int)
+                      window_standards::Optical_Standard_Method const & method,
+                      Spectal_Data_Wavelength_Range_Method const & type,
+                      int number_visible_bands,
+                      int number_solar_bands)
     {
+        auto wavelength_set = wavelength_range_factory(
+          product.wavelengths(), method, type, number_visible_bands, number_solar_bands);
+
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::dualBandMaterial(product.tf_solar,
                                                         product.tb_solar,
@@ -329,6 +332,8 @@ namespace wincalc
                                                         product.tb_visible,
                                                         product.rf_visible,
                                                         product.rb_visible);
+
+        material->setBandWavelengths(wavelength_set);
         return material;
         //throw std::runtime_error("Dual band specular materials not yet supported.");
     }
