@@ -389,7 +389,9 @@ namespace wincalc
 
     void Glazing_System::flip_layer(size_t layer_index, bool flipped)
     {
-        product_data.at(layer_index).optical_data->flipped = flipped;
+		auto & layer = product_data.at(layer_index);
+		layer.optical_data->flipped = flipped;
+		layer.thermal_data->flipped = flipped;
         reset_igu();
     }
 
