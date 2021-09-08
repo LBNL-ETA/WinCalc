@@ -954,7 +954,7 @@ namespace wincalc
                 converted_gas.push_back(std::make_pair(gas.percent, gas.gas));
             }
             tarcog_gaps.push_back(
-              Tarcog::ISO15099::Layers::gap(engine_gap_info.thickness, Gases::CGas(converted_gas)));
+              Tarcog::ISO15099::Layers::gap(engine_gap_info.thickness, Gases::CGas(converted_gas), engine_gap_info.pressure));
         }
 
         return create_igu(tarcog_solid_layers, tarcog_gaps, width, height, tilt);

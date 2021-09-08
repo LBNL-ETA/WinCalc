@@ -1,21 +1,29 @@
 #include "gap.h"
 
-wincalc::Engine_Gap_Info::Engine_Gap_Info(Gases::CGasData const & gas, double thickness) :
-    gases{{gas, 1.0}}, thickness(thickness)
+wincalc::Engine_Gap_Info::Engine_Gap_Info(Gases::CGasData const & gas,
+                                          double thickness,
+                                          double pressure) :
+    gases{{gas, 1.0}}, thickness(thickness), pressure(pressure)
 {}
 
 wincalc::Engine_Gap_Info::Engine_Gap_Info(
-  std::vector<wincalc::Engine_Gas_Mixture_Component> const & gases, double thickness) :
-    gases(gases), thickness(thickness)
+  std::vector<wincalc::Engine_Gas_Mixture_Component> const & gases,
+  double thickness,
+  double pressure) :
+    gases(gases), thickness(thickness), pressure(pressure)
 {}
 
-wincalc::Engine_Gap_Info::Engine_Gap_Info(Gases::GasDef const & gas, double thickness) :
-    gases{{Gases::Gas::intance().get(gas), 1.0}}, thickness(thickness)
+wincalc::Engine_Gap_Info::Engine_Gap_Info(Gases::GasDef const & gas,
+                                          double thickness,
+                                          double pressure) :
+    gases{{Gases::Gas::intance().get(gas), 1.0}}, thickness(thickness), pressure(pressure)
 {}
 
 wincalc::Engine_Gap_Info::Engine_Gap_Info(
-  std::vector<wincalc::Predefined_Gas_Mixture_Component> const & gases, double thickness) :
-    thickness(thickness)
+  std::vector<wincalc::Predefined_Gas_Mixture_Component> const & gases,
+  double thickness,
+  double pressure) :
+    thickness(thickness), pressure(pressure)
 {
     for(auto const & gas : gases)
     {
@@ -26,8 +34,8 @@ wincalc::Engine_Gap_Info::Engine_Gap_Info(
 wincalc::Engine_Gap_Info::Engine_Gap_Info(
   std::vector<std::variant<wincalc::Predefined_Gas_Mixture_Component,
                            wincalc::Engine_Gas_Mixture_Component>> const & gases,
-  double thickness) :
-    thickness(thickness)
+  double thickness, double pressure) :
+    thickness(thickness), pressure(pressure)
 {
     for(auto gas : gases)
     {
