@@ -335,7 +335,7 @@ namespace wincalc
 
         material->setBandWavelengths(wavelength_set);
         return material;
-        //throw std::runtime_error("Dual band specular materials not yet supported.");
+        // throw std::runtime_error("Dual band specular materials not yet supported.");
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
@@ -712,7 +712,9 @@ namespace wincalc
         if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data))
         {
             layer = create_bsdf_layer_perfectly_diffuse(
-              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data)->material_optical_data,
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(
+                product_data)
+                ->material_optical_data,
               method,
               bsdf_hemisphere,
               type,
@@ -922,7 +924,8 @@ namespace wincalc
 
         for(auto const & layer : layers)
         {
-            auto ir_results = calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
+            auto ir_results =
+              calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
 
             auto effective_thermal_values =
               layer.optical_data->effective_thermal_values(width,
@@ -946,15 +949,20 @@ namespace wincalc
         }
 
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
-        for(Engine_Gap_Info engine_gap_info : gaps)
+        for(const Engine_Gap_Info & engine_gap_info : gaps)
         {
             std::vector<std::pair<double, Gases::CGasData>> converted_gas;
             for(Engine_Gas_Mixture_Component gas : engine_gap_info.gases)
             {
-                converted_gas.push_back(std::make_pair(gas.percent, gas.gas));
+                converted_gas.emplace_back(gas.percent, gas.gas);
             }
-            tarcog_gaps.push_back(
-              Tarcog::ISO15099::Layers::gap(engine_gap_info.thickness, Gases::CGas(converted_gas)));
+            auto gap = Tarcog::ISO15099::Layers::gap(
+              engine_gap_info.thickness, Gases::CGas(converted_gas), engine_gap_info.pressure);
+            if(engine_gap_info.pillar)
+            {
+                gap = engine_gap_info.pillar->createGapPillar(gap);
+            }
+            tarcog_gaps.push_back(gap);
         }
 
         return create_igu(tarcog_solid_layers, tarcog_gaps, width, height, tilt);
