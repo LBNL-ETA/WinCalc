@@ -1,5 +1,15 @@
 #include "gap.h"
 
+wincalc::Pillar::Pillar(double const conductivity):
+    conductivity(conductivity)
+{}
+
+wincalc::Pillar_Circular::Pillar_Circular(double const conductivity, double const spacing, double const radius):
+    Pillar(conductivity),
+    spacing(spacing),
+    radius(radius)
+{}
+
 std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer> wincalc::Pillar_Circular::createGapPillar(
     const std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer> & gap)
 {

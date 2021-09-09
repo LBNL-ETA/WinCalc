@@ -22,6 +22,8 @@ namespace wincalc
 
     struct Pillar
     {
+        explicit Pillar(double conductivity);
+
         virtual ~Pillar() = default;
         virtual std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>
           createGapPillar(const std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer> & gap) = 0;
@@ -30,6 +32,8 @@ namespace wincalc
 
     struct Pillar_Circular : Pillar
     {
+        Pillar_Circular(double conductivity, double spacing, double radius);
+
         std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>
           createGapPillar(const std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer> & gap) override;
         double spacing;
