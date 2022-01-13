@@ -143,6 +143,7 @@ namespace wincalc
         double last_phi = 0;
         void reset_system();
         void reset_igu();
+		void sort_spectral_data();
 
         window_standards::Optical_Standard_Method get_method(std::string const & method_name) const;
     };

@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		igsdb_14684_nfrc_102.unit.cpp
 		igsdb_5051_nfrc_102.unit.cpp
 		deflection_triple_clear.unit.cpp
 		nfrc_20748.unit.cpp

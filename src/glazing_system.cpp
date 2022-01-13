@@ -131,17 +131,17 @@ namespace wincalc
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
-        
-		// Don't do deflection updates if theta and phi are unchanged.  If this check is not
-		// present then the CSystem m_solved value will get set to false causing the deflection 
-		// solver to go through another iteration resulting in slightly differnt temperatures
-		// While these results are not incorrect they will not match the results from 
-		// Windows-CalcEngine unit tests.  And also if those temperates from the extra
-		// iteration are used in the Stephen Morse code it will not result in the same
-		// deflection values.
-		//
-		// The whole interaction involving do_deflection_updates needs to be refactored
-		if(theta != last_theta || phi != last_phi)
+
+        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
+        // present then the CSystem m_solved value will get set to false causing the deflection
+        // solver to go through another iteration resulting in slightly differnt temperatures
+        // While these results are not incorrect they will not match the results from
+        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
+        // iteration are used in the Stephen Morse code it will not result in the same
+        // deflection values.
+        //
+        // The whole interaction involving do_deflection_updates needs to be refactored
+        if(theta != last_theta || phi != last_phi)
         {
             do_deflection_updates(theta, phi);
         }
@@ -247,6 +247,24 @@ namespace wincalc
         return product_data;
     }
 
+    void Glazing_System::sort_spectral_data()
+    {
+        for(auto & product : product_data)
+        {
+            auto nband_optical_data = std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(
+              product.optical_data->optical_data());
+            if(nband_optical_data)
+            {
+                auto & measurements = nband_optical_data->wavelength_data;
+                std::sort(measurements.begin(),
+                          measurements.end(),
+                          [](OpticsParser::WLData const & a, OpticsParser::WLData const & b) {
+                              return a.wavelength < b.wavelength;
+                          });
+            }
+        }
+    }
+
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
       std::vector<Product_Data_Optical_Thermal> const & product_data,
@@ -270,7 +288,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+		sort_spectral_data();
+	}
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
@@ -295,7 +315,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+		sort_spectral_data();
+	}
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
       std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
@@ -347,7 +369,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+		sort_spectral_data();
+	}
 
     Environments Glazing_System::environments() const
     {
@@ -389,9 +413,9 @@ namespace wincalc
 
     void Glazing_System::flip_layer(size_t layer_index, bool flipped)
     {
-		auto & layer = product_data.at(layer_index);
-		layer.optical_data->flipped = flipped;
-		layer.thermal_data->flipped = flipped;
+        auto & layer = product_data.at(layer_index);
+        layer.optical_data->flipped = flipped;
+        layer.thermal_data->flipped = flipped;
         reset_igu();
     }
 
