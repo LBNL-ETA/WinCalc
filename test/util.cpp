@@ -308,8 +308,8 @@ void test_deflection_results(std::string const & results_name,
     {
         expected["max_deflection_system_u"] = deflection_results.deflection_max;
         expected["mean_deflection_system_u"] = deflection_results.deflection_mean;
-        expected["panes_load_system_u"] = deflection_results.panes_load;
-        expected["layer_temperatures_system_u"] = temperatures;
+		expected["panes_load_system_u"] = deflection_results.panes_load;
+		expected["layer_temperatures_system_u"] = temperatures;
         update_expected_results(results_name, expected);
     }
 }

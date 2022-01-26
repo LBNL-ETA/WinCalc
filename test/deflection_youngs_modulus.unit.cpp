@@ -30,7 +30,7 @@ protected:
 		std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
 		OpticsParser::Parser parser;
 		auto clear_3 = parser.parseJSONFile(clear_3_path.string());
-		clear_3->youngsModulus = 1e6;
+		clear_3->youngsModulus = 7.2e10;
 		products.push_back(clear_3);
 		products.push_back(clear_3);
 
