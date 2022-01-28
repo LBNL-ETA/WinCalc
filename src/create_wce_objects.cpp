@@ -911,10 +911,7 @@ namespace wincalc
                  window_standards::Optical_Standard const & standard,
                  double theta,
                  double phi,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
-                 Spectal_Data_Wavelength_Range_Method const & type,
-                 int number_visible_bands,
-                 int number_solar_bands)
+                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere)
     {
         std::ignore = theta;
         std::ignore = phi;
@@ -924,8 +921,7 @@ namespace wincalc
 
         for(auto const & layer : layers)
         {
-            auto ir_results =
-              calc_thermal_ir(standard, layer, type, number_visible_bands, number_solar_bands);
+            auto ir_results = calc_thermal_ir(standard, layer);
 
             auto effective_thermal_values =
               layer.optical_data->effective_thermal_values(width,

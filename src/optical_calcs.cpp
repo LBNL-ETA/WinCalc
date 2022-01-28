@@ -307,13 +307,9 @@ namespace wincalc
 
     Layer_Optical_IR_Results_Needed_For_Thermal_Calcs optical_ir_results_needed_for_thermal_calcs(
       Product_Data_Optical_Thermal const & product_data,
-      window_standards::Optical_Standard const & standard,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      window_standards::Optical_Standard const & standard)
     {
-        auto ir_results =
-          calc_thermal_ir(standard, product_data, type, number_visible_bands, number_solar_bands);
+        auto ir_results = calc_thermal_ir(standard, product_data);
 
         double tf = ir_results.transmittance_front_diffuse_diffuse;
         double tb = ir_results.transmittance_back_diffuse_diffuse;
@@ -326,16 +322,12 @@ namespace wincalc
     std::vector<Layer_Optical_IR_Results_Needed_For_Thermal_Calcs>
       optical_ir_results_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
-        window_standards::Optical_Standard const & standard,
-        Spectal_Data_Wavelength_Range_Method const & type,
-        int number_visible_bands,
-        int number_solar_bands)
+        window_standards::Optical_Standard const & standard)
     {
         std::vector<Layer_Optical_IR_Results_Needed_For_Thermal_Calcs> result;
         for(auto product : product_data)
         {
-            result.push_back(optical_ir_results_needed_for_thermal_calcs(
-              product, standard, type, number_visible_bands, number_solar_bands));
+            result.push_back(optical_ir_results_needed_for_thermal_calcs(product, standard));
         }
         return result;
     }

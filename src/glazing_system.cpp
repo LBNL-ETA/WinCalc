@@ -67,18 +67,8 @@ namespace wincalc
         }
         else
         {
-            current_igu = create_igu(product_data,
-                                     gap_values,
-                                     width,
-                                     height,
-                                     tilt,
-                                     standard,
-                                     theta,
-                                     phi,
-                                     bsdf_hemisphere,
-                                     spectral_data_wavelength_range_method,
-                                     number_visible_bands,
-                                     number_solar_bands);
+            current_igu = create_igu(
+              product_data, gap_values, width, height, tilt, standard, theta, phi, bsdf_hemisphere);
             if(!applied_loads.empty())
             {
                 current_igu.value().setAppliedLoad(applied_loads);
