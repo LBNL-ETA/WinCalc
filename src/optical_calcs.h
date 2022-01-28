@@ -21,11 +21,7 @@ namespace wincalc
     std::vector<Layer_Optical_IR_Results_Needed_For_Thermal_Calcs>
       optical_ir_results_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
-        window_standards::Optical_Standard const & standard,
-        Spectal_Data_Wavelength_Range_Method const & type =
-          Spectal_Data_Wavelength_Range_Method::FULL,
-        int number_visible_bands = 5,
-        int number_solar_bands = 10);
+        window_standards::Optical_Standard const & standard);
 
     struct Optical_Solar_Results_Needed_For_Thermal_Calcs
     {

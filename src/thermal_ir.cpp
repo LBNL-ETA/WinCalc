@@ -4,16 +4,13 @@
 
 wincalc::ThermalIRResults
   wincalc::calc_thermal_ir(window_standards::Optical_Standard const & standard,
-                           Product_Data_Optical_Thermal const & product_data,
-                           Spectal_Data_Wavelength_Range_Method const & type,
-                           int number_visible_bands,
-                           int number_solar_bands)
+                           Product_Data_Optical_Thermal const & product_data)
 {
     auto method = standard.methods.at("THERMAL IR");
     auto bsdf = SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
 
     auto bsdf_layer = create_bsdf_layer(
-      product_data.optical_data, method, bsdf, type, number_visible_bands, number_solar_bands);
+      product_data.optical_data, method, bsdf, Spectal_Data_Wavelength_Range_Method::FULL);
     auto layer = SingleLayerOptics::CScatteringLayer(bsdf_layer);
     layer.setBlackBodySource(method.source_spectrum.t);
 

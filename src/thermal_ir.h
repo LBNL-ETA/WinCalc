@@ -24,11 +24,7 @@ namespace wincalc
     };
 
     ThermalIRResults calc_thermal_ir(window_standards::Optical_Standard const & standard,
-                                     Product_Data_Optical_Thermal const & product_data,
-                                     Spectal_Data_Wavelength_Range_Method const & type =
-                                       Spectal_Data_Wavelength_Range_Method::FULL,
-                                     int number_visible_bands = 5,
-                                     int number_solar_bands = 10);
+                                     Product_Data_Optical_Thermal const & product_data);
 
 }   // namespace wincalc
 #endif

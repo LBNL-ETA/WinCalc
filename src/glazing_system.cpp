@@ -67,18 +67,8 @@ namespace wincalc
         }
         else
         {
-            current_igu = create_igu(product_data,
-                                     gap_values,
-                                     width,
-                                     height,
-                                     tilt,
-                                     standard,
-                                     theta,
-                                     phi,
-                                     bsdf_hemisphere,
-                                     spectral_data_wavelength_range_method,
-                                     number_visible_bands,
-                                     number_solar_bands);
+            current_igu = create_igu(
+              product_data, gap_values, width, height, tilt, standard, theta, phi, bsdf_hemisphere);
             if(!applied_loads.empty())
             {
                 current_igu.value().setAppliedLoad(applied_loads);
@@ -131,17 +121,17 @@ namespace wincalc
     {
         auto optical_results = optical_solar_results_needed_for_thermal_calcs(
           product_data, optical_standard(), theta, phi, bsdf_hemisphere);
-        
-		// Don't do deflection updates if theta and phi are unchanged.  If this check is not
-		// present then the CSystem m_solved value will get set to false causing the deflection 
-		// solver to go through another iteration resulting in slightly differnt temperatures
-		// While these results are not incorrect they will not match the results from 
-		// Windows-CalcEngine unit tests.  And also if those temperates from the extra
-		// iteration are used in the Stephen Morse code it will not result in the same
-		// deflection values.
-		//
-		// The whole interaction involving do_deflection_updates needs to be refactored
-		if(theta != last_theta || phi != last_phi)
+
+        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
+        // present then the CSystem m_solved value will get set to false causing the deflection
+        // solver to go through another iteration resulting in slightly differnt temperatures
+        // While these results are not incorrect they will not match the results from
+        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
+        // iteration are used in the Stephen Morse code it will not result in the same
+        // deflection values.
+        //
+        // The whole interaction involving do_deflection_updates needs to be refactored
+        if(theta != last_theta || phi != last_phi)
         {
             do_deflection_updates(theta, phi);
         }
@@ -389,9 +379,9 @@ namespace wincalc
 
     void Glazing_System::flip_layer(size_t layer_index, bool flipped)
     {
-		auto & layer = product_data.at(layer_index);
-		layer.optical_data->flipped = flipped;
-		layer.thermal_data->flipped = flipped;
+        auto & layer = product_data.at(layer_index);
+        layer.optical_data->flipped = flipped;
+        layer.thermal_data->flipped = flipped;
         reset_igu();
     }
 
