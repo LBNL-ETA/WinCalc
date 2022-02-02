@@ -19,15 +19,13 @@ using namespace window_standards;
 class TestIGSDB_14025 : public testing::Test
 {
 protected:
-    
-
     virtual void SetUp()
     {}
 };
 
 TEST_F(TestIGSDB_14025, Test_IR)
 {
-	std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(test_dir);
     product_path /= "products";
     product_path /= "14025.json";
 

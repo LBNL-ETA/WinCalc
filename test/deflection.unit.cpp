@@ -20,7 +20,7 @@ class TestDeflection : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system;
-    
+
     virtual void SetUp()
     {
         std::filesystem::path clear_3_path(test_dir);
@@ -31,11 +31,11 @@ protected:
         OpticsParser::Parser parser;
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
         products.push_back(clear_3);
-		products.push_back(clear_3);
+        products.push_back(clear_3);
 
-		Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-		std::vector<Engine_Gap_Info> gaps;
-		gaps.push_back(air_gap);
+        Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
+        std::vector<Engine_Gap_Info> gaps;
+        gaps.push_back(air_gap);
 
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";
@@ -49,13 +49,16 @@ protected:
 
 TEST_F(TestDeflection, Test_Deflection_Off)
 {
-	test_deflection_results("deflection/double_clear/deflection_off", glazing_system, update_results);
+    test_deflection_results(
+      "NFRC_102_NFRC_102", "deflection/deflection_off", glazing_system, update_results);
 }
 
 TEST_F(TestDeflection, Test_Deflection_On)
 {
-	glazing_system->enable_deflection(true);
-	auto deflection_results = glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
+    glazing_system->enable_deflection(true);
+    auto deflection_results =
+      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
 
-	test_deflection_results("deflection/double_clear/deflection_on", glazing_system, update_results);
+    test_deflection_results(
+      "NFRC_102_NFRC_102", "deflection/deflection_on", glazing_system, update_results);
 }

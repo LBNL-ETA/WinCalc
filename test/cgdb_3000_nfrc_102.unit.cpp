@@ -68,12 +68,13 @@ protected:
 
 TEST_F(TestCGDB3000NFRC102, Test_Thermal)
 {
-	test_thermal_results("CGDB_3000_NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("CGDB_3000_NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results(
+      "CGDB_3000_NFRC_102", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "CGDB_3000_NFRC_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestCGDB3000NFRC102, Test_Optical)
 {
-	test_optical_results("CGDB_3000_NFRC_102", glazing_system_u, update_results);
+    test_optical_results("CGDB_3000_NFRC_102", glazing_system_u, update_results);
 }
-

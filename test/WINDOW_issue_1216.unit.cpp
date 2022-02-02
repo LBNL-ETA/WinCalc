@@ -34,22 +34,22 @@ protected:
 
         std::filesystem::path layer_3_path(test_dir);
         layer_3_path /= "products";
-		layer_3_path /= "igsdb_9817.json";
+        layer_3_path /= "igsdb_9817.json";
 
         std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
         auto layer_1 = OpticsParser::parseJSONFile(layer_1_path.string());
-        //products.push_back(layer_1);
+        // products.push_back(layer_1);
 
         auto bsdf = OpticsParser::parseBSDFXMLFile(bsdf_path.string());
-        //products.push_back(bsdf);
+        // products.push_back(bsdf);
 
         auto layer_3 = OpticsParser::parseJSONFile(layer_3_path.string());
         products.push_back(layer_3);
-		//products.push_back(layer_3);
+        // products.push_back(layer_3);
 
         Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-        //std::vector<Engine_Gap_Info> gaps{air_gap, air_gap};
-		std::vector<Engine_Gap_Info> gaps;
+        // std::vector<Engine_Gap_Info> gaps{air_gap, air_gap};
+        std::vector<Engine_Gap_Info> gaps;
 
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";
@@ -64,8 +64,8 @@ protected:
         glazing_system_shgc = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
 
-		//glazing_system_u->flip_layer(2, true);
-		//glazing_system_shgc->flip_layer(2, true);
+        // glazing_system_u->flip_layer(2, true);
+        // glazing_system_shgc->flip_layer(2, true);
     }
 };
 
@@ -73,9 +73,9 @@ protected:
 TEST_F(TestWINDOWIssue1216, Test_Thermal)
 {
     test_thermal_results(
-      "WINDOW_Issue_1216/thermal_U_Environment", glazing_system_u, update_results);
+      "WINDOW_Issue_1216", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "WINDOW_Issue_1216/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "WINDOW_Issue_1216", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 #endif
 

@@ -42,19 +42,20 @@ protected:
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
-        glazing_system_shgc =
-			std::make_shared<Glazing_System>(standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
+        glazing_system_shgc = std::make_shared<Glazing_System>(
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
     }
 };
 
 TEST_F(TestNFRC102, Test_Thermal)
 {
-	test_thermal_results("NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results("NFRC_102", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "NFRC_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 
 TEST_F(TestNFRC102, Test_Optical)
 {
-	test_optical_results("NFRC_102", glazing_system_u, update_results);
+    test_optical_results("NFRC_102", glazing_system_u, update_results);
 }

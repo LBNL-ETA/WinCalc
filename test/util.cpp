@@ -49,17 +49,17 @@ void update_expected_results(std::string const & test_name, nlohmann::json const
     fout << std::setw(4) << updated_results << std::endl;
 }
 
-void compare_vectors(std::vector < double > const& v1, std::vector<double> const& v2)
+void compare_vectors(std::vector<double> const & v1, std::vector<double> const & v2)
 {
-	EXPECT_EQ(v1.size(), v2.size());
-	if(v1.size() != v2.size())
-	{
-		return;
-	}
-	for(size_t i = 0; i < v1.size(); ++i)
-	{
-		EXPECT_NEAR(v1[i], v2[i], TEST_TOLARANCE);
-	}
+    EXPECT_EQ(v1.size(), v2.size());
+    if(v1.size() != v2.size())
+    {
+        return;
+    }
+    for(size_t i = 0; i < v1.size(); ++i)
+    {
+        EXPECT_NEAR(v1[i], v2[i], TEST_TOLARANCE);
+    }
 }
 
 void test_trichromatic_result(nlohmann::json & expected,
@@ -257,9 +257,9 @@ void test_optical_results(std::string const & test_name,
     }
 }
 
-void test_optical_results(std::string const & system_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update)
+void test_all_optical_results(std::string const & system_name,
+                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                              bool update)
 {
     auto solar_results = glazing_system->optical_method_results("SOLAR");
     test_optical_results(system_name + "/solar", solar_results, update_results);
@@ -296,20 +296,20 @@ void test_deflection_results(std::string const & results_name,
     auto const & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
 
     compare_vectors(expected_max, deflection_results.deflection_max);
-	compare_vectors(expected_mean, deflection_results.deflection_mean);
-	compare_vectors(expected_panes_load, deflection_results.panes_load);
+    compare_vectors(expected_mean, deflection_results.deflection_mean);
+    compare_vectors(expected_panes_load, deflection_results.panes_load);
 
     auto const & expected_layer_temperatures =
       expected.value("layer_temperatures_system_u", std::vector<double>());
     auto temperatures = glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
-	compare_vectors(expected_layer_temperatures, temperatures);
+    compare_vectors(expected_layer_temperatures, temperatures);
 
     if(update)
     {
         expected["max_deflection_system_u"] = deflection_results.deflection_max;
         expected["mean_deflection_system_u"] = deflection_results.deflection_mean;
-		expected["panes_load_system_u"] = deflection_results.panes_load;
-		expected["layer_temperatures_system_u"] = temperatures;
+        expected["panes_load_system_u"] = deflection_results.panes_load;
+        expected["layer_temperatures_system_u"] = temperatures;
         update_expected_results(results_name, expected);
     }
 }
@@ -378,10 +378,10 @@ void test_thermal_results(std::string const & results_name,
       expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
       expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
-	compare_vectors(solid_layer_effective_conductivities_u,
-              expected_solid_layer_effective_conductivities_u);
-	compare_vectors(solid_layer_effective_conductivities_shgc,
-              expected_solid_layer_effective_conductivities_shgc);
+    compare_vectors(solid_layer_effective_conductivities_u,
+                    expected_solid_layer_effective_conductivities_u);
+    compare_vectors(solid_layer_effective_conductivities_shgc,
+                    expected_solid_layer_effective_conductivities_shgc);
 
     auto gap_layer_effective_conductivities_u =
       glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
@@ -392,9 +392,10 @@ void test_thermal_results(std::string const & results_name,
       expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_gap_layer_effective_conductivities_shgc =
       expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
-	compare_vectors(gap_layer_effective_conductivities_u, expected_gap_layer_effective_conductivities_u);
-	compare_vectors(gap_layer_effective_conductivities_shgc,
-              expected_gap_layer_effective_conductivities_shgc);
+    compare_vectors(gap_layer_effective_conductivities_u,
+                    expected_gap_layer_effective_conductivities_u);
+    compare_vectors(gap_layer_effective_conductivities_shgc,
+                    expected_gap_layer_effective_conductivities_shgc);
 
     auto layer_temperatures_u =
       glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
@@ -405,8 +406,8 @@ void test_thermal_results(std::string const & results_name,
       expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
       expected.value("layer_temperatures_shgc", std::vector<double>());
-	compare_vectors(layer_temperatures_u, expected_layer_temperatures_u);
-	compare_vectors(layer_temperatures_shgc, expected_layer_temperatures_shgc);
+    compare_vectors(layer_temperatures_u, expected_layer_temperatures_u);
+    compare_vectors(layer_temperatures_shgc, expected_layer_temperatures_shgc);
 
 
     if(update)
@@ -426,4 +427,43 @@ void test_thermal_results(std::string const & results_name,
         expected["layer_temperatures_shgc"] = layer_temperatures_shgc;
         update_expected_results(results_name, expected);
     }
+}
+
+void test_optical_results(std::string const & system_name,
+                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                          bool update)
+{
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_all_optical_results(system_name + "/condensed_spectrum", glazing_system, update);
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_all_optical_results(system_name + "/full_spectrum", glazing_system, update);
+}
+
+void test_thermal_results(std::string const & system_name,
+                          std::string const & results_name,
+                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                          bool update)
+{
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_thermal_results(
+      system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_thermal_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);
+}
+void test_deflection_results(std::string const & system_name,
+                             std::string const & results_name,
+                             std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                             bool update)
+{
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_deflection_results(
+      system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_deflection_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);
 }

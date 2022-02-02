@@ -61,8 +61,14 @@ protected:
 
 TEST_F(TestNFRC1022011SA1, Test_Thermal)
 {
-	test_thermal_results("NFRC_102_2011_SA1_XML_same_solar_and_visible/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("NFRC_102_2011_SA1_XML_same_solar_and_visible/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results("NFRC_102_2011_SA1_XML_same_solar_and_visible",
+                         "thermal_U_Environment",
+                         glazing_system_u,
+                         update_results);
+    test_thermal_results("NFRC_102_2011_SA1_XML_same_solar_and_visible",
+                         "thermal_SHGC_Environment",
+                         glazing_system_shgc,
+                         update_results);
 }
 
 TEST_F(TestNFRC1022011SA1, Test_Optical)

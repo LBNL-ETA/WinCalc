@@ -52,8 +52,8 @@ protected:
         standard_path /= "W5_NFRC_2003.std";
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
-		auto bsdf_hemisphere =
-			SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
+        auto bsdf_hemisphere =
+          SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
@@ -64,25 +64,33 @@ protected:
 
 TEST_F(TestIGSDB14684NFRC102, Test_Thermal)
 {
-	test_thermal_results("IGSDB_14684_NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
-	test_thermal_results("IGSDB_14684_NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "IGSDB_14684_NFRC_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results(
+      "IGSDB_14684_NFRC_102", "thermal_U_Environment", glazing_system_u, update_results);
 }
 
 TEST_F(TestIGSDB14684NFRC102, Test_Optical)
 {
-	test_optical_results("IGSDB_14684_NFRC_102", glazing_system_u, update_results);
+    test_optical_results("IGSDB_14684_NFRC_102", glazing_system_u, update_results);
 }
 
 TEST_F(TestIGSDB14684NFRC102, Test_Thermal_Flipped_shade)
 {
-	glazing_system_u->flip_layer(0, true);
-	glazing_system_shgc->flip_layer(0, true);
-	test_thermal_results("IGSDB_14684_NFRC_102_Flipped_shade/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("IGSDB_14684_NFRC_102_Flipped_shade/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    glazing_system_u->flip_layer(0, true);
+    glazing_system_shgc->flip_layer(0, true);
+    test_thermal_results("IGSDB_14684_NFRC_102_Flipped_shade",
+                         "thermal_U_Environment",
+                         glazing_system_u,
+                         update_results);
+    test_thermal_results("IGSDB_14684_NFRC_102_Flipped_shade",
+                         "thermal_SHGC_Environment",
+                         glazing_system_shgc,
+                         update_results);
 }
 
 TEST_F(TestIGSDB14684NFRC102, Test_Optical_Flipped_shade)
 {
-	glazing_system_shgc->flip_layer(0, true);
-	test_optical_results("IGSDB_14684_NFRC_102_Flipped_shade", glazing_system_u, update_results);
+    glazing_system_shgc->flip_layer(0, true);
+    test_optical_results("IGSDB_14684_NFRC_102_Flipped_shade", glazing_system_u, update_results);
 }

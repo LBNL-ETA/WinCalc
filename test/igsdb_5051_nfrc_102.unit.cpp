@@ -61,25 +61,33 @@ protected:
 
 TEST_F(TestIGSDB5051NFRC102, Test_Thermal)
 {
-	test_thermal_results("IGSDB_5051_NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("IGSDB_5051_NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results(
+      "IGSDB_5051_NFRC_102", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "IGSDB_5051_NFRC_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestIGSDB5051NFRC102, Test_Optical)
 {
-	test_optical_results("IGSDB_5051_NFRC_102", glazing_system_u, update_results);
+    test_optical_results("IGSDB_5051_NFRC_102", glazing_system_u, update_results);
 }
 
 TEST_F(TestIGSDB5051NFRC102, Test_Thermal_Flipped_LowE)
 {
-	glazing_system_u->flip_layer(0, true);
-	glazing_system_shgc->flip_layer(0, true);
-	test_thermal_results("IGSDB_5051_NFRC_102_Flipped_LowE/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("IGSDB_5051_NFRC_102_Flipped_LowE/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    glazing_system_u->flip_layer(0, true);
+    glazing_system_shgc->flip_layer(0, true);
+    test_thermal_results("IGSDB_5051_NFRC_102_Flipped_LowE",
+                         "thermal_U_Environment",
+                         glazing_system_u,
+                         update_results);
+    test_thermal_results("IGSDB_5051_NFRC_102_Flipped_LowE",
+                         "thermal_SHGC_Environment",
+                         glazing_system_shgc,
+                         update_results);
 }
 
 TEST_F(TestIGSDB5051NFRC102, Test_Optical_Flipped_LowE)
 {
-	glazing_system_shgc->flip_layer(0, true);
-	test_optical_results("IGSDB_5051_NFRC_102_Flipped_LowE", glazing_system_u, update_results);
+    glazing_system_shgc->flip_layer(0, true);
+    test_optical_results("IGSDB_5051_NFRC_102_Flipped_LowE", glazing_system_u, update_results);
 }
