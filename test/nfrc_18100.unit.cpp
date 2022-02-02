@@ -49,9 +49,9 @@ protected:
 
 TEST_F(TestCGDB18100, Test_Thermal)
 {
-    test_thermal_results("CGDB_18100/thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("CGDB_18100", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "CGDB_18100/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "CGDB_18100", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestCGDB18100, Test_Optical)

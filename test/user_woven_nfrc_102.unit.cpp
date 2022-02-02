@@ -64,18 +64,26 @@ protected:
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, converted_products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
-        glazing_system_shgc = std::make_shared<Glazing_System>(
-          standard, converted_products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
+        glazing_system_shgc = std::make_shared<Glazing_System>(standard,
+                                                               converted_products,
+                                                               gaps,
+                                                               1.0,
+                                                               1.0,
+                                                               90,
+                                                               nfrc_shgc_environments(),
+                                                               bsdf_hemisphere);
     }
 };
 
 TEST_F(TestUserWovenNFRC102, Test_Thermal)
 {
-	test_thermal_results("User_Woven_NFRC_102/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("User_Woven_NFRC_102/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results(
+      "User_Woven_NFRC_102", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "User_Woven_NFRC_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestUserWovenNFRC102, Test_Optical)
 {
-	test_optical_results("User_Woven_NFRC_102", glazing_system_u, update_results);
+    test_optical_results("User_Woven_NFRC_102", glazing_system_u, update_results);
 }

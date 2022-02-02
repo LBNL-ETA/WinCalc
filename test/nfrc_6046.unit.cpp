@@ -47,8 +47,9 @@ protected:
 
 TEST_F(TestNFRC6046, Test_Thermal)
 {
-	test_thermal_results("NFRC_6046/thermal_U_Environment", glazing_system_u, update_results);
-	test_thermal_results("NFRC_6046/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results("NFRC_6046", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "NFRC_6046", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestNFRC6046, Test_Optical)

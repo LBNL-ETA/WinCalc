@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.2898191555267528,
+                    "direct": 0.3430478117167448
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.34464803318534987,
+                    "direct": 0.36021104378250846
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.1370696390340504,
+                    "direct": 0.13248495589658438
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.01022165501477591,
+                    "direct": 0.0028274994647368556
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.44318037683369776,
+                "direct_diffuse": 0.32426803858874387,
+                "direct_direct": 0.0839712008371781,
+                "direct_hemispherical": 0.408239239425922
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.12993082860549882,
+                "direct_diffuse": 0.11356786734673344,
+                "direct_direct": 0.0026601256140152477,
+                "direct_hemispherical": 0.11622799296074869
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.5780080125136374,
+                "direct_diffuse": 0.5995320376836758,
+                "direct_direct": 0.0150269514371872,
+                "direct_hemispherical": 0.614558989120863
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.06712229928624021,
+                "direct_diffuse": 0.021789730511648897,
+                "direct_direct": 0.0006127371202430504,
+                "direct_hemispherical": 0.022402467631891947
+            }
+        }
+    }
+}

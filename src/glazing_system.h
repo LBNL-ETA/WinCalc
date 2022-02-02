@@ -74,7 +74,7 @@ namespace wincalc
 
         void enable_deflection(bool model);
         void set_deflection_properties(double temperature_initial, double pressure_initial);
-		void set_applied_loads(std::vector<double> const& loads);
+        void set_applied_loads(std::vector<double> const & loads);
         Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
                                                       double theta = 0,
                                                       double phi = 0);
@@ -113,7 +113,12 @@ namespace wincalc
         void set_width(double width);
         void set_height(double height);
         void set_tilt(double tilt);
-		void flip_layer(size_t layer_index, bool flipped);
+        void flip_layer(size_t layer_index, bool flipped);
+        void set_spectral_data_wavelength_range(Spectal_Data_Wavelength_Range_Method const & type =
+                                                  Spectal_Data_Wavelength_Range_Method::FULL,
+                                                int number_visible_bands = 5,
+                                                int number_solar_bands = 10);
+
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
@@ -143,6 +148,7 @@ namespace wincalc
         double last_phi = 0;
         void reset_system();
         void reset_igu();
+        void sort_spectral_data();
 
         window_standards::Optical_Standard_Method get_method(std::string const & method_name) const;
     };

@@ -52,9 +52,9 @@ protected:
 TEST_F(TestNFRC102AsBSDF, Test_Thermal)
 {
     test_thermal_results(
-      "NFRC_102_BSDF/thermal_U_Environment", glazing_system_u, update_results);
+      "NFRC_102_BSDF", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "NFRC_102_BSDF/thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "NFRC_102_BSDF", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(TestNFRC102AsBSDF, Test_Optical)

@@ -13,7 +13,14 @@ namespace wincalc
                                                                double phi) const
     {
         auto method = get_method(method_name);
-        return calc_all(get_optical_layers(product_data), method, theta, phi, bsdf_hemisphere);
+        return calc_all(get_optical_layers(product_data),
+                        method,
+                        theta,
+                        phi,
+                        bsdf_hemisphere,
+                        spectral_data_wavelength_range_method,
+                        number_visible_bands,
+                        number_solar_bands);
     }
 
     WCE_Color_Results Glazing_System::color(double theta,
@@ -31,7 +38,10 @@ namespace wincalc
                           tristim_z,
                           theta,
                           phi,
-                          bsdf_hemisphere);
+                          bsdf_hemisphere,
+                          spectral_data_wavelength_range_method,
+                          number_visible_bands,
+                          number_solar_bands);
     }
 
     void Glazing_System::reset_igu()
@@ -102,8 +112,15 @@ namespace wincalc
 
     double Glazing_System::shgc(double theta, double phi)
     {
-        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
-          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+        auto optical_results =
+          optical_solar_results_needed_for_thermal_calcs(product_data,
+                                                         optical_standard(),
+                                                         theta,
+                                                         phi,
+                                                         bsdf_hemisphere,
+                                                         spectral_data_wavelength_range_method,
+                                                         number_visible_bands,
+                                                         number_solar_bands);
 
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
@@ -119,8 +136,15 @@ namespace wincalc
                                                            double theta,
                                                            double phi)
     {
-        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
-          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+        auto optical_results =
+          optical_solar_results_needed_for_thermal_calcs(product_data,
+                                                         optical_standard(),
+                                                         theta,
+                                                         phi,
+                                                         bsdf_hemisphere,
+                                                         spectral_data_wavelength_range_method,
+                                                         number_visible_bands,
+                                                         number_solar_bands);
 
         // Don't do deflection updates if theta and phi are unchanged.  If this check is not
         // present then the CSystem m_solved value will get set to false causing the deflection
@@ -209,8 +233,15 @@ namespace wincalc
     }
     double Glazing_System::relative_heat_gain(double theta, double phi)
     {
-        auto optical_results = optical_solar_results_needed_for_thermal_calcs(
-          product_data, optical_standard(), theta, phi, bsdf_hemisphere);
+        auto optical_results =
+          optical_solar_results_needed_for_thermal_calcs(product_data,
+                                                         optical_standard(),
+                                                         theta,
+                                                         phi,
+                                                         bsdf_hemisphere,
+                                                         spectral_data_wavelength_range_method,
+                                                         number_visible_bands,
+                                                         number_solar_bands);
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
         return system.relativeHeatGain(optical_results.total_solar_transmittance);
@@ -237,6 +268,24 @@ namespace wincalc
         return product_data;
     }
 
+    void Glazing_System::sort_spectral_data()
+    {
+        for(auto & product : product_data)
+        {
+            auto nband_optical_data = std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(
+              product.optical_data->optical_data());
+            if(nband_optical_data)
+            {
+                auto & measurements = nband_optical_data->wavelength_data;
+                std::sort(measurements.begin(),
+                          measurements.end(),
+                          [](OpticsParser::WLData const & a, OpticsParser::WLData const & b) {
+                              return a.wavelength < b.wavelength;
+                          });
+            }
+        }
+    }
+
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
       std::vector<Product_Data_Optical_Thermal> const & product_data,
@@ -260,7 +309,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+        sort_spectral_data();
+    }
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
@@ -285,7 +336,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+        sort_spectral_data();
+    }
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
       std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
@@ -337,7 +390,9 @@ namespace wincalc
         spectral_data_wavelength_range_method(spectral_data_wavelength_range_method),
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
-    {}
+    {
+        sort_spectral_data();
+    }
 
     Environments Glazing_System::environments() const
     {
@@ -383,6 +438,14 @@ namespace wincalc
         layer.optical_data->flipped = flipped;
         layer.thermal_data->flipped = flipped;
         reset_igu();
+    }
+
+    void Glazing_System::set_spectral_data_wavelength_range(
+      Spectal_Data_Wavelength_Range_Method const & type, int visible_bands, int solar_bands)
+    {
+        this->spectral_data_wavelength_range_method = type;
+        this->number_visible_bands = visible_bands;
+        this->number_solar_bands = solar_bands;
     }
 
     void Glazing_System::enable_deflection(bool enable)

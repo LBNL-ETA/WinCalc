@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.25191512894260915,
+                    "direct": 0.26131744785377886
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.3051518535352182,
+                    "direct": 0.28297996530383174
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.13527373606637416,
+                    "direct": 0.12858456567590165
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.004411971008846175,
+                    "direct": 0.009532249626048109
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.5697869216722742,
+                "direct_diffuse": 0.4249853161163482,
+                "direct_direct": 0.08764629275321674,
+                "direct_hemispherical": 0.5126316088695649
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.04302421331874744,
+                "direct_diffuse": 0.0034986141913722624,
+                "direct_direct": 0.09396776340938263,
+                "direct_hemispherical": 0.0974663776007549
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.647744375257581,
+                "direct_diffuse": 0.5922351433627994,
+                "direct_direct": 0.01579077393093437,
+                "direct_hemispherical": 0.6080259172937338
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.04269180019835105,
+                "direct_diffuse": 0.005507129491385654,
+                "direct_direct": 0.09395473828500145,
+                "direct_hemispherical": 0.0994618677763871
+            }
+        }
+    }
+}
