@@ -229,7 +229,8 @@ namespace wincalc
           double slat_curvature,
           int number_slats,
           SingleLayerOptics::DistributionMethod distribution_method =
-            SingleLayerOptics::DistributionMethod::DirectionalDiffuse);
+            SingleLayerOptics::DistributionMethod::DirectionalDiffuse,
+          bool is_horizontal = true);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
@@ -245,6 +246,7 @@ namespace wincalc
         double slat_curvature;
         int number_slats;
         SingleLayerOptics::DistributionMethod distribution_method;
+        bool is_horizontal;
     };
 
     struct Product_Data_Optical_Woven_Shade : Product_Data_Optical_With_Material

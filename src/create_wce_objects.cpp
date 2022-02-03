@@ -618,7 +618,8 @@ namespace wincalc
                                                                product_data->slat_tilt,
                                                                product_data->slat_curvature,
                                                                product_data->number_slats,
-                                                               product_data->distribution_method);
+                                                               product_data->distribution_method,
+                                                               product_data->is_horizontal);
         return layer;
     }
 
