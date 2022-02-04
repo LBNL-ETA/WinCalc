@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.28981915552675275,
+                    "direct": 0.3430478117167448
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.34464803318534976,
+                    "direct": 0.36021104378250846
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.13706963903405037,
+                    "direct": 0.13248495589658438
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.01022165501477591,
+                    "direct": 0.0028274994647368556
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.4431803768336978,
+                "direct_diffuse": 0.32426803858874387,
+                "direct_direct": 0.0839712008371781,
+                "direct_hemispherical": 0.408239239425922
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.12993082860549887,
+                "direct_diffuse": 0.11356786734673346,
+                "direct_direct": 0.0026601256140152477,
+                "direct_hemispherical": 0.1162279929607487
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.5780080125136378,
+                "direct_diffuse": 0.5995320376836758,
+                "direct_direct": 0.0150269514371872,
+                "direct_hemispherical": 0.614558989120863
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.06712229928624011,
+                "direct_diffuse": 0.02178973051164889,
+                "direct_direct": 0.0006127371202430504,
+                "direct_hemispherical": 0.02240246763189194
+            }
+        }
+    }
+}

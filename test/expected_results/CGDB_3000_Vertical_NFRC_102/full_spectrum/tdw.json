@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.3882357351336755,
+                    "direct": 0.4572485743818842
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.5010005614065651,
+                    "direct": 0.5236894709619931
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.08774318858333327,
+                    "direct": 0.08519323121513656
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.005597537039534684,
+                    "direct": 0.00047911545366506006
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.41212671525170275,
+                "direct_diffuse": 0.2765960087594202,
+                "direct_direct": 0.08951226897276392,
+                "direct_hemispherical": 0.36610827773218413
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.11189436103128753,
+                "direct_diffuse": 0.08936814190232074,
+                "direct_direct": 0.00208177476847484,
+                "direct_hemispherical": 0.09144991667079558
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.43127690222657844,
+                "direct_diffuse": 0.44725407558200686,
+                "direct_direct": 0.011209886261526587,
+                "direct_hemispherical": 0.45846396184353344
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.06212499932732353,
+                "direct_diffuse": 0.016897594470476306,
+                "direct_direct": 0.00046985727033176913,
+                "direct_hemispherical": 0.017367451740808074
+            }
+        }
+    }
+}

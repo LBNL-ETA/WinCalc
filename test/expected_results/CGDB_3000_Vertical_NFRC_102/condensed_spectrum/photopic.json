@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.26609800173518405,
+                    "direct": 0.31141707062328583
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.2808905515728218,
+                    "direct": 0.29303097694885144
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.030243806512722373,
+                    "direct": 0.029091491572113843
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.0023194924472284906,
+                    "direct": 0.0007333525619373859
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.545198037863281,
+                "direct_diffuse": 0.4204152682186099,
+                "direct_direct": 0.09406207774947756,
+                "direct_hemispherical": 0.5144773459680875
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.15846015388881393,
+                "direct_diffuse": 0.14170069695052703,
+                "direct_direct": 0.0033133948859857838,
+                "direct_hemispherical": 0.14501409183651282
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6370992646616698,
+                "direct_diffuse": 0.660520172499682,
+                "direct_direct": 0.0165532834445055,
+                "direct_hemispherical": 0.6770734559441874
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.07969069131828187,
+                "direct_diffuse": 0.028373405785038063,
+                "direct_direct": 0.0007888087599855061,
+                "direct_hemispherical": 0.02916221454502357
+            }
+        }
+    }
+}

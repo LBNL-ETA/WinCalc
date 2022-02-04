@@ -1,0 +1,62 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.42822940715124,
+                    "direct": 0.5018332348141659
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.509166945051004,
+                    "direct": 0.5318945254432214
+                }
+            }
+        },
+        "layer 1": {
+            "back": {
+                "absorptance": {
+                    "diffuse": 0.04445605691973883,
+                    "direct": 0.041243776776631186
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "diffuse": 0.003065673267003399,
+                    "direct": 0.00043845008204878975
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.4134192201311616,
+                "direct_diffuse": 0.27415080340214393,
+                "direct_direct": 0.09152852829636977,
+                "direct_hemispherical": 0.3656793316985137
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.11389531579785847,
+                "direct_diffuse": 0.08916526112058516,
+                "direct_direct": 0.002078395590104294,
+                "direct_hemispherical": 0.09124365671068946
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.42355049270132145,
+                "direct_diffuse": 0.4392220393528294,
+                "direct_direct": 0.011008376640460985,
+                "direct_hemispherical": 0.4502304159932904
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.06421688898067153,
+                "direct_diffuse": 0.016964977141265342,
+                "direct_direct": 0.0004716313401744828,
+                "direct_hemispherical": 0.017436608481439825
+            }
+        }
+    }
+}
