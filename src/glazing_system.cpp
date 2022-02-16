@@ -12,6 +12,29 @@ namespace wincalc
                                                                double theta,
                                                                double phi) const
     {
+        if(method_name == "THERMAL IR")
+        {
+            throw std::runtime_error(
+              "THERMAL IR results should not be calculated using the generic method for optical "
+              "calculations.  Valid results are only available for single layers via the "
+              "calc_thermal_ir function which should be used instead.  If results using the "
+              "generic calculations are absolutely required rename the THERMAL IR method in the "
+              "optical standard file but care should be taken in interpreting any results "
+              "calculated this way.");
+        }
+        std::vector<std::string> color_methods{
+          "COLOR_TRISTIMX", "COLOR_TRISTIMY", "COLOR_TRISTIMZ", "CRI_X", "CRI_Y", "CRI_Z"};
+        if(std::find(color_methods.begin(), color_methods.end(), method_name)
+           != color_methods.end())
+        {
+            throw std::runtime_error(
+              "Individual tristimulus color optical methods should not be calculated using the "
+              "generic method for optical calculations.  The color function which takes the X, Y "
+              "and Z optical methods should be used instead.  If results from individual tristulus "
+              "methods are absolutely required rename the tristimuls method in the optical "
+              "standard file but care should be taken in interpreting any results calculated this "
+              "way.");
+        }
         auto method = get_method(method_name);
         return calc_all(get_optical_layers(product_data),
                         method,
