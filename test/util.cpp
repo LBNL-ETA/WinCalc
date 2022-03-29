@@ -103,15 +103,30 @@ void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & res
     }
 }
 
+double get_possible_nan(nlohmann::json & expected, std::string const & field_name)
+{
+    if(expected.at(field_name).is_null())
+    {
+        return -std::nan("ind");
+    }
+    else
+    {
+        return expected.value(field_name, -1);
+    }
+}
+
 void test_wce_optical_result_simple(nlohmann::json & expected,
                                     wincalc::WCE_Optical_Result_Simple<double> const & results,
                                     bool update)
 {
-    EXPECT_NEAR(results.direct_direct, expected.value("direct_direct", -1.0), TEST_TOLARANCE);
-    EXPECT_NEAR(results.direct_diffuse, expected.value("direct_diffuse", -1.0), TEST_TOLARANCE);
+    EXPECT_NEAR(results.direct_direct, get_possible_nan(expected, "direct_direct"), TEST_TOLARANCE);
     EXPECT_NEAR(
-      results.direct_hemispherical, expected.value("direct_hemispherical", -1.0), TEST_TOLARANCE);
-    EXPECT_NEAR(results.diffuse_diffuse, expected.value("diffuse_diffuse", -1.0), TEST_TOLARANCE);
+      results.direct_diffuse, get_possible_nan(expected, "direct_diffuse"), TEST_TOLARANCE);
+    EXPECT_NEAR(results.direct_hemispherical,
+                get_possible_nan(expected, "direct_hemispherical"),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(
+      results.diffuse_diffuse, get_possible_nan(expected, "diffuse_diffuse"), TEST_TOLARANCE);
     if(update)
     {
         expected["direct_direct"] = results.direct_direct;
@@ -167,8 +182,8 @@ void test_wce_absorptances(nlohmann::json & expected,
                            wincalc::WCE_Optical_Result_Absorptance<double> const & results,
                            bool update)
 {
-    auto expected_direct = expected.value("direct", -1.0);
-    auto expected_diffuse = expected.value("diffuse", -1.0);
+    auto expected_direct = get_possible_nan(expected, "direct");
+    auto expected_diffuse = get_possible_nan(expected, "diffuse");
     EXPECT_NEAR(results.direct, expected_direct, TEST_TOLARANCE);
     EXPECT_NEAR(results.diffuse, expected_diffuse, TEST_TOLARANCE);
     if(update)
@@ -273,10 +288,10 @@ void test_all_optical_results(std::string const & system_name,
     test_optical_results(system_name + "/tdw", tdw_results, update_results);
 
     auto tkr_results = glazing_system->optical_method_results("TKR");
-    test_optical_results(system_name + "/tkr", tdw_results, update_results);
+    test_optical_results(system_name + "/tkr", tkr_results, update_results);
 
     auto tuv_results = glazing_system->optical_method_results("TUV");
-    test_optical_results(system_name + "/tuv", tdw_results, update_results);
+    test_optical_results(system_name + "/tuv", tuv_results, update_results);
 
     auto color_results = glazing_system->color();
     test_optical_results(system_name + "/color", color_results, update_results);

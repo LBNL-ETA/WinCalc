@@ -3,14 +3,14 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.6195235124191356,
-                    "direct": 0.6439151736194082
+                    "diffuse": null,
+                    "direct": null
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.6195235124191356,
-                    "direct": 0.6439151736194082
+                    "diffuse": null,
+                    "direct": null
                 }
             }
         }
@@ -18,30 +18,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.10784977814038764,
+                "diffuse_diffuse": null,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.05768740657902875,
-                "direct_hemispherical": 0.05768740657902875
+                "direct_direct": null,
+                "direct_hemispherical": null
             },
             "transmittance": {
-                "diffuse_diffuse": 0.20087116328354251,
+                "diffuse_diffuse": null,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.22971842597102465,
-                "direct_hemispherical": 0.22971842597102465
+                "direct_direct": null,
+                "direct_hemispherical": null
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.19448620134321418,
+                "diffuse_diffuse": null,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.15024617644485566,
-                "direct_hemispherical": 0.15024617644485566
+                "direct_direct": null,
+                "direct_hemispherical": null
             },
             "transmittance": {
-                "diffuse_diffuse": 0.20087116328354251,
+                "diffuse_diffuse": null,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.22971842597102465,
-                "direct_hemispherical": 0.22971842597102465
+                "direct_direct": null,
+                "direct_hemispherical": null
             }
         }
     }

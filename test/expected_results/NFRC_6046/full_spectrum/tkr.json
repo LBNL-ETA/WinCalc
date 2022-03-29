@@ -3,14 +3,14 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.20312264925611834,
-                    "direct": 0.2080573009516063
+                    "diffuse": 0.2629084500980207,
+                    "direct": 0.2742980199895203
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.20312264925611834,
-                    "direct": 0.2080573009516063
+                    "diffuse": 0.2629084500980207,
+                    "direct": 0.2742980199895203
                 }
             }
         }
@@ -18,30 +18,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.18032504130534477,
+                "diffuse_diffuse": 0.269956510998279,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.11999639709151914,
-                "direct_hemispherical": 0.11999639709151914
+                "direct_direct": 0.21743429797707187,
+                "direct_hemispherical": 0.21743429797707187
             },
             "transmittance": {
-                "diffuse_diffuse": 0.5224673211571503,
+                "diffuse_diffuse": 0.29851080072723074,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.5781976789546324,
-                "direct_hemispherical": 0.5781976789546324
+                "direct_direct": 0.3303522443109101,
+                "direct_hemispherical": 0.3303522443109101
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.1423186835969221,
+                "diffuse_diffuse": 0.1490591549091994,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.07867988484307524,
-                "direct_hemispherical": 0.07867988484307524
+                "direct_direct": 0.08600741587539706,
+                "direct_hemispherical": 0.08600741587539706
             },
             "transmittance": {
-                "diffuse_diffuse": 0.5224673211571503,
+                "diffuse_diffuse": 0.29851080072723074,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.5781976789546324,
-                "direct_hemispherical": 0.5781976789546324
+                "direct_direct": 0.3303522443109101,
+                "direct_hemispherical": 0.3303522443109101
             }
         }
     }
