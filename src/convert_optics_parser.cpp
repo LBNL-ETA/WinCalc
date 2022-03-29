@@ -55,6 +55,7 @@ namespace wincalc
           {"back", CoatedSide::BACK},
           {"both", CoatedSide::BOTH},
           {"neither", CoatedSide::NEITHER},
+		  {"na", CoatedSide::NEITHER},
         };
 
         auto itr = mappings.find(to_lower(coated_side));

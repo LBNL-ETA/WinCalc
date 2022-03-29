@@ -65,7 +65,13 @@ namespace wincalc
         material_type(material_type),
         wavelength_data(wavelength_data),
         coated_side(coated_side)
-    {}
+    {
+        std::sort(this->wavelength_data.begin(),
+                  this->wavelength_data.end(),
+                  [](OpticsParser::WLData const & v1, OpticsParser::WLData const & v2) {
+                      return v1.wavelength < v2.wavelength;
+                  });
+    }
 
     std::vector<double> Product_Data_N_Band_Optical::wavelengths() const
     {
@@ -112,7 +118,7 @@ namespace wincalc
 
     Product_Data_Optical_Perfectly_Diffuse::Product_Data_Optical_Perfectly_Diffuse(
       const std::shared_ptr<Product_Data_Optical> & material_data) :
-      Product_Data_Optical_With_Material(material_data)
+        Product_Data_Optical_With_Material(material_data)
     {
         permeability_factor = material_data->permeability_factor;
     }

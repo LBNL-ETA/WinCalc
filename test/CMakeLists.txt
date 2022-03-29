@@ -28,13 +28,14 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		nfrc_102.unit.cpp
+		pv_single_layer.unit.cpp
 		cgdb_3000_vertical_nfrc_102.unit.cpp
  		deflection_youngs_modulus.unit.cpp
 		igsdb_14684_nfrc_102.unit.cpp
 		igsdb_5051_nfrc_102.unit.cpp
 		deflection_triple_clear.unit.cpp
 		nfrc_20748.unit.cpp
-		nfrc_102.unit.cpp
 		nfrc_102_as_bsdf.unit.cpp 
 		WINDOW_issue_1216.unit.cpp
  		deflection.unit.cpp

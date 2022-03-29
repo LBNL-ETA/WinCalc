@@ -38,9 +38,9 @@ namespace wincalc
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
         SpectralAveraging::MeasuredRow converted(data.wavelength,
-                                                 data.directComponent.tf,
-                                                 data.directComponent.rf,
-                                                 data.directComponent.rb);
+                                                 data.directComponent.value().tf,
+                                                 data.directComponent.value().rf,
+                                                 data.directComponent.value().rb);
         return converted;
     }
 
@@ -51,7 +51,10 @@ namespace wincalc
 
         for(auto const & row : data)
         {
-            converted.push_back(convert(row));
+            if(row.directComponent.has_value())
+            {
+                converted.push_back(convert(row));
+            }
         }
         return converted;
     }
