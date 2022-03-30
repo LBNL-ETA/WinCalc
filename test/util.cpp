@@ -105,13 +105,28 @@ void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & res
 
 double get_possible_nan(nlohmann::json & expected, std::string const & field_name)
 {
-    if(expected.at(field_name).is_null())
+    if(expected.count(field_name) == 0 || expected.at(field_name).is_null())
     {
         return -std::nan("ind");
     }
     else
     {
-        return expected.value(field_name, -1);
+        return expected.value(field_name, -1.0);
+    }
+}
+
+void compare_possible_nan(double given,
+                          nlohmann::json & expected_json,
+                          std::string const & field_name)
+{
+    auto expected = get_possible_nan(expected_json, field_name);
+    if(!isnan(given) || !isnan(expected))
+    {
+        EXPECT_NEAR(given, expected, TEST_TOLARANCE);
+    }
+    else
+    {
+        // if both values are nan then the test passes and nothing needs to be checked
     }
 }
 
@@ -119,14 +134,11 @@ void test_wce_optical_result_simple(nlohmann::json & expected,
                                     wincalc::WCE_Optical_Result_Simple<double> const & results,
                                     bool update)
 {
-    EXPECT_NEAR(results.direct_direct, get_possible_nan(expected, "direct_direct"), TEST_TOLARANCE);
-    EXPECT_NEAR(
-      results.direct_diffuse, get_possible_nan(expected, "direct_diffuse"), TEST_TOLARANCE);
-    EXPECT_NEAR(results.direct_hemispherical,
-                get_possible_nan(expected, "direct_hemispherical"),
-                TEST_TOLARANCE);
-    EXPECT_NEAR(
-      results.diffuse_diffuse, get_possible_nan(expected, "diffuse_diffuse"), TEST_TOLARANCE);
+    compare_possible_nan(results.direct_direct, expected, "direct_direct");
+    compare_possible_nan(results.direct_diffuse, expected, "direct_diffuse");
+    compare_possible_nan(results.direct_hemispherical, expected, "direct_hemispherical");
+    compare_possible_nan(results.diffuse_diffuse, expected, "diffuse_diffuse");
+
     if(update)
     {
         expected["direct_direct"] = results.direct_direct;
@@ -182,10 +194,8 @@ void test_wce_absorptances(nlohmann::json & expected,
                            wincalc::WCE_Optical_Result_Absorptance<double> const & results,
                            bool update)
 {
-    auto expected_direct = get_possible_nan(expected, "direct");
-    auto expected_diffuse = get_possible_nan(expected, "diffuse");
-    EXPECT_NEAR(results.direct, expected_direct, TEST_TOLARANCE);
-    EXPECT_NEAR(results.diffuse, expected_diffuse, TEST_TOLARANCE);
+    compare_possible_nan(results.direct, expected, "direct");
+	compare_possible_nan(results.diffuse, expected, "diffuse");
     if(update)
     {
         expected["direct"] = results.direct;
