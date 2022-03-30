@@ -368,12 +368,12 @@ namespace wincalc
                                     phi);
 
         std::vector<double> layer_absorptances =
-          layers->getAbsorptanceLayers(lambda_range.min_lambda,
-                                       lambda_range.max_lambda,
-                                       FenestrationCommon::Side::Front,
-                                       FenestrationCommon::ScatteringSimple::Direct,
-                                       theta,
-                                       phi);
+          layers->getAbsorptanceLayersHeat(lambda_range.min_lambda,
+                                           lambda_range.max_lambda,
+                                           FenestrationCommon::Side::Front,
+                                           FenestrationCommon::ScatteringSimple::Direct,
+                                           theta,
+                                           phi);
 
         return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }

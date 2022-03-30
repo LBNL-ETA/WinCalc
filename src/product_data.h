@@ -68,6 +68,7 @@ namespace wincalc
         std::optional<double> emissivity_back;
         double permeability_factor;
         virtual std::vector<double> wavelengths() const = 0;
+		std::optional<OpticsParser::PVPowerProperties> pv_power_properties;
     };
 
 
