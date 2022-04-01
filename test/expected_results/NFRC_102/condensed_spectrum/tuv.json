@@ -3,14 +3,22 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": null,
-                    "direct": null
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": null,
+                    "heat_direct": null,
+                    "total_diffuse": null,
+                    "total_direct": null
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": null,
-                    "direct": null
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": null,
+                    "heat_direct": null,
+                    "total_diffuse": null,
+                    "total_direct": null
                 }
             }
         }

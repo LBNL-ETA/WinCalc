@@ -19,8 +19,12 @@ namespace wincalc
     template<typename T>
     struct WCE_Optical_Result_Absorptance
     {
-        T direct;
-        T diffuse;
+		T total_direct;
+		T total_diffuse;
+        T heat_direct;
+        T heat_diffuse;
+		T electricity_direct;
+		T electricity_diffuse;
         // T hemispherical;
     };
 

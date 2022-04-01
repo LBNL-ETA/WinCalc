@@ -3,14 +3,22 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.6327884163934027,
-                    "direct": 0.6708784532857739
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.5295488389465741,
+                    "heat_direct": 0.5605761377366382,
+                    "total_diffuse": 0.5295488389465741,
+                    "total_direct": 0.5605761377366382
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.6327884163934027,
-                    "direct": 0.6708784532857739
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.6327884163934027,
+                    "heat_direct": 0.6708784532857739,
+                    "total_diffuse": 0.6327884163934027,
+                    "total_direct": 0.6708784532857739
                 }
             }
         }

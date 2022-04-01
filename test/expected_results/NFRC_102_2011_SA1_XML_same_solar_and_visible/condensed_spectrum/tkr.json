@@ -3,28 +3,44 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.00011055325671438583,
-                    "direct": 0.008626885381333218
+                    "electricity_diffuse": 0.00011055325671438583,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.00011055325671438583,
+                    "heat_direct": 0.008626885381333218,
+                    "total_diffuse": 0.00011055325671438583,
+                    "total_direct": 0.008626885381333218
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.3109641805346472,
-                    "direct": 0.3240166188362334
+                    "electricity_diffuse": 0.3109641805346472,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.3109641805346472,
+                    "heat_direct": 0.3240166188362334,
+                    "total_diffuse": 0.3109641805346472,
+                    "total_direct": 0.3240166188362334
                 }
             }
         },
         "layer 1": {
             "back": {
                 "absorptance": {
-                    "diffuse": 0.9994613273658913,
-                    "direct": 0.9579653534357551
+                    "electricity_diffuse": 0.9994613273658913,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.9994613273658913,
+                    "heat_direct": 0.9579653534357551,
+                    "total_diffuse": 0.9994613273658913,
+                    "total_direct": 0.9579653534357551
                 }
             },
             "front": {
                 "absorptance": {
-                    "diffuse": 0.5455390891470822,
-                    "direct": 0.571936535979104
+                    "electricity_diffuse": 0.5455390891470822,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.5455390891470822,
+                    "heat_direct": 0.571936535979104,
+                    "total_diffuse": 0.5455390891470822,
+                    "total_direct": 0.571936535979104
                 }
             }
         }

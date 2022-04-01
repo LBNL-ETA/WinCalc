@@ -194,12 +194,20 @@ void test_wce_absorptances(nlohmann::json & expected,
                            wincalc::WCE_Optical_Result_Absorptance<double> const & results,
                            bool update)
 {
-    compare_possible_nan(results.direct, expected, "direct");
-	compare_possible_nan(results.diffuse, expected, "diffuse");
+	compare_possible_nan(results.total_direct, expected, "total_direct");
+	compare_possible_nan(results.total_diffuse, expected, "total_diffuse");
+    compare_possible_nan(results.heat_direct, expected, "heat_direct");
+	compare_possible_nan(results.heat_diffuse, expected, "heat_diffuse");
+	compare_possible_nan(results.electricity_direct, expected, "electricity_direct");
+	compare_possible_nan(results.electricity_diffuse, expected, "electricity_diffuse");
     if(update)
     {
-        expected["direct"] = results.direct;
-        expected["diffuse"] = results.diffuse;
+		expected["total_direct"] = results.total_direct;
+		expected["total_diffuse"] = results.total_diffuse;
+        expected["heat_direct"] = results.heat_direct;
+        expected["heat_diffuse"] = results.heat_diffuse;
+		expected["electricity_direct"] = results.electricity_direct;
+		expected["electricity_diffuse"] = results.electricity_diffuse;
     }
 }
 
@@ -458,9 +466,11 @@ void test_optical_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+#if 1
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(system_name + "/condensed_spectrum", glazing_system, update);
+#endif
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update);
@@ -471,10 +481,12 @@ void test_thermal_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+#if 1
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_thermal_results(
       system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+#endif
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_thermal_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);
@@ -484,10 +496,12 @@ void test_deflection_results(std::string const & system_name,
                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                              bool update)
 {
+#if 1
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(
       system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+#endif
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);

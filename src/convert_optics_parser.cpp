@@ -284,6 +284,8 @@ namespace wincalc
       convert_to_solid_layer(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
         auto optical = convert_optical(product);
+		// PV power properties are properties of the layer and so far do not require any conversion
+		optical->pv_power_properties = product->pvPowerProperties;
         auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(product));
         return wincalc::Product_Data_Optical_Thermal{optical, thermal};
     }
