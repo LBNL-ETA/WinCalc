@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.04576331182436012,
+                    "heat_direct": 0.043420379944974004,
+                    "total_diffuse": 0.04576331182436012,
+                    "total_direct": 0.043420379944974004
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.004997384918395449,
+                    "electricity_direct": 0.0050487539419384634,
+                    "heat_diffuse": 0.040844913634694995,
+                    "heat_direct": 0.038450178791756044,
+                    "total_diffuse": 0.045842298553090424,
+                    "total_direct": 0.043498932733694505
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.13587074925002177,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.07683055062720932,
+                "direct_hemispherical": 0.07683055062720932
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.6545854787901785,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.7260208099632376,
+                "direct_hemispherical": 0.7260208099632376
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.1354650484739604,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.07643318255167346,
+                "direct_hemispherical": 0.07643318255167346
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.6545854787901785,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.7260208099632376,
+                "direct_hemispherical": 0.7260208099632376
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.03355166142465648,
+                    "heat_direct": 0.030448304997599682,
+                    "total_diffuse": 0.03355166142465648,
+                    "total_direct": 0.030448304997599682
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.03367000247379195,
+                    "heat_direct": 0.030565463920778482,
+                    "total_diffuse": 0.03367000247379195,
+                    "total_direct": 0.030565463920778482
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.14781035043362725,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.08399032261685312,
+                "direct_hemispherical": 0.08399032261685312
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.8050389079367114,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.8823283131748633,
+                "direct_hemispherical": 0.8823283131748633
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.14779986132208542,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.08397993828257246,
+                "direct_hemispherical": 0.08397993828257246
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.8050389079367114,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.8823283131748633,
+                "direct_hemispherical": 0.8823283131748633
+            }
+        }
+    }
+}

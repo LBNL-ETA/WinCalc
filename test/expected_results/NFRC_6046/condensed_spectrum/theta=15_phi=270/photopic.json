@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.20595485048711687,
+                    "heat_direct": 0.21390009034879434,
+                    "total_diffuse": 0.20595485048711687,
+                    "total_direct": 0.21390009034879434
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.21144600639598807,
+                    "heat_direct": 0.21987133890592253,
+                    "total_diffuse": 0.21144600639598807,
+                    "total_direct": 0.21987133890592253
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.1137603787244919,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.047340466279807,
+                "direct_hemispherical": 0.047340466279807
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.7174483373500488,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.7918060426576167,
+                "direct_hemispherical": 0.7918060426576167
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.12651548293838805,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.06121075131582316,
+                "direct_hemispherical": 0.06121075131582316
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.7174483373500488,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.7918060426576167,
+                "direct_hemispherical": 0.7918060426576167
+            }
+        }
+    }
+}

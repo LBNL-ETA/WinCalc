@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.0408840161359844,
+                    "heat_direct": 0.03718200466811347,
+                    "total_diffuse": 0.0408840161359844,
+                    "total_direct": 0.03718200466811347
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.00934144584719916,
+                    "electricity_direct": 0.009437468258817723,
+                    "heat_diffuse": 0.031707769598355286,
+                    "heat_direct": 0.027908085518778908,
+                    "total_diffuse": 0.041049215445554454,
+                    "total_direct": 0.03734555377759663
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.14740083745396587,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.08247780977028268,
+                "direct_hemispherical": 0.08247780977028268
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.8219825352927558,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.8990420571721714,
+                "direct_hemispherical": 0.8990420571721714
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.14739872313913527,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.08247571657565247,
+                "direct_hemispherical": 0.08247571657565247
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.8219825352927558,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.8990420571721714,
+                "direct_hemispherical": 0.8990420571721714
+            }
+        }
+    }
+}
