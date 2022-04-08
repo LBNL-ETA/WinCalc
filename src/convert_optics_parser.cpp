@@ -4,26 +4,6 @@
 
 namespace wincalc
 {
-#if 0
-    wincalc::Wavelength_Data convert(OpticsParser::WLData const & wl_data)
-    {
-        return wincalc::Wavelength_Data{wl_data.wavelength,
-                                        wl_data.directComponent.tf,
-                                        wl_data.directComponent.tf,
-                                        wl_data.directComponent.rf,
-                                        wl_data.directComponent.rb};
-    }
-
-    std::vector<wincalc::Wavelength_Data> convert(std::vector<OpticsParser::WLData> const & wl_data)
-    {
-        std::vector<wincalc::Wavelength_Data> converted_data;
-        for(auto wl_row : wl_data)
-        {
-            converted_data.push_back(convert(wl_row));
-        }
-        return converted_data;
-    }
-#endif
 
     FenestrationCommon::MaterialType convert_material_type(std::string const & material_type)
     {

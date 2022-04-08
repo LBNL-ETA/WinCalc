@@ -28,32 +28,32 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
-		pv_single_layer.unit.cpp		
+		pv_single_layer.unit.cpp
 		nfrc_102.unit.cpp
-		cgdb_3000_vertical_nfrc_102.unit.cpp
- 		deflection_youngs_modulus.unit.cpp
-		igsdb_14684_nfrc_102.unit.cpp
-		igsdb_5051_nfrc_102.unit.cpp
-		deflection_triple_clear.unit.cpp
-		nfrc_20748.unit.cpp
-		nfrc_102_as_bsdf.unit.cpp 
+		nfrc_20748.unit.cpp 
+		nfrc_6046.unit.cpp
+ 		nfrc_9023.unit.cpp
+ 		nfrc_9223.unit.cpp
+ 		nfrc_18100.unit.cpp
+ 		nfrc_21467.unit.cpp
 		WINDOW_issue_1216.unit.cpp
+ 		igsdb_14025.cpp
+ 		igsdb_14684_nfrc_102.unit.cpp
+		igsdb_5051_nfrc_102.unit.cpp
+		cgdb_3000_vertical_nfrc_102.unit.cpp
+ 		cgdb_3000_nfrc_102.unit.cpp
+ 		cgdb_18000_nfrc_102.unit.cpp
+ 		user_woven_nfrc_102.unit.cpp
+		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
+ 		nfrc_102_as_bsdf.unit.cpp
+		deflection_triple_clear.unit.cpp
+		deflection_youngs_modulus.unit.cpp
  		deflection.unit.cpp
  		deflection_environment.unit.cpp
  		deflection_load.unit.cpp
  		deflection_tilt.unit.cpp
  		deflection_density.unit.cpp
- 		igsdb_14025.cpp
  		cma.unit.cpp
- 		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
- 		nfrc_6046.unit.cpp
- 		nfrc_9023.unit.cpp
- 		nfrc_9223.unit.cpp
- 		nfrc_18100.unit.cpp
- 		nfrc_21467.unit.cpp
- 		cgdb_3000_nfrc_102.unit.cpp
- 		cgdb_18000_nfrc_102.unit.cpp
- 		user_woven_nfrc_102.unit.cpp
 		main.cpp
 		paths.h 
 		util.h

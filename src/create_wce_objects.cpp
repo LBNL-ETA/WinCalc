@@ -480,16 +480,6 @@ namespace wincalc
                                                                  lambda_range.max_lambda,
                                                                  integration_rule,
                                                                  method.integration_rule.k);
-#if 0
-        std::shared_ptr<SingleLayerOptics::CMaterial> material =
-          SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
-                                                     product_data.thickness_meters,
-                                                     product_data.material_type,
-                                                     lambda_range.min_lambda,
-                                                     lambda_range.max_lambda,
-                                                     integration_rule,
-                                                     method.integration_rule.k);
-#endif
 
         material->setBandWavelengths(wavelength_set);
         return material;
@@ -632,29 +622,12 @@ namespace wincalc
                       product_data))
             {
                 throw std::runtime_error("Dual band BSDF material does not yet support PV");
-#if 0
-				material = create_material(
-					*std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
-						product_data),
-					method,
-					type,
-					number_visible_bands,
-					number_solar_bands);
-#endif
+
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
                       product_data))
             {
                 throw std::runtime_error("Dual band hemispheric material does not yet support PV");
-#if 0
-				material = create_material(
-					*std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
-						product_data),
-					method,
-					type,
-					number_visible_bands,
-					number_solar_bands);
-#endif
             }
             else
             {

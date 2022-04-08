@@ -56,19 +56,6 @@ namespace wincalc
         std::vector<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> layer_results;
     };
 
-#if 0
-    template<typename T>
-    struct WCE_Optical_Result_By_Side
-    {
-        WCE_Optical_Result_Simple<T> tf;
-        WCE_Optical_Result_Simple<T> tb;
-        WCE_Optical_Result_Simple<T> rf;
-        WCE_Optical_Result_Simple<T> rb;
-        WCE_Optical_Result_Absorptance<T> absorptances_front;
-        WCE_Optical_Result_Absorptance<T> absorptances_back;
-    };
-#endif
-
     using WCE_Optical_Results = WCE_Optical_Results_Template<double>;
 
     struct Trichromatic
