@@ -38,19 +38,18 @@ protected:
 
         std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
         auto layer_1 = OpticsParser::parseJSONFile(layer_1_path.string());
-        // products.push_back(layer_1);
+        products.push_back(layer_1);
 
         auto bsdf = OpticsParser::parseBSDFXMLFile(bsdf_path.string());
-        // products.push_back(bsdf);
+        products.push_back(bsdf);
 
         auto layer_3 = OpticsParser::parseJSONFile(layer_3_path.string());
         products.push_back(layer_3);
-        // products.push_back(layer_3);
+        products.push_back(layer_3);
 
         Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-        // std::vector<Engine_Gap_Info> gaps{air_gap, air_gap};
-        std::vector<Engine_Gap_Info> gaps;
-
+        std::vector<Engine_Gap_Info> gaps{air_gap, air_gap};
+        
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";
         standard_path /= "W5_NFRC_2003.std";
