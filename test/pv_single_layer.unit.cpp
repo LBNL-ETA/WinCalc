@@ -26,7 +26,7 @@ protected:
     {
         std::filesystem::path clear_3_path(test_dir);
         clear_3_path /= "products";
-        clear_3_path /= "igsdb_v2_pv.json";
+        clear_3_path /= "generic_pv.json";
 
         std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
         OpticsParser::Parser parser;
