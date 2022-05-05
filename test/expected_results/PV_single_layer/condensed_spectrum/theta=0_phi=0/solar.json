@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": -0.0,
+                    "heat_diffuse": 0.8060127281651372,
+                    "heat_direct": 0.7821680078160723,
+                    "total_diffuse": 0.8060127281651372,
+                    "total_direct": 0.7821680078160723
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.10274889376907274,
+                    "electricity_direct": 0.10380506823416416,
+                    "heat_diffuse": 0.6970065516598378,
+                    "heat_direct": 0.6739049414748753,
+                    "total_diffuse": 0.7997554454289104,
+                    "total_direct": 0.7777100097090395
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.04986883606731966,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.017831992183928034,
+                "direct_hemispherical": 0.017831992183928034
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.13394384137578513,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.20000000000000004,
+                "direct_hemispherical": 0.20000000000000004
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.05612611880354641,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.02228999029096076,
+                "direct_hemispherical": 0.02228999029096076
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.13394384137578513,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.20000000000000004,
+                "direct_hemispherical": 0.20000000000000004
+            }
+        }
+    }
+}

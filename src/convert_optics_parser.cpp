@@ -4,26 +4,6 @@
 
 namespace wincalc
 {
-#if 0
-    wincalc::Wavelength_Data convert(OpticsParser::WLData const & wl_data)
-    {
-        return wincalc::Wavelength_Data{wl_data.wavelength,
-                                        wl_data.directComponent.tf,
-                                        wl_data.directComponent.tf,
-                                        wl_data.directComponent.rf,
-                                        wl_data.directComponent.rb};
-    }
-
-    std::vector<wincalc::Wavelength_Data> convert(std::vector<OpticsParser::WLData> const & wl_data)
-    {
-        std::vector<wincalc::Wavelength_Data> converted_data;
-        for(auto wl_row : wl_data)
-        {
-            converted_data.push_back(convert(wl_row));
-        }
-        return converted_data;
-    }
-#endif
 
     FenestrationCommon::MaterialType convert_material_type(std::string const & material_type)
     {
@@ -55,6 +35,7 @@ namespace wincalc
           {"back", CoatedSide::BACK},
           {"both", CoatedSide::BOTH},
           {"neither", CoatedSide::NEITHER},
+		  {"na", CoatedSide::NEITHER},
         };
 
         auto itr = mappings.find(to_lower(coated_side));
@@ -283,6 +264,8 @@ namespace wincalc
       convert_to_solid_layer(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
         auto optical = convert_optical(product);
+		// PV power properties are properties of the layer and so far do not require any conversion
+		optical->pv_power_properties = product->pvPowerProperties;
         auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(product));
         return wincalc::Product_Data_Optical_Thermal{optical, thermal};
     }

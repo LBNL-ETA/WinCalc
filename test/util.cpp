@@ -2,6 +2,7 @@
 #include <math.h>
 #include <fstream>
 #include <filesystem>
+#include <string>
 #include <gtest/gtest.h>
 #include "paths.h"
 
@@ -103,15 +104,42 @@ void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & res
     }
 }
 
+double get_possible_nan(nlohmann::json & expected, std::string const & field_name)
+{
+    if(expected.count(field_name) == 0 || expected.at(field_name).is_null())
+    {
+        return -std::nan("ind");
+    }
+    else
+    {
+        return expected.value(field_name, -1.0);
+    }
+}
+
+void compare_possible_nan(double given,
+                          nlohmann::json & expected_json,
+                          std::string const & field_name)
+{
+    auto expected = get_possible_nan(expected_json, field_name);
+    if(!isnan(given) || !isnan(expected))
+    {
+        EXPECT_NEAR(given, expected, TEST_TOLARANCE);
+    }
+    else
+    {
+        // if both values are nan then the test passes and nothing needs to be checked
+    }
+}
+
 void test_wce_optical_result_simple(nlohmann::json & expected,
                                     wincalc::WCE_Optical_Result_Simple<double> const & results,
                                     bool update)
 {
-    EXPECT_NEAR(results.direct_direct, expected.value("direct_direct", -1.0), TEST_TOLARANCE);
-    EXPECT_NEAR(results.direct_diffuse, expected.value("direct_diffuse", -1.0), TEST_TOLARANCE);
-    EXPECT_NEAR(
-      results.direct_hemispherical, expected.value("direct_hemispherical", -1.0), TEST_TOLARANCE);
-    EXPECT_NEAR(results.diffuse_diffuse, expected.value("diffuse_diffuse", -1.0), TEST_TOLARANCE);
+    compare_possible_nan(results.direct_direct, expected, "direct_direct");
+    compare_possible_nan(results.direct_diffuse, expected, "direct_diffuse");
+    compare_possible_nan(results.direct_hemispherical, expected, "direct_hemispherical");
+    compare_possible_nan(results.diffuse_diffuse, expected, "diffuse_diffuse");
+
     if(update)
     {
         expected["direct_direct"] = results.direct_direct;
@@ -167,14 +195,20 @@ void test_wce_absorptances(nlohmann::json & expected,
                            wincalc::WCE_Optical_Result_Absorptance<double> const & results,
                            bool update)
 {
-    auto expected_direct = expected.value("direct", -1.0);
-    auto expected_diffuse = expected.value("diffuse", -1.0);
-    EXPECT_NEAR(results.direct, expected_direct, TEST_TOLARANCE);
-    EXPECT_NEAR(results.diffuse, expected_diffuse, TEST_TOLARANCE);
+    compare_possible_nan(results.total_direct, expected, "total_direct");
+    compare_possible_nan(results.total_diffuse, expected, "total_diffuse");
+    compare_possible_nan(results.heat_direct, expected, "heat_direct");
+    compare_possible_nan(results.heat_diffuse, expected, "heat_diffuse");
+    compare_possible_nan(results.electricity_direct, expected, "electricity_direct");
+    compare_possible_nan(results.electricity_diffuse, expected, "electricity_diffuse");
     if(update)
     {
-        expected["direct"] = results.direct;
-        expected["diffuse"] = results.diffuse;
+        expected["total_direct"] = results.total_direct;
+        expected["total_diffuse"] = results.total_diffuse;
+        expected["heat_direct"] = results.heat_direct;
+        expected["heat_diffuse"] = results.heat_diffuse;
+        expected["electricity_direct"] = results.electricity_direct;
+        expected["electricity_diffuse"] = results.electricity_diffuse;
     }
 }
 
@@ -257,39 +291,67 @@ void test_optical_results(std::string const & test_name,
     }
 }
 
+bool isint(double v)
+{
+    double intpart;
+    return modf(v, &intpart) == 0.0;
+}
+
+std::string get_angle_txt(double theta, double phi)
+{
+    std::stringstream s;
+    s << std::fixed;
+    if(isint(theta) && isint(phi))
+    {
+        s << std::setprecision(0);
+    }
+    else
+    {
+        s << std::setprecision(3);
+    }
+    s << "theta=" << theta << "_phi=" << phi;
+    return s.str();
+}
+
 void test_all_optical_results(std::string const & system_name,
                               std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                              bool update)
+                              bool update,
+                              double theta = 0,
+                              double phi = 0)
 {
-    auto solar_results = glazing_system->optical_method_results("SOLAR");
-    test_optical_results(system_name + "/solar", solar_results, update_results);
+    std::string angle = "/" + get_angle_txt(theta, phi);
 
-    auto photopic_results = glazing_system->optical_method_results("PHOTOPIC");
-    test_optical_results(system_name + "/photopic", photopic_results, update_results);
+	auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
+    test_optical_results(system_name + angle + "/solar", solar_results, update_results);
+
+    auto photopic_results = glazing_system->optical_method_results("PHOTOPIC", theta, phi);
+    test_optical_results(system_name + angle + "/photopic", photopic_results, update_results);
 
     EXPECT_THROW(glazing_system->optical_method_results("SPF"), std::runtime_error);
 
-    auto tdw_results = glazing_system->optical_method_results("TDW");
-    test_optical_results(system_name + "/tdw", tdw_results, update_results);
+    auto tdw_results = glazing_system->optical_method_results("TDW", theta, phi);
+    test_optical_results(system_name + angle + "/tdw", tdw_results, update_results);
 
-    auto tkr_results = glazing_system->optical_method_results("TKR");
-    test_optical_results(system_name + "/tkr", tdw_results, update_results);
+    auto tkr_results = glazing_system->optical_method_results("TKR", theta, phi);
+    test_optical_results(system_name + angle + "/tkr", tkr_results, update_results);
 
-    auto tuv_results = glazing_system->optical_method_results("TUV");
-    test_optical_results(system_name + "/tuv", tdw_results, update_results);
+    auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
+    test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
 
-    auto color_results = glazing_system->color();
-    test_optical_results(system_name + "/color", color_results, update_results);
+    auto color_results = glazing_system->color(theta, phi);
+    test_optical_results(system_name + angle + "/color", color_results, update_results);
 }
 
 void test_deflection_results(std::string const & results_name,
                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                             bool update)
+                             bool update,
+                             double theta = 0,
+                             double phi = 0)
 {
     auto expected = parse_expected_results(results_name);
 
     auto deflection_results =
-      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
+      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue, theta, phi);
 
     auto const & expected_max = expected.value("max_deflection_system_u", std::vector<double>());
     auto const & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
@@ -301,7 +363,8 @@ void test_deflection_results(std::string const & results_name,
 
     auto const & expected_layer_temperatures =
       expected.value("layer_temperatures_system_u", std::vector<double>());
-    auto temperatures = glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
+    auto temperatures =
+      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
     compare_vectors(expected_layer_temperatures, temperatures);
 
     if(update)
@@ -316,16 +379,18 @@ void test_deflection_results(std::string const & results_name,
 
 void test_thermal_results(std::string const & results_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update)
+                          bool update,
+                          double theta = 0,
+                          double phi = 0)
 {
     auto expected = parse_expected_results(results_name);
-    auto u = glazing_system->u();
-    auto shgc = glazing_system->shgc();
+    auto u = glazing_system->u(theta, phi);
+    auto shgc = glazing_system->shgc(theta, phi);
     auto system_effective_conductivity_u =
-      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::Uvalue);
+      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto system_effective_conductivity_shgc =
-      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC);
-    auto relative_heat_gain = glazing_system->relative_heat_gain();
+      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC, theta, phi);
+    auto relative_heat_gain = glazing_system->relative_heat_gain(theta, phi);
 
     auto expected_u = expected.value("U", -1.0);
     EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
@@ -370,9 +435,11 @@ void test_thermal_results(std::string const & results_name,
         }
     }
     auto solid_layer_effective_conductivities_u =
-      glazing_system->solid_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
+      glazing_system->solid_layers_effective_conductivities(
+        Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto solid_layer_effective_conductivities_shgc =
-      glazing_system->solid_layers_effective_conductivities(Tarcog::ISO15099::System::SHGC);
+      glazing_system->solid_layers_effective_conductivities(
+        Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_solid_layer_effective_conductivities_u =
       expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
@@ -383,10 +450,11 @@ void test_thermal_results(std::string const & results_name,
     compare_vectors(solid_layer_effective_conductivities_shgc,
                     expected_solid_layer_effective_conductivities_shgc);
 
-    auto gap_layer_effective_conductivities_u =
-      glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::Uvalue);
+    auto gap_layer_effective_conductivities_u = glazing_system->gap_layers_effective_conductivities(
+      Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto gap_layer_effective_conductivities_shgc =
-      glazing_system->gap_layers_effective_conductivities(Tarcog::ISO15099::System::SHGC);
+      glazing_system->gap_layers_effective_conductivities(
+        Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_gap_layer_effective_conductivities_u =
       expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
@@ -398,9 +466,9 @@ void test_thermal_results(std::string const & results_name,
                     expected_gap_layer_effective_conductivities_shgc);
 
     auto layer_temperatures_u =
-      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue);
+      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto layer_temperatures_shgc =
-      glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC);
+      glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_layer_temperatures_u =
       expected.value("layer_temperatures_u", std::vector<double>());
@@ -433,12 +501,29 @@ void test_optical_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+    double theta = 0;
+    double phi = 0;
+
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
-    test_all_optical_results(system_name + "/condensed_spectrum", glazing_system, update);
+    test_all_optical_results(
+      system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+
+	glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
+
+    theta = 15;
+    phi = 270;
+
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_all_optical_results(
+      system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
-    test_all_optical_results(system_name + "/full_spectrum", glazing_system, update);
+    test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
 }
 
 void test_thermal_results(std::string const & system_name,
@@ -446,24 +531,84 @@ void test_thermal_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+    double theta = 0;
+    double phi = 0;
+    std::string angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
-    test_thermal_results(
-      system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+    test_thermal_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
+                         glazing_system,
+                         update,
+                         theta,
+                         phi);
+
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
-    test_thermal_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);
+    test_thermal_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
+                         glazing_system,
+                         update,
+                         theta,
+                         phi);
+
+    theta = 15;
+    phi = 270;
+    angle = get_angle_txt(theta, phi);
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_thermal_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
+                         glazing_system,
+                         update,
+                         theta,
+                         phi);
+
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_thermal_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
+                         glazing_system,
+                         update,
+                         theta,
+                         phi);
 }
 void test_deflection_results(std::string const & system_name,
                              std::string const & results_name,
                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                              bool update)
 {
+    double theta = 0;
+    double phi = 0;
+    std::string angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
-    test_deflection_results(
-      system_name + "/condensed_spectrum/" + results_name, glazing_system, update);
+    test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
+                            glazing_system,
+                            update,
+                            theta,
+                            phi);
+
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
-    test_deflection_results(system_name + "/full_spectrum/" + results_name, glazing_system, update);
+    test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
+                            glazing_system,
+                            update,
+                            theta,
+                            phi);
+
+    theta = 15;
+    phi = 270;
+    angle = get_angle_txt(theta, phi);
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
+                            glazing_system,
+                            update,
+                            theta,
+                            phi);
+
+    glazing_system->set_spectral_data_wavelength_range(
+      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
+                            glazing_system,
+                            update,
+                            theta,
+                            phi);
 }

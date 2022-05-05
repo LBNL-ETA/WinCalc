@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.19254031692189347,
+                    "heat_direct": 0.19973511434867194,
+                    "total_diffuse": 0.19254031692189347,
+                    "total_direct": 0.19973511434867194
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.36046959152540087,
+                    "heat_direct": 0.3791526235572254,
+                    "total_diffuse": 0.36046959152540087,
+                    "total_direct": 0.3791526235572254
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.7178018856228998,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.709367038491966,
+                "direct_hemispherical": 0.709367038491966
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.07948320306344847,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.09089784715936203,
+                "direct_hemispherical": 0.09089784715936203
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.5498726110193924,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.5299495292834127,
+                "direct_hemispherical": 0.5299495292834127
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.07948320306344847,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.09089784715936203,
+                "direct_hemispherical": 0.09089784715936203
+            }
+        }
+    }
+}

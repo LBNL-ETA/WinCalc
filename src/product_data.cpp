@@ -65,7 +65,13 @@ namespace wincalc
         material_type(material_type),
         wavelength_data(wavelength_data),
         coated_side(coated_side)
-    {}
+    {
+        std::sort(this->wavelength_data.begin(),
+                  this->wavelength_data.end(),
+                  [](OpticsParser::WLData const & v1, OpticsParser::WLData const & v2) {
+                      return v1.wavelength < v2.wavelength;
+                  });
+    }
 
     std::vector<double> Product_Data_N_Band_Optical::wavelengths() const
     {
@@ -112,7 +118,7 @@ namespace wincalc
 
     Product_Data_Optical_Perfectly_Diffuse::Product_Data_Optical_Perfectly_Diffuse(
       const std::shared_ptr<Product_Data_Optical> & material_data) :
-      Product_Data_Optical_With_Material(material_data)
+        Product_Data_Optical_With_Material(material_data)
     {
         permeability_factor = material_data->permeability_factor;
     }
@@ -135,29 +141,6 @@ namespace wincalc
         distribution_method(distribution_method),
         is_horizontal(is_horizontal)
     {}
-
-#if 0
-    std::shared_ptr<SingleLayerOptics::CBSDFLayer> Product_Data_Optical_Venetian::create_layer(
-      window_standards::Optical_Standard_Method const & method,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands) const
-    {
-
-        auto material =
-          create_material(optical_data, method, type, number_visible_bands, number_solar_bands);
-        auto layer = SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer(material,
-                                                                          bsdf_hemisphere,
-                                                                          slat_width,
-                                                                          slat_spacing,
-                                                                          slat_tilt,
-                                                                          slat_curvature,
-                                                                          number_slats);
-        return layer;
-    }
-
-#endif
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical_Venetian::effective_thermal_values(double width,

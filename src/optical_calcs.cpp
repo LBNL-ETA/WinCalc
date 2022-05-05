@@ -86,14 +86,14 @@ namespace wincalc
                              double phi = 0)
     {
         std::vector<WCE_Optical_Result_Absorptance<double>> absorptances;
-        auto direct_absorptances =
+        auto direct_absorptances_total =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
                                        side_choice,
                                        FenestrationCommon::ScatteringSimple::Direct,
                                        theta,
                                        phi);
-        auto diffuse_absorptances =
+        auto diffuse_absorptances_total =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
                                        side_choice,
@@ -101,10 +101,46 @@ namespace wincalc
                                        theta,
                                        phi);
 
-        for(size_t i = 0; i < direct_absorptances.size(); ++i)
+        auto direct_absorptances_heat =
+          layers->getAbsorptanceLayersHeat(min_lambda,
+                                           max_lambda,
+                                           side_choice,
+                                           FenestrationCommon::ScatteringSimple::Direct,
+                                           theta,
+                                           phi);
+        auto diffuse_absorptances_heat =
+          layers->getAbsorptanceLayersHeat(min_lambda,
+                                           max_lambda,
+                                           side_choice,
+                                           FenestrationCommon::ScatteringSimple::Diffuse,
+                                           theta,
+                                           phi);
+
+        auto direct_absorptances_electricity =
+          layers->getAbsorptanceLayersElectricity(min_lambda,
+                                                  max_lambda,
+                                                  side_choice,
+                                                  FenestrationCommon::ScatteringSimple::Direct,
+                                                  theta,
+                                                  phi);
+
+        auto diffuse_absorptances_electricity =
+          layers->getAbsorptanceLayersElectricity(min_lambda,
+                                                  max_lambda,
+                                                  side_choice,
+                                                  FenestrationCommon::ScatteringSimple::Diffuse,
+                                                  theta,
+                                                  phi);
+
+        for(size_t i = 0; i < diffuse_absorptances_heat.size(); ++i)
         {
-            absorptances.push_back(WCE_Optical_Result_Absorptance<double>{direct_absorptances[i],
-                                                                          diffuse_absorptances[i]});
+            absorptances.push_back(
+              WCE_Optical_Result_Absorptance<double>{direct_absorptances_total[i],
+                                                     diffuse_absorptances_total[i],
+                                                     direct_absorptances_heat[i],
+                                                     diffuse_absorptances_heat[i],
+                                                     direct_absorptances_electricity[i],
+                                                     diffuse_absorptances_electricity[i]});
         }
 
         return absorptances;
@@ -164,22 +200,16 @@ namespace wincalc
                 .getMatrix();
         }
 
-#if 0
-        optical_results.absorptances_front = get_layer_absorptances(
-          system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
-        optical_results.absorptances_back = get_layer_absorptances(
-          system, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
-#endif
-        auto absorptancs_front = get_layer_absorptances(
+        auto absorptances_front = get_layer_absorptances(
           system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
         auto absorptances_back = get_layer_absorptances(
           system, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
 
-        for(size_t i = 0; i < absorptancs_front.size(); ++i)
+        for(size_t i = 0; i < absorptances_front.size(); ++i)
         {
             optical_results.layer_results.push_back(
               WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<double>>{
-                WCE_Optical_Result_Absorptance<double>{absorptancs_front[i]},
+                WCE_Optical_Result_Absorptance<double>{absorptances_front[i]},
                 WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}});
         }
 
@@ -368,12 +398,12 @@ namespace wincalc
                                     phi);
 
         std::vector<double> layer_absorptances =
-          layers->getAbsorptanceLayers(lambda_range.min_lambda,
-                                       lambda_range.max_lambda,
-                                       FenestrationCommon::Side::Front,
-                                       FenestrationCommon::ScatteringSimple::Direct,
-                                       theta,
-                                       phi);
+          layers->getAbsorptanceLayersHeat(lambda_range.min_lambda,
+                                           lambda_range.max_lambda,
+                                           FenestrationCommon::Side::Front,
+                                           FenestrationCommon::ScatteringSimple::Direct,
+                                           theta,
+                                           phi);
 
         return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }

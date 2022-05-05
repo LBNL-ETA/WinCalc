@@ -38,9 +38,9 @@ namespace wincalc
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
         SpectralAveraging::MeasuredRow converted(data.wavelength,
-                                                 data.directComponent.tf,
-                                                 data.directComponent.rf,
-                                                 data.directComponent.rb);
+                                                 data.directComponent.value().tf,
+                                                 data.directComponent.value().rf,
+                                                 data.directComponent.value().rb);
         return converted;
     }
 
@@ -51,7 +51,10 @@ namespace wincalc
 
         for(auto const & row : data)
         {
-            converted.push_back(convert(row));
+            if(row.directComponent.has_value())
+            {
+                converted.push_back(convert(row));
+            }
         }
         return converted;
     }
@@ -382,6 +385,31 @@ namespace wincalc
         return Lambda_Range{min_wavelength, max_wavelength};
     }
 
+    FenestrationCommon::CSeries get_eqef(std::vector<OpticsParser::WLData> const & data)
+    {
+        FenestrationCommon::CSeries res;
+        for(auto & row : data)
+        {
+            if(row.pvComponent.has_value())
+            {
+                res.addProperty(row.wavelength, row.pvComponent.value().eqef);
+            }
+        }
+		return res;
+    }
+
+    FenestrationCommon::CSeries get_eqeb(std::vector<OpticsParser::WLData> const & data)
+    {
+        FenestrationCommon::CSeries res;
+        for(auto & row : data)
+        {
+            if(row.pvComponent.has_value())
+            {
+                res.addProperty(row.wavelength, row.pvComponent.value().eqeb);
+            }
+        }
+		return res;
+    }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(wincalc::Product_Data_N_Band_Optical const & product_data,
@@ -412,6 +440,46 @@ namespace wincalc
                                                      lambda_range.max_lambda,
                                                      integration_rule,
                                                      method.integration_rule.k);
+
+        material->setBandWavelengths(wavelength_set);
+        return material;
+    }
+
+    std::shared_ptr<SingleLayerOptics::CMaterial>
+      create_pv_material(wincalc::Product_Data_N_Band_Optical const & product_data,
+                         window_standards::Optical_Standard_Method const & method,
+                         Spectal_Data_Wavelength_Range_Method const & type,
+                         int number_visible_bands,
+                         int number_solar_bands)
+    {
+        auto wavelength_set = wavelength_range_factory(
+          product_data.wavelengths(), method, type, number_visible_bands, number_solar_bands);
+
+        std::shared_ptr<std::vector<double>> converted_wavelengths =
+          std::make_shared<std::vector<double>>(wavelength_set);
+
+        auto integration_rule = convert(method.integration_rule.type);
+
+        auto measured_wavelength_data = convert(product_data.wavelength_data);
+        auto spectral_sample_data =
+          SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
+
+        auto lambda_range = get_lambda_range({product_data.wavelengths()}, method);
+
+        auto eqef = get_eqef(product_data.wavelength_data);
+        auto eqeb = get_eqeb(product_data.wavelength_data);
+
+        auto pvSample = std::make_shared<SpectralAveraging::PhotovoltaicSampleData>(
+          measured_wavelength_data, eqef, eqeb);
+
+        auto material =
+          SingleLayerOptics::Material::nBandPhotovoltaicMaterial(pvSample,
+                                                                 product_data.thickness_meters,
+                                                                 product_data.material_type,
+                                                                 lambda_range.min_lambda,
+                                                                 lambda_range.max_lambda,
+                                                                 integration_rule,
+                                                                 method.integration_rule.k);
 
         material->setBandWavelengths(wavelength_set);
         return material;
@@ -513,6 +581,120 @@ namespace wincalc
         return material;
     }
 
+    std::shared_ptr<SingleLayerOptics::CMaterial>
+      create_pv_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+                         window_standards::Optical_Standard_Method const & method,
+                         Spectal_Data_Wavelength_Range_Method const & type,
+                         int number_visible_bands,
+                         int number_solar_bands)
+    {
+        std::shared_ptr<SingleLayerOptics::CMaterial> material;
+        auto wavelengths = product_data->wavelengths();
+        double material_min_wavelength = wavelengths.front();
+        double material_max_wavelength = wavelengths.back();
+        auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
+        auto min_wavelength =
+          get_minimum_wavelength(method, material_min_wavelength, source_spectrum);
+        auto max_wavelength =
+          get_maximum_wavelength(method, material_max_wavelength, source_spectrum);
+        // Need to check max wavelength > min wavelength because the way methods are setup it is
+        // possible to have min wavelength > max wavelength based on definitions.
+        // e.g. the NFRC Thermal IR standard has min wavelength: 5 and max wavelength:
+        // wavelength set and wavelength set: Data.  So if the data only goes up to 2.5 then
+        // based on the definitions max wavelength = 5 and min wavelength = 2.5
+        if(max_wavelength > min_wavelength
+           && material_min_wavelength <= (min_wavelength + ConstantsData::wavelengthErrorTolerance)
+           && (material_max_wavelength + ConstantsData::wavelengthErrorTolerance) >= max_wavelength)
+        {
+            // has the required wavelength ranges to calculate from measured values, priortize
+            // this case
+
+            if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
+            {
+                material = create_pv_material(
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data),
+                  method,
+                  type,
+                  number_visible_bands,
+                  number_solar_bands);
+            }
+            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
+                      product_data))
+            {
+                throw std::runtime_error("Dual band BSDF material does not yet support PV");
+
+            }
+            else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
+                      product_data))
+            {
+                throw std::runtime_error("Dual band hemispheric material does not yet support PV");
+            }
+            else
+            {
+                throw std::runtime_error("Unsupported optical data format");
+            }
+        }
+        else
+        {
+            if(method.name == "THERMAL IR")
+            {
+#if 1
+                // Thermal IR is a special case where we calculate values even if the individual
+                // measured wavelength values does not extend into the wavelength range defined
+                // in the standard method.  To do the calculation in that case a single band
+                // material is created NOTE:  Since the method defines the max wavelength as the
+                // max measured value
+                // this will be less than the minimum wavelength as defined in the method.
+                // Since this is a single band material it doesn't matter what the max lambda
+                // is so long as it is greater than min lambda.  So define max_lambda =
+                // min_lambda + 1
+                double tf = product_data->ir_transmittance_front.value();
+                double tb = product_data->ir_transmittance_back.value();
+                double rf = 1.0 - tf - product_data->emissivity_front.value();
+                double rb = 1.0 - tb - product_data->emissivity_back.value();
+                material = SingleLayerOptics::Material::singleBandMaterial(
+                  tf, tb, rf, rb, FenestrationCommon::WavelengthRange::IR);
+#endif
+            }
+            else
+            {
+                std::stringstream msg;
+                msg << "Product without measured data for entire wavelength range in method: "
+                    << method.name;
+                throw std::runtime_error(msg.str());
+            }
+        }
+
+        return material;
+    }
+
+    SingleLayerOptics::PVPowerPropertiesTable
+      get_power_properties(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
+    {
+        // Currently there is only one temperature that power properties are available at
+        // so use that.  In the future if there are more values and interpolation is needed this
+        // will need to change.  But a lot more will need to change because that will introduce
+        // a temperature dependence into optical calculations.  And that means iterations between
+        // optical and thermal calculations to get results.
+        std::vector<SingleLayerOptics::PVPowerProperties> properties;
+
+        if(product_data->pv_power_properties.has_value())
+        {
+            auto default_power_table = product_data->pv_power_properties.value().begin();
+            for(auto & power_property : default_power_table->second)
+            {
+                properties.emplace_back(power_property.jsc, power_property.voc, power_property.ff);
+            }
+        }
+        SingleLayerOptics::PVPowerPropertiesTable table(properties);
+        return table;
+    }
+
+    bool is_pv(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data)
+    {
+		return product_data->pv_power_properties.has_value();
+    }
+
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                             window_standards::Optical_Standard_Method const & method,
@@ -520,12 +702,24 @@ namespace wincalc
                             int number_visible_bands,
                             int number_solar_bands)
     {
-        auto material =
-          create_material(product_data, method, type, number_visible_bands, number_solar_bands);
-        auto specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
+        std::shared_ptr<SingleLayerOptics::SpecularLayer> specular_layer;
+        if(is_pv(product_data))
+        {
+            auto material = create_pv_material(
+              product_data, method, type, number_visible_bands, number_solar_bands);
+            auto power_properties = get_power_properties(product_data);
+            specular_layer =
+              SingleLayerOptics::PhotovoltaicSpecularLayer::createLayer(material, power_properties);
+        }
+        else
+        {
+            auto material =
+              create_material(product_data, method, type, number_visible_bands, number_solar_bands);
+            specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
+        }
         specular_layer->Flipped(product_data->flipped);
         return specular_layer;
-    }   // namespace wincalc
+    }
 
 
     std::unique_ptr<MultiLayerOptics::CMultiPaneSpecular> create_multi_pane_specular(

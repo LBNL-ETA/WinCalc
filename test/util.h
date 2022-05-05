@@ -14,18 +14,6 @@ void test_optical_results(std::string const & test_name,
                           wincalc::WCE_Color_Results const & results,
                           bool update = false);
 
-#if 0
-void test_optical_results(std::string const & system_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update = false);
-void test_thermal_results(std::string const & results_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update = false);
-void test_deflection_results(std::string const & results_name,
-                             std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                             bool update);
-#endif
-
 void test_optical_results(std::string const & system_name,
 	std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
 	bool update = false);
