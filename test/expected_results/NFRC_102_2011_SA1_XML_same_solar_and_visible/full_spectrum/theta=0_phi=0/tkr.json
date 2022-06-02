@@ -3,17 +3,17 @@
         "layer 0": {
             "back": {
                 "absorptance": {
-                    "electricity_diffuse": 5.4777244793468835e-05,
+                    "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 5.4777244793468835e-05,
-                    "heat_direct": 0.004274473917664296,
-                    "total_diffuse": 5.4777244793468835e-05,
-                    "total_direct": 0.004274473917664296
+                    "heat_diffuse": 0.00010305314612962484,
+                    "heat_direct": 0.008041623614425562,
+                    "total_diffuse": 0.00010305314612962484,
+                    "total_direct": 0.008041623614425562
                 }
             },
             "front": {
                 "absorptance": {
-                    "electricity_diffuse": 0.20017534155817532,
+                    "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
                     "heat_diffuse": 0.20017534155817532,
                     "heat_direct": 0.19629937291183652,
@@ -25,22 +25,22 @@
         "layer 1": {
             "back": {
                 "absorptance": {
-                    "electricity_diffuse": 0.9995382637123634,
+                    "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.9995382637123634,
-                    "heat_direct": 0.9639689851911568,
-                    "total_diffuse": 0.9995382637123634,
-                    "total_direct": 0.9639689851911568
+                    "heat_diffuse": 0.9993930186140667,
+                    "heat_direct": 0.9526349652586161,
+                    "total_diffuse": 0.9993930186140667,
+                    "total_direct": 0.9526349652586161
                 }
             },
             "front": {
                 "absorptance": {
-                    "electricity_diffuse": 0.6517126913433153,
+                    "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.6517126913433153,
-                    "heat_direct": 0.6974282817983912,
-                    "total_diffuse": 0.6517126913433153,
-                    "total_direct": 0.6974282817983912
+                    "heat_diffuse": 0.6516165152874975,
+                    "heat_direct": 0.6899233033416082,
+                    "total_diffuse": 0.6516165152874975,
+                    "total_direct": 0.6899233033416082
                 }
             }
         }
@@ -48,16 +48,16 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 5.1004732331657984e-05,
+                "diffuse_diffuse": 5.179787347465934e-05,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.003980090617027812,
-                "direct_hemispherical": 0.003980090617027812
+                "direct_direct": 0.004041982396024151,
+                "direct_hemispherical": 0.004041982396024151
             },
             "transmittance": {
-                "diffuse_diffuse": 0.0003559543105113155,
+                "diffuse_diffuse": 0.00045213036632909203,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.02777645027415122,
-                "direct_hemispherical": 0.02777645027415122
+                "direct_direct": 0.0352814287309342,
+                "direct_hemispherical": 0.0352814287309342
             }
         },
         "front": {
@@ -68,10 +68,10 @@
                 "direct_hemispherical": 0.07849589501562107
             },
             "transmittance": {
-                "diffuse_diffuse": 0.0003559543105113156,
+                "diffuse_diffuse": 0.00045213036632909203,
                 "direct_diffuse": 0.0,
-                "direct_direct": 0.02777645027415123,
-                "direct_hemispherical": 0.02777645027415123
+                "direct_direct": 0.0352814287309342,
+                "direct_hemispherical": 0.0352814287309342
             }
         }
     }

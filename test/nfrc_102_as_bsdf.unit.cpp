@@ -49,6 +49,7 @@ protected:
     }
 };
 
+#if 0
 TEST_F(TestNFRC102AsBSDF, Test_Thermal)
 {
     test_thermal_results(
@@ -57,6 +58,7 @@ TEST_F(TestNFRC102AsBSDF, Test_Thermal)
       "NFRC_102_BSDF", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 
 }
+#endif
 
 TEST_F(TestNFRC102AsBSDF, Test_Optical)
 {
