@@ -515,7 +515,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                       window_standards::Optical_Standard_Method const & method,
-                      int number_of_layers,
+                      size_t number_of_layers,
                       Spectal_Data_Wavelength_Range_Method const & type,
                       int number_visible_bands,
                       int number_solar_bands)
@@ -726,7 +726,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                             window_standards::Optical_Standard_Method const & method,
-                            int number_of_layers,
+                            size_t number_of_layers,
                             Spectal_Data_Wavelength_Range_Method const & type,
                             int number_visible_bands,
                             int number_solar_bands)
@@ -783,7 +783,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_specular(
       std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -799,7 +799,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_perfectly_diffuse(
       std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -815,7 +815,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_preloaded_matrices(
       std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -831,7 +831,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_venetian(
       std::shared_ptr<wincalc::Product_Data_Optical_Venetian> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -859,7 +859,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_woven_shade(
       std::shared_ptr<wincalc::Product_Data_Optical_Woven_Shade> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -879,7 +879,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_perforated_screen(
       std::shared_ptr<wincalc::Product_Data_Optical_Perforated_Screen> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      int number_of_layers,
+      size_t number_of_layers,
       SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
@@ -941,7 +941,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CBSDFLayer>
       create_bsdf_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                         window_standards::Optical_Standard_Method const & method,
-                        int number_of_layers,
+                        size_t number_of_layers,
                         SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
                         Spectal_Data_Wavelength_Range_Method const & type,
                         int number_visible_bands,
