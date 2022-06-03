@@ -344,7 +344,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(wincalc::Product_Data_Dual_Band_Optical_BSDF const & product,
                       window_standards::Optical_Standard_Method const & optical_method,
-                      int number_layers,
+                      size_t number_of_layers,
                       Spectal_Data_Wavelength_Range_Method const & type,
                       int number_visible_bands,
                       int number_solar_bands)
@@ -352,7 +352,7 @@ namespace wincalc
 		auto wavelength_set = wavelength_range_factory(
 			product.wavelengths(), optical_method, type, number_visible_bands, number_solar_bands);
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
-        if(number_layers == 1 && to_lower(optical_method.name) == "solar")
+        if(number_of_layers == 1 && to_lower(optical_method.name) == "solar")
         {
             material = SingleLayerOptics::Material::singleBandBSDFMaterial(
               product.tf_solar,
@@ -362,7 +362,7 @@ namespace wincalc
               product.bsdf_hemisphere,
               FenestrationCommon::WavelengthRange::Solar);
         }
-        else if(number_layers == 1 && to_lower(optical_method.name) == "photopic")
+        else if(number_of_layers == 1 && to_lower(optical_method.name) == "photopic")
         {
             material = SingleLayerOptics::Material::singleBandBSDFMaterial(
               product.tf_visible,

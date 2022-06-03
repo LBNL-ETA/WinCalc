@@ -68,7 +68,7 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                       window_standards::Optical_Standard_Method const & method,
-                      int number_layers,
+                      size_t number_of_layers,
                       Spectal_Data_Wavelength_Range_Method const & type =
                         Spectal_Data_Wavelength_Range_Method::FULL,
                       int number_visible_bands = 5,
