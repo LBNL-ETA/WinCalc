@@ -28,6 +28,8 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		SEATEX_Midnight.unit.cpp
+		nfrc_102_as_bsdf.unit.cpp
 		pv_single_layer.unit.cpp
 		nfrc_102.unit.cpp
 		nfrc_20748.unit.cpp 
@@ -45,7 +47,6 @@ add_executable(${PROJECT_TEST_NAME}
  		cgdb_18000_nfrc_102.unit.cpp
  		user_woven_nfrc_102.unit.cpp
 		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
- 		nfrc_102_as_bsdf.unit.cpp
 		deflection_triple_clear.unit.cpp
 		deflection_youngs_modulus.unit.cpp
  		deflection.unit.cpp

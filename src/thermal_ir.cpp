@@ -10,7 +10,7 @@ wincalc::ThermalIRResults
     auto bsdf = SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
 
     auto bsdf_layer = create_bsdf_layer(
-      product_data.optical_data, method, bsdf, Spectal_Data_Wavelength_Range_Method::FULL);
+      product_data.optical_data, method, 1, bsdf, Spectal_Data_Wavelength_Range_Method::FULL);
     auto layer = SingleLayerOptics::CScatteringLayer(bsdf_layer);
     layer.setBlackBodySource(method.source_spectrum.t);
 
