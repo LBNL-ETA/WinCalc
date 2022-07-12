@@ -37,6 +37,10 @@ namespace wincalc
 
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
+        if(!data.directComponent.has_value())
+        {
+            throw std::runtime_error("Missing wavelength direct component");
+        }
         SpectralAveraging::MeasuredRow converted(data.wavelength,
                                                  data.directComponent.value().tf,
                                                  data.directComponent.value().rf,
@@ -349,8 +353,8 @@ namespace wincalc
                       int number_visible_bands,
                       int number_solar_bands)
     {
-		auto wavelength_set = wavelength_range_factory(
-			product.wavelengths(), optical_method, type, number_visible_bands, number_solar_bands);
+        auto wavelength_set = wavelength_range_factory(
+          product.wavelengths(), optical_method, type, number_visible_bands, number_solar_bands);
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
         if(number_of_layers == 1 && to_lower(optical_method.name) == "solar")
         {
@@ -386,7 +390,7 @@ namespace wincalc
                                                                 product.bsdf_hemisphere,
                                                                 0.49);   // TODO, replace 0.49 ratio
         }
-		material->setBandWavelengths(wavelength_set);
+        material->setBandWavelengths(wavelength_set);
         return material;
     }
 
@@ -591,8 +595,25 @@ namespace wincalc
                 // Since this is a single band material it doesn't matter what the max lambda
                 // is so long as it is greater than min lambda.  So define max_lambda =
                 // min_lambda + 1
+
+                if(!product_data->ir_transmittance_front.has_value())
+                {
+                    throw std::runtime_error("Missing IR transmittance front");
+                }
+                if(!product_data->ir_transmittance_back.has_value())
+                {
+                    throw std::runtime_error("Missing IR transmittance back");
+                }
                 double tf = product_data->ir_transmittance_front.value();
                 double tb = product_data->ir_transmittance_back.value();
+                if(!product_data->emissivity_front.has_value())
+                {
+                    throw std::runtime_error("Missing emissivity front");
+                }
+                if(!product_data->emissivity_back.has_value())
+                {
+                    throw std::runtime_error("Missing emissivity back");
+                }
                 double rf = 1.0 - tf - product_data->emissivity_front.value();
                 double rb = 1.0 - tb - product_data->emissivity_back.value();
                 material = SingleLayerOptics::Material::singleBandMaterial(
@@ -676,8 +697,24 @@ namespace wincalc
                 // Since this is a single band material it doesn't matter what the max lambda
                 // is so long as it is greater than min lambda.  So define max_lambda =
                 // min_lambda + 1
+                if(!product_data->ir_transmittance_front.has_value())
+                {
+                    throw std::runtime_error("Missing IR transmittance front");
+                }
+                if(!product_data->ir_transmittance_back.has_value())
+                {
+                    throw std::runtime_error("Missing IR transmittance back");
+                }
                 double tf = product_data->ir_transmittance_front.value();
                 double tb = product_data->ir_transmittance_back.value();
+                if(!product_data->emissivity_front.has_value())
+                {
+                    throw std::runtime_error("Missing emissivity front");
+                }
+                if(!product_data->emissivity_back.has_value())
+                {
+                    throw std::runtime_error("Missing emissivity back");
+                }
                 double rf = 1.0 - tf - product_data->emissivity_front.value();
                 double rb = 1.0 - tb - product_data->emissivity_back.value();
                 material = SingleLayerOptics::Material::singleBandMaterial(
@@ -1174,10 +1211,10 @@ namespace wincalc
 
         for(auto const & layer : layers)
         {
-			if(!layer.thermal_data->conductivity.has_value())
-			{
-				throw std::runtime_error("Missing conductivity");
-			}
+            if(!layer.thermal_data->conductivity.has_value())
+            {
+                throw std::runtime_error("Missing conductivity");
+            }
             auto ir_results = calc_thermal_ir(standard, layer);
 
             auto effective_thermal_values =
@@ -1197,7 +1234,10 @@ namespace wincalc
                                                 ir_results.emissivity_back_hemispheric,
                                                 ir_results.transmittance_back_diffuse_diffuse);
             tarcog_layer = Tarcog::ISO15099::Layers::updateMaterialData(
-              tarcog_layer, layer.thermal_data->density.value_or(Tarcog::MaterialConstants::GLASSDENSITY), layer.thermal_data->youngs_modulus.value_or(Tarcog::DeflectionConstants::YOUNGSMODULUS));
+              tarcog_layer,
+              layer.thermal_data->density.value_or(Tarcog::MaterialConstants::GLASSDENSITY),
+              layer.thermal_data->youngs_modulus.value_or(
+                Tarcog::DeflectionConstants::YOUNGSMODULUS));
             tarcog_solid_layers.push_back(tarcog_layer);
         }
 

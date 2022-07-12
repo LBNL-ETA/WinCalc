@@ -66,17 +66,15 @@ wincalc::ThermalIRResults
     auto ir_layer = SingleLayerOptics::CScatteringLayerIR(layer);
     auto emissivity_front_hemispheric =
       ir_layer.emissivity(FenestrationCommon::Side::Front, polynomial_front);
-	auto emissivity_back_hemispheric =
+    auto emissivity_back_hemispheric =
       ir_layer.emissivity(FenestrationCommon::Side::Back, polynomial_back);
 
-	if(product_data.optical_data->flipped)
-	{
-		std::swap(tf, tb);
-		std::swap(emissivity_front_hemispheric, emissivity_back_hemispheric);
-	}
+    if(product_data.optical_data->flipped)
+    {
+        std::swap(tf, tb);
+        std::swap(emissivity_front_hemispheric, emissivity_back_hemispheric);
+    }
 
-    return wincalc::ThermalIRResults{tf,
-                                     tb,
-                                     emissivity_front_hemispheric,
-                                     emissivity_back_hemispheric};
+    return wincalc::ThermalIRResults{
+      tf, tb, emissivity_front_hemispheric, emissivity_back_hemispheric};
 }
