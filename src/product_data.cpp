@@ -82,7 +82,7 @@ namespace wincalc
         thickness_meters(thickness_meters), flipped(flipped)
     {}
 
-    Product_Data_Thermal::Product_Data_Thermal(double conductivity,
+    Product_Data_Thermal::Product_Data_Thermal(std::optional<double> conductivity,
                                                double thickness_meters,
                                                bool flipped,
                                                double opening_top,

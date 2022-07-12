@@ -4,7 +4,6 @@
 
 namespace wincalc
 {
-
     FenestrationCommon::MaterialType convert_material_type(std::string const & material_type)
     {
         std::map<std::string, FenestrationCommon::MaterialType> material_type_mappings{
@@ -35,7 +34,7 @@ namespace wincalc
           {"back", CoatedSide::BACK},
           {"both", CoatedSide::BOTH},
           {"neither", CoatedSide::NEITHER},
-		  {"na", CoatedSide::NEITHER},
+          {"na", CoatedSide::NEITHER},
         };
 
         auto itr = mappings.find(to_lower(coated_side));
@@ -168,12 +167,12 @@ namespace wincalc
                 FenestrationCommon::MaterialType material_type =
                   convert_material_type(product->productSubtype.value());
 
-				std::optional<CoatedSide> coated_side;
-				if(product->coatedSide.has_value())
-				{
-					coated_side = convert_coated_side(product->coatedSide.value());
-				}
-                
+                std::optional<CoatedSide> coated_side;
+                if(product->coatedSide.has_value())
+                {
+                    coated_side = convert_coated_side(product->coatedSide.value());
+                }
+
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product->thickness.value() / 1000.0,
@@ -235,37 +234,26 @@ namespace wincalc
             data = composed_product->compositionInformation->material;
         }
 
-        if(!data->conductivity.has_value())
-        {
-            throw std::runtime_error("Missing conductivity");
-        }
-
         if(!data->thickness.has_value())
         {
             throw std::runtime_error("Missing thickness");
         }
 
         auto thermal_data = wincalc::Product_Data_Thermal(
-          data->conductivity.value(), data->thickness.value() / 1000.0, false);
+          data->conductivity, data->thickness.value() / 1000.0, false);
 
-		if(data->density.has_value())
-		{
-			thermal_data.density = data->density.value();
-		}
+        thermal_data.density = data->density;
+        thermal_data.youngs_modulus = data->youngsModulus;
 
-		if(data->youngsModulus.has_value())
-		{
-			thermal_data.youngs_modulus = data->youngsModulus.value();
-		}
-		return thermal_data;
+        return thermal_data;
     }
 
     wincalc::Product_Data_Optical_Thermal
       convert_to_solid_layer(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
         auto optical = convert_optical(product);
-		// PV power properties are properties of the layer and so far do not require any conversion
-		optical->pv_power_properties = product->pvPowerProperties;
+        // PV power properties are properties of the layer and so far do not require any conversion
+        optical->pv_power_properties = product->pvPowerProperties;
         auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(product));
         return wincalc::Product_Data_Optical_Thermal{optical, thermal};
     }

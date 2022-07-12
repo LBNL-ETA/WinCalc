@@ -1174,6 +1174,10 @@ namespace wincalc
 
         for(auto const & layer : layers)
         {
+			if(!layer.thermal_data->conductivity.has_value())
+			{
+				throw std::runtime_error("Missing conductivity");
+			}
             auto ir_results = calc_thermal_ir(standard, layer);
 
             auto effective_thermal_values =
@@ -1186,14 +1190,14 @@ namespace wincalc
             auto effective_openness = effective_thermal_values->getEffectiveOpenness();
             auto tarcog_layer =
               Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),
-                                                layer.thermal_data->conductivity,
+                                                layer.thermal_data->conductivity.value(),
                                                 effective_openness,
                                                 ir_results.emissivity_front_hemispheric,
                                                 ir_results.transmittance_front_diffuse_diffuse,
                                                 ir_results.emissivity_back_hemispheric,
                                                 ir_results.transmittance_back_diffuse_diffuse);
             tarcog_layer = Tarcog::ISO15099::Layers::updateMaterialData(
-              tarcog_layer, layer.thermal_data->density, layer.thermal_data->youngs_modulus);
+              tarcog_layer, layer.thermal_data->density.value_or(Tarcog::MaterialConstants::GLASSDENSITY), layer.thermal_data->youngs_modulus.value_or(Tarcog::DeflectionConstants::YOUNGSMODULUS));
             tarcog_solid_layers.push_back(tarcog_layer);
         }
 

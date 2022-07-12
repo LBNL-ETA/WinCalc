@@ -135,6 +135,14 @@ namespace wincalc
 
     double Glazing_System::shgc(double theta, double phi)
     {
+        // Doing deflection updates and creating the system before calculating the optical results
+        // because there are cases where the thermal system cannot be created.  E.G. genSDF XML
+        // files do not have conductivity and so can be used in optical calcs but not thermal.
+        // Creating the system is much less expensive than doing the optical calcs so do that first
+        // to save time if there are any errors.
+        do_deflection_updates(theta, phi);
+        auto & system = get_system(theta, phi);
+
         auto optical_results =
           optical_solar_results_needed_for_thermal_calcs(product_data,
                                                          optical_standard(),
@@ -145,8 +153,6 @@ namespace wincalc
                                                          number_visible_bands,
                                                          number_solar_bands);
 
-        do_deflection_updates(theta, phi);
-        auto & system = get_system(theta, phi);
         system.setAbsorptances(optical_results.layer_solar_absorptances);
         return system.getSHGC(optical_results.total_solar_transmittance);
 
@@ -159,6 +165,27 @@ namespace wincalc
                                                            double theta,
                                                            double phi)
     {
+        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
+        // present then the CSystem m_solved value will get set to false causing the deflection
+        // solver to go through another iteration resulting in slightly differnt temperatures
+        // While these results are not incorrect they will not match the results from
+        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
+        // iteration are used in the Stephen Morse code it will not result in the same
+        // deflection values.
+        //
+        // The whole interaction involving do_deflection_updates needs to be refactored
+        //
+        // Doing deflection updates and creating the system before calculating the optical results
+        // because there are cases where the thermal system cannot be created.  E.G. genSDF XML
+        // files do not have conductivity and so can be used in optical calcs but not thermal.
+        // Creating the system is much less expensive than doing the optical calcs so do that first
+        // to save time if there are any errors.
+        if(theta != last_theta || phi != last_phi)
+        {
+            do_deflection_updates(theta, phi);
+        }
+        auto & system = get_system(theta, phi);
+
         auto optical_results =
           optical_solar_results_needed_for_thermal_calcs(product_data,
                                                          optical_standard(),
@@ -169,20 +196,6 @@ namespace wincalc
                                                          number_visible_bands,
                                                          number_solar_bands);
 
-        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
-        // present then the CSystem m_solved value will get set to false causing the deflection
-        // solver to go through another iteration resulting in slightly differnt temperatures
-        // While these results are not incorrect they will not match the results from
-        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
-        // iteration are used in the Stephen Morse code it will not result in the same
-        // deflection values.
-        //
-        // The whole interaction involving do_deflection_updates needs to be refactored
-        if(theta != last_theta || phi != last_phi)
-        {
-            do_deflection_updates(theta, phi);
-        }
-        auto & system = get_system(theta, phi);
         if(system_type == Tarcog::ISO15099::System::SHGC)
         {
             system.setAbsorptances(optical_results.layer_solar_absorptances);
@@ -256,6 +269,14 @@ namespace wincalc
     }
     double Glazing_System::relative_heat_gain(double theta, double phi)
     {
+        // Doing deflection updates and creating the system before calculating the optical results
+        // because there are cases where the thermal system cannot be created.  E.G. genSDF XML
+        // files do not have conductivity and so can be used in optical calcs but not thermal.
+        // Creating the system is much less expensive than doing the optical calcs so do that first
+        // to save time if there are any errors.
+        do_deflection_updates(theta, phi);
+        auto & system = get_system(theta, phi);
+
         auto optical_results =
           optical_solar_results_needed_for_thermal_calcs(product_data,
                                                          optical_standard(),
@@ -265,8 +286,7 @@ namespace wincalc
                                                          spectral_data_wavelength_range_method,
                                                          number_visible_bands,
                                                          number_solar_bands);
-        do_deflection_updates(theta, phi);
-        auto & system = get_system(theta, phi);
+
         return system.relativeHeatGain(optical_results.total_solar_transmittance);
     }
 

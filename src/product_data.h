@@ -18,7 +18,7 @@ namespace wincalc
 
     struct Product_Data_Thermal : Flippable_Solid_Layer
     {
-        Product_Data_Thermal(double conductivity,
+        Product_Data_Thermal(std::optional<double> conductivity,
                              double thickness_meters,
                              bool flipped = false,
                              double opening_top = 0,
@@ -27,14 +27,14 @@ namespace wincalc
                              double opening_right = 0,
                              double opening_front = 0);
 
-        double conductivity;
+        std::optional<double> conductivity;
         double opening_top;
         double opening_bottom;
         double opening_left;
         double opening_right;
         double opening_front;
-        double youngs_modulus;
-        double density;
+		std::optional<double> youngs_modulus;
+		std::optional<double> density;
     };
 
     struct Product_Data_Optical : Flippable_Solid_Layer,
