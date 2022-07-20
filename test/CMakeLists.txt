@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		bsdf_xml_thermal_openness.unit.cpp
 		CS03_genBSDF.unit.cpp
 		SEATEX_Midnight.unit.cpp
 		nfrc_102_as_bsdf.unit.cpp

@@ -12,7 +12,7 @@ int main( int argc, char* argv[] ) {
 #endif
 	::testing::InitGoogleTest( &argc, argv );
 	test_dir = argv[1];
-	update_results = false;
+	update_results = true;
 	return RUN_ALL_TESTS();
 }
 
