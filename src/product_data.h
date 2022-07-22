@@ -228,7 +228,7 @@ namespace wincalc
           double slat_width,
           double slat_spacing,
           double slat_curvature,
-          int number_slats,
+          int number_slat_segments,
           SingleLayerOptics::DistributionMethod distribution_method =
             SingleLayerOptics::DistributionMethod::DirectionalDiffuse,
           bool is_horizontal = true);
@@ -245,7 +245,7 @@ namespace wincalc
         double slat_width;
         double slat_spacing;
         double slat_curvature;
-        int number_slats;
+        int number_slat_segments;
         SingleLayerOptics::DistributionMethod distribution_method;
         bool is_horizontal;
     };

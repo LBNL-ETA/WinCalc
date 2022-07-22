@@ -129,7 +129,7 @@ namespace wincalc
       double slat_width,
       double slat_spacing,
       double slat_curvature,
-      int number_slats,
+      int number_slat_segments,
       SingleLayerOptics::DistributionMethod distribution_method,
       bool is_horizontal) :
         Product_Data_Optical_With_Material(optical_data),
@@ -137,7 +137,7 @@ namespace wincalc
         slat_width(slat_width),
         slat_spacing(slat_spacing),
         slat_curvature(slat_curvature),
-        number_slats(number_slats),
+		number_slat_segments(number_slat_segments),
         distribution_method(distribution_method),
         is_horizontal(is_horizontal)
     {}
