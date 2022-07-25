@@ -30,7 +30,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 add_executable(${PROJECT_TEST_NAME}
 		#double_layer_perfect_clear_exterior_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
-		quad_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
+		#quad_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		bsdf_xml_thermal_openness.unit.cpp
 		CS03_genBSDF.unit.cpp
 		SEATEX_Midnight.unit.cpp
