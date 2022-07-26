@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.6272676253018581,
+                    "heat_direct": 0.5509956011033719,
+                    "total_diffuse": 0.6272676253018581,
+                    "total_direct": 0.5509956011033719
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.12979981048179934,
+                    "heat_direct": 0.11401692310376274,
+                    "total_diffuse": 0.12979981048179934,
+                    "total_direct": 0.11401692310376274
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.1305772191236817,
+                "direct_diffuse": 0.11382852959217221,
+                "direct_direct": 0.0008712738718382211,
+                "direct_hemispherical": 0.11469980346401043
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.24215515557445857,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.33430459543261737,
+                "direct_hemispherical": 0.33430459543261737
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6280450339437336,
+                "direct_diffuse": 0.5474878635894975,
+                "direct_direct": 0.0041906178741226464,
+                "direct_hemispherical": 0.5516784814636202
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.24215515557445857,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.33430459543261737,
+                "direct_hemispherical": 0.33430459543261737
+            }
+        }
+    }
+}

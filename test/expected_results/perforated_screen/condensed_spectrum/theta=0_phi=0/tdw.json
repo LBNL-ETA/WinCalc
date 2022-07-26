@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.5005452518288412,
+                    "heat_direct": 0.4396819169140899,
+                    "total_diffuse": 0.5005452518288412,
+                    "total_direct": 0.4396819169140899
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.11710546261341716,
+                    "heat_direct": 0.10286613267202573,
+                    "total_diffuse": 0.11710546261341716,
+                    "total_direct": 0.10286613267202573
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.2572995925967004,
+                "direct_diffuse": 0.22429666128979162,
+                "direct_direct": 0.0017168263635005405,
+                "direct_hemispherical": 0.22601348765329216
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.24215515557445857,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.33430459543261737,
+                "direct_hemispherical": 0.33430459543261737
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6407393818121154,
+                "direct_diffuse": 0.5585539512400582,
+                "direct_direct": 0.004275320655296675,
+                "direct_hemispherical": 0.5628292718953549
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.24215515557445857,
+                "direct_diffuse": 0.0,
+                "direct_direct": 0.33430459543261737,
+                "direct_hemispherical": 0.33430459543261737
+            }
+        }
+    }
+}
