@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.424460738240927,
+                    "heat_direct": 0.318089639395118,
+                    "total_diffuse": 0.424460738240927,
+                    "total_direct": 0.318089639395118
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.09930504970594241,
+                    "heat_direct": 0.07441891464917677,
+                    "total_diffuse": 0.09930504970594241,
+                    "total_direct": 0.07441891464917677
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.13675138336517792,
+                "direct_diffuse": 0.14003739455816444,
+                "direct_direct": 0.0010718835022816538,
+                "direct_hemispherical": 0.1411092780604461
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.4387878783938769,
+                "direct_diffuse": 0.022230921155032668,
+                "direct_direct": 0.5185701613894045,
+                "direct_hemispherical": 0.5408010825444372
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.5150808594189241,
+                "direct_diffuse": 0.399905934179733,
+                "direct_direct": 0.0030609864933880044,
+                "direct_hemispherical": 0.402966920673121
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.3856140908751498,
+                "direct_diffuse": 0.004182153362390029,
+                "direct_direct": 0.5184320113153154,
+                "direct_hemispherical": 0.5226141646777054
+            }
+        }
+    }
+}

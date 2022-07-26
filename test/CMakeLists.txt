@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		woven_shade.unit.cpp
 		perforated_screen.unit.cpp
 		#double_layer_perfect_clear_exterior_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
