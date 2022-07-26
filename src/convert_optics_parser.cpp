@@ -89,9 +89,9 @@ namespace wincalc
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Venetian{material,
                                                     venetian_geometry->slatTilt,
-                                                    venetian_geometry->slatWidth,
-                                                    venetian_geometry->slatSpacing,
-                                                    venetian_geometry->slatCurvature,
+                                                    venetian_geometry->slatWidth / 1000.0,
+                                                    venetian_geometry->slatSpacing / 1000.0,
+                                                    venetian_geometry->slatCurvature / 1000.0,
                                                     venetian_geometry->numberSegments});
                 return converted;
             }
@@ -102,9 +102,9 @@ namespace wincalc
             {
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Woven_Shade{material,
-                                                       woven_geometry->threadDiameter,
-                                                       woven_geometry->threadSpacing,
-                                                       woven_geometry->shadeThickness});
+                                                       woven_geometry->threadDiameter / 1000.0,
+                                                       woven_geometry->threadSpacing / 1000.0,
+                                                       woven_geometry->shadeThickness / 1000.0});
                 return converted;
             }
             std::shared_ptr<OpticsParser::PerforatedGeometry> perforated_geometry =
@@ -134,10 +134,10 @@ namespace wincalc
                 }
                 std::shared_ptr<Product_Data_Optical> converted(
                   new Product_Data_Optical_Perforated_Screen{material,
-                                                             perforated_geometry->spacingX,
-                                                             perforated_geometry->spacingY,
-                                                             perforated_geometry->dimensionX,
-                                                             perforated_geometry->dimensionY,
+                                                             perforated_geometry->spacingX / 1000.0,
+                                                             perforated_geometry->spacingY / 1000.0,
+                                                             perforated_geometry->dimensionX / 1000.0,
+                                                             perforated_geometry->dimensionY / 1000.0,
                                                              perforation_type});
                 return converted;
             }

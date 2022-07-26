@@ -934,10 +934,10 @@ namespace wincalc
             return SingleLayerOptics::CBSDFLayerMaker::getCircularPerforatedLayer(
               material,
               bsdf_hemisphere,
-              product_data->spacing_x / 1000.0,
-              product_data->spacing_y / 1000.0,
+              product_data->spacing_x,
+              product_data->spacing_y,
               product_data->material_optical_data->thickness_meters,
-              product_data->dimension_x / 1000.0);
+              product_data->dimension_x);
         }
         else if(product_data->perforation_type
                 == wincalc::Product_Data_Optical_Perforated_Screen::Type::RECTANGULAR)
