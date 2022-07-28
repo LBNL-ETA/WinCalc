@@ -71,11 +71,40 @@ namespace wincalc
         }
     }
 
+    double
+      get_length_unit_conversion_factor(std::shared_ptr<OpticsParser::ProductData> const & product)
+    {
+		// Almost all lengths coming from OpticsParser are in mm so default to that.
+        double length_conversion = 1.0 / 1000.0;   
+        if(product->thicknessUnit.has_value())
+        {
+            auto thickness_unit = to_lower(product->thicknessUnit.value());
+            if(thickness_unit == "meter" || thickness_unit == "meters")
+            {
+                length_conversion = 1.0;
+            }
+            else if(thickness_unit == "millimeter" || thickness_unit == "millimeter")
+            {
+                // mm is already the default so do nothing
+            }
+            else
+            {
+                std::stringstream msg;
+                msg << "Unsupported thickness unit: " << product->thicknessUnit.value()
+                    << " Currently only meter and millimeter are supported.";
+                throw std::runtime_error(msg.str());
+            }
+        }
+        return length_conversion;
+    }
+
     std::shared_ptr<Product_Data_Optical>
       convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
         std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
           std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
+
+		auto length_conversion = get_length_unit_conversion_factor(product);
 
         if(composed_product)
         {
@@ -86,13 +115,13 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(venetian_geometry)
             {
-                std::shared_ptr<Product_Data_Optical> converted(
-                  new Product_Data_Optical_Venetian{material,
-                                                    venetian_geometry->slatTilt,
-                                                    venetian_geometry->slatWidth / 1000.0,
-                                                    venetian_geometry->slatSpacing / 1000.0,
-                                                    venetian_geometry->slatCurvature / 1000.0,
-                                                    venetian_geometry->numberSegments});
+                std::shared_ptr<Product_Data_Optical> converted(new Product_Data_Optical_Venetian{
+                  material,
+                  venetian_geometry->slatTilt,
+                  venetian_geometry->slatWidth * length_conversion,
+                  venetian_geometry->slatSpacing * length_conversion,
+                  venetian_geometry->slatCurvature * length_conversion,
+                  venetian_geometry->numberSegments});
                 return converted;
             }
             std::shared_ptr<OpticsParser::WovenGeometry> woven_geometry =
@@ -101,10 +130,11 @@ namespace wincalc
             if(woven_geometry)
             {
                 std::shared_ptr<Product_Data_Optical> converted(
-                  new Product_Data_Optical_Woven_Shade{material,
-                                                       woven_geometry->threadDiameter / 1000.0,
-                                                       woven_geometry->threadSpacing / 1000.0,
-                                                       woven_geometry->shadeThickness / 1000.0});
+                  new Product_Data_Optical_Woven_Shade{
+                    material,
+                    woven_geometry->threadDiameter * length_conversion,
+                    woven_geometry->threadSpacing * length_conversion,
+                    woven_geometry->shadeThickness * length_conversion});
                 return converted;
             }
             std::shared_ptr<OpticsParser::PerforatedGeometry> perforated_geometry =
@@ -133,12 +163,13 @@ namespace wincalc
                     throw std::runtime_error(msg.str());
                 }
                 std::shared_ptr<Product_Data_Optical> converted(
-                  new Product_Data_Optical_Perforated_Screen{material,
-                                                             perforated_geometry->spacingX / 1000.0,
-                                                             perforated_geometry->spacingY / 1000.0,
-                                                             perforated_geometry->dimensionX / 1000.0,
-                                                             perforated_geometry->dimensionY / 1000.0,
-                                                             perforation_type});
+                  new Product_Data_Optical_Perforated_Screen{
+                    material,
+                    perforated_geometry->spacingX * length_conversion,
+                    perforated_geometry->spacingY * length_conversion,
+                    perforated_geometry->dimensionX * length_conversion,
+                    perforated_geometry->dimensionY * length_conversion,
+                    perforation_type});
                 return converted;
             }
             // If this point is reached then the product is either missing a geometry or
@@ -175,7 +206,7 @@ namespace wincalc
 
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
-                  product->thickness.value() / 1000.0,
+                  product->thickness.value() * length_conversion,
                   std::get<std::vector<OpticsParser::WLData>>(wavelength_measured_values),
                   coated_side,
                   product->IRTransmittance,
@@ -209,7 +240,7 @@ namespace wincalc
                   visible.rf.data,
                   visible.rb.data,
                   bsdfHemisphere,
-                  product->thickness.value() / 1000.0,
+                  product->thickness.value() * length_conversion,
                   product->IRTransmittance,
                   product->IRTransmittance,
                   product->frontEmissivity,
@@ -228,6 +259,8 @@ namespace wincalc
         std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
           std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
 
+		auto length_conversion = get_length_unit_conversion_factor(product);
+
         std::shared_ptr<OpticsParser::ProductData> data = product;
         if(composed_product)
         {
@@ -240,7 +273,7 @@ namespace wincalc
         }
 
         auto thermal_data = wincalc::Product_Data_Thermal(
-          data->conductivity, data->thickness.value() / 1000.0, false);
+          data->conductivity, data->thickness.value() * length_conversion, false);
 
         thermal_data.density = data->density;
         thermal_data.youngs_modulus = data->youngsModulus;
