@@ -125,21 +125,8 @@ namespace wincalc
 
     Product_Data_Optical_Venetian::Product_Data_Optical_Venetian(
       std::shared_ptr<Product_Data_Optical> const & optical_data,
-      double slat_tilt,
-      double slat_width,
-      double slat_spacing,
-      double slat_curvature,
-      int number_slat_segments,
-      SingleLayerOptics::DistributionMethod distribution_method,
-      bool is_horizontal) :
-        Product_Data_Optical_With_Material(optical_data),
-        slat_tilt(slat_tilt),
-        slat_width(slat_width),
-        slat_spacing(slat_spacing),
-        slat_curvature(slat_curvature),
-		number_slat_segments(number_slat_segments),
-        distribution_method(distribution_method),
-        is_horizontal(is_horizontal)
+      Venetian_Geometry const & geometry) :
+        Product_Data_Optical_With_Material(optical_data), geometry(geometry)
     {}
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
@@ -151,28 +138,28 @@ namespace wincalc
                                                               double gap_width_right) const
     {
         double front_openness =
-          ThermalPermeability::Venetian::openness(slat_tilt,
-                                                  slat_spacing,
+          ThermalPermeability::Venetian::openness(geometry.slat_tilt,
+                                                  geometry.slat_spacing,
                                                   material_optical_data->thickness_meters,
-                                                  slat_curvature,
-                                                  slat_width);
+                                                  geometry.slat_curvature,
+                                                  geometry.slat_width);
 
         EffectiveLayers::ShadeOpenness openness{
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveHorizontalVenetian>(
-          width, height, material_optical_data->thickness_meters, openness, slat_tilt, slat_width);
+          width,
+          height,
+          material_optical_data->thickness_meters,
+          openness,
+          geometry.slat_tilt,
+          geometry.slat_width);
     }
 
     Product_Data_Optical_Woven_Shade::Product_Data_Optical_Woven_Shade(
       std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-      double thread_diameter,
-      double thread_spacing,
-      double shade_thickness) :
-        Product_Data_Optical_With_Material(material_optical_data),
-        thread_diameter(thread_diameter),
-        thread_spacing(thread_spacing),
-        shade_thickness(shade_thickness)
+      Woven_Geometry const & geometry) :
+        Product_Data_Optical_With_Material(material_optical_data), geometry(geometry)
     {}
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
@@ -184,12 +171,12 @@ namespace wincalc
                                                                  double gap_width_right) const
     {
         double front_openness =
-          ThermalPermeability::Woven::openness(thread_diameter, thread_spacing);
+          ThermalPermeability::Woven::openness(geometry.thread_diameter, geometry.thread_spacing);
         EffectiveLayers::ShadeOpenness openness{
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
-          width, height, shade_thickness, openness);
+          width, height, geometry.shade_thickness, openness);
     }
 
     Product_Data_Optical_Thermal::Product_Data_Optical_Thermal(
@@ -200,17 +187,8 @@ namespace wincalc
 
     Product_Data_Optical_Perforated_Screen::Product_Data_Optical_Perforated_Screen(
       std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-      double spacing_x,
-      double spacing_y,
-      double dimension_x,
-      double dimension_y,
-      Product_Data_Optical_Perforated_Screen::Type perforation_type) :
-        Product_Data_Optical_With_Material(material_optical_data),
-        spacing_x(spacing_x),
-        spacing_y(spacing_y),
-        dimension_x(dimension_x),
-        dimension_y(dimension_y),
-        perforation_type(perforation_type)
+      Perforated_Geometry const & geometry) :
+        Product_Data_Optical_With_Material(material_optical_data), geometry(geometry)
     {}
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
@@ -221,46 +199,45 @@ namespace wincalc
                                                                        double gap_width_left,
                                                                        double gap_width_right) const
     {
-        std::map<Product_Data_Optical_Perforated_Screen::Type, std::function<double(void)>>
-          front_openness_calcs;
-        front_openness_calcs[Product_Data_Optical_Perforated_Screen::Type::CIRCULAR] = [=]() {
+        std::map<Perforated_Geometry::Type, std::function<double(void)>> front_openness_calcs;
+        front_openness_calcs[Perforated_Geometry::Type::CIRCULAR] = [=]() {
             auto cell_dimension =
-              ThermalPermeability::Perforated::diameterToXYDimension(dimension_x * 2);
+              ThermalPermeability::Perforated::diameterToXYDimension(geometry.dimension_x * 2);
             return ThermalPermeability::Perforated::openness(
               ThermalPermeability::Perforated::Geometry::Circular,
-              spacing_x,
-              spacing_y,
+              geometry.spacing_x,
+              geometry.spacing_y,
               cell_dimension.x,
               cell_dimension.y);
         };
 
-        front_openness_calcs[Product_Data_Optical_Perforated_Screen::Type::RECTANGULAR] = [=]() {
+        front_openness_calcs[Perforated_Geometry::Type::RECTANGULAR] = [=]() {
             return ThermalPermeability::Perforated::openness(
               ThermalPermeability::Perforated::Geometry::Rectangular,
-              spacing_x,
-              spacing_y,
-              dimension_x,
-              dimension_y);
+              geometry.spacing_x,
+              geometry.spacing_y,
+              geometry.dimension_x,
+              geometry.dimension_y);
         };
 
-        front_openness_calcs[Product_Data_Optical_Perforated_Screen::Type::SQUARE] = [=]() {
+        front_openness_calcs[Perforated_Geometry::Type::SQUARE] = [=]() {
             return ThermalPermeability::Perforated::openness(
               ThermalPermeability::Perforated::Geometry::Square,
-              spacing_x,
-              spacing_y,
-              dimension_x,
-              dimension_x);
+				geometry.spacing_x,
+				geometry.spacing_y,
+				geometry.dimension_x,
+				geometry.dimension_x);
         };
 
-        auto front_openness_calc = front_openness_calcs.find(perforation_type);
+        auto front_openness_calc = front_openness_calcs.find(geometry.perforation_type);
 
         if(front_openness_calc == front_openness_calcs.end())
         {
             std::stringstream msg;
             msg << "Unsupported perforation type: "
                 << static_cast<
-                     std::underlying_type<Product_Data_Optical_Perforated_Screen::Type>::type>(
-                     perforation_type);
+                     std::underlying_type<Perforated_Geometry::Type>::type>(
+						 geometry.perforation_type);
             throw std::runtime_error(msg.str());
         }
 

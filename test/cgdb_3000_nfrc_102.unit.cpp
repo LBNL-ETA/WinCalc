@@ -41,7 +41,7 @@ protected:
         auto converted_venetian = wincalc::convert_to_solid_layer(venetian);
         std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(
           converted_venetian.optical_data)
-          ->distribution_method = SingleLayerOptics::DistributionMethod::UniformDiffuse;
+          ->geometry.distribution_method = SingleLayerOptics::DistributionMethod::UniformDiffuse;
 
         products.push_back(converted_venetian);
         products.push_back(clear_3);

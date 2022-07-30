@@ -5,5 +5,6 @@
 #include "../../src/convert_optics_parser.h"
 #include "../../src/cma.h"
 #include "../../src/thermal_ir.h"
+#include "../../src/shade_factories.h"
 
 #endif

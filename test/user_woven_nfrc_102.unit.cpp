@@ -33,22 +33,18 @@ protected:
         venetian_material_path /= "products";
         venetian_material_path /= "igsdb_12852.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
-        OpticsParser::Parser parser;
-        auto clear_3 = parser.parseJSONFile(clear_3_path.string());
-        auto shade_material = parser.parseJSONFile(venetian_material_path.string());
-        auto shade_geometry = std::make_shared<OpticsParser::WovenGeometry>(0.002, 0.003, 0.002);
-        auto shade_composition_info = std::shared_ptr<OpticsParser::CompositionInformation>(
-          new OpticsParser::CompositionInformation{shade_material, shade_geometry});
-        OpticsParser::ProductData shade_layer_info(
-          "User Woven Shade", "shading", "User Manufacturer");
-        auto woven_shade = std::make_shared<OpticsParser::ComposedProductData>(
-          shade_layer_info, shade_composition_info);
+        std::vector<
+          std::variant<std::shared_ptr<OpticsParser::ProductData>, Product_Data_Optical_Thermal>>
+          products;
 
-        parsed_products.push_back(woven_shade);
-        parsed_products.push_back(clear_3);
+        auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
+        auto shade_material = OpticsParser::parseJSONFile(venetian_material_path.string());
+        wincalc::Woven_Geometry geometry{0.002, 0.003, 0.002};
 
-        auto converted_products = convert_to_solid_layers(parsed_products);
+        auto woven_shade = wincalc::create_woven_shade(geometry, shade_material);
+
+        products.push_back(woven_shade);
+        products.push_back(clear_3);
 
         Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
         std::vector<Engine_Gap_Info> gaps;
@@ -63,15 +59,9 @@ protected:
           SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
         glazing_system_u = std::make_shared<Glazing_System>(
-          standard, converted_products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
-        glazing_system_shgc = std::make_shared<Glazing_System>(standard,
-                                                               converted_products,
-                                                               gaps,
-                                                               1.0,
-                                                               1.0,
-                                                               90,
-                                                               nfrc_shgc_environments(),
-                                                               bsdf_hemisphere);
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
+        glazing_system_shgc = std::make_shared<Glazing_System>(
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
     }
 };
 

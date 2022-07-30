@@ -74,8 +74,8 @@ namespace wincalc
     double
       get_length_unit_conversion_factor(std::shared_ptr<OpticsParser::ProductData> const & product)
     {
-		// Almost all lengths coming from OpticsParser are in mm so default to that.
-        double length_conversion = 1.0 / 1000.0;   
+        // Almost all lengths coming from OpticsParser are in mm so default to that.
+        double length_conversion = 1.0 / 1000.0;
         if(product->thicknessUnit.has_value())
         {
             auto thickness_unit = to_lower(product->thicknessUnit.value());
@@ -104,7 +104,7 @@ namespace wincalc
         std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
           std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
 
-		auto length_conversion = get_length_unit_conversion_factor(product);
+        auto length_conversion = get_length_unit_conversion_factor(product);
 
         if(composed_product)
         {
@@ -115,13 +115,17 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(venetian_geometry)
             {
-                std::shared_ptr<Product_Data_Optical> converted(new Product_Data_Optical_Venetian{
-                  material,
+                Venetian_Geometry geometry{
                   venetian_geometry->slatTilt,
                   venetian_geometry->slatWidth * length_conversion,
                   venetian_geometry->slatSpacing * length_conversion,
                   venetian_geometry->slatCurvature * length_conversion,
-                  venetian_geometry->numberSegments});
+                  true,
+                  SingleLayerOptics::DistributionMethod::DirectionalDiffuse,
+                  venetian_geometry->numberSegments};
+
+                std::shared_ptr<Product_Data_Optical> converted(
+                  new Product_Data_Optical_Venetian{material, geometry});
                 return converted;
             }
             std::shared_ptr<OpticsParser::WovenGeometry> woven_geometry =
@@ -129,12 +133,12 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(woven_geometry)
             {
+                Woven_Geometry geometry{woven_geometry->threadDiameter * length_conversion,
+                                        woven_geometry->threadSpacing * length_conversion,
+                                        woven_geometry->shadeThickness * length_conversion};
+
                 std::shared_ptr<Product_Data_Optical> converted(
-                  new Product_Data_Optical_Woven_Shade{
-                    material,
-                    woven_geometry->threadDiameter * length_conversion,
-                    woven_geometry->threadSpacing * length_conversion,
-                    woven_geometry->shadeThickness * length_conversion});
+                  new Product_Data_Optical_Woven_Shade(material, geometry));
                 return converted;
             }
             std::shared_ptr<OpticsParser::PerforatedGeometry> perforated_geometry =
@@ -142,19 +146,19 @@ namespace wincalc
                 composed_product->compositionInformation->geometry);
             if(perforated_geometry)
             {
-                Product_Data_Optical_Perforated_Screen::Type perforation_type;
+                Perforated_Geometry::Type perforation_type;
                 auto perforation_type_str = to_lower(perforated_geometry->perforationType);
                 if(perforation_type_str == "circular")
                 {
-                    perforation_type = Product_Data_Optical_Perforated_Screen::Type::CIRCULAR;
+                    perforation_type = Perforated_Geometry::Type::CIRCULAR;
                 }
                 else if(perforation_type_str == "square")
                 {
-                    perforation_type = Product_Data_Optical_Perforated_Screen::Type::SQUARE;
+                    perforation_type = Perforated_Geometry::Type::SQUARE;
                 }
                 else if(perforation_type_str == "rectangular")
                 {
-                    perforation_type = Product_Data_Optical_Perforated_Screen::Type::RECTANGULAR;
+                    perforation_type = Perforated_Geometry::Type::RECTANGULAR;
                 }
                 else
                 {
@@ -162,14 +166,13 @@ namespace wincalc
                     msg << "Unsupported perforation type: " << perforated_geometry->perforationType;
                     throw std::runtime_error(msg.str());
                 }
+                Perforated_Geometry geometry{perforated_geometry->spacingX * length_conversion,
+                                             perforated_geometry->spacingY * length_conversion,
+                                             perforated_geometry->dimensionX * length_conversion,
+                                             perforated_geometry->dimensionY * length_conversion,
+                                             perforation_type};
                 std::shared_ptr<Product_Data_Optical> converted(
-                  new Product_Data_Optical_Perforated_Screen{
-                    material,
-                    perforated_geometry->spacingX * length_conversion,
-                    perforated_geometry->spacingY * length_conversion,
-                    perforated_geometry->dimensionX * length_conversion,
-                    perforated_geometry->dimensionY * length_conversion,
-                    perforation_type});
+                  new Product_Data_Optical_Perforated_Screen{material, geometry});
                 return converted;
             }
             // If this point is reached then the product is either missing a geometry or
@@ -259,7 +262,7 @@ namespace wincalc
         std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
           std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
 
-		auto length_conversion = get_length_unit_conversion_factor(product);
+        auto length_conversion = get_length_unit_conversion_factor(product);
 
         std::shared_ptr<OpticsParser::ProductData> data = product;
         if(composed_product)

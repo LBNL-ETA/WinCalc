@@ -883,13 +883,13 @@ namespace wincalc
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer(material,
                                                                bsdf_hemisphere,
-                                                               product_data->slat_width,
-                                                               product_data->slat_spacing,
-                                                               product_data->slat_tilt,
-                                                               product_data->slat_curvature,
-                                                               product_data->number_slat_segments,
-                                                               product_data->distribution_method,
-                                                               product_data->is_horizontal);
+                                                               product_data->geometry.slat_width,
+                                                               product_data->geometry.slat_spacing,
+                                                               product_data->geometry.slat_tilt,
+                                                               product_data->geometry.slat_curvature,
+                                                               product_data->geometry.number_slat_segments,
+                                                               product_data->geometry.distribution_method,
+                                                               product_data->geometry.is_horizontal);
         return layer;
     }
 
@@ -909,7 +909,7 @@ namespace wincalc
                                         number_visible_bands,
                                         number_solar_bands);
         auto layer = SingleLayerOptics::CBSDFLayerMaker::getWovenLayer(
-          material, bsdf_hemisphere, product_data->thread_diameter, product_data->thread_spacing);
+          material, bsdf_hemisphere, product_data->geometry.thread_diameter, product_data->geometry.thread_spacing);
         return layer;
     }
 
@@ -928,48 +928,48 @@ namespace wincalc
                                         type,
                                         number_visible_bands,
                                         number_solar_bands);
-        if(product_data->perforation_type
-           == wincalc::Product_Data_Optical_Perforated_Screen::Type::CIRCULAR)
+        if(product_data->geometry.perforation_type
+           == wincalc::Perforated_Geometry::Type::CIRCULAR)
         {
             return SingleLayerOptics::CBSDFLayerMaker::getCircularPerforatedLayer(
               material,
               bsdf_hemisphere,
-              product_data->spacing_x,
-              product_data->spacing_y,
+              product_data->geometry.spacing_x,
+              product_data->geometry.spacing_y,
               product_data->material_optical_data->thickness_meters,
-              product_data->dimension_x);
+              product_data->geometry.dimension_x);
         }
-        else if(product_data->perforation_type
-                == wincalc::Product_Data_Optical_Perforated_Screen::Type::RECTANGULAR)
+        else if(product_data->geometry.perforation_type
+                == wincalc::Perforated_Geometry::Type::RECTANGULAR)
         {
             return SingleLayerOptics::CBSDFLayerMaker::getRectangularPerforatedLayer(
               material,
               bsdf_hemisphere,
-              product_data->spacing_x,
-              product_data->spacing_y,
+              product_data->geometry.spacing_x,
+              product_data->geometry.spacing_y,
               product_data->material_optical_data->thickness_meters,
-              product_data->dimension_x,
-              product_data->dimension_y);
+              product_data->geometry.dimension_x,
+              product_data->geometry.dimension_y);
         }
-        else if(product_data->perforation_type
-                == wincalc::Product_Data_Optical_Perforated_Screen::Type::SQUARE)
+        else if(product_data->geometry.perforation_type
+                == wincalc::Perforated_Geometry::Type::SQUARE)
         {
             return SingleLayerOptics::CBSDFLayerMaker::getRectangularPerforatedLayer(
               material,
               bsdf_hemisphere,
-              product_data->spacing_x,
-              product_data->spacing_y,
+              product_data->geometry.spacing_x,
+              product_data->geometry.spacing_y,
               product_data->material_optical_data->thickness_meters,
-              product_data->dimension_x,
-              product_data->dimension_x);
+              product_data->geometry.dimension_x,
+              product_data->geometry.dimension_x);
         }
         else
         {
             std::stringstream msg;
             msg << "Unsupported perforation type for optical bsdf layer: "
                 << static_cast<
-                     std::underlying_type<Product_Data_Optical_Perforated_Screen::Type>::type>(
-                     product_data->perforation_type);
+                     std::underlying_type<Perforated_Geometry::Type>::type>(
+                     product_data->geometry.perforation_type);
             throw std::runtime_error(msg.str());
         }
     }
