@@ -223,10 +223,10 @@ namespace wincalc
         front_openness_calcs[Perforated_Geometry::Type::SQUARE] = [=]() {
             return ThermalPermeability::Perforated::openness(
               ThermalPermeability::Perforated::Geometry::Square,
-				geometry.spacing_x,
-				geometry.spacing_y,
-				geometry.dimension_x,
-				geometry.dimension_x);
+              geometry.spacing_x,
+              geometry.spacing_y,
+              geometry.dimension_x,
+              geometry.dimension_x);
         };
 
         auto front_openness_calc = front_openness_calcs.find(geometry.perforation_type);
@@ -235,9 +235,8 @@ namespace wincalc
         {
             std::stringstream msg;
             msg << "Unsupported perforation type: "
-                << static_cast<
-                     std::underlying_type<Perforated_Geometry::Type>::type>(
-						 geometry.perforation_type);
+                << static_cast<std::underlying_type<Perforated_Geometry::Type>::type>(
+                     geometry.perforation_type);
             throw std::runtime_error(msg.str());
         }
 
@@ -331,5 +330,40 @@ namespace wincalc
         tb_visible(tb_visible),
         rf_visible(rf_visible),
         rb_visible(rb_visible)
+    {}
+    Venetian_Geometry::Venetian_Geometry(double slat_tilt,
+                                         double slat_width,
+                                         double slat_spacing,
+                                         double slat_curvature,
+                                         bool is_horizontal,
+                                         SingleLayerOptics::DistributionMethod distribution_method,
+                                         int number_slat_segments) :
+        slat_tilt(slat_tilt),
+        slat_width(slat_width),
+        slat_spacing(slat_spacing),
+        slat_curvature(slat_curvature),
+        is_horizontal(is_horizontal),
+        distribution_method(distribution_method),
+        number_slat_segments(number_slat_segments)
+    {}
+
+    Woven_Geometry::Woven_Geometry(double thread_diameter,
+                                   double thread_spacing,
+                                   double shade_thickness) :
+        thread_diameter(thread_diameter),
+        thread_spacing(thread_spacing),
+        shade_thickness(shade_thickness)
+    {}
+
+    Perforated_Geometry::Perforated_Geometry(double spacing_x,
+                                             double spacing_y,
+                                             double dimension_x,
+                                             double dimension_y,
+                                             Perforated_Geometry::Type perforation_type) :
+        spacing_x(spacing_x),
+        spacing_y(spacing_y),
+        dimension_x(dimension_x),
+        dimension_y(dimension_y),
+        perforation_type(perforation_type)
     {}
 }   // namespace wincalc

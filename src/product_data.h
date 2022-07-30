@@ -222,21 +222,30 @@ namespace wincalc
 
     struct Venetian_Geometry
     {
+        Venetian_Geometry(double slat_tilt,
+                          double slat_width,
+                          double slat_spacing,
+                          double slat_curvature,
+                          bool is_horizontal = true,
+                          SingleLayerOptics::DistributionMethod distribution_method =
+                            SingleLayerOptics::DistributionMethod::DirectionalDiffuse,
+                          int number_slat_segments = 5);
+
         double slat_tilt;
         double slat_width;
         double slat_spacing;
         double slat_curvature;
         bool is_horizontal = true;
-		SingleLayerOptics::DistributionMethod distribution_method =
-			SingleLayerOptics::DistributionMethod::DirectionalDiffuse;
-		int number_slat_segments = 5;
+        SingleLayerOptics::DistributionMethod distribution_method =
+          SingleLayerOptics::DistributionMethod::DirectionalDiffuse;
+        int number_slat_segments = 5;
     };
 
     struct Product_Data_Optical_Venetian : Product_Data_Optical_With_Material
     {
         Product_Data_Optical_Venetian(
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-			Venetian_Geometry const& geometry);
+          Venetian_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
@@ -246,21 +255,23 @@ namespace wincalc
                                    double gap_width_left,
                                    double gap_width_right) const override;
 
-		Venetian_Geometry geometry;
+        Venetian_Geometry geometry;
     };
 
-	struct Woven_Geometry
-	{
+    struct Woven_Geometry
+    {
+        Woven_Geometry(double thread_diameter, double thread_spacing, double shade_thickness);
+        
 		double thread_diameter;
-		double thread_spacing;
-		double shade_thickness;
-	};
+        double thread_spacing;
+        double shade_thickness;
+    };
 
     struct Product_Data_Optical_Woven_Shade : Product_Data_Optical_With_Material
     {
         Product_Data_Optical_Woven_Shade(
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-          Woven_Geometry const& geometry);
+          Woven_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
@@ -270,31 +281,36 @@ namespace wincalc
                                    double gap_width_left,
                                    double gap_width_right) const override;
 
-		Woven_Geometry geometry;
+        Woven_Geometry geometry;
     };
 
-	struct Perforated_Geometry
-	{
-		enum class Type
-		{
-			CIRCULAR,
-			RECTANGULAR,
-			SQUARE
-		};
+    struct Perforated_Geometry
+    {
+        enum class Type
+        {
+            CIRCULAR,
+            RECTANGULAR,
+            SQUARE
+        };
 
-		double spacing_x;
-		double spacing_y;
-		double dimension_x;
-		double dimension_y;
-		Perforated_Geometry::Type perforation_type;
-	};
+        Perforated_Geometry(double spacing_x,
+                            double spacing_y,
+                            double dimension_x,
+                            double dimension_y,
+                            Perforated_Geometry::Type perforation_type);
+
+        double spacing_x;
+        double spacing_y;
+        double dimension_x;
+        double dimension_y;
+        Perforated_Geometry::Type perforation_type;
+    };
 
     struct Product_Data_Optical_Perforated_Screen : Product_Data_Optical_With_Material
     {
-        
         Product_Data_Optical_Perforated_Screen(
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-          Perforated_Geometry const& geometry);
+          Perforated_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
