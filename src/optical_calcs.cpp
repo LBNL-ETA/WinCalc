@@ -16,6 +16,7 @@
 
 namespace wincalc
 {
+#if 0
     template<typename T>
     WCE_Optical_Result_Simple<T>
       do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> const & f)
@@ -64,70 +65,151 @@ namespace wincalc
         return calc_result;
     }
 
-    double calc_optical_property(std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
-                                 Calculated_Property_Choice property_choice,
-                                 Side_Choice side_choice,
-                                 Scattering_Choice scattering_choice,
-                                 double min_lambda,
-                                 double max_lambda,
-                                 double theta,
-                                 double phi)
+    double calc_optical_property_ORIG(std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
+                                      FenestrationCommon::PropertySimple property_choice,
+                                      FenestrationCommon::Side FenestrationCommon::Side,
+                                      FenestrationCommon::Scattering FenestrationCommon::Scattering,
+                                      double min_lambda,
+                                      double max_lambda,
+                                      double theta,
+                                      double phi)
     {
         return layers->getPropertySimple(
-          min_lambda, max_lambda, property_choice, side_choice, scattering_choice, theta, phi);
+          min_lambda, max_lambda, property_choice, FenestrationCommon::Side, FenestrationCommon::Scattering, theta, phi);
+    }
+#endif
+
+    std::function<
+      double(FenestrationCommon::PropertySimple, FenestrationCommon::Side, FenestrationCommon::Scattering, double, double)>
+      get_optical_result_function_system(
+        std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
+        double min_lambda,
+        double max_lambda)
+    {
+        return std::bind(&SingleLayerOptics::IScatteringLayer::getPropertySimple,
+                         layers,
+                         min_lambda,
+                         max_lambda,
+                         std::placeholders::_1,
+                         std::placeholders::_2,
+                         std::placeholders::_3,
+                         std::placeholders::_4,
+                         std::placeholders::_5);
     }
 
+    std::function<std::vector<double>(
+      FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+      get_layer_absorptances_total_function(
+        std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
+        double min_lambda,
+        double max_lambda)
+    {
+        return std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayers,
+                         layers,
+                         min_lambda,
+                         max_lambda,
+                         std::placeholders::_1,
+                         std::placeholders::_2,
+                         std::placeholders::_3,
+                         std::placeholders::_4);
+    }
+
+    std::function<std::vector<double>(
+      FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+      get_layer_absorptances_heat_function(
+        std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
+        double min_lambda,
+        double max_lambda)
+    {
+        return std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayersHeat,
+                         layers,
+                         min_lambda,
+                         max_lambda,
+                         std::placeholders::_1,
+                         std::placeholders::_2,
+                         std::placeholders::_3,
+                         std::placeholders::_4);
+    }
+
+    std::function<std::vector<double>(
+      FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+      get_layer_absorptances_electricity_function(
+        std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
+        double min_lambda,
+        double max_lambda)
+    {
+        return std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayersElectricity,
+                         layers,
+                         min_lambda,
+                         max_lambda,
+                         std::placeholders::_1,
+                         std::placeholders::_2,
+                         std::placeholders::_3,
+                         std::placeholders::_4);
+    }
+
+#if 0
     std::vector<WCE_Optical_Result_Absorptance<double>>
       get_layer_absorptances(std::shared_ptr<SingleLayerOptics::IScatteringLayer> layers,
-                             FenestrationCommon::Side side_choice,
+                             FenestrationCommon::Side FenestrationCommon::Side,
                              double min_lambda,
                              double max_lambda,
                              double theta = 0,
                              double phi = 0)
     {
         std::vector<WCE_Optical_Result_Absorptance<double>> absorptances;
+
         auto direct_absorptances_total =
-          layers->getAbsorptanceLayers(min_lambda,
-                                       max_lambda,
-                                       side_choice,
-                                       FenestrationCommon::ScatteringSimple::Direct,
-                                       theta,
-                                       phi);
+          std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayers,
+                    layers,
+                    min_lambda,
+                    max_lambda,
+                    FenestrationCommon::Side,
+                    FenestrationCommon::ScatteringSimple::Direct,
+                    std::placeholders::_1,
+                    std::placeholders::_2);
+
+
         auto diffuse_absorptances_total =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
-                                       side_choice,
+                                       FenestrationCommon::Side,
                                        FenestrationCommon::ScatteringSimple::Diffuse,
                                        theta,
                                        phi);
 
         auto direct_absorptances_heat =
-          layers->getAbsorptanceLayersHeat(min_lambda,
-                                           max_lambda,
-                                           side_choice,
-                                           FenestrationCommon::ScatteringSimple::Direct,
-                                           theta,
-                                           phi);
+          std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayersHeat,
+                    layers,
+                    min_lambda,
+                    max_lambda,
+                    FenestrationCommon::Side,
+                    FenestrationCommon::ScatteringSimple::Direct,
+                    std::placeholders::_1,
+                    std::placeholders::_2);
+
         auto diffuse_absorptances_heat =
           layers->getAbsorptanceLayersHeat(min_lambda,
                                            max_lambda,
-                                           side_choice,
+                                           FenestrationCommon::Side,
                                            FenestrationCommon::ScatteringSimple::Diffuse,
                                            theta,
                                            phi);
 
         auto direct_absorptances_electricity =
-          layers->getAbsorptanceLayersElectricity(min_lambda,
-                                                  max_lambda,
-                                                  side_choice,
-                                                  FenestrationCommon::ScatteringSimple::Direct,
-                                                  theta,
-                                                  phi);
+          std::bind(&SingleLayerOptics::IScatteringLayer::getAbsorptanceLayersElectricity,
+                    layers,
+                    min_lambda,
+                    max_lambda,
+                    FenestrationCommon::Side,
+                    FenestrationCommon::ScatteringSimple::Direct,
+                    std::placeholders::_1,
+                    std::placeholders::_2);
 
         auto diffuse_absorptances_electricity =
           layers->getAbsorptanceLayersElectricity(min_lambda,
                                                   max_lambda,
-                                                  side_choice,
+                                                  FenestrationCommon::Side,
                                                   FenestrationCommon::ScatteringSimple::Diffuse,
                                                   theta,
                                                   phi);
@@ -145,27 +227,48 @@ namespace wincalc
 
         return absorptances;
     }
+#endif
+
+    std::function<std::vector<std::vector<double>>(FenestrationCommon::Side,
+                                                   FenestrationCommon::PropertySimple)>
+      get_matrix_function(std::shared_ptr<MultiLayerOptics::CMultiPaneBSDF> system,
+                          double min_lambda,
+                          double max_lambda)
+    {
+        return
+          [&](FenestrationCommon::Side side, FenestrationCommon::PropertySimple property_simple) {
+              return system->getMatrix(min_lambda, max_lambda, side, property_simple).getMatrix();
+          };
+    }
 
     WCE_Optical_Results calc_all(std::shared_ptr<SingleLayerOptics::IScatteringLayer> system,
                                  double min_lambda,
-                                 double max_lambda,
-                                 double theta,
-                                 double phi)
+                                 double max_lambda)
     {
         if(max_lambda < min_lambda)
         {
             max_lambda = min_lambda + 1;
         }
+#if 0
         auto calc_f = [=, &system](const FenestrationCommon::PropertySimple prop,
                                    const FenestrationCommon::Side side,
                                    const FenestrationCommon::Scattering scattering) {
             return calc_optical_property(
               system, prop, side, scattering, min_lambda, max_lambda, theta, phi);
         };
+
         auto optical_results = do_calcs<double>(calc_f);
+#endif
+        WCE_Optical_Results optical_results;
+        optical_results.system_results.optical_results_f =
+          get_optical_result_function_system(system, min_lambda, max_lambda);
+
         auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(system);
         if(bsdf_system)
         {
+            optical_results.system_results.matrix_results_f =
+              get_matrix_function(bsdf_system, min_lambda, max_lambda);
+#if 0
             // Include matrix results for BSDF systems
             optical_results.system_results.front.transmittance.matrix =
               bsdf_system
@@ -198,8 +301,10 @@ namespace wincalc
                             FenestrationCommon::Side::Back,
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
+#endif
         }
 
+#if 0
         auto absorptances_front = get_layer_absorptances(
           system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
         auto absorptances_back = get_layer_absorptances(
@@ -212,28 +317,22 @@ namespace wincalc
                 WCE_Optical_Result_Absorptance<double>{absorptances_front[i]},
                 WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}});
         }
+#endif
 
         return optical_results;
     }
 
+
     WCE_Optical_Results
-      calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-               window_standards::Optical_Standard_Method const & method,
-               double theta,
-               double phi,
-               std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
-               Spectal_Data_Wavelength_Range_Method const & type,
-               int number_visible_bands,
-               int number_solar_bands)
+      calc_all(std::shared_ptr<SingleLayerOptics::IScatteringLayer> optical_system,
+               Lambda_Range const & lambda_range)
     {
-        auto layers = create_multi_pane(
-          product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
-        auto lambda_range = get_lambda_range(wavelengths, method);
-        return calc_all(
-          std::move(layers), lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
+        // std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        // auto lambda_range = get_lambda_range(wavelengths, method);
+        return calc_all(optical_system, lambda_range.min_lambda, lambda_range.max_lambda);
     }
 
+#if 0
     Color_Result
       calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
                             const FenestrationCommon::PropertySimple prop,
@@ -247,7 +346,9 @@ namespace wincalc
         auto lab = color_props->getCIE_Lab(prop, side, scattering, theta, phi);
         return Color_Result(trichromatic, rgb, lab);
     }
+#endif
 
+#if 0
     WCE_Color_Results calc_color_properties(
       std::shared_ptr<SingleLayerOptics::ColorProperties> color_props, double theta, double phi)
     {
@@ -260,8 +361,9 @@ namespace wincalc
 
         return do_calcs<Color_Result>(calc_f);
     }
+#endif
 
-
+#if 0
     WCE_Color_Results
       calc_color(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
                  window_standards::Optical_Standard_Method const & method_x,
@@ -269,7 +371,7 @@ namespace wincalc
                  window_standards::Optical_Standard_Method const & method_z,
                  double theta,
                  double phi,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+                 std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
                  Spectal_Data_Wavelength_Range_Method const & type,
                  int number_visible_bands,
                  int number_solar_bands)
@@ -319,8 +421,8 @@ namespace wincalc
           get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
 
         // and the same wavelength set?
-        std::vector<double> wavelength_set =
-          get_wavelength_set_to_use(method_x, common_wavelengths);
+        std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
+          {common_wavelengths}, type, number_visible_bands, number_solar_bands);
 
         auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
                                                                                 std::move(layer_y),
@@ -333,6 +435,133 @@ namespace wincalc
 
 
         return calc_color_properties(color_props, theta, phi);
+    }
+#endif
+
+    std::unique_ptr<SingleLayerOptics::ColorProperties> create_optical_system_color(
+      std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
+      window_standards::Optical_Standard_Method const & method_x,
+      window_standards::Optical_Standard_Method const & method_y,
+      window_standards::Optical_Standard_Method const & method_z,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
+      Spectal_Data_Wavelength_Range_Method const & type,
+      int number_visible_bands,
+      int number_solar_bands)
+    {
+        auto layer_x = create_multi_pane(
+          product_data, method_x, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
+        auto layer_y = create_multi_pane(
+          product_data, method_y, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
+        auto layer_z = create_multi_pane(
+          product_data, method_z, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
+
+        auto x_wavelengths = layer_x->getWavelengths();
+        auto y_wavelengths = layer_y->getWavelengths();
+        auto z_wavelengths = layer_z->getWavelengths();
+
+        if((x_wavelengths.front() != y_wavelengths.front())
+           || (y_wavelengths.front() != z_wavelengths.front())
+           || (x_wavelengths.back() != y_wavelengths.back())
+           || (y_wavelengths.back() != z_wavelengths.back()))
+        {
+            std::stringstream err_msg;
+            err_msg << "Mismatched min and max wavelengths.  X: [" << x_wavelengths.front() << ", "
+                    << x_wavelengths.back() << "] Y: [" << y_wavelengths.front() << ", "
+                    << y_wavelengths.back() << "] Z: [" << z_wavelengths.front() << ", "
+                    << z_wavelengths.back() << "]" << std::endl;
+            throw std::runtime_error(err_msg.str());
+        }
+
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+
+        auto detector_x = get_spectum_values(method_x.detector_spectrum, method_x, wavelengths);
+        auto detector_y = get_spectum_values(method_y.detector_spectrum, method_y, wavelengths);
+        auto detector_z = get_spectum_values(method_z.detector_spectrum, method_z, wavelengths);
+
+        FenestrationCommon::CCommonWavelengths wavelength_combiner;
+        for(auto & wavelength_set : wavelengths)
+        {
+            wavelength_combiner.addWavelength(wavelength_set);
+        }
+        auto common_wavelengths =
+          wavelength_combiner.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
+
+
+        // All methods must have the same source
+        // spectrum? (Should it be checked above?)
+        auto source_spectrum =
+          get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
+
+        // and the same wavelength set?
+        std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
+          {common_wavelengths}, type, number_visible_bands, number_solar_bands);
+
+        auto color_system = std::make_unique<SingleLayerOptics::ColorProperties>(std::move(layer_x),
+                                                                                 std::move(layer_y),
+                                                                                 std::move(layer_z),
+                                                                                 source_spectrum,
+                                                                                 detector_x,
+                                                                                 detector_y,
+                                                                                 detector_z,
+                                                                                 wavelength_set);
+
+        return color_system;
+    }
+
+    WCE_Color_Results
+      get_color_results_functions(std::shared_ptr<SingleLayerOptics::ColorProperties> system)
+    {
+        WCE_Color_Results results;
+        results.system_results.lab_results_f =
+          std::bind(&SingleLayerOptics::ColorProperties::getCIE_Lab,
+                    system,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4,
+                    std::placeholders::_5);
+
+        results.system_results.trichromatic_results_f =
+          std::bind(&SingleLayerOptics::ColorProperties::getTrichromatic,
+                    system,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4,
+                    std::placeholders::_5);
+
+        results.system_results.rgb_results_f =
+          std::bind(&SingleLayerOptics::ColorProperties::getRGB,
+                    system,
+                    std::placeholders::_1,
+                    std::placeholders::_2,
+                    std::placeholders::_3,
+                    std::placeholders::_4,
+                    std::placeholders::_5);
+
+        return results;
+    }
+
+    WCE_Color_Results
+      calc_color(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
+                 window_standards::Optical_Standard_Method const & method_x,
+                 window_standards::Optical_Standard_Method const & method_y,
+                 window_standards::Optical_Standard_Method const & method_z,
+                 std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
+                 Spectal_Data_Wavelength_Range_Method const & type,
+                 int number_visible_bands,
+                 int number_solar_bands)
+    {
+        auto system = std::shared_ptr<SingleLayerOptics::ColorProperties>(
+          create_optical_system_color(product_data,
+                                      method_x,
+                                      method_y,
+                                      method_z,
+                                      bsdf_hemisphere,
+                                      type,
+                                      number_visible_bands,
+                                      number_solar_bands));
+		return get_color_results_functions(system);
     }
 
     Layer_Optical_IR_Results_Needed_For_Thermal_Calcs optical_ir_results_needed_for_thermal_calcs(
@@ -369,7 +598,7 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       double theta,
       double phi,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -408,15 +637,16 @@ namespace wincalc
         return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
     }
 
+#if 0
     double calc_optical_property(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      Calculated_Property_Choice property_choice,
-      Side_Choice side_choice,
-      Scattering_Choice scattering_choice,
+      FenestrationCommon::PropertySimple property_choice,
+      FenestrationCommon::Side FenestrationCommon::Side,
+      FenestrationCommon::Scattering FenestrationCommon::Scattering,
       double theta,
       double phi,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -428,11 +658,12 @@ namespace wincalc
 
         return calc_optical_property(std::move(layers),
                                      property_choice,
-                                     side_choice,
-                                     scattering_choice,
+                                     FenestrationCommon::Side,
+                                     FenestrationCommon::Scattering,
                                      lambda_range.min_lambda,
                                      lambda_range.max_lambda,
                                      theta,
                                      phi);
     }
+#endif
 }   // namespace wincalc

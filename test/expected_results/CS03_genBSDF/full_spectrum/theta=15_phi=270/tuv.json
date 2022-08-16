@@ -5,20 +5,20 @@
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.19000138093965988,
-                    "heat_direct": 0.19030003222318553,
-                    "total_diffuse": 0.19000138093965988,
-                    "total_direct": 0.19030003222318553
+                    "heat_diffuse": 0.14352117825574714,
+                    "heat_direct": 0.14374657182790004,
+                    "total_diffuse": 0.14352117825574714,
+                    "total_direct": 0.14374657182790004
                 }
             },
             "front": {
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.1900738731849955,
-                    "heat_direct": 0.19050557480224442,
-                    "total_diffuse": 0.1900738731849955,
-                    "total_direct": 0.19050557480224442
+                    "heat_diffuse": 0.14359329394088888,
+                    "heat_direct": 0.14327948286067943,
+                    "total_diffuse": 0.14359329394088888,
+                    "total_direct": 0.14327948286067943
                 }
             }
         }
@@ -26,30 +26,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.6022745669211492,
-                "direct_diffuse": 0.5973432241834574,
-                "direct_direct": 0.004342207083863924,
-                "direct_hemispherical": 0.6016854312673213
+                "diffuse_diffuse": 0.6378686087284325,
+                "direct_diffuse": 0.6326722268839287,
+                "direct_direct": 0.004650065472994364,
+                "direct_hemispherical": 0.6373222923569231
             },
             "transmittance": {
-                "diffuse_diffuse": 0.20772405213919623,
-                "direct_diffuse": 0.2063946434743413,
-                "direct_direct": 0.0016198930351517993,
-                "direct_hemispherical": 0.20801453650949311
+                "diffuse_diffuse": 0.2186102130158248,
+                "direct_diffuse": 0.2172840702505257,
+                "direct_direct": 0.001647065564651412,
+                "direct_hemispherical": 0.21893113581517712
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.6021946646582237,
-                "direct_diffuse": 0.5975506253071049,
-                "direct_direct": 0.004456239045519109,
-                "direct_hemispherical": 0.602006864352624
+                "diffuse_diffuse": 0.6378506457931424,
+                "direct_diffuse": 0.6328461383777936,
+                "direct_direct": 0.0046289996308648135,
+                "direct_hemispherical": 0.6374751380086584
             },
             "transmittance": {
-                "diffuse_diffuse": 0.20773146215677865,
-                "direct_diffuse": 0.20593953944496157,
-                "direct_direct": 0.0015480214001701502,
-                "direct_hemispherical": 0.20748756084513173
+                "diffuse_diffuse": 0.21855606026597083,
+                "direct_diffuse": 0.21762267059693552,
+                "direct_direct": 0.0016227085337269956,
+                "direct_hemispherical": 0.21924537913066253
             }
         }
     }

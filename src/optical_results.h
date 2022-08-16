@@ -3,36 +3,81 @@
 
 #include <vector>
 #include <optional>
+#include <WCEMultiLayerOptics.hpp>
 
 namespace wincalc
 {
+#if 0
     template<typename T>
-    struct WCE_Optical_Result_Simple
+    struct WCE_Optical_Result_Simple_ORIG
     {
         T direct_direct;
         T direct_diffuse;
         T diffuse_diffuse;
         T direct_hemispherical;
-		std::optional<std::vector<std::vector<T>>> matrix;
+        std::optional<std::vector<std::vector<T>>> matrix;
+    };
+
+    template<typename T>
+    struct OpticalResultFunctionWrapper
+    {
+        using Theta = double;
+        using Phi = double;
+
+        std::function<T(Theta, Phi)> results_f;
+        T operator()(double theta = 0, double = 0)
+        {
+            return results_f(theta, phi);
+        }
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_Simple_Angular_Dependent
+    {
+        OpticalResultFunctionWrapper<T> direct_direct;
+        OpticalResultFunctionWrapper<T> direct_diffuse;
+        OpticalResultFunctionWrapper<T> direct_hemispherical;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_Simple
+    {
+        WCE_Optical_Result_Simple_Angular_Dependent<T> angular_dependent;
+        T diffuse_diffuse;
+        std::optional<std::vector<std::vector<T>>> matrix;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Result_Absorptance_ORIG
+    {
+        T total_direct;
+        T total_diffuse;
+        T heat_direct;
+        T heat_diffuse;
+        T electricity_direct;
+        T electricity_diffuse;
+        // T hemispherical;
     };
 
     template<typename T>
     struct WCE_Optical_Result_Absorptance
     {
-		T total_direct;
-		T total_diffuse;
-        T heat_direct;
+        using Theta = double;
+        using Phi = double;
+        std::function<T(Theta, Phi)> total_direct;
+        T total_diffuse;
+        std::function<T(Theta, Phi)> heat_direct;
         T heat_diffuse;
-		T electricity_direct;
-		T electricity_diffuse;
+        std::function<T(Theta, Phi)> electricity_direct;
+        T electricity_diffuse;
         // T hemispherical;
     };
 
     template<typename T>
-	struct WCE_Optical_Result_Layer
-	{
+    struct WCE_Optical_Result_Layer
+    {
         WCE_Optical_Result_Absorptance<T> absorptance;
-	};
+    };
 
     template<typename T>
     struct WCE_Optical_Transmission_Result
@@ -47,13 +92,47 @@ namespace wincalc
         T front;
         T back;
     };
+#endif
 
+    template<typename T>
+    struct WCE_Optical_Results_System
+    {
+        std::function<T(FenestrationCommon::PropertySimple, FenestrationCommon::Side, FenestrationCommon::Scattering, double, double)>
+          optical_results_f;
+        std::optional<std::function<std::vector<std::vector<double>>(
+          FenestrationCommon::Side, FenestrationCommon::PropertySimple)>>
+          matrix_results_f;
+    };
+
+    template<typename T>
+    struct WCE_Optical_Results_Layers
+    {
+        std::function<std::vector<double>(
+          FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+          layer_absorptances_total_f;
+        std::function<std::vector<double>(
+          FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+          layer_absorptances_heat_f;
+        std::function<std::vector<double>(
+          FenestrationCommon::Side, FenestrationCommon::ScatteringSimple, double, double)>
+          layer_absorptances_electricity_f;
+    };
+
+#if 0
     template<typename T>
     struct WCE_Optical_Results_Template
     {
         WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<T>>>
           system_results;
         std::vector<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> layer_results;
+    };
+#endif
+
+    template<typename T>
+    struct WCE_Optical_Results_Template
+    {
+        WCE_Optical_Results_System<T> system_results;
+        WCE_Optical_Results_Layers<T> layer_results;
     };
 
     using WCE_Optical_Results = WCE_Optical_Results_Template<double>;
@@ -109,10 +188,23 @@ namespace wincalc
     };
 
     template<>
+    struct WCE_Optical_Results_System<Color_Result>
+    {
+        std::function<SingleLayerOptics::Trichromatic(
+          FenestrationCommon::PropertySimple, FenestrationCommon::Side, FenestrationCommon::Scattering, double, double)>
+          trichromatic_results_f;
+        std::function<SingleLayerOptics::aRGB(
+          FenestrationCommon::PropertySimple, FenestrationCommon::Side, FenestrationCommon::Scattering, double, double)>
+          rgb_results_f;
+        std::function<SingleLayerOptics::CIE_LAB(
+          FenestrationCommon::PropertySimple, FenestrationCommon::Side, FenestrationCommon::Scattering, double, double)>
+          lab_results_f;
+    };
+
+    template<>
     struct WCE_Optical_Results_Template<Color_Result>
     {
-        WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
-          system_results;
+        WCE_Optical_Results_System<Color_Result> system_results;
     };
 
     using WCE_Color_Results = WCE_Optical_Results_Template<Color_Result>;

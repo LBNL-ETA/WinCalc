@@ -34,35 +34,37 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       double theta = 0,
       double phi = 0,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-        std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+        std::optional<SingleLayerOptics::BSDFHemisphere>(),
       Spectal_Data_Wavelength_Range_Method const & type =
         Spectal_Data_Wavelength_Range_Method::FULL,
       int number_visible_bands = 5,
       int number_solar_bands = 10);
 
+#if 0
     double
       calc_optical_property(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
                             window_standards::Optical_Standard_Method const & method,
-                            Calculated_Property_Choice property_choice,
-                            Side_Choice side_choice,
-                            Scattering_Choice scattering_choice,
+                            FenestrationCommon::PropertySimple property_choice,
+                            FenestrationCommon::Side FenestrationCommon::Side,
+                            FenestrationCommon::Scattering FenestrationCommon::Scattering,
                             double theta = 0,
                             double phi = 0,
-                            std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-                              std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                            std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+                              std::optional<SingleLayerOptics::BSDFHemisphere>(),
                             Spectal_Data_Wavelength_Range_Method const & type =
                               Spectal_Data_Wavelength_Range_Method::FULL,
                             int number_visible_bands = 5,
                             int number_solar_bands = 10);
+#endif
 
     WCE_Optical_Results
       calc_all(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
                window_standards::Optical_Standard_Method const & method,
                double theta = 0,
                double phi = 0,
-               std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-                 std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+               std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+                 std::optional<SingleLayerOptics::BSDFHemisphere>(),
                Spectal_Data_Wavelength_Range_Method const & type =
                  Spectal_Data_Wavelength_Range_Method::FULL,
                int number_visible_bands = 5,
@@ -75,8 +77,8 @@ namespace wincalc
                  window_standards::Optical_Standard_Method const & method_z,
                  double theta = 0,
                  double phi = 0,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-                   std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+                 std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+                   std::optional<SingleLayerOptics::BSDFHemisphere>(),
                  Spectal_Data_Wavelength_Range_Method const & type =
                    Spectal_Data_Wavelength_Range_Method::FULL,
                  int number_visible_bands = 5,

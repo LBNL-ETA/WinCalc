@@ -8,9 +8,7 @@
 
 namespace wincalc
 {
-    WCE_Optical_Results Glazing_System::optical_method_results(std::string const & method_name,
-                                                               double theta,
-                                                               double phi) const
+    WCE_Optical_Results Glazing_System::optical_method_results(std::string const & method_name) const
     {
         if(method_name == "THERMAL IR")
         {
@@ -35,7 +33,13 @@ namespace wincalc
               "standard file but care should be taken in interpreting any results calculated this "
               "way.");
         }
-        auto method = get_method(method_name);
+		auto method = get_method(method_name);
+		if(!optical_system || method_name != last_optical_method)
+		{
+			optical_system = std::shared_ptr<SingleLayerOptics::IScatteringLayer>(create_multi_pane(
+				get_optical_layers(product_data), method, bsdf_hemisphere, spectral_data_wavelength_range_method, number_visible_bands, number_solar_bands));
+		}
+        
         return calc_all(get_optical_layers(product_data),
                         method,
                         theta,
@@ -337,7 +341,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :
@@ -364,7 +368,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :
@@ -418,7 +422,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :

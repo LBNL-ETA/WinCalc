@@ -26,8 +26,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -41,8 +41,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -58,8 +58,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -79,9 +79,7 @@ namespace wincalc
                                                       double theta = 0,
                                                       double phi = 0);
 
-        WCE_Optical_Results optical_method_results(std::string const & method_name,
-                                                   double theta = 0,
-                                                   double phi = 0) const;
+        WCE_Optical_Results optical_method_results(std::string const & method_name) const;
 
         WCE_Color_Results color(double theta = 0,
                                 double phi = 0,
@@ -128,7 +126,7 @@ namespace wincalc
         double height;
         double tilt;
         Environments environment;
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
+        std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere;
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
@@ -136,6 +134,9 @@ namespace wincalc
         double initial_temperature = 293.15;
         double initial_pressure = 101325;
         std::vector<double> applied_loads;
+
+		std::shared_ptr<SingleLayerOptics::IScatteringLayer> optical_system;
+
 
         void do_deflection_updates(double theta, double phi);
 
@@ -146,6 +147,7 @@ namespace wincalc
         std::optional<Tarcog::ISO15099::CSystem> current_system;
         double last_theta = 0;
         double last_phi = 0;
+		std::string last_optical_method;
         void reset_system();
         void reset_igu();
         void sort_spectral_data();

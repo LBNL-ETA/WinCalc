@@ -258,7 +258,7 @@ namespace wincalc
       std::vector<std::vector<double>> const & tb_visible,
       std::vector<std::vector<double>> const & rf_visible,
       std::vector<std::vector<double>> const & rb_visible,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
       double thickness_meteres,
       std::optional<double> ir_transmittance_front,
       std::optional<double> ir_transmittance_back,

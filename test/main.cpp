@@ -11,7 +11,7 @@ int main( int argc, char* argv[] ) {
   ::testing::GTEST_FLAG(catch_exceptions) = false;
 #endif
 	::testing::InitGoogleTest( &argc, argv );
-	test_dir = argv[1];
+	test_dir = "C:\\Users\\dev\\source\\repos\\WinCalc\\test";
 	update_results = false;
 	return RUN_ALL_TESTS();
 }

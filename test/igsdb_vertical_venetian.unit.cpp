@@ -16,7 +16,7 @@
 using namespace wincalc;
 using namespace window_standards;
 
-class TestVerticalVenetianIGSDBMaterialUserGeometry  : public testing::Test
+class TestVerticalVenetianIGSDBMaterialUserGeometry : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
@@ -33,14 +33,14 @@ protected:
           products;
 
         auto shade_material = OpticsParser::parseJSONFile(venetian_material_path.string());
-        
-		wincalc::Venetian_Geometry geometry{15, 0.020, 0.050, 0.025, false};
-		auto shade = wincalc::create_venetian_blind(geometry, shade_material);
 
-		products.push_back(shade);
+        wincalc::Venetian_Geometry geometry{15, 0.020, 0.050, 0.025, false};
+        auto shade = wincalc::create_venetian_blind(geometry, shade_material);
+
+        products.push_back(shade);
 
         std::vector<Engine_Gap_Info> gaps;
-        
+
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";
         standard_path /= "W5_NFRC_2003.std";
@@ -56,15 +56,20 @@ protected:
     }
 };
 
-TEST_F(TestVerticalVenetianIGSDBMaterialUserGeometry , Test_Thermal)
+TEST_F(TestVerticalVenetianIGSDBMaterialUserGeometry, Test_Thermal)
 {
-    test_thermal_results(
-      "vertical_venetian_igsdb_material_14477_user_geometry", "thermal_U_Environment", glazing_system_u, update_results);
-    test_thermal_results(
-      "vertical_venetian_igsdb_material_14477_user_geometry", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+    test_thermal_results("vertical_venetian_igsdb_material_14477_user_geometry",
+                         "thermal_U_Environment",
+                         glazing_system_u,
+                         update_results);
+    test_thermal_results("vertical_venetian_igsdb_material_14477_user_geometry",
+                         "thermal_SHGC_Environment",
+                         glazing_system_shgc,
+                         update_results);
 }
 
-TEST_F(TestVerticalVenetianIGSDBMaterialUserGeometry , Test_Optical)
+TEST_F(TestVerticalVenetianIGSDBMaterialUserGeometry, Test_Optical)
 {
-    test_optical_results("vertical_venetian_igsdb_material_14477_user_geometry", glazing_system_u, update_results);
+    test_optical_results(
+      "vertical_venetian_igsdb_material_14477_user_geometry", glazing_system_u, update_results);
 }

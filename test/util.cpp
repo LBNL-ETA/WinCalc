@@ -323,7 +323,7 @@ void test_all_optical_results(std::string const & system_name,
 
 	auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
     test_optical_results(system_name + angle + "/solar", solar_results, update_results);
-
+#if 0
     auto photopic_results = glazing_system->optical_method_results("PHOTOPIC", theta, phi);
     test_optical_results(system_name + angle + "/photopic", photopic_results, update_results);
 
@@ -340,6 +340,7 @@ void test_all_optical_results(std::string const & system_name,
 
     auto color_results = glazing_system->color(theta, phi);
     test_optical_results(system_name + angle + "/color", color_results, update_results);
+#endif
 }
 
 void test_deflection_results(std::string const & results_name,
@@ -503,16 +504,18 @@ void test_optical_results(std::string const & system_name,
 {
     double theta = 0;
     double phi = 0;
-
+#if 0
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
       system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+#endif
 
 	glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
 
+#if 0
     theta = 15;
     phi = 270;
 
@@ -524,6 +527,7 @@ void test_optical_results(std::string const & system_name,
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
+#endif
 }
 
 void test_thermal_results(std::string const & system_name,
