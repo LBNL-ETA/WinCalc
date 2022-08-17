@@ -220,7 +220,7 @@ namespace wincalc
             else if(std::holds_alternative<OpticsParser::DualBandBSDF>(wavelength_measured_values))
             {
                 auto bsdfHemisphere =
-                  SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
+                  SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
                 auto wavelengthValues =
                   std::get<OpticsParser::DualBandBSDF>(wavelength_measured_values);
                 auto solar = wavelengthValues.solar;

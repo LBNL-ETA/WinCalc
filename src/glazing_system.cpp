@@ -101,7 +101,7 @@ namespace wincalc
         else
         {
             current_igu = create_igu(
-              product_data, gap_values, width, height, tilt, standard, theta, phi, bsdf_hemisphere);
+              product_data, gap_values, width, height, tilt, standard);
             if(!applied_loads.empty())
             {
                 current_igu.value().setAppliedLoad(applied_loads);
@@ -337,7 +337,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :
@@ -364,7 +364,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :
@@ -418,7 +418,7 @@ namespace wincalc
       double height,
       double tilt,
       Environments const & environment,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
       int number_solar_bands) :

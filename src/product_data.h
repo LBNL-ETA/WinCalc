@@ -138,7 +138,7 @@ namespace wincalc
           std::vector<std::vector<double>> const & tb_visible,
           std::vector<std::vector<double>> const & rf_visible,
           std::vector<std::vector<double>> const & rb_visible,
-          SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+          SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
           double thickness_meteres,
           std::optional<double> ir_transmittance_front = std::optional<double>(),
           std::optional<double> ir_transmittance_back = std::optional<double>(),
@@ -147,7 +147,7 @@ namespace wincalc
           double permeability_factor = 0,
           bool flipped = false);
 
-        SingleLayerOptics::CBSDFHemisphere bsdf_hemisphere;
+        SingleLayerOptics::BSDFHemisphere bsdf_hemisphere;
 
         std::vector<std::vector<double>> tf_solar;
         std::vector<std::vector<double>> tb_solar;

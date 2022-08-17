@@ -221,7 +221,7 @@ namespace wincalc
                window_standards::Optical_Standard_Method const & method,
                double theta,
                double phi,
-               std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+               std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
                Spectal_Data_Wavelength_Range_Method const & type,
                int number_visible_bands,
                int number_solar_bands)
@@ -269,7 +269,7 @@ namespace wincalc
                  window_standards::Optical_Standard_Method const & method_z,
                  double theta,
                  double phi,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+                 std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
                  Spectal_Data_Wavelength_Range_Method const & type,
                  int number_visible_bands,
                  int number_solar_bands)
@@ -319,8 +319,8 @@ namespace wincalc
           get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
 
         // and the same wavelength set?
-        std::vector<double> wavelength_set =
-          get_wavelength_set_to_use(method_x, common_wavelengths);
+		std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
+			{common_wavelengths}, type, number_visible_bands, number_solar_bands);
 
         auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
                                                                                 std::move(layer_y),
@@ -369,7 +369,7 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       double theta,
       double phi,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -416,7 +416,7 @@ namespace wincalc
       Scattering_Choice scattering_choice,
       double theta,
       double phi,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)

@@ -26,8 +26,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -41,8 +41,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -58,8 +58,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -128,7 +128,7 @@ namespace wincalc
         double height;
         double tilt;
         Environments environment;
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
+        std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere;
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
