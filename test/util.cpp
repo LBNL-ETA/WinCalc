@@ -338,8 +338,11 @@ void test_all_optical_results(std::string const & system_name,
     auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
     test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
 
-    auto color_results = glazing_system->color(theta, phi);
-    test_optical_results(system_name + angle + "/color", color_results, update_results);
+    if(!glazing_system->isBSDF())
+    {
+        auto color_results = glazing_system->color(theta, phi);
+        test_optical_results(system_name + angle + "/color", color_results, update_results);
+    }
 }
 
 void test_deflection_results(std::string const & results_name,
