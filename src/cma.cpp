@@ -1,6 +1,5 @@
 #include "cma.h"
 #include <optional>
-#include <WCETarcog.hpp>
 #include <map>
 #include <sstream>
 #include <iostream>
@@ -9,8 +8,6 @@
 
 namespace wincalc
 {
-    using BestWorstSpacerIGU = std::pair<CMA::Option, CMA::Option>;
-
     CMA::Option get_cma_option(std::string const & s)
     {
         if(to_lower(s) == "low")
@@ -124,6 +121,7 @@ namespace wincalc
         return BestWorstUFactors{best_u_factors, worst_u_factors};
     }
 
+
     CMA::CMAFrame
       get_cma_frame(std::map<BestWorstSpacerIGU, Tarcog::ISO15099::FrameData> const & frame_data)
     {
@@ -190,17 +188,17 @@ namespace wincalc
                                    double window_width,
                                    double window_height)
     {
-		auto top_cma_frame = get_cma_frame(cma_frame_parameters(top_frame));
+        auto top_cma_frame = get_cma_frame(cma_frame_parameters(top_frame));
         auto bottom_cma_frame = get_cma_frame(cma_frame_parameters(bottom_frame));
         auto left_cma_frame = get_cma_frame(cma_frame_parameters(left_frame));
         auto right_cma_frame = get_cma_frame(cma_frame_parameters(right_frame));
 
-		auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
-		auto best_spacer_keff =
+        auto best_worst_u_factors = get_best_worst_u_factors(top_frame);
+        auto best_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("Low").spacerConductance;
         auto worst_spacer_keff =
           top_frame.cmaOptions.value().bestWorstOptions.at("High").spacerConductance;
-		
+
         std::shared_ptr<CMA::CMAWindowSingleVision> cma_window(
           new CMA::CMAWindowSingleVision(window_width,
                                          window_height,
@@ -208,11 +206,37 @@ namespace wincalc
                                          worst_spacer_keff,
                                          best_worst_u_factors.best,
                                          best_worst_u_factors.worst));
-		cma_window->setFrameTop(top_cma_frame);
+        cma_window->setFrameTop(top_cma_frame);
         cma_window->setFrameBottom(bottom_cma_frame);
         cma_window->setFrameLeft(left_cma_frame);
         cma_window->setFrameRight(right_cma_frame);
-		return cma_window;
+        return cma_window;
+    }
+
+    std::shared_ptr<CMA::CMAWindowSingleVision>
+      get_cma_window_single_vision(CMA::CMAFrame const & top_frame,
+                                   CMA::CMAFrame const & bottom_frame,
+                                   CMA::CMAFrame const & left_frame,
+                                   CMA::CMAFrame const & right_frame,
+                                   double window_width,
+                                   double window_height,
+                                   double best_spacer_keff,
+                                   double worst_spacer_keff,
+                                   CMA::CMABestWorstUFactors const & best_u_factors,
+                                   CMA::CMABestWorstUFactors const & worst_u_factors)
+    {
+        std::shared_ptr<CMA::CMAWindowSingleVision> cma_window(
+          new CMA::CMAWindowSingleVision(window_width,
+                                         window_height,
+                                         best_spacer_keff,
+                                         worst_spacer_keff,
+                                         best_u_factors,
+                                         worst_u_factors));
+        cma_window->setFrameTop(top_frame);
+        cma_window->setFrameBottom(bottom_frame);
+        cma_window->setFrameLeft(left_frame);
+        cma_window->setFrameRight(right_frame);
+        return cma_window;
     }
 
     std::shared_ptr<CMA::CMAWindowDualVisionVertical>
@@ -254,6 +278,38 @@ namespace wincalc
         cma_window->setFrameBottomLeft(bottom_left_cma_frame);
         cma_window->setFrameBottomRight(bottom_right_cma_frame);
         cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
+        return cma_window;
+    }
+
+    std::shared_ptr<CMA::CMAWindowDualVisionVertical>
+      get_cma_window_double_vision_vertical(CMA::CMAFrame const & top_frame,
+                                            CMA::CMAFrame const & bottom_frame,
+                                            CMA::CMAFrame const & top_left_frame,
+                                            CMA::CMAFrame const & top_right_frame,
+                                            CMA::CMAFrame const & bottom_left_frame,
+                                            CMA::CMAFrame const & bottom_right_frame,
+                                            CMA::CMAFrame const & meeting_rail,
+                                            double window_width,
+                                            double window_height,
+                                            double best_spacer_keff,
+                                            double worst_spacer_keff,
+                                            CMA::CMABestWorstUFactors const & best_u_factors,
+                                            CMA::CMABestWorstUFactors const & worst_u_factors)
+    {
+        std::shared_ptr<CMA::CMAWindowDualVisionVertical> cma_window(
+          new CMA::CMAWindowDualVisionVertical(window_width,
+                                               window_height,
+                                               best_spacer_keff,
+                                               worst_spacer_keff,
+                                               best_u_factors,
+                                               worst_u_factors));
+        cma_window->setFrameTop(top_frame);
+        cma_window->setFrameBottom(bottom_frame);
+        cma_window->setFrameTopLeft(top_left_frame);
+        cma_window->setFrameTopRight(top_right_frame);
+        cma_window->setFrameBottomLeft(bottom_left_frame);
+        cma_window->setFrameBottomRight(bottom_right_frame);
+        cma_window->setFrameMeetingRail(meeting_rail);
         return cma_window;
     }
 
@@ -299,16 +355,48 @@ namespace wincalc
         return cma_window;
     }
 
+        std::shared_ptr<CMA::CMAWindowDualVisionHorizontal>
+		get_cma_window_double_vision_horizontal(CMA::CMAFrame const & top_left_frame,
+			CMA::CMAFrame const & top_right_frame,
+			CMA::CMAFrame const & bottom_left_frame,
+			CMA::CMAFrame const & bottom_right_frame,
+			CMA::CMAFrame const & left_frame,
+			CMA::CMAFrame const & right_frame,
+			CMA::CMAFrame const & meeting_rail,
+			double window_width,
+			double window_height,
+			double best_spacer_keff,
+			double worst_spacer_keff,
+			CMA::CMABestWorstUFactors const & best_u_factors,
+			CMA::CMABestWorstUFactors const & worst_u_factors)
+	{
+        std::shared_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
+          new CMA::CMAWindowDualVisionHorizontal(window_width,
+                                                 window_height,
+                                                 best_spacer_keff,
+                                                 worst_spacer_keff,
+                                                 best_u_factors,
+                                                 worst_u_factors));
+        cma_window->setFrameTopLeft(top_left_frame);
+        cma_window->setFrameTopRight(top_right_frame);
+        cma_window->setFrameBottomLeft(bottom_left_frame);
+        cma_window->setFrameBottomRight(bottom_right_frame);
+        cma_window->setFrameLeft(left_frame);
+        cma_window->setFrameRight(right_frame);
+        cma_window->setFrameMeetingRail(meeting_rail);
+        return cma_window;
+	}
+
     CMAResult calc_cma(std::shared_ptr<CMA::ICMAWindow> window,
                        double glazing_system_u,
                        double glazing_system_shgc,
                        double glazing_system_visible_front_direct_hemispheric_transmittance,
                        double spacer_keff)
     {
-		auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
-		auto u = window->uValue(glazing_system_u, spacer_keff);
-		auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
-		return CMAResult{u, shgc, tvis};
+        auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
+        auto u = window->uValue(glazing_system_u, spacer_keff);
+        auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+        return CMAResult{u, shgc, tvis};
     }
 
 }   // namespace wincalc
