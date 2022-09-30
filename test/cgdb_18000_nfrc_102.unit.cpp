@@ -32,7 +32,7 @@ protected:
         shade_path /= "products";
         shade_path /= "cgdb_18000.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
+        std::vector<OpticsParser::ProductData> parsed_products;
         OpticsParser::Parser parser;
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
         auto shade = parser.parseJSONFile(shade_path.string());

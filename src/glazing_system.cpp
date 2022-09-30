@@ -100,8 +100,7 @@ namespace wincalc
         }
         else
         {
-            current_igu = create_igu(
-              product_data, gap_values, width, height, tilt, standard);
+            current_igu = create_igu(product_data, gap_values, width, height, tilt, standard);
             if(!applied_loads.empty())
             {
                 current_igu.value().setAppliedLoad(applied_loads);
@@ -358,7 +357,7 @@ namespace wincalc
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
-      std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+      std::vector<OpticsParser::ProductData> const & product_data,
       std::vector<Engine_Gap_Info> const & gap_values,
       double width,
       double height,
@@ -384,8 +383,8 @@ namespace wincalc
     }
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
-      std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                               Product_Data_Optical_Thermal>> const & product_data)
+      std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
+        product_data)
     {
         std::vector<Product_Data_Optical_Thermal> solid_layers;
         for(auto product : product_data)
@@ -401,8 +400,8 @@ namespace wincalc
             {
                 // Otherwise the variant was holding OpticsParser::ProductData
                 // Convert that and use it
-                auto converted_layer = convert_to_solid_layer(
-                  std::get<std::shared_ptr<OpticsParser::ProductData>>(product));
+                auto converted_layer =
+                  convert_to_solid_layer(std::get<OpticsParser::ProductData>(product));
                 solid_layers.push_back(converted_layer);
             }
         }
@@ -411,8 +410,8 @@ namespace wincalc
 
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
-      std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                               Product_Data_Optical_Thermal>> const & product_data,
+      std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
+        product_data,
       std::vector<Engine_Gap_Info> const & gap_values,
       double width,
       double height,

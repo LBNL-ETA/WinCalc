@@ -46,7 +46,7 @@ namespace wincalc
       double window_width,
       double window_height);
 
-    CMAResult calc_cma(std::shared_ptr<CMA::ICMAWindow> window,
+    CMAResult calc_cma(CMA::ICMAWindow & window,
                        double glazing_system_u,
                        double glazing_system_shgc,
                        double glazing_system_visible_front_direct_hemispheric_transmittance,

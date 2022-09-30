@@ -32,8 +32,7 @@ protected:
         venetian_path /= "products";
         venetian_path /= "igsdb_12149.json";
 
-        std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                                 wincalc::Product_Data_Optical_Thermal>>
+        std::vector<std::variant<OpticsParser::ProductData, wincalc::Product_Data_Optical_Thermal>>
           products;
         OpticsParser::Parser parser;
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
@@ -43,7 +42,7 @@ protected:
           converted_venetian.optical_data);
         optical_venetian->geometry.distribution_method =
           SingleLayerOptics::DistributionMethod::UniformDiffuse;
-		optical_venetian->geometry.is_horizontal = false;
+        optical_venetian->geometry.is_horizontal = false;
 
         products.push_back(converted_venetian);
         products.push_back(clear_3);

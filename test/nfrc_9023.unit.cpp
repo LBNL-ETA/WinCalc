@@ -32,7 +32,7 @@ protected:
 		product_path /= "products";
 		product_path /= "9023.json";
 
-		std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+		std::vector<OpticsParser::ProductData> products;
 		auto product = OpticsParser::parseJSONFile(product_path.string());
 		products.push_back(product);
 

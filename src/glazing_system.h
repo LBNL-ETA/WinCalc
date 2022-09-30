@@ -35,7 +35,7 @@ namespace wincalc
 
         Glazing_System(
           window_standards::Optical_Standard const & standard,
-          std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+          std::vector<OpticsParser::ProductData> const & product_data,
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
@@ -51,8 +51,8 @@ namespace wincalc
         // Constructor with vector of variants added for ease of use in python
         Glazing_System(
           window_standards::Optical_Standard const & standard,
-          std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                                   Product_Data_Optical_Thermal>> const & product_data,
+          std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
+            product_data,
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,

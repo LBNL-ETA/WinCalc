@@ -71,14 +71,13 @@ namespace wincalc
         }
     }
 
-    double
-      get_length_unit_conversion_factor(std::shared_ptr<OpticsParser::ProductData> const & product)
+    double get_length_unit_conversion_factor(OpticsParser::ProductData const & product)
     {
         // Almost all lengths coming from OpticsParser are in mm so default to that.
         double length_conversion = 1.0 / 1000.0;
-        if(product->thicknessUnit.has_value())
+        if(product.thicknessUnit.has_value())
         {
-            auto thickness_unit = to_lower(product->thicknessUnit.value());
+            auto thickness_unit = to_lower(product.thicknessUnit.value());
             if(thickness_unit == "meter" || thickness_unit == "meters")
             {
                 length_conversion = 1.0;
@@ -90,7 +89,7 @@ namespace wincalc
             else
             {
                 std::stringstream msg;
-                msg << "Unsupported thickness unit: " << product->thicknessUnit.value()
+                msg << "Unsupported thickness unit: " << product.thicknessUnit.value()
                     << " Currently only meter and millimeter are supported.";
                 throw std::runtime_error(msg.str());
             }
@@ -98,21 +97,16 @@ namespace wincalc
         return length_conversion;
     }
 
-    std::shared_ptr<Product_Data_Optical>
-      convert_optical(std::shared_ptr<OpticsParser::ProductData> const & product)
+    std::shared_ptr<Product_Data_Optical> convert_optical(OpticsParser::ProductData const & product)
     {
-        std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
-          std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
-
         auto length_conversion = get_length_unit_conversion_factor(product);
 
-        if(composed_product)
+        if(product.composition.has_value())
         {
-            auto material = convert_optical(composed_product->compositionInformation->material);
-
+            auto material = convert_optical(*product.composition.value().material);
+            auto product_geometry = product.composition.value().geometry;
             std::shared_ptr<OpticsParser::VenetianGeometry> venetian_geometry =
-              std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(
-                composed_product->compositionInformation->geometry);
+              std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(product_geometry);
             if(venetian_geometry)
             {
                 Venetian_Geometry geometry{
@@ -129,8 +123,7 @@ namespace wincalc
                 return converted;
             }
             std::shared_ptr<OpticsParser::WovenGeometry> woven_geometry =
-              std::dynamic_pointer_cast<OpticsParser::WovenGeometry>(
-                composed_product->compositionInformation->geometry);
+              std::dynamic_pointer_cast<OpticsParser::WovenGeometry>(product_geometry);
             if(woven_geometry)
             {
                 Woven_Geometry geometry{woven_geometry->threadDiameter * length_conversion,
@@ -142,8 +135,7 @@ namespace wincalc
                 return converted;
             }
             std::shared_ptr<OpticsParser::PerforatedGeometry> perforated_geometry =
-              std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(
-                composed_product->compositionInformation->geometry);
+              std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(product_geometry);
             if(perforated_geometry)
             {
                 Perforated_Geometry::Type perforation_type;
@@ -181,41 +173,41 @@ namespace wincalc
         }
         else
         {
-            if(!product->measurements.has_value())
+            if(!product.measurements.has_value())
             {
                 throw std::runtime_error("Missing wavelength measurements");
             }
-            if(!product->thickness.has_value())
+            if(!product.thickness.has_value())
             {
                 throw std::runtime_error("Missing product thickness");
             }
-            auto wavelength_measured_values = product->measurements.value();
+            auto wavelength_measured_values = product.measurements.value();
             std::shared_ptr<Product_Data_Optical> converted;
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
-                if(!product->productSubtype.has_value())
+                if(!product.productSubtype.has_value())
                 {
                     throw std::runtime_error("Missing product subtype");
                 }
                 FenestrationCommon::MaterialType material_type =
-                  convert_material_type(product->productSubtype.value());
+                  convert_material_type(product.productSubtype.value());
 
                 std::optional<CoatedSide> coated_side;
-                if(product->coatedSide.has_value())
+                if(product.coatedSide.has_value())
                 {
-                    coated_side = convert_coated_side(product->coatedSide.value());
+                    coated_side = convert_coated_side(product.coatedSide.value());
                 }
 
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
-                  product->thickness.value() * length_conversion,
+                  product.thickness.value() * length_conversion,
                   std::get<std::vector<OpticsParser::WLData>>(wavelength_measured_values),
                   coated_side,
-                  product->IRTransmittance,
-                  product->IRTransmittance,
-                  product->frontEmissivity,
-                  product->backEmissivity));
+                  product.IRTransmittance,
+                  product.IRTransmittance,
+                  product.frontEmissivity,
+                  product.backEmissivity));
             }
             else if(std::holds_alternative<OpticsParser::DualBandBSDF>(wavelength_measured_values))
             {
@@ -243,12 +235,12 @@ namespace wincalc
                   visible.rf.data,
                   visible.rb.data,
                   bsdfHemisphere,
-                  product->thickness.value() * length_conversion,
-                  product->IRTransmittance,
-                  product->IRTransmittance,
-                  product->frontEmissivity,
-                  product->backEmissivity,
-                  product->permeabilityFactor.value_or(
+                  product.thickness.value() * length_conversion,
+                  product.IRTransmittance,
+                  product.IRTransmittance,
+                  product.frontEmissivity,
+                  product.backEmissivity,
+                  product.permeabilityFactor.value_or(
                     0)));   // If permeability factor is not defined assume it is zero
             }
             return converted;
@@ -256,46 +248,39 @@ namespace wincalc
     }
 
 
-    wincalc::Product_Data_Thermal
-      convert_thermal(std::shared_ptr<OpticsParser::ProductData> const & product)
+    wincalc::Product_Data_Thermal convert_thermal(OpticsParser::ProductData const & product)
     {
-        std::shared_ptr<OpticsParser::ComposedProductData> composed_product =
-          std::dynamic_pointer_cast<OpticsParser::ComposedProductData>(product);
-
         auto length_conversion = get_length_unit_conversion_factor(product);
 
-        std::shared_ptr<OpticsParser::ProductData> data = product;
-        if(composed_product)
-        {
-            data = composed_product->compositionInformation->material;
-        }
+        OpticsParser::ProductData const & data =
+          product.composition.has_value() ? *product.composition.value().material : product;
 
-        if(!data->thickness.has_value())
+        if(!data.thickness.has_value())
         {
             throw std::runtime_error("Missing thickness");
         }
 
         auto thermal_data = wincalc::Product_Data_Thermal(
-          data->conductivity, data->thickness.value() * length_conversion, false);
+          data.conductivity, data.thickness.value() * length_conversion, false);
 
-        thermal_data.density = data->density;
-        thermal_data.youngs_modulus = data->youngsModulus;
+        thermal_data.density = data.density;
+        thermal_data.youngs_modulus = data.youngsModulus;
 
         return thermal_data;
     }
 
     wincalc::Product_Data_Optical_Thermal
-      convert_to_solid_layer(std::shared_ptr<OpticsParser::ProductData> const & product)
+      convert_to_solid_layer(OpticsParser::ProductData const & product)
     {
         auto optical = convert_optical(product);
         // PV power properties are properties of the layer and so far do not require any conversion
-        optical->pv_power_properties = product->pvPowerProperties;
+        optical->pv_power_properties = product.pvPowerProperties;
         auto thermal = std::make_shared<Product_Data_Thermal>(convert_thermal(product));
         return wincalc::Product_Data_Optical_Thermal{optical, thermal};
     }
 
     std::vector<wincalc::Product_Data_Optical_Thermal> convert_to_solid_layers(
-      std::vector<std::shared_ptr<OpticsParser::ProductData>> const & products)
+      std::vector<OpticsParser::ProductData> const & products)
     {
         std::vector<wincalc::Product_Data_Optical_Thermal> converted;
         for(auto product : products)

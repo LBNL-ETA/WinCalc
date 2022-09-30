@@ -29,7 +29,7 @@ TEST_F(TestIGSDB_14025, Test_IR)
     product_path /= "products";
     product_path /= "14025.json";
 
-    std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+    std::vector<OpticsParser::ProductData> products;
     OpticsParser::Parser parser;
     auto product = parser.parseJSONFile(product_path.string());
     auto layer = convert_to_solid_layer(product);

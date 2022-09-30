@@ -29,7 +29,7 @@ protected:
         product_path /= "products";
         product_path /= "CS03_genBSDF.xml";
         
-		std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+		std::vector<OpticsParser::ProductData> products;
 		auto shade = OpticsParser::parseBSDFXMLFile(product_path.string());
 		products.push_back(shade);
 

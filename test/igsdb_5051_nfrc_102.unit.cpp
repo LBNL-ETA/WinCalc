@@ -32,7 +32,7 @@ protected:
         lowe_path /= "products";
         lowe_path /= "igsdb_5051.json";
 
-        std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+        std::vector<std::variant<OpticsParser::ProductData,
                                  wincalc::Product_Data_Optical_Thermal>>
           products;
         OpticsParser::Parser parser;

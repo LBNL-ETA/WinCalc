@@ -28,7 +28,7 @@ protected:
         shade_path /= "products";
         shade_path /= "46016 SEATEX Midnight.xml";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
+        std::vector<OpticsParser::ProductData> parsed_products;
         auto shade = OpticsParser::parseBSDFXMLFile(shade_path.string());
         parsed_products.push_back(shade);
     

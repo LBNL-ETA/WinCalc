@@ -32,8 +32,7 @@ protected:
         venetian_path /= "products";
         venetian_path /= "igsdb_12149.json";
 
-        std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                                 wincalc::Product_Data_Optical_Thermal>>
+        std::vector<std::variant<OpticsParser::ProductData, wincalc::Product_Data_Optical_Thermal>>
           products;
         OpticsParser::Parser parser;
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());

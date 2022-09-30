@@ -28,7 +28,7 @@ protected:
         layer_1_path /= "products";
         layer_1_path /= "CLEAR_3.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         auto layer_1 = OpticsParser::parseJSONFile(layer_1_path.string());
         products.push_back(layer_1);
 

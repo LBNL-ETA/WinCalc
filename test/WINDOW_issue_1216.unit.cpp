@@ -38,7 +38,7 @@ protected:
         layer_3_path /= "products";
         layer_3_path /= "igsdb_9817.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         auto layer_1 = OpticsParser::parseJSONFile(layer_1_path.string());
         products.push_back(layer_1);
 

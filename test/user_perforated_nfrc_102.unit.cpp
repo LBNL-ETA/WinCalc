@@ -34,7 +34,7 @@ protected:
         venetian_material_path /= "igsdb_12852.json";
 
         std::vector<
-          std::variant<std::shared_ptr<OpticsParser::ProductData>, Product_Data_Optical_Thermal>>
+          std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>>
           products;
 
         auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());

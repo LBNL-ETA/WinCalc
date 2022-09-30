@@ -33,7 +33,7 @@ protected:
         bsdf_path /=
           "2011-SA1_same_solar_and_visible_only_normal.XML";   //"2011-SA1_same_solar_and_visible.XML";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
         products.push_back(clear_3);
 

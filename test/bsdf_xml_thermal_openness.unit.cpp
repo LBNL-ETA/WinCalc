@@ -32,7 +32,7 @@ protected:
 		shade_path /= "products";
 		shade_path /= "2011-SA1.XML";
 
-        std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+        std::vector<std::variant<OpticsParser::ProductData,
                                  wincalc::Product_Data_Optical_Thermal>>
           products;
 
