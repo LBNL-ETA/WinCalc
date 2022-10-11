@@ -746,7 +746,7 @@ namespace wincalc
 
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
 
-        const MultiLayerOptics::CalculationProperties input{
+        const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
         layer->setCalculationProperties(input);
 
@@ -991,7 +991,7 @@ namespace wincalc
 
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
 
-        const MultiLayerOptics::CalculationProperties input{
+        const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
         layer->setCalculationProperties(input);
 

@@ -119,6 +119,8 @@ namespace wincalc
                                                 int number_visible_bands = 5,
                                                 int number_solar_bands = 10);
 
+        bool isBSDF();
+
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;

@@ -495,4 +495,9 @@ namespace wincalc
         model_deflection = enable;
         do_deflection_updates(last_theta, last_phi);
     }
+
+    bool Glazing_System::isBSDF()
+    {
+        return bsdf_hemisphere.has_value();
+    }
 }   // namespace wincalc
