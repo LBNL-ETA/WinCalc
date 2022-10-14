@@ -69,6 +69,7 @@ namespace wincalc
 
     void Glazing_System::reset_igu()
     {
+		optical_system_for_thermal_calcs = nullptr;
         current_igu = std::nullopt;
         reset_system();
     }

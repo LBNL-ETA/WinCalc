@@ -123,7 +123,6 @@ namespace wincalc
 
 
     protected:
-		//std::tuple< Product_Data_Optical_Thermal, FenestrationCommon::IntegrationType> previous_optical_params;
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<Engine_Gap_Info> gap_values;
         window_standards::Optical_Standard standard;
