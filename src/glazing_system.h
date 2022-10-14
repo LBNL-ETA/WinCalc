@@ -149,7 +149,7 @@ namespace wincalc
 
 		std::vector<double> get_solar_abs_front(double theta, double phi);
 		double get_solar_transmittance_front(double theta, double phi);
-		SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs();
+		SingleLayerOptics::IScatteringLayer & get_optical_system_for_thermal_calcs();
 		std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
 		
 
