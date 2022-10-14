@@ -276,22 +276,25 @@ namespace wincalc
     {
         auto layer_x = create_multi_pane(
           product_data, method_x, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        //auto layer_y = create_multi_pane(
-        //  product_data, method_y, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        //auto layer_z = create_multi_pane(
-        //  product_data, method_z, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
+        // auto layer_y = create_multi_pane(
+        //  product_data, method_y, bsdf_hemisphere, type, number_visible_bands,
+        //  number_solar_bands);
+        // auto layer_z = create_multi_pane(
+        //  product_data, method_z, bsdf_hemisphere, type, number_visible_bands,
+        //  number_solar_bands);
 
         auto x_wavelengths = layer_x->getWavelengths();
-        //auto y_wavelengths = layer_y->getWavelengths();
-        //auto z_wavelengths = layer_z->getWavelengths();
+        // auto y_wavelengths = layer_y->getWavelengths();
+        // auto z_wavelengths = layer_z->getWavelengths();
 
-        ///if((x_wavelengths.front() != y_wavelengths.front())
+        /// if((x_wavelengths.front() != y_wavelengths.front())
         ///   || (y_wavelengths.front() != z_wavelengths.front())
         ///   || (x_wavelengths.back() != y_wavelengths.back())
         ///   || (y_wavelengths.back() != z_wavelengths.back()))
         ///{
         ///    std::stringstream err_msg;
-        ///    err_msg << "Mismatched min and max wavelengths.  X: [" << x_wavelengths.front() << ", "
+        ///    err_msg << "Mismatched min and max wavelengths.  X: [" << x_wavelengths.front() << ",
+        ///    "
         ///            << x_wavelengths.back() << "] Y: [" << y_wavelengths.front() << ", "
         ///            << y_wavelengths.back() << "] Z: [" << z_wavelengths.front() << ", "
         ///            << z_wavelengths.back() << "]" << std::endl;
@@ -319,15 +322,11 @@ namespace wincalc
           get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
 
         // and the same wavelength set?
-		std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
-			{common_wavelengths}, type, number_visible_bands, number_solar_bands);
+        std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
+          {common_wavelengths}, type, number_visible_bands, number_solar_bands);
 
-        auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(std::move(layer_x),
-                                                                                source_spectrum,
-                                                                                detector_x,
-                                                                                detector_y,
-                                                                                detector_z,
-                                                                                wavelength_set);
+        auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(
+          std::move(layer_x), source_spectrum, detector_x, detector_y, detector_z, wavelength_set);
 
 
         return calc_color_properties(color_props, theta, phi);
@@ -361,7 +360,7 @@ namespace wincalc
     }
 
 #include <iostream>
-
+#if 0
     Optical_Solar_Results_Needed_For_Thermal_Calcs optical_solar_results_needed_for_thermal_calcs(
       std::vector<Product_Data_Optical_Thermal> const & product_data,
       window_standards::Optical_Standard const & standard,
@@ -404,6 +403,31 @@ namespace wincalc
                                            phi);
 
         return Optical_Solar_Results_Needed_For_Thermal_Calcs{t_sol, layer_absorptances};
+    }
+#endif
+
+    std::unique_ptr<SingleLayerOptics::IScatteringLayer>
+      optical_solar_results_system_needed_for_thermal_calcs(
+        std::vector<Product_Data_Optical_Thermal> const & product_data,
+        window_standards::Optical_Standard const & standard,
+        std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
+        Spectal_Data_Wavelength_Range_Method const & type,
+        int number_visible_bands,
+        int number_solar_bands)
+    {
+        auto optical_layers = get_optical_layers(product_data);
+        auto solar_method = standard.methods.at("SOLAR");
+
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
+
+        auto lambda_range = get_lambda_range(wavelengths, solar_method);
+
+        return create_multi_pane(optical_layers,
+                                 solar_method,
+                                 bsdf_hemisphere,
+                                 type,
+                                 number_visible_bands,
+                                 number_solar_bands);
     }
 
     double calc_optical_property(

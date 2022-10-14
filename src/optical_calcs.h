@@ -23,6 +23,7 @@ namespace wincalc
         std::vector<Product_Data_Optical_Thermal> const & product_data,
         window_standards::Optical_Standard const & standard);
 
+#if 0
     struct Optical_Solar_Results_Needed_For_Thermal_Calcs
     {
         double total_solar_transmittance;
@@ -40,6 +41,18 @@ namespace wincalc
         Spectal_Data_Wavelength_Range_Method::FULL,
       int number_visible_bands = 5,
       int number_solar_bands = 10);
+#endif
+
+	std::unique_ptr<SingleLayerOptics::IScatteringLayer>
+		optical_solar_results_system_needed_for_thermal_calcs(
+			std::vector<Product_Data_Optical_Thermal> const & product_data,
+			window_standards::Optical_Standard const & standard,
+			std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+			std::optional<SingleLayerOptics::BSDFHemisphere>(),
+			Spectal_Data_Wavelength_Range_Method const & type =
+			Spectal_Data_Wavelength_Range_Method::FULL,
+			int number_visible_bands = 5,
+			int number_solar_bands = 10);
 
     double
       calc_optical_property(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,

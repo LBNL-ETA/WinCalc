@@ -123,6 +123,7 @@ namespace wincalc
 
 
     protected:
+		//std::tuple< Product_Data_Optical_Thermal, FenestrationCommon::IntegrationType> previous_optical_params;
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<Engine_Gap_Info> gap_values;
         window_standards::Optical_Standard standard;
@@ -146,6 +147,13 @@ namespace wincalc
 
         std::optional<Tarcog::ISO15099::CIGU> current_igu;
         std::optional<Tarcog::ISO15099::CSystem> current_system;
+
+		std::vector<double> get_solar_abs_front(double theta, double phi);
+		double get_solar_transmittance_front(double theta, double phi);
+		SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs();
+		std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
+		
+
         double last_theta = 0;
         double last_phi = 0;
         void reset_system();

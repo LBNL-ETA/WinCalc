@@ -142,22 +142,11 @@ namespace wincalc
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
 
-        auto optical_results =
-          optical_solar_results_needed_for_thermal_calcs(product_data,
-                                                         optical_standard(),
-                                                         theta,
-                                                         phi,
-                                                         bsdf_hemisphere,
-                                                         spectral_data_wavelength_range_method,
-                                                         number_visible_bands,
-                                                         number_solar_bands);
+        auto absportances = get_solar_abs_front(theta, phi);
+        auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
 
-        system.setAbsorptances(optical_results.layer_solar_absorptances);
-        return system.getSHGC(optical_results.total_solar_transmittance);
-
-
-        // return shgc(optical_results.layer_solar_absorptances,
-        //            optical_results.total_solar_transmittance);
+        system.setAbsorptances(absportances);
+        return system.getSHGC(solar_front_transmittance);
     }
 
     std::vector<double> Glazing_System::layer_temperatures(Tarcog::ISO15099::System system_type,
@@ -185,19 +174,10 @@ namespace wincalc
         }
         auto & system = get_system(theta, phi);
 
-        auto optical_results =
-          optical_solar_results_needed_for_thermal_calcs(product_data,
-                                                         optical_standard(),
-                                                         theta,
-                                                         phi,
-                                                         bsdf_hemisphere,
-                                                         spectral_data_wavelength_range_method,
-                                                         number_visible_bands,
-                                                         number_solar_bands);
-
         if(system_type == Tarcog::ISO15099::System::SHGC)
         {
-            system.setAbsorptances(optical_results.layer_solar_absorptances);
+			auto solar_front_absorptances = get_solar_abs_front(theta, phi);
+            system.setAbsorptances(solar_front_absorptances);
         }
         return system.getTemperatures(system_type);
     }
@@ -276,17 +256,9 @@ namespace wincalc
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
 
-        auto optical_results =
-          optical_solar_results_needed_for_thermal_calcs(product_data,
-                                                         optical_standard(),
-                                                         theta,
-                                                         phi,
-                                                         bsdf_hemisphere,
-                                                         spectral_data_wavelength_range_method,
-                                                         number_visible_bands,
-                                                         number_solar_bands);
+		auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
 
-        return system.relativeHeatGain(optical_results.total_solar_transmittance);
+        return system.relativeHeatGain(solar_front_transmittance);
     }
 
     void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
@@ -500,4 +472,59 @@ namespace wincalc
     {
         return bsdf_hemisphere.has_value();
     }
+
+
+    SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs()
+    {
+        if(optical_system_for_thermal_calcs == nullptr)
+        {
+            optical_system_for_thermal_calcs =
+              optical_solar_results_system_needed_for_thermal_calcs(
+                product_data,
+                optical_standard(),
+                bsdf_hemisphere,
+                spectral_data_wavelength_range_method,
+                number_visible_bands,
+                number_solar_bands);
+        }
+
+        return *optical_system_for_thermal_calcs;
+    }
+
+    double Glazing_System::get_solar_transmittance_front(double theta, double phi)
+    {
+        auto & optical_system = get_optical_system_for_thermal_calcs();
+
+        auto optical_layers = get_optical_layers(product_data);
+        auto solar_method = standard.methods.at("SOLAR");
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
+        auto lambda_range = get_lambda_range(wavelengths, solar_method);
+
+        return optical_system.getPropertySimple(lambda_range.min_lambda,
+                                                lambda_range.max_lambda,
+                                                FenestrationCommon::PropertySimple::T,
+                                                FenestrationCommon::Side::Front,
+                                                FenestrationCommon::Scattering::DirectHemispherical,
+                                                theta,
+                                                phi);
+    }
+
+    std::vector<double> Glazing_System::get_solar_abs_front(double theta, double phi)
+    {
+        auto & optical_system = get_optical_system_for_thermal_calcs();
+
+        auto optical_layers = get_optical_layers(product_data);
+        auto solar_method = standard.methods.at("SOLAR");
+        std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
+        auto lambda_range = get_lambda_range(wavelengths, solar_method);
+
+        return optical_system.getAbsorptanceLayersHeat(lambda_range.min_lambda,
+                                                       lambda_range.max_lambda,
+                                                       FenestrationCommon::Side::Front,
+                                                       FenestrationCommon::ScatteringSimple::Direct,
+                                                       theta,
+                                                       phi);
+    }
+
+
 }   // namespace wincalc

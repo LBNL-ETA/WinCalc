@@ -434,11 +434,8 @@ namespace wincalc
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_N_Band_Optical const & product_data,
-                      window_standards::Optical_Standard_Method const & method)
+      create_material(wincalc::Product_Data_N_Band_Optical const & product_data)
     {
-        auto integration_rule = convert(method.integration_rule.type);
-
         auto measured_wavelength_data = convert(product_data.wavelength_data);
         auto spectral_sample_data =
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
@@ -446,18 +443,13 @@ namespace wincalc
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
                                                      product_data.thickness_meters,
-                                                     product_data.material_type,
-                                                     integration_rule,
-                                                     method.integration_rule.k);
+                                                     product_data.material_type);
         return material;
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_pv_material(wincalc::Product_Data_N_Band_Optical const & product_data,
-                         window_standards::Optical_Standard_Method const & method)
+      create_pv_material(wincalc::Product_Data_N_Band_Optical const & product_data)
     {
-        auto integration_rule = convert(method.integration_rule.type);
-
         auto measured_wavelength_data = convert(product_data.wavelength_data);
         auto spectral_sample_data =
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
@@ -471,9 +463,7 @@ namespace wincalc
         auto material =
           SingleLayerOptics::Material::nBandPhotovoltaicMaterial(pvSample,
                                                                  product_data.thickness_meters,
-                                                                 product_data.material_type,
-                                                                 integration_rule,
-                                                                 method.integration_rule.k);
+                                                                 product_data.material_type);
 
         return material;
     }
@@ -507,7 +497,7 @@ namespace wincalc
             if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
             {
                 material = create_material(
-                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data), method);
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data));
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                       product_data))
@@ -606,7 +596,7 @@ namespace wincalc
             if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
             {
                 material = create_pv_material(
-                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data), method);
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data));
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                       product_data))
