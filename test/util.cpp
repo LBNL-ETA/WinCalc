@@ -338,8 +338,11 @@ void test_all_optical_results(std::string const & system_name,
     auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
     test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
 
-    auto color_results = glazing_system->color(theta, phi);
-    test_optical_results(system_name + angle + "/color", color_results, update_results);
+    if(!glazing_system->isBSDF())
+    {
+        auto color_results = glazing_system->color(theta, phi);
+        test_optical_results(system_name + angle + "/color", color_results, update_results);
+    }
 }
 
 void test_deflection_results(std::string const & results_name,
@@ -501,14 +504,22 @@ void test_optical_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+    std::cerr << "TEST OPTICAL RESULTS" << std::endl;
+    std::cerr << "--------------------------------------------------" << std::endl;
+
     double theta = 0;
     double phi = 0;
+
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "condensed spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
       system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
 
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "full spectrum" << std::endl;
 	glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
@@ -516,11 +527,16 @@ void test_optical_results(std::string const & system_name,
     theta = 15;
     phi = 270;
 
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "condensed spectrum" << std::endl;
+
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
       system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
 
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "full spectrum" << std::endl;
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
@@ -531,8 +547,15 @@ void test_thermal_results(std::string const & system_name,
                           std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
                           bool update)
 {
+    std::cerr << "TEST THERMAL RESULTS" << std::endl;
+    std::cerr << "--------------------------------------------------" << std::endl;
+
     double theta = 0;
     double phi = 0;
+
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "condensed spectrum" << std::endl;
+
     std::string angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
@@ -541,6 +564,9 @@ void test_thermal_results(std::string const & system_name,
                          update,
                          theta,
                          phi);
+
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "full spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
@@ -552,6 +578,10 @@ void test_thermal_results(std::string const & system_name,
 
     theta = 15;
     phi = 270;
+
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "condensed spectrum" << std::endl;
+
     angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
@@ -560,6 +590,9 @@ void test_thermal_results(std::string const & system_name,
                          update,
                          theta,
                          phi);
+
+    std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
+    std::cerr << "full spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);

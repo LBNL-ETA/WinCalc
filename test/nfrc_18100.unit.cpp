@@ -28,7 +28,7 @@ protected:
         product_path /= "products";
         product_path /= "CGD89_092661-2-Efb.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         OpticsParser::Parser parser;
         auto product = parser.parseJSONFile(product_path.string());
         products.push_back(product);

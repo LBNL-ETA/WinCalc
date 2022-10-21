@@ -35,14 +35,13 @@ add_executable(${PROJECT_TEST_NAME}
 		perforated_screen.unit.cpp
 		#double_layer_perfect_clear_exterior_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
-		#quad_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		bsdf_xml_thermal_openness.unit.cpp
 		CS03_genBSDF.unit.cpp
 		SEATEX_Midnight.unit.cpp
 		nfrc_102_as_bsdf.unit.cpp
 		pv_single_layer.unit.cpp
 		nfrc_102.unit.cpp
-		nfrc_20748.unit.cpp 
+		nfrc_20748.unit.cpp
 		nfrc_6046.unit.cpp
  		nfrc_9023.unit.cpp
  		nfrc_9223.unit.cpp
@@ -65,6 +64,7 @@ add_executable(${PROJECT_TEST_NAME}
  		deflection_tilt.unit.cpp
  		deflection_density.unit.cpp
  		cma.unit.cpp
+		quad_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		main.cpp
 		paths.h 
 		util.h

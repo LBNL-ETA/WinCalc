@@ -61,33 +61,18 @@ namespace wincalc
                          window_standards::Optical_Standard_Method const & method,
                          std::vector<std::vector<double>> const & products_wavelengths);
 
-    std::vector<double>
-      get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
-                                std::vector<double> const & product_wavelengths);
-
-    std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                      window_standards::Optical_Standard_Method const & method,
-                      size_t number_of_layers,
-                      Spectal_Data_Wavelength_Range_Method const & type =
-                        Spectal_Data_Wavelength_Range_Method::FULL,
-                      int number_visible_bands = 5,
-                      int number_solar_bands = 10);
-
-    std::shared_ptr<SingleLayerOptics::SpecularLayer>
-      create_specular_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                            window_standards::Optical_Standard_Method const & method,
-                            size_t number_of_layers,
-                            Spectal_Data_Wavelength_Range_Method const & type =
-                              Spectal_Data_Wavelength_Range_Method::FULL,
-                            int number_visible_bands = 5,
-                            int number_solar_bands = 10);
+    std::vector<double> combined_layer_wavelength_range_factory(
+      std::vector<std::vector<double>> const & product_wavelengths,
+      Spectal_Data_Wavelength_Range_Method const & type =
+        Spectal_Data_Wavelength_Range_Method::FULL,
+      int number_visible_bands = 5,
+      int number_solar_bands = 10);
 
     std::unique_ptr<SingleLayerOptics::IScatteringLayer> create_multi_pane(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-        std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
+        std::optional<SingleLayerOptics::BSDFHemisphere>(),
       Spectal_Data_Wavelength_Range_Method const & type =
         Spectal_Data_Wavelength_Range_Method::FULL,
       int number_visible_bands = 5,
@@ -97,11 +82,7 @@ namespace wincalc
       create_bsdf_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                         window_standards::Optical_Standard_Method const & method,
                         size_t number_of_layers,
-                        SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-                        Spectal_Data_Wavelength_Range_Method const & type =
-                          Spectal_Data_Wavelength_Range_Method::FULL,
-                        int number_visible_bands = 5,
-                        int number_solar_bands = 10);
+                        SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere);
 
     struct IGU_Info
     {
@@ -115,11 +96,7 @@ namespace wincalc
                  double width,
                  double height,
                  double tilt,
-                 window_standards::Optical_Standard const & standard,
-                 double theta = 0,
-                 double phi = 0,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere =
-                   std::optional<SingleLayerOptics::CBSDFHemisphere>());
+                 window_standards::Optical_Standard const & standard);
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,
                                             Environments const & environments);

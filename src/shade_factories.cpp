@@ -5,7 +5,7 @@ namespace wincalc
 {
     Product_Data_Optical_Thermal
       create_venetian_blind(Venetian_Geometry const & geometry,
-                            std::shared_ptr<OpticsParser::ProductData> const & material)
+                            OpticsParser::ProductData const & material)
     {
         auto converted_material = convert_to_solid_layer(material);
         auto optical_data = std::make_shared<Product_Data_Optical_Venetian>(
@@ -25,7 +25,7 @@ namespace wincalc
 
     Product_Data_Optical_Thermal
       create_woven_shade(Woven_Geometry const & geometry,
-                         std::shared_ptr<OpticsParser::ProductData> const & material)
+                         OpticsParser::ProductData const & material)
     {
         auto converted_material = convert_to_solid_layer(material);
         auto optical_data = std::make_shared<Product_Data_Optical_Woven_Shade>(
@@ -45,7 +45,7 @@ namespace wincalc
 
     Product_Data_Optical_Thermal
       create_perforated_screen(Perforated_Geometry const & geometry,
-                               std::shared_ptr<OpticsParser::ProductData> const & material)
+                               OpticsParser::ProductData const & material)
     {
         auto converted_material = convert_to_solid_layer(material);
         auto optical_data = std::make_shared<Product_Data_Optical_Perforated_Screen>(

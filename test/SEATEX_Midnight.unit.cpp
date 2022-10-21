@@ -28,7 +28,7 @@ protected:
         shade_path /= "products";
         shade_path /= "46016 SEATEX Midnight.xml";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
+        std::vector<OpticsParser::ProductData> parsed_products;
         auto shade = OpticsParser::parseBSDFXMLFile(shade_path.string());
         parsed_products.push_back(shade);
     
@@ -40,7 +40,7 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         auto bsdf_hemisphere =
-          SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, parsed_products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);

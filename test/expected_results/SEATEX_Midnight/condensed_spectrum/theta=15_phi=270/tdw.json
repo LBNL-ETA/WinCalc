@@ -5,20 +5,20 @@
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.8563572220147646,
-                    "heat_direct": 0.8588017020106986,
-                    "total_diffuse": 0.8563572220147646,
-                    "total_direct": 0.8588017020106986
+                    "heat_diffuse": 0.7876284815193948,
+                    "heat_direct": 0.788405489876698,
+                    "total_diffuse": 0.7876284815193948,
+                    "total_direct": 0.788405489876698
                 }
             },
             "front": {
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.8563572220147646,
-                    "heat_direct": 0.8588017020106986,
-                    "total_diffuse": 0.8563572220147646,
-                    "total_direct": 0.8588017020106986
+                    "heat_diffuse": 0.7876284815193948,
+                    "heat_direct": 0.788405489876698,
+                    "total_diffuse": 0.7876284815193948,
+                    "total_direct": 0.788405489876698
                 }
             }
         }
@@ -26,30 +26,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.10900078433331392,
-                "direct_diffuse": 0.08317672848136597,
-                "direct_direct": 1.0868452635056592e-05,
-                "direct_hemispherical": 0.08318759693400102
+                "diffuse_diffuse": 0.15761431898591763,
+                "direct_diffuse": 0.12775509717232997,
+                "direct_direct": 1.438018451435919e-05,
+                "direct_hemispherical": 0.12776947735684432
             },
             "transmittance": {
-                "diffuse_diffuse": 0.034641993651924136,
-                "direct_diffuse": 0.02043090368935687,
-                "direct_direct": 0.03757979736594376,
-                "direct_hemispherical": 0.05801070105530063
+                "diffuse_diffuse": 0.05475719949471311,
+                "direct_diffuse": 0.04628599127471925,
+                "direct_direct": 0.0375390414917389,
+                "direct_hemispherical": 0.08382503276645815
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.10900078433331392,
-                "direct_diffuse": 0.08317672848136597,
-                "direct_direct": 1.0868452635056592e-05,
-                "direct_hemispherical": 0.08318759693400102
+                "diffuse_diffuse": 0.15761431898591763,
+                "direct_diffuse": 0.12775509717232997,
+                "direct_direct": 1.438018451435919e-05,
+                "direct_hemispherical": 0.12776947735684432
             },
             "transmittance": {
-                "diffuse_diffuse": 0.034641993651924136,
-                "direct_diffuse": 0.02043090368935687,
-                "direct_direct": 0.03757979736594376,
-                "direct_hemispherical": 0.05801070105530063
+                "diffuse_diffuse": 0.05475719949471311,
+                "direct_diffuse": 0.04628599127471925,
+                "direct_direct": 0.0375390414917389,
+                "direct_hemispherical": 0.08382503276645815
             }
         }
     }

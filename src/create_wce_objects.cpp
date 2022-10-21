@@ -176,19 +176,19 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(
-                          SpectralAveraging::UVAction(product_wavelengths, spectrum.a, spectrum.b));
+                        result =
+                          SpectralAveraging::UVAction(product_wavelengths, spectrum.a, spectrum.b);
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::UVAction(
-                          get_first_val(method.source_spectrum.values), spectrum.a, spectrum.b));
+                        result = SpectralAveraging::UVAction(
+                          get_first_val(method.source_spectrum.values), spectrum.a, spectrum.b);
                         break;
                     case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
-                        result = convert(SpectralAveraging::UVAction(
-                          method.wavelength_set.values, spectrum.a, spectrum.b));
+                        result = SpectralAveraging::UVAction(
+                          method.wavelength_set.values, spectrum.a, spectrum.b);
                         break;
                 }
                 break;
@@ -198,18 +198,17 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::Krochmann(product_wavelengths));
+                        result = SpectralAveraging::Krochmann(product_wavelengths);
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::Krochmann(
-                          get_first_val(method.source_spectrum.values)));
+                        result = SpectralAveraging::Krochmann(
+                          get_first_val(method.source_spectrum.values));
                         break;
                     case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
-                        result =
-                          convert(SpectralAveraging::Krochmann(method.wavelength_set.values));
+                        result = SpectralAveraging::Krochmann(method.wavelength_set.values);
                         break;
                 }
                 break;
@@ -219,19 +218,19 @@ namespace wincalc
                     case window_standards::Wavelength_Set_Type::DATA:
                         // Wavelengths come from the measured data.  Extract first column and pass
                         // those
-                        result = convert(
-                          SpectralAveraging::BlackBodySpectrum(product_wavelengths, spectrum.t));
+                        result =
+                          SpectralAveraging::BlackBodySpectrum(product_wavelengths, spectrum.t);
                         break;
                     case window_standards::Wavelength_Set_Type::SOURCE:
                         // Wavelengths come from the source spectrum.  Extract first column and pass
                         // those
-                        result = convert(SpectralAveraging::BlackBodySpectrum(
-                          get_first_val(method.source_spectrum.values), spectrum.t));
+                        result = SpectralAveraging::BlackBodySpectrum(
+                          get_first_val(method.source_spectrum.values), spectrum.t);
                         break;
                     case window_standards::Wavelength_Set_Type::FILE:
                         // Wavelengths should already be loaded into the wavelength_set
-                        result = convert(SpectralAveraging::BlackBodySpectrum(
-                          method.wavelength_set.values, spectrum.t));
+                        result = SpectralAveraging::BlackBodySpectrum(method.wavelength_set.values,
+                                                                      spectrum.t);
                         break;
                 }
                 break;
@@ -264,9 +263,21 @@ namespace wincalc
         return get_spectum_values(spectrum, method, common_wavelengths);
     }
 
+    std::vector<double> get_wavelength_set_to_use_combined_layers(
+      std::vector<std::vector<double>> const & product_wavelengths)
+    {
+        FenestrationCommon::CCommonWavelengths combined;
+        for(auto const & wl : product_wavelengths)
+        {
+            combined.addWavelength(wl);
+        }
+
+        return combined.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
+    }
+
     std::vector<double>
-      get_wavelength_set_to_use(window_standards::Optical_Standard_Method const & method,
-                                std::vector<double> const & product_wavelengths)
+      optical_standard_wavelength_set(window_standards::Optical_Standard_Method const & method,
+                                      std::vector<std::vector<double>> const & product_wavelengths)
     {
         std::vector<double> result;
 
@@ -288,19 +299,18 @@ namespace wincalc
             }
             else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
-                result = product_wavelengths;
+                result = get_wavelength_set_to_use_combined_layers(product_wavelengths);
             }
         }
 
         return result;
     }
 
-    std::vector<double>
-      wavelength_range_factory(std::vector<double> const & product_wavelengths,
-                               window_standards::Optical_Standard_Method const & method,
-                               Spectal_Data_Wavelength_Range_Method const & type,
-                               int number_visible_bands,
-                               int number_solar_bands)
+    std::vector<double> combined_layer_wavelength_range_factory(
+      std::vector<std::vector<double>> const & product_wavelengths,
+      Spectal_Data_Wavelength_Range_Method const & type,
+      int number_visible_bands,
+      int number_solar_bands)
     {
         if(type == Spectal_Data_Wavelength_Range_Method::CONDENSED)
         {
@@ -312,7 +322,7 @@ namespace wincalc
         }
         else if(type == Spectal_Data_Wavelength_Range_Method::FULL)
         {
-            return get_wavelength_set_to_use(method, product_wavelengths);
+            return get_wavelength_set_to_use_combined_layers(product_wavelengths);
         }
         else
         {
@@ -321,15 +331,8 @@ namespace wincalc
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_Dual_Band_Optical_Hemispheric const & product,
-                      window_standards::Optical_Standard_Method const & method,
-                      Spectal_Data_Wavelength_Range_Method const & type,
-                      int number_visible_bands,
-                      int number_solar_bands)
+      create_material(wincalc::Product_Data_Dual_Band_Optical_Hemispheric const & product)
     {
-        auto wavelength_set = wavelength_range_factory(
-          product.wavelengths(), method, type, number_visible_bands, number_solar_bands);
-
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::dualBandMaterial(product.tf_solar,
                                                         product.tb_solar,
@@ -340,41 +343,30 @@ namespace wincalc
                                                         product.rf_visible,
                                                         product.rb_visible);
 
-        material->setBandWavelengths(wavelength_set);
         return material;
-        // throw std::runtime_error("Dual band specular materials not yet supported.");
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(wincalc::Product_Data_Dual_Band_Optical_BSDF const & product,
                       window_standards::Optical_Standard_Method const & optical_method,
-                      size_t number_of_layers,
-                      Spectal_Data_Wavelength_Range_Method const & type,
-                      int number_visible_bands,
-                      int number_solar_bands)
+                      size_t number_of_layers)
     {
-        auto wavelength_set = wavelength_range_factory(
-          product.wavelengths(), optical_method, type, number_visible_bands, number_solar_bands);
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
         if(number_of_layers == 1 && to_lower(optical_method.name) == "solar")
         {
-            material = SingleLayerOptics::Material::singleBandBSDFMaterial(
-              product.tf_solar,
-              product.tb_solar,
-              product.rf_solar,
-              product.rb_solar,
-              product.bsdf_hemisphere,
-              FenestrationCommon::WavelengthRange::Solar);
+            material = SingleLayerOptics::Material::singleBandBSDFMaterial(product.tf_solar,
+                                                                           product.tb_solar,
+                                                                           product.rf_solar,
+                                                                           product.rb_solar,
+                                                                           product.bsdf_hemisphere);
         }
         else if(number_of_layers == 1 && to_lower(optical_method.name) == "photopic")
         {
-            material = SingleLayerOptics::Material::singleBandBSDFMaterial(
-              product.tf_visible,
-              product.tb_visible,
-              product.rf_visible,
-              product.rb_visible,
-              product.bsdf_hemisphere,
-              FenestrationCommon::WavelengthRange::Visible);
+            material = SingleLayerOptics::Material::singleBandBSDFMaterial(product.tf_visible,
+                                                                           product.tb_visible,
+                                                                           product.rf_visible,
+                                                                           product.rb_visible,
+                                                                           product.bsdf_hemisphere);
         }
         else
         {
@@ -390,7 +382,6 @@ namespace wincalc
                                                                 product.bsdf_hemisphere,
                                                                 0.49);   // TODO, replace 0.49 ratio
         }
-        material->setBandWavelengths(wavelength_set);
         return material;
     }
 
@@ -443,59 +434,25 @@ namespace wincalc
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_material(wincalc::Product_Data_N_Band_Optical const & product_data,
-                      window_standards::Optical_Standard_Method const & method,
-                      Spectal_Data_Wavelength_Range_Method const & type,
-                      int number_visible_bands,
-                      int number_solar_bands)
+      create_material(wincalc::Product_Data_N_Band_Optical const & product_data)
     {
-        auto wavelength_set = wavelength_range_factory(
-          product_data.wavelengths(), method, type, number_visible_bands, number_solar_bands);
-
-        std::shared_ptr<std::vector<double>> converted_wavelengths =
-          std::make_shared<std::vector<double>>(wavelength_set);
-
-        auto integration_rule = convert(method.integration_rule.type);
-
         auto measured_wavelength_data = convert(product_data.wavelength_data);
         auto spectral_sample_data =
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
-
-        auto lambda_range = get_lambda_range({product_data.wavelengths()}, method);
 
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
           SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
                                                      product_data.thickness_meters,
-                                                     product_data.material_type,
-                                                     lambda_range.min_lambda,
-                                                     lambda_range.max_lambda,
-                                                     integration_rule,
-                                                     method.integration_rule.k);
-
-        material->setBandWavelengths(wavelength_set);
+                                                     product_data.material_type);
         return material;
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
-      create_pv_material(wincalc::Product_Data_N_Band_Optical const & product_data,
-                         window_standards::Optical_Standard_Method const & method,
-                         Spectal_Data_Wavelength_Range_Method const & type,
-                         int number_visible_bands,
-                         int number_solar_bands)
+      create_pv_material(wincalc::Product_Data_N_Band_Optical const & product_data)
     {
-        auto wavelength_set = wavelength_range_factory(
-          product_data.wavelengths(), method, type, number_visible_bands, number_solar_bands);
-
-        std::shared_ptr<std::vector<double>> converted_wavelengths =
-          std::make_shared<std::vector<double>>(wavelength_set);
-
-        auto integration_rule = convert(method.integration_rule.type);
-
         auto measured_wavelength_data = convert(product_data.wavelength_data);
         auto spectral_sample_data =
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
-
-        auto lambda_range = get_lambda_range({product_data.wavelengths()}, method);
 
         auto eqef = get_eqef(product_data.wavelength_data);
         auto eqeb = get_eqeb(product_data.wavelength_data);
@@ -506,23 +463,15 @@ namespace wincalc
         auto material =
           SingleLayerOptics::Material::nBandPhotovoltaicMaterial(pvSample,
                                                                  product_data.thickness_meters,
-                                                                 product_data.material_type,
-                                                                 lambda_range.min_lambda,
-                                                                 lambda_range.max_lambda,
-                                                                 integration_rule,
-                                                                 method.integration_rule.k);
+                                                                 product_data.material_type);
 
-        material->setBandWavelengths(wavelength_set);
         return material;
     }
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                       window_standards::Optical_Standard_Method const & method,
-                      size_t number_of_layers,
-                      Spectal_Data_Wavelength_Range_Method const & type,
-                      int number_visible_bands,
-                      int number_solar_bands)
+                      size_t number_of_layers)
     {
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
         auto wavelengths = product_data->wavelengths();
@@ -548,11 +497,7 @@ namespace wincalc
             if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
             {
                 material = create_material(
-                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data),
-                  method,
-                  type,
-                  number_visible_bands,
-                  number_solar_bands);
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data));
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                       product_data))
@@ -561,21 +506,14 @@ namespace wincalc
                   *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                     product_data),
                   method,
-                  number_of_layers,
-                  type,
-                  number_visible_bands,
-                  number_solar_bands);
+                  number_of_layers);
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
                       product_data))
             {
                 material = create_material(
                   *std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_Hemispheric>(
-                    product_data),
-                  method,
-                  type,
-                  number_visible_bands,
-                  number_solar_bands);
+                    product_data));
             }
             else
             {
@@ -616,8 +554,7 @@ namespace wincalc
                 }
                 double rf = 1.0 - tf - product_data->emissivity_front.value();
                 double rb = 1.0 - tb - product_data->emissivity_back.value();
-                material = SingleLayerOptics::Material::singleBandMaterial(
-                  tf, tb, rf, rb, FenestrationCommon::WavelengthRange::IR);
+                material = SingleLayerOptics::Material::singleBandMaterial(tf, tb, rf, rb);
             }
             else
             {
@@ -633,10 +570,7 @@ namespace wincalc
 
     std::shared_ptr<SingleLayerOptics::CMaterial>
       create_pv_material(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-                         window_standards::Optical_Standard_Method const & method,
-                         Spectal_Data_Wavelength_Range_Method const & type,
-                         int number_visible_bands,
-                         int number_solar_bands)
+                         window_standards::Optical_Standard_Method const & method)
     {
         std::shared_ptr<SingleLayerOptics::CMaterial> material;
         auto wavelengths = product_data->wavelengths();
@@ -662,11 +596,7 @@ namespace wincalc
             if(std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data))
             {
                 material = create_pv_material(
-                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data),
-                  method,
-                  type,
-                  number_visible_bands,
-                  number_solar_bands);
+                  *std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(product_data));
             }
             else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                       product_data))
@@ -687,7 +617,6 @@ namespace wincalc
         {
             if(method.name == "THERMAL IR")
             {
-#if 1
                 // Thermal IR is a special case where we calculate values even if the individual
                 // measured wavelength values does not extend into the wavelength range defined
                 // in the standard method.  To do the calculation in that case a single band
@@ -717,9 +646,7 @@ namespace wincalc
                 }
                 double rf = 1.0 - tf - product_data->emissivity_front.value();
                 double rb = 1.0 - tb - product_data->emissivity_back.value();
-                material = SingleLayerOptics::Material::singleBandMaterial(
-                  tf, tb, rf, rb, FenestrationCommon::WavelengthRange::IR);
-#endif
+                material = SingleLayerOptics::Material::singleBandMaterial(tf, tb, rf, rb);
             }
             else
             {
@@ -763,28 +690,19 @@ namespace wincalc
     std::shared_ptr<SingleLayerOptics::SpecularLayer>
       create_specular_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                             window_standards::Optical_Standard_Method const & method,
-                            size_t number_of_layers,
-                            Spectal_Data_Wavelength_Range_Method const & type,
-                            int number_visible_bands,
-                            int number_solar_bands)
+                            size_t number_of_layers)
     {
         std::shared_ptr<SingleLayerOptics::SpecularLayer> specular_layer;
         if(is_pv(product_data))
         {
-            auto material = create_pv_material(
-              product_data, method, type, number_visible_bands, number_solar_bands);
+            auto material = create_pv_material(product_data, method);
             auto power_properties = get_power_properties(product_data);
             specular_layer =
               SingleLayerOptics::PhotovoltaicSpecularLayer::createLayer(material, power_properties);
         }
         else
         {
-            auto material = create_material(product_data,
-                                            method,
-                                            number_of_layers,
-                                            type,
-                                            number_visible_bands,
-                                            number_solar_bands);
+            auto material = create_material(product_data, method, number_of_layers);
             specular_layer = SingleLayerOptics::SpecularLayer::createLayer(material);
         }
         specular_layer->Flipped(product_data->flipped);
@@ -803,16 +721,24 @@ namespace wincalc
         auto number_of_layers = product_data.size();
         for(std::shared_ptr<wincalc::Product_Data_Optical> const & product : product_data)
         {
-            layers.push_back(create_specular_layer(
-              product, method, number_of_layers, type, number_visible_bands, number_solar_bands));
+            layers.push_back(create_specular_layer(product, method, number_of_layers));
         }
 
         std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
         auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
 
+        auto combined_layer_wavelengths = combined_layer_wavelength_range_factory(
+          wavelengths, type, number_visible_bands, number_solar_bands);
+
         auto layer =
-          MultiLayerOptics::CMultiPaneSpecular::create(layers, source_spectrum, detector_spectrum);
+          MultiLayerOptics::CMultiPaneSpecular::create(layers, combined_layer_wavelengths);
+
+        auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
+
+        const SingleLayerOptics::CalculationProperties input{
+          source_spectrum, standard_wavelengths, detector_spectrum};
+        layer->setCalculationProperties(input);
 
         return layer;
     }
@@ -821,13 +747,9 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(
-          product_data, method, number_of_layers, type, number_visible_bands, number_solar_bands);
+        auto material = create_material(product_data, method, number_of_layers);
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
         return layer;
@@ -837,13 +759,9 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(
-          product_data, method, number_of_layers, type, number_visible_bands, number_solar_bands);
+        auto material = create_material(product_data, method, number_of_layers);
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getPerfectlyDiffuseLayer(material, bsdf_hemisphere);
         return layer;
@@ -853,13 +771,9 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(
-          product_data, method, number_of_layers, type, number_visible_bands, number_solar_bands);
+        auto material = create_material(product_data, method, number_of_layers);
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
         return layer;
@@ -869,27 +783,20 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Optical_Venetian> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(product_data->material_optical_data,
-                                        method,
-                                        number_of_layers,
-                                        type,
-                                        number_visible_bands,
-                                        number_solar_bands);
-        auto layer =
-          SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer(material,
-                                                               bsdf_hemisphere,
-                                                               product_data->geometry.slat_width,
-                                                               product_data->geometry.slat_spacing,
-                                                               product_data->geometry.slat_tilt,
-                                                               product_data->geometry.slat_curvature,
-                                                               product_data->geometry.number_slat_segments,
-                                                               product_data->geometry.distribution_method,
-                                                               product_data->geometry.is_horizontal);
+        auto material =
+          create_material(product_data->material_optical_data, method, number_of_layers);
+        auto layer = SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer(
+          material,
+          bsdf_hemisphere,
+          product_data->geometry.slat_width,
+          product_data->geometry.slat_spacing,
+          product_data->geometry.slat_tilt,
+          product_data->geometry.slat_curvature,
+          product_data->geometry.number_slat_segments,
+          product_data->geometry.distribution_method,
+          product_data->geometry.is_horizontal);
         return layer;
     }
 
@@ -897,19 +804,15 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Optical_Woven_Shade> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(product_data->material_optical_data,
-                                        method,
-                                        number_of_layers,
-                                        type,
-                                        number_visible_bands,
-                                        number_solar_bands);
-        auto layer = SingleLayerOptics::CBSDFLayerMaker::getWovenLayer(
-          material, bsdf_hemisphere, product_data->geometry.thread_diameter, product_data->geometry.thread_spacing);
+        auto material =
+          create_material(product_data->material_optical_data, method, number_of_layers);
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getWovenLayer(material,
+                                                            bsdf_hemisphere,
+                                                            product_data->geometry.thread_diameter,
+                                                            product_data->geometry.thread_spacing);
         return layer;
     }
 
@@ -917,19 +820,11 @@ namespace wincalc
       std::shared_ptr<wincalc::Product_Data_Optical_Perforated_Screen> const & product_data,
       window_standards::Optical_Standard_Method const & method,
       size_t number_of_layers,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-      Spectal_Data_Wavelength_Range_Method const & type,
-      int number_visible_bands,
-      int number_solar_bands)
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
-        auto material = create_material(product_data->material_optical_data,
-                                        method,
-                                        number_of_layers,
-                                        type,
-                                        number_visible_bands,
-                                        number_solar_bands);
-        if(product_data->geometry.perforation_type
-           == wincalc::Perforated_Geometry::Type::CIRCULAR)
+        auto material =
+          create_material(product_data->material_optical_data, method, number_of_layers);
+        if(product_data->geometry.perforation_type == wincalc::Perforated_Geometry::Type::CIRCULAR)
         {
             return SingleLayerOptics::CBSDFLayerMaker::getCircularPerforatedLayer(
               material,
@@ -967,8 +862,7 @@ namespace wincalc
         {
             std::stringstream msg;
             msg << "Unsupported perforation type for optical bsdf layer: "
-                << static_cast<
-                     std::underlying_type<Perforated_Geometry::Type>::type>(
+                << static_cast<std::underlying_type<Perforated_Geometry::Type>::type>(
                      product_data->geometry.perforation_type);
             throw std::runtime_error(msg.str());
         }
@@ -979,10 +873,7 @@ namespace wincalc
       create_bsdf_layer(std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
                         window_standards::Optical_Standard_Method const & method,
                         size_t number_of_layers,
-                        SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
-                        Spectal_Data_Wavelength_Range_Method const & type,
-                        int number_visible_bands,
-                        int number_solar_bands)
+                        SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
         std::shared_ptr<SingleLayerOptics::CBSDFLayer> layer;
         if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data))
@@ -993,10 +884,7 @@ namespace wincalc
                 ->material_optical_data,
               method,
               number_of_layers,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
+              bsdf_hemisphere);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(product_data))
         {
@@ -1004,10 +892,7 @@ namespace wincalc
               std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Venetian>(product_data),
               method,
               number_of_layers,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
+              bsdf_hemisphere);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Woven_Shade>(product_data))
         {
@@ -1015,10 +900,7 @@ namespace wincalc
               std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Woven_Shade>(product_data),
               method,
               number_of_layers,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
+              bsdf_hemisphere);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perforated_Screen>(
                   product_data))
@@ -1028,12 +910,7 @@ namespace wincalc
                 product_data),
               method,
               number_of_layers,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
-            auto tf = layer->getResults()->DirHem(FenestrationCommon::Side::Front,
-                                                  FenestrationCommon::PropertySimple::T);
+              bsdf_hemisphere);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
                   product_data))
@@ -1043,10 +920,7 @@ namespace wincalc
                 ->material_optical_data,
               method,
               number_of_layers,
-              bsdf_hemisphere,
-              type,
-              number_visible_bands,
-              number_solar_bands);
+              bsdf_hemisphere);
         }
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                   product_data))
@@ -1056,13 +930,8 @@ namespace wincalc
                 // Thermal IR is a special case that can be calculated despite a lack of
                 // BSDF data.  Since there is no BSDF for the IR range yet the IR range
                 // is instead modeled as a perfectly diffusing shade
-                layer = create_bsdf_layer_perfectly_diffuse(product_data,
-                                                            method,
-                                                            number_of_layers,
-                                                            bsdf_hemisphere,
-                                                            type,
-                                                            number_visible_bands,
-                                                            number_solar_bands);
+                layer = create_bsdf_layer_perfectly_diffuse(
+                  product_data, method, number_of_layers, bsdf_hemisphere);
             }
             else
             {
@@ -1071,21 +940,13 @@ namespace wincalc
                     product_data),
                   method,
                   number_of_layers,
-                  bsdf_hemisphere,
-                  type,
-                  number_visible_bands,
-                  number_solar_bands);
+                  bsdf_hemisphere);
             }
         }
         else
         {
-            layer = create_bsdf_layer_specular(product_data,
-                                               method,
-                                               number_of_layers,
-                                               bsdf_hemisphere,
-                                               type,
-                                               number_visible_bands,
-                                               number_solar_bands);
+            layer =
+              create_bsdf_layer_specular(product_data, method, number_of_layers, bsdf_hemisphere);
         }
 
 
@@ -1095,7 +956,7 @@ namespace wincalc
     std::unique_ptr<MultiLayerOptics::CMultiPaneBSDF> create_multi_pane_bsdf(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & products,
       window_standards::Optical_Standard_Method const & method,
-      SingleLayerOptics::CBSDFHemisphere const & bsdf_hemisphere,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -1105,13 +966,7 @@ namespace wincalc
         auto number_of_layers = products.size();
         for(auto const & product : products)
         {
-            layers.push_back(create_bsdf_layer(product,
-                                               method,
-                                               number_of_layers,
-                                               bsdf_hemisphere,
-                                               type,
-                                               number_visible_bands,
-                                               number_solar_bands));
+            layers.push_back(create_bsdf_layer(product, method, number_of_layers, bsdf_hemisphere));
             wavelengths.push_back(product->wavelengths());
         }
 
@@ -1119,8 +974,16 @@ namespace wincalc
 
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
 
-        auto layer =
-          MultiLayerOptics::CMultiPaneBSDF::create(layers, source_spectrum, detector_spectrum);
+        auto combined_layer_wavelengths = combined_layer_wavelength_range_factory(
+          wavelengths, type, number_visible_bands, number_solar_bands);
+
+        auto layer = MultiLayerOptics::CMultiPaneBSDF::create(layers, combined_layer_wavelengths);
+
+        auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
+
+        const SingleLayerOptics::CalculationProperties input{
+          source_spectrum, standard_wavelengths, detector_spectrum};
+        layer->setCalculationProperties(input);
 
         return layer;
     }
@@ -1128,7 +991,7 @@ namespace wincalc
     std::unique_ptr<SingleLayerOptics::IScatteringLayer> create_multi_pane(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
       window_standards::Optical_Standard_Method const & method,
-      std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere,
+      std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & type,
       int number_visible_bands,
       int number_solar_bands)
@@ -1198,14 +1061,8 @@ namespace wincalc
                  double width,
                  double height,
                  double tilt,
-                 window_standards::Optical_Standard const & standard,
-                 double theta,
-                 double phi,
-                 std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere)
+                 window_standards::Optical_Standard const & standard)
     {
-        std::ignore = theta;
-        std::ignore = phi;
-        std::ignore = bsdf_hemisphere;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
         auto ir_method = standard.methods.at("THERMAL IR");
 

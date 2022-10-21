@@ -62,7 +62,7 @@ TEST_F(TestCMA, Test_CMA_Single_Vision)
     auto spacer_keff = wincalc::get_spacer_keff(spacer);
 
     auto results =
-      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
+      wincalc::calc_cma(*cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
     EXPECT_NEAR(results.u, 1.451714, 1e-6);
     EXPECT_NEAR(results.shgc, 0.299620, 1e-6);
     EXPECT_NEAR(results.vt, 0.468371, 1e-6);
@@ -92,7 +92,7 @@ TEST_F(TestCMA, Test_CMA_Double_Vision_Vertical)
                                                      height);
 
     auto results =
-      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
+      wincalc::calc_cma(*cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
 
     EXPECT_NEAR(results.u, 1.511768, 1e-6);
     EXPECT_NEAR(results.shgc, 0.290800, 1e-6);
@@ -123,7 +123,7 @@ TEST_F(TestCMA, Test_CMA_Double_Vision_Horizontal)
                                                        height);
 
     auto results =
-      wincalc::calc_cma(cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
+      wincalc::calc_cma(*cma_window, glazing_system_u, glazing_system_shgc, tvis, spacer_keff);
 
     EXPECT_NEAR(results.u, 1.512250, 1e-6);
     EXPECT_NEAR(results.shgc, 0.290802, 1e-6);

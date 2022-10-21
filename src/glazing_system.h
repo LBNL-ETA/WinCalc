@@ -26,8 +26,8 @@ namespace wincalc
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -35,14 +35,14 @@ namespace wincalc
 
         Glazing_System(
           window_standards::Optical_Standard const & standard,
-          std::vector<std::shared_ptr<OpticsParser::ProductData>> const & product_data,
+          std::vector<OpticsParser::ProductData> const & product_data,
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -51,15 +51,15 @@ namespace wincalc
         // Constructor with vector of variants added for ease of use in python
         Glazing_System(
           window_standards::Optical_Standard const & standard,
-          std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
-                                   Product_Data_Optical_Thermal>> const & product_data,
+          std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
+            product_data,
           std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
           Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::CBSDFHemisphere> const & bsdf_hemisphere =
-            std::optional<SingleLayerOptics::CBSDFHemisphere>(),
+          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            std::optional<SingleLayerOptics::BSDFHemisphere>(),
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
@@ -119,6 +119,8 @@ namespace wincalc
                                                 int number_visible_bands = 5,
                                                 int number_solar_bands = 10);
 
+        bool isBSDF();
+
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
@@ -128,7 +130,7 @@ namespace wincalc
         double height;
         double tilt;
         Environments environment;
-        std::optional<SingleLayerOptics::CBSDFHemisphere> bsdf_hemisphere;
+        std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere;
         Spectal_Data_Wavelength_Range_Method spectral_data_wavelength_range_method;
         int number_visible_bands;
         int number_solar_bands;
@@ -144,6 +146,13 @@ namespace wincalc
 
         std::optional<Tarcog::ISO15099::CIGU> current_igu;
         std::optional<Tarcog::ISO15099::CSystem> current_system;
+
+		std::vector<double> get_solar_abs_front(double theta, double phi);
+		double get_solar_transmittance_front(double theta, double phi);
+		SingleLayerOptics::IScatteringLayer & get_optical_system_for_thermal_calcs();
+		std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
+		
+
         double last_theta = 0;
         double last_phi = 0;
         void reset_system();

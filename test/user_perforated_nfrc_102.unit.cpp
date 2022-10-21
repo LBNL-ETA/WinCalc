@@ -34,7 +34,7 @@ protected:
         venetian_material_path /= "igsdb_12852.json";
 
         std::vector<
-          std::variant<std::shared_ptr<OpticsParser::ProductData>, Product_Data_Optical_Thermal>>
+          std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>>
           products;
 
         auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
@@ -56,7 +56,7 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         auto bsdf_hemisphere =
-          SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);

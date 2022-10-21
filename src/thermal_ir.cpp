@@ -7,10 +7,9 @@ wincalc::ThermalIRResults
                            Product_Data_Optical_Thermal const & product_data)
 {
     auto method = standard.methods.at("THERMAL IR");
-    auto bsdf = SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
+    auto bsdf = SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
 
-    auto bsdf_layer = create_bsdf_layer(
-      product_data.optical_data, method, 1, bsdf, Spectal_Data_Wavelength_Range_Method::FULL);
+    auto bsdf_layer = create_bsdf_layer(product_data.optical_data, method, 1, bsdf);
     auto layer = SingleLayerOptics::CScatteringLayer(bsdf_layer);
     layer.setBlackBodySource(method.source_spectrum.t);
 

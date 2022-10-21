@@ -28,7 +28,7 @@ protected:
         clear_3_path /= "products";
         clear_3_path /= "generic_pv.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         OpticsParser::Parser parser;
         auto product = parser.parseJSONFile(clear_3_path.string());
         products.push_back(product);

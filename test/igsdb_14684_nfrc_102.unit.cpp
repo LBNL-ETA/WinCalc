@@ -32,7 +32,7 @@ protected:
         shade_path /= "products";
         shade_path /= "14684.json";
 
-        std::vector<std::variant<std::shared_ptr<OpticsParser::ProductData>,
+        std::vector<std::variant<OpticsParser::ProductData,
                                  wincalc::Product_Data_Optical_Thermal>>
           products;
         OpticsParser::Parser parser;
@@ -53,7 +53,7 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         auto bsdf_hemisphere =
-          SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);

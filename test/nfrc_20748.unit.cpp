@@ -28,7 +28,7 @@ protected:
         product_path /= "products";
         product_path /= "8 mm Stopray Titanium-34T.oag";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> products;
+        std::vector<OpticsParser::ProductData> products;
         OpticsParser::Parser parser;
         auto layer = parser.parseFile(product_path.string());
         products.push_back(layer);

@@ -32,7 +32,7 @@ protected:
         shade_path /= "products";
         shade_path /= "cgdb_18000.json";
 
-        std::vector<std::shared_ptr<OpticsParser::ProductData>> parsed_products;
+        std::vector<OpticsParser::ProductData> parsed_products;
         OpticsParser::Parser parser;
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
         auto shade = parser.parseJSONFile(shade_path.string());
@@ -51,7 +51,7 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         auto bsdf_hemisphere =
-          SingleLayerOptics::CBSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, converted_products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);

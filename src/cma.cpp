@@ -299,15 +299,15 @@ namespace wincalc
         return cma_window;
     }
 
-    CMAResult calc_cma(std::shared_ptr<CMA::ICMAWindow> window,
+    CMAResult calc_cma(CMA::ICMAWindow & window,
                        double glazing_system_u,
                        double glazing_system_shgc,
                        double glazing_system_visible_front_direct_hemispheric_transmittance,
                        double spacer_keff)
     {
-		auto tvis = window->vt(glazing_system_visible_front_direct_hemispheric_transmittance);
-		auto u = window->uValue(glazing_system_u, spacer_keff);
-		auto shgc = window->shgc(glazing_system_shgc, spacer_keff);
+		auto tvis = window.vt(glazing_system_visible_front_direct_hemispheric_transmittance);
+		auto u = window.uValue(glazing_system_u, spacer_keff);
+		auto shgc = window.shgc(glazing_system_shgc, spacer_keff);
 		return CMAResult{u, shgc, tvis};
     }
 
