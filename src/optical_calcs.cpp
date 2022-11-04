@@ -132,31 +132,33 @@ namespace wincalc
                                                   theta,
                                                   phi);
 
+        auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(layers);
+
         for(size_t i = 0; i < diffuse_absorptances_heat.size(); ++i)
         {
-            absorptances.push_back(
-              WCE_Optical_Result_Absorptance<double>{direct_absorptances_total[i],
-                                                     diffuse_absorptances_total[i],
-                                                     direct_absorptances_heat[i],
-                                                     diffuse_absorptances_heat[i],
-                                                     direct_absorptances_electricity[i],
-                                                     diffuse_absorptances_electricity[i]});
-        }
+            std::optional<std::vector<double>> angular_total;
+            std::optional<std::vector<double>> angular_heat;
+            std::optional<std::vector<double>> angular_electricity;
 
-        auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(layers);
-        if(bsdf_system)
-        {
-            for(size_t i = 0; i < diffuse_absorptances_heat.size(); ++i)
+            if(bsdf_system)
             {
-                auto angular_total = bsdf_system->Abs(min_lambda, max_lambda, side_choice, i + 1);
-                auto angular_heat =
-                  bsdf_system->AbsHeat(min_lambda, max_lambda, side_choice, i + 1);
-                auto angular_electricity =
+                angular_total = bsdf_system->Abs(min_lambda, max_lambda, side_choice, i + 1);
+                angular_heat = bsdf_system->AbsHeat(min_lambda, max_lambda, side_choice, i + 1);
+                angular_electricity =
                   bsdf_system->AbsElectricity(min_lambda, max_lambda, side_choice, i + 1);
-                absorptances[i].angular_total = angular_total;
-                absorptances[i].angular_heat = angular_heat;
-                absorptances[i].angular_electricity = angular_electricity;
             }
+
+            absorptances.push_back(WCE_Optical_Result_Absorptance<double>{
+              direct_absorptances_total[i],
+              diffuse_absorptances_total[i],
+              direct_absorptances_heat[i],
+              diffuse_absorptances_heat[i],
+              direct_absorptances_electricity[i],
+              diffuse_absorptances_electricity[i],
+              angular_total,
+              angular_heat,
+              angular_electricity,
+            });
         }
 
         return absorptances;
