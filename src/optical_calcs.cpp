@@ -143,6 +143,22 @@ namespace wincalc
                                                      diffuse_absorptances_electricity[i]});
         }
 
+        auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(layers);
+        if(bsdf_system)
+        {
+            for(size_t i = 0; i < diffuse_absorptances_heat.size(); ++i)
+            {
+                auto angular_total = bsdf_system->Abs(min_lambda, max_lambda, side_choice, i + 1);
+                auto angular_heat =
+                  bsdf_system->AbsHeat(min_lambda, max_lambda, side_choice, i + 1);
+                auto angular_electricity =
+                  bsdf_system->AbsElectricity(min_lambda, max_lambda, side_choice, i + 1);
+                absorptances[i].angular_total = angular_total;
+                absorptances[i].angular_heat = angular_heat;
+                absorptances[i].angular_electricity = angular_electricity;
+            }
+        }
+
         return absorptances;
     }
 

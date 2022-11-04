@@ -147,11 +147,11 @@ namespace wincalc
         std::optional<Tarcog::ISO15099::CIGU> current_igu;
         std::optional<Tarcog::ISO15099::CSystem> current_system;
 
-		std::vector<double> get_solar_abs_front(double theta, double phi);
-		double get_solar_transmittance_front(double theta, double phi);
-		SingleLayerOptics::IScatteringLayer & get_optical_system_for_thermal_calcs();
-		std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
-		
+        std::vector<double> get_solar_abs_front(double theta, double phi);
+        double get_solar_transmittance_front(double theta, double phi);
+        SingleLayerOptics::IScatteringLayer & get_optical_system_for_thermal_calcs();
+        std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
+
 
         double last_theta = 0;
         double last_phi = 0;

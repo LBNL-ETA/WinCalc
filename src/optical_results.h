@@ -13,26 +13,28 @@ namespace wincalc
         T direct_diffuse;
         T diffuse_diffuse;
         T direct_hemispherical;
-		std::optional<std::vector<std::vector<T>>> matrix;
+        std::optional<std::vector<std::vector<T>>> matrix;
     };
 
     template<typename T>
     struct WCE_Optical_Result_Absorptance
     {
-		T total_direct;
-		T total_diffuse;
+        T total_direct;
+        T total_diffuse;
         T heat_direct;
         T heat_diffuse;
-		T electricity_direct;
-		T electricity_diffuse;
-        // T hemispherical;
+        T electricity_direct;
+        T electricity_diffuse;
+        std::optional<std::vector<T>> angular_total;
+        std::optional<std::vector<T>> angular_heat;
+        std::optional<std::vector<T>> angular_electricity;
     };
 
     template<typename T>
-	struct WCE_Optical_Result_Layer
-	{
+    struct WCE_Optical_Result_Layer
+    {
         WCE_Optical_Result_Absorptance<T> absorptance;
-	};
+    };
 
     template<typename T>
     struct WCE_Optical_Transmission_Result
@@ -111,7 +113,8 @@ namespace wincalc
     template<>
     struct WCE_Optical_Results_Template<Color_Result>
     {
-        WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
+        WCE_Optical_Result_By_Side<
+          WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<Color_Result>>>
           system_results;
     };
 
