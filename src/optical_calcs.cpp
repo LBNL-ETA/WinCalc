@@ -438,8 +438,6 @@ namespace wincalc
 
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
 
-        auto lambda_range = get_lambda_range(wavelengths, solar_method);
-
         return create_multi_pane(optical_layers,
                                  solar_method,
                                  bsdf_hemisphere,
