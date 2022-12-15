@@ -36,7 +36,7 @@ wincalc::Engine_Gap_Info::Engine_Gap_Info(Gases::GasDef const & gas,
                                           double thickness,
                                           double pressure,
                                           std::shared_ptr<Pillar> pillar) :
-    gases{{Gases::Gas::intance().get(gas), 1.0}},
+    gases{{Gases::Gas::instance().get(gas), 1.0}},
     thickness(thickness),
     pressure(pressure),
     pillar(pillar)
@@ -51,7 +51,7 @@ wincalc::Engine_Gap_Info::Engine_Gap_Info(
 {
     for(auto const & gas : gases)
     {
-        this->gases.push_back({Gases::Gas::intance().get(gas.gas), gas.percent});
+        this->gases.push_back({Gases::Gas::instance().get(gas.gas), gas.percent});
     }
 }
 
@@ -79,7 +79,7 @@ wincalc::Engine_Gap_Info::Engine_Gap_Info(
             wincalc::Predefined_Gas_Mixture_Component * predefined_gas =
               std::get_if<wincalc::Predefined_Gas_Mixture_Component>(&gas);
             this->gases.push_back(
-              {Gases::Gas::intance().get(predefined_gas->gas), predefined_gas->percent});
+              {Gases::Gas::instance().get(predefined_gas->gas), predefined_gas->percent});
         }
     }
 }
