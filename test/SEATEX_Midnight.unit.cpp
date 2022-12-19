@@ -32,7 +32,7 @@ protected:
         auto shade = OpticsParser::parseBSDFXMLFile(shade_path.string());
         parsed_products.push_back(shade);
     
-        std::vector<Engine_Gap_Info> gaps;
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";

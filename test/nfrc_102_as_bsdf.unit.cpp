@@ -32,7 +32,7 @@ protected:
         auto layer_1 = OpticsParser::parseJSONFile(layer_1_path.string());
         products.push_back(layer_1);
 
-        std::vector<Engine_Gap_Info> gaps;
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
 
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";

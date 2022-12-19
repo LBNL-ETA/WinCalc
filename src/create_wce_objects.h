@@ -13,7 +13,6 @@
 #include <OpticsProductData.hpp>
 #include <windows_standards/windows_standard.h>
 
-#include "gap.h"
 #include "environmental_conditions.h"
 #include "product_data.h"
 
@@ -32,7 +31,7 @@ namespace wincalc
     std::shared_ptr<Tarcog::ISO15099::COutdoorEnvironment>
       create_outdoor_environment(Environment const & environment);
 
-    // std::vector<Engine_Gap_Info> convert(std::vector<Gap_Data> const & data);
+    // std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> convert(std::vector<Gap_Data> const & data);
 
 
     // SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data);
@@ -92,7 +91,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU
       create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                 std::vector<Engine_Gap_Info> const & gaps,
+                 std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gaps,
                  double width,
                  double height,
                  double tilt,

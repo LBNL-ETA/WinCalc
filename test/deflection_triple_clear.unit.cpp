@@ -34,9 +34,16 @@ protected:
         products.push_back(clear_3);
         products.push_back(clear_3);
 
-        Engine_Gap_Info air_gap_1(Gases::GasDef::Air, 0.006);
-        Engine_Gap_Info air_gap_2(Gases::GasDef::Air, 0.025);
-        std::vector<Engine_Gap_Info> gaps;
+		double gap_1_thickness = 0.006;
+		double gap_pressure = Gases::DefaultPressure;
+		auto air_gap_1 = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+			gap_1_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+
+		double gap_2_thickness = 0.025;
+		auto air_gap_2 = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+			gap_1_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap_1);
         gaps.push_back(air_gap_2);
 

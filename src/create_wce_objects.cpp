@@ -1057,7 +1057,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU
       create_igu(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
-                 std::vector<Engine_Gap_Info> const & gaps,
+                 std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gaps,
                  double width,
                  double height,
                  double tilt,
@@ -1098,24 +1098,7 @@ namespace wincalc
             tarcog_solid_layers.push_back(tarcog_layer);
         }
 
-        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> tarcog_gaps;
-        for(const Engine_Gap_Info & engine_gap_info : gaps)
-        {
-            std::vector<std::pair<double, Gases::CGasData>> converted_gas;
-            for(Engine_Gas_Mixture_Component gas : engine_gap_info.gases)
-            {
-                converted_gas.emplace_back(gas.percent, gas.gas);
-            }
-            auto gap = Tarcog::ISO15099::Layers::gap(
-              engine_gap_info.thickness, Gases::CGas(converted_gas), engine_gap_info.pressure);
-            if(engine_gap_info.pillar)
-            {
-                gap = engine_gap_info.pillar->createGapPillar(gap);
-            }
-            tarcog_gaps.push_back(gap);
-        }
-
-        return create_igu(tarcog_solid_layers, tarcog_gaps, width, height, tilt);
+        return create_igu(tarcog_solid_layers, gaps, width, height, tilt);
     }
 
     Tarcog::ISO15099::CSystem create_system(Tarcog::ISO15099::CIGU & igu,

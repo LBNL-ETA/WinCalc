@@ -7,7 +7,6 @@
 #include <windows_standards/windows_standard.h>
 #include <WCEGases.hpp>
 #include <WCETarcog.hpp>
-#include "gap.h"
 #include "optical_results.h"
 #include "environmental_conditions.h"
 #include "product_data.h"
@@ -21,7 +20,7 @@ namespace wincalc
         Glazing_System(
           window_standards::Optical_Standard const & standard,
           std::vector<Product_Data_Optical_Thermal> const & product_data,
-          std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -36,7 +35,7 @@ namespace wincalc
         Glazing_System(
           window_standards::Optical_Standard const & standard,
           std::vector<OpticsParser::ProductData> const & product_data,
-          std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -53,7 +52,7 @@ namespace wincalc
           window_standards::Optical_Standard const & standard,
           std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
             product_data,
-          std::vector<Engine_Gap_Info> const & gap_values = std::vector<Engine_Gap_Info>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -124,7 +123,7 @@ namespace wincalc
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
-        std::vector<Engine_Gap_Info> gap_values;
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_values;
         window_standards::Optical_Standard standard;
         double width;
         double height;

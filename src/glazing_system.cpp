@@ -304,7 +304,7 @@ namespace wincalc
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
       std::vector<Product_Data_Optical_Thermal> const & product_data,
-      std::vector<Engine_Gap_Info> const & gap_values,
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values,
       double width,
       double height,
       double tilt,
@@ -331,7 +331,7 @@ namespace wincalc
     Glazing_System::Glazing_System(
       window_standards::Optical_Standard const & standard,
       std::vector<OpticsParser::ProductData> const & product_data,
-      std::vector<Engine_Gap_Info> const & gap_values,
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values,
       double width,
       double height,
       double tilt,
@@ -385,7 +385,7 @@ namespace wincalc
       window_standards::Optical_Standard const & standard,
       std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
         product_data,
-      std::vector<Engine_Gap_Info> const & gap_values,
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values,
       double width,
       double height,
       double tilt,
