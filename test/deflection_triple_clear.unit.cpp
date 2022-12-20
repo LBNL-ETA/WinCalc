@@ -34,14 +34,15 @@ protected:
         products.push_back(clear_3);
         products.push_back(clear_3);
 
-		double gap_1_thickness = 0.006;
-		double gap_pressure = Gases::DefaultPressure;
-		auto air_gap_1 = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_1_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+        double gap_1_thickness = 0.006;
+        double gap_pressure = Gases::DefaultPressure;
+        auto air_gas = Gases::CGas(Gases::GasDef::Air);
+        auto air_gap_1 =
+          std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(gap_1_thickness, gap_pressure, air_gas);
 
-		double gap_2_thickness = 0.025;
-		auto air_gap_2 = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_1_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+        double gap_2_thickness = 0.025;
+        auto air_gap_2 =
+          std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(gap_2_thickness, gap_pressure, air_gas);
 
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap_1);
