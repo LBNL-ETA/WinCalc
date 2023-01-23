@@ -1109,4 +1109,16 @@ namespace wincalc
         auto system = Tarcog::ISO15099::CSystem(igu, indoor, outdoor);
         return system;
     }
+
+	Gases::CGas create_gas(std::vector<std::pair<double, std::variant<Gases::GasDef, Gases::CGasData>>> const& components)
+	{
+		auto gas = Gases::CGas();
+		for(const auto & item : components)
+		{
+			auto percent = item.first;
+			std::visit([&gas, percent](auto arg) { gas.addGasItem(percent, arg); }, item.second);
+		}
+
+		return gas;
+	}
 }   // namespace wincalc

@@ -118,6 +118,6 @@ namespace wincalc
                                   double product_data_maximum_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum);
 
-
+	Gases::CGas create_gas(std::vector<std::pair<double, std::variant<Gases::GasDef, Gases::CGasData>>> const& components);
 }   // namespace wincalc
 #endif
