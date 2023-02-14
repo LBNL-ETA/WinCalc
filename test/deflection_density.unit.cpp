@@ -37,7 +37,7 @@ protected:
 		double gap_thickness = 0.0127;
 		double gap_pressure = Gases::DefaultPressure;
 		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap);
 
