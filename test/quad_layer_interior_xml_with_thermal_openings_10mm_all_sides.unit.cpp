@@ -62,7 +62,7 @@ protected:
 		double gap_thickness = 0.0127;
 		double gap_pressure = Gases::DefaultPressure;
 		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_thickness, gap_pressure, Gases::CGas(Gases::GasDef::Air));
+			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
 
 		auto air_10_percent = std::make_pair<double, Gases::GasDef>(.1, Gases::GasDef::Air);
 		auto argon_90_percent = std::make_pair<double, Gases::GasDef>(.9, Gases::GasDef::Argon);
