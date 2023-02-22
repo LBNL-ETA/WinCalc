@@ -196,8 +196,10 @@ namespace wincalc
 
     struct Product_Data_Optical_Thermal
     {
+		Product_Data_Optical_Thermal() = default;
         Product_Data_Optical_Thermal(std::shared_ptr<Product_Data_Optical> optical_data,
                                      std::shared_ptr<Product_Data_Thermal> thermal_data);
+		Product_Data_Optical_Thermal & operator=(Product_Data_Optical_Thermal const&) = default;
         std::shared_ptr<Product_Data_Optical> optical_data;
         std::shared_ptr<Product_Data_Thermal> thermal_data;
     };
