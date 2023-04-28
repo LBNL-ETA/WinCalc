@@ -49,8 +49,8 @@ protected:
         products.push_back(layer_3);
         products.push_back(layer_3);
 
-        Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-        std::vector<Engine_Gap_Info> gaps{air_gap, air_gap};
+        std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer> air_gap(Gases::GasDef::Air, 0.0127);
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps{air_gap, air_gap};
         
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";

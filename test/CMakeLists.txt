@@ -28,6 +28,13 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		deflection_triple_clear.unit.cpp
+		deflection_youngs_modulus.unit.cpp
+ 		deflection.unit.cpp
+ 		deflection_environment.unit.cpp
+ 		deflection_load.unit.cpp
+ 		deflection_tilt.unit.cpp
+ 		deflection_density.unit.cpp
 		user_vertical_venetian_nfrc_102.unit.cpp
 		user_venetian_nfrc_102.unit.cpp
 		user_perforated_nfrc_102.unit.cpp
@@ -56,13 +63,6 @@ add_executable(${PROJECT_TEST_NAME}
  		cgdb_18000_nfrc_102.unit.cpp
  		user_woven_nfrc_102.unit.cpp
 		nfrc_102_2011_SA1_same_solar_and_visible.unit.cpp
-		deflection_triple_clear.unit.cpp
-		deflection_youngs_modulus.unit.cpp
- 		deflection.unit.cpp
- 		deflection_environment.unit.cpp
- 		deflection_load.unit.cpp
- 		deflection_tilt.unit.cpp
- 		deflection_density.unit.cpp
  		cma.unit.cpp
 		quad_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		main.cpp

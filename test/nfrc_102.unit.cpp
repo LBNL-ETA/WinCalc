@@ -33,7 +33,7 @@ protected:
         auto clear_3 = parser.parseJSONFile(clear_3_path.string());
         products.push_back(clear_3);
 
-        std::vector<Engine_Gap_Info> gaps;
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
 
         std::filesystem::path standard_path(test_dir);
         standard_path /= "standards";

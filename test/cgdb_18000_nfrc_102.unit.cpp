@@ -41,8 +41,11 @@ protected:
 
         auto converted_products = convert_to_solid_layers(parsed_products);
 
-        Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-        std::vector<Engine_Gap_Info> gaps;
+		double gap_thickness = 0.0127;
+		double gap_pressure = Gases::DefaultPressure;
+		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap);
 
         std::filesystem::path standard_path(test_dir);

@@ -1,6 +1,6 @@
 #include "thermal_ir.h"
 #include "convert_optics_parser.h"
-
+#include "create_wce_objects.h"
 
 wincalc::ThermalIRResults
   wincalc::calc_thermal_ir(window_standards::Optical_Standard const & standard,

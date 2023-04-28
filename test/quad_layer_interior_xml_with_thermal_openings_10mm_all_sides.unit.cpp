@@ -59,16 +59,19 @@ protected:
         products.push_back(CG_Prem2_5);
         products.push_back(converted_shade);
 
-        Engine_Gap_Info air_gap(Gases::GasDef::Air, 0.0127);
-        Predefined_Gas_Mixture_Component air_10_percent{Gases::GasDef::Air, .1};
-        Predefined_Gas_Mixture_Component argon_90_percent{Gases::GasDef::Argon, .9};
-        std::vector<Predefined_Gas_Mixture_Component> gas_mix_components;
-        gas_mix_components.push_back(air_10_percent);
-        gas_mix_components.push_back(argon_90_percent);
-        Engine_Gap_Info argon_mix(gas_mix_components, .0127);
-        std::vector<Engine_Gap_Info> gaps;
-        gaps.push_back(argon_mix);
-        gaps.push_back(argon_mix);
+		double gap_thickness = 0.0127;
+		double gap_pressure = Gases::DefaultPressure;
+		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
+
+		auto air_10_percent = std::make_pair<double, Gases::GasDef>(.1, Gases::GasDef::Air);
+		auto argon_90_percent = std::make_pair<double, Gases::GasDef>(.9, Gases::GasDef::Argon);
+		std::vector<std::pair<double, Gases::GasDef>> argon_mix_components{air_10_percent, argon_90_percent};
+		Gases::CGas argon_air_gas(argon_mix_components);
+		auto argon_air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(gap_thickness, gap_pressure, argon_air_gas);
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
+        gaps.push_back(argon_air_gap);
+        gaps.push_back(argon_air_gap);
         gaps.push_back(air_gap);
 
         std::filesystem::path standard_path(test_dir);
