@@ -64,9 +64,9 @@ protected:
 		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
 			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
 
-		auto air_10_percent = std::make_pair<double, Gases::GasDef>(.1, Gases::GasDef::Air);
-		auto argon_90_percent = std::make_pair<double, Gases::GasDef>(.9, Gases::GasDef::Argon);
-		std::vector<std::pair<double, Gases::GasDef>> argon_mix_components{air_10_percent, argon_90_percent};
+		auto air_10_percent = Gases::CGasItem(.1, Gases::GasDef::Air);
+		auto argon_90_percent = Gases::CGasItem(.9, Gases::GasDef::Argon);
+		std::vector<Gases::CGasItem> argon_mix_components{air_10_percent, argon_90_percent};
 		Gases::CGas argon_air_gas(argon_mix_components);
 		auto argon_air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(gap_thickness, gap_pressure, argon_air_gas);
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
