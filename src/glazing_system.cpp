@@ -458,9 +458,13 @@ namespace wincalc
     void Glazing_System::set_spectral_data_wavelength_range(
       Spectal_Data_Wavelength_Range_Method const & type, int visible_bands, int solar_bands)
     {
-        this->spectral_data_wavelength_range_method = type;
-        this->number_visible_bands = visible_bands;
-        this->number_solar_bands = solar_bands;
+		if(this->spectral_data_wavelength_range_method != type || this->number_visible_bands != visible_bands || this->number_solar_bands != solar_bands)
+		{
+			this->spectral_data_wavelength_range_method = type;
+			this->number_visible_bands = visible_bands;
+			this->number_solar_bands = solar_bands;
+			this->optical_system_for_thermal_calcs = nullptr;
+		}
     }
 
     void Glazing_System::enable_deflection(bool enable)
