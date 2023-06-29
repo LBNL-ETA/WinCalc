@@ -56,7 +56,7 @@ protected:
 
 TEST_F(TestNFRC102NFRC102ForcedVentilation, Test_Thermal)
 {
-    //test_thermal_results("NFRC_102_NFRC_102_forced_ventilation", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("NFRC_102_NFRC_102_forced_ventilation", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
       "NFRC_102_NFRC_102_forced_ventilation", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
