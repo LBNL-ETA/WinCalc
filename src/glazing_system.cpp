@@ -186,8 +186,13 @@ namespace wincalc
     void Glazing_System::set_deflection_properties(double temperature_initial,
                                                    double pressure_initial)
     {
-        initial_pressure = pressure_initial;
-        initial_temperature = temperature_initial;
+        deflection_properties = IGU_Manufacturing_State{temperature_initial, pressure_initial};
+        do_deflection_updates(last_theta, last_phi);
+    }
+
+    void Glazing_System::set_deflection_properties(const std::vector<double> & measured_deflected_gaps)
+    {
+        deflection_properties = measured_deflected_gaps;
         do_deflection_updates(last_theta, last_phi);
     }
 
@@ -216,7 +221,15 @@ namespace wincalc
         auto & system = get_system(theta, phi);
         if(model_deflection)
         {
-            system.setDeflectionProperties(initial_temperature, initial_pressure);
+            if (auto state_ptr = std::get_if<IGU_Manufacturing_State>(&deflection_properties))
+            {
+                // Use the IGU_Manufacturing_State data to set deflection properties
+                system.setDeflectionProperties(state_ptr->temperature, state_ptr->pressure);
+            }
+            else if (auto vector_ptr = std::get_if<std::vector<double>>(&deflection_properties))
+            {
+                system.setDeflectionProperties(*vector_ptr);
+            }
         }
         else
         {

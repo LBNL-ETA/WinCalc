@@ -15,12 +15,21 @@
 
 namespace wincalc
 {
+    // Some calculations require window data at the moment when it was made. For example, this is
+    // used to calculate deflection.
+    struct IGU_Manufacturing_State
+    {
+        double temperature{293.15};
+        double pressure{101325};
+    };
+
     struct Glazing_System
     {
         Glazing_System(
           window_standards::Optical_Standard const & standard,
           std::vector<Product_Data_Optical_Thermal> const & product_data,
-          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values =
+            std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -35,7 +44,8 @@ namespace wincalc
         Glazing_System(
           window_standards::Optical_Standard const & standard,
           std::vector<OpticsParser::ProductData> const & product_data,
-          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values =
+            std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -52,7 +62,8 @@ namespace wincalc
           window_standards::Optical_Standard const & standard,
           std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
             product_data,
-          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values = std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
+          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values =
+            std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
           double width = 1.0,
           double height = 1.0,
           double tilt = 90,
@@ -73,6 +84,7 @@ namespace wincalc
 
         void enable_deflection(bool model);
         void set_deflection_properties(double temperature_initial, double pressure_initial);
+        void set_deflection_properties(std::vector<double> const & measured_deflected_gaps);
         void set_applied_loads(std::vector<double> const & loads);
         Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
                                                       double theta = 0,
@@ -134,8 +146,7 @@ namespace wincalc
         int number_visible_bands;
         int number_solar_bands;
         bool model_deflection = false;
-        double initial_temperature = 293.15;
-        double initial_pressure = 101325;
+        std::variant<IGU_Manufacturing_State, std::vector<double>> deflection_properties;
         std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
