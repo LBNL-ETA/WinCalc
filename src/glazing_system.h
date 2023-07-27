@@ -17,7 +17,7 @@ namespace wincalc
 {
     // Some calculations require window data at the moment when it was made. For example, this is
     // used to calculate deflection.
-    struct IGU_Manufacturing_State
+    struct Temperature_Pressure
     {
         double temperature{293.15};
         double pressure{101325};
@@ -83,7 +83,7 @@ namespace wincalc
                                                double phi = 0);
 
         void enable_deflection(bool model);
-        void set_deflection_properties(double temperature_initial, double pressure_initial);
+        void set_deflection_properties(double temperature_at_construction, double pressure_at_construction);
         void set_deflection_properties(std::vector<double> const & measured_deflected_gaps);
         void set_applied_loads(std::vector<double> const & loads);
         Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
@@ -146,7 +146,7 @@ namespace wincalc
         int number_visible_bands;
         int number_solar_bands;
         bool model_deflection = false;
-        std::variant<IGU_Manufacturing_State, std::vector<double>> deflection_properties;
+        std::variant<Temperature_Pressure, std::vector<double>> deflection_properties;
         std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
