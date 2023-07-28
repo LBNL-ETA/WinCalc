@@ -69,7 +69,7 @@ namespace wincalc
 
     void Glazing_System::reset_igu()
     {
-		optical_system_for_thermal_calcs = nullptr;
+        optical_system_for_thermal_calcs = nullptr;
         current_igu = std::nullopt;
         reset_system();
     }
@@ -177,17 +177,24 @@ namespace wincalc
 
         if(system_type == Tarcog::ISO15099::System::SHGC)
         {
-			auto solar_front_absorptances = get_solar_abs_front(theta, phi);
+            auto solar_front_absorptances = get_solar_abs_front(theta, phi);
             system.setAbsorptances(solar_front_absorptances);
         }
         return system.getTemperatures(system_type);
     }
 
-    void Glazing_System::set_deflection_properties(double temperature_initial,
-                                                   double pressure_initial)
+    void Glazing_System::set_deflection_properties(double temperature_at_construction,
+                                                   double pressure_at_construction)
     {
-        initial_pressure = pressure_initial;
-        initial_temperature = temperature_initial;
+        deflection_properties =
+          Temperature_Pressure{temperature_at_construction, pressure_at_construction};
+        do_deflection_updates(last_theta, last_phi);
+    }
+
+    void
+      Glazing_System::set_deflection_properties(const std::vector<double> & measured_deflected_gaps)
+    {
+        deflection_properties = measured_deflected_gaps;
         do_deflection_updates(last_theta, last_phi);
     }
 
@@ -216,7 +223,14 @@ namespace wincalc
         auto & system = get_system(theta, phi);
         if(model_deflection)
         {
-            system.setDeflectionProperties(initial_temperature, initial_pressure);
+            if(auto state_ptr = std::get_if<Temperature_Pressure>(&deflection_properties))
+            {
+                system.setDeflectionProperties(state_ptr->temperature, state_ptr->pressure);
+            }
+            else if(auto vector_ptr = std::get_if<std::vector<double>>(&deflection_properties))
+            {
+                system.setDeflectionProperties(*vector_ptr);
+            }
         }
         else
         {
@@ -257,7 +271,7 @@ namespace wincalc
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
 
-		auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
+        auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
 
         return system.relativeHeatGain(solar_front_transmittance);
     }
