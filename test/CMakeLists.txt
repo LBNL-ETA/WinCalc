@@ -28,6 +28,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		nfrc_102_nfrc_102_forced_ventilation.unit.cpp
 		deflection_triple_clear.unit.cpp
 		deflection_youngs_modulus.unit.cpp
  		deflection.unit.cpp

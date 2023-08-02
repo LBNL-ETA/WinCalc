@@ -54,8 +54,6 @@ protected:
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
         auto environments = nfrc_u_environments();
-        environments.outside.air_temperature = 250;
-        environments.inside.air_temperature = 293;
         glazing_system =
           std::make_shared<Glazing_System>(standard, products, gaps, 1.0, 1.0, 90, environments);
     }
@@ -73,4 +71,13 @@ TEST_F(TestDeflectionTripleClear, Test_Deflection_On)
     glazing_system->set_deflection_properties(273, 101325);
     test_deflection_results(
       "NFRC_102_NFRC_102_NFRC_102", "deflection/deflection_on", glazing_system, update_results);
+}
+
+TEST_F(TestDeflectionTripleClear, Test_Deflection_Measured)
+{
+    glazing_system->enable_deflection(true);
+    const std::vector<double> measured_deflected_gaps = {0.0135, 0.013};
+    glazing_system->set_deflection_properties(measured_deflected_gaps);
+    test_deflection_results(
+      "NFRC_102_NFRC_102_NFRC_102", "deflection/deflection_measured", glazing_system, update_results);
 }
