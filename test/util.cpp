@@ -347,6 +347,7 @@ void test_all_optical_results(std::string const & system_name,
 
 void test_deflection_results(std::string const & results_name,
                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                             Tarcog::ISO15099::System system_type,
                              bool update,
                              double theta = 0,
                              double phi = 0)
@@ -354,28 +355,36 @@ void test_deflection_results(std::string const & results_name,
     auto expected = parse_expected_results(results_name);
 
     auto deflection_results =
-      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue, theta, phi);
+      glazing_system->calc_deflection_properties(system_type, theta, phi);
 
-    auto const & expected_max = expected.value("max_deflection_system_u", std::vector<double>());
-    auto const & expected_mean = expected.value("mean_deflection_system_u", std::vector<double>());
-    auto const & expected_panes_load = expected.value("panes_load_system_u", std::vector<double>());
+    auto const & expected_max = expected.value("max_deflection_system", std::vector<double>());
+    auto const & expected_mean = expected.value("mean_deflection_system", std::vector<double>());
+    auto const & expected_panes_load = expected.value("panes_load_system", std::vector<double>());
+    auto const & expected_gaps_width_u_max =
+      expected.value("deflected_gaps_width_system_max", std::vector<double>());
+    auto const & expected_gaps_width_u_mean =
+      expected.value("deflected_gaps_width_system_mean", std::vector<double>());
 
-    compare_vectors(expected_max, deflection_results.deflection_max);
-    compare_vectors(expected_mean, deflection_results.deflection_mean);
+    compare_vectors(expected_max, deflection_results.layer_deflection_max);
+    compare_vectors(expected_mean, deflection_results.layer_deflection_mean);
     compare_vectors(expected_panes_load, deflection_results.panes_load);
+    compare_vectors(expected_gaps_width_u_max, deflection_results.gap_width_max);
+    compare_vectors(expected_gaps_width_u_mean, deflection_results.gap_width_mean);
 
     auto const & expected_layer_temperatures =
-      expected.value("layer_temperatures_system_u", std::vector<double>());
+      expected.value("layer_temperatures_system", std::vector<double>());
     auto temperatures =
-      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
+      glazing_system->layer_temperatures(system_type, theta, phi);
     compare_vectors(expected_layer_temperatures, temperatures);
 
     if(update)
     {
-        expected["max_deflection_system_u"] = deflection_results.deflection_max;
-        expected["mean_deflection_system_u"] = deflection_results.deflection_mean;
-        expected["panes_load_system_u"] = deflection_results.panes_load;
-        expected["layer_temperatures_system_u"] = temperatures;
+        expected["max_deflection_system"] = deflection_results.layer_deflection_max;
+        expected["mean_deflection_system"] = deflection_results.layer_deflection_mean;
+        expected["panes_load_system"] = deflection_results.panes_load;
+        expected["deflected_gaps_width_system_max"] = deflection_results.gap_width_max;
+        expected["deflected_gaps_width_system_mean"] = deflection_results.gap_width_mean;
+        expected["layer_temperatures_system"] = temperatures;
         update_expected_results(results_name, expected);
     }
 }
@@ -605,6 +614,7 @@ void test_thermal_results(std::string const & system_name,
 void test_deflection_results(std::string const & system_name,
                              std::string const & results_name,
                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+                             Tarcog::ISO15099::System system_type,
                              bool update)
 {
     double theta = 0;
@@ -614,6 +624,7 @@ void test_deflection_results(std::string const & system_name,
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                             glazing_system,
+                            system_type,
                             update,
                             theta,
                             phi);
@@ -622,6 +633,7 @@ void test_deflection_results(std::string const & system_name,
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                             glazing_system,
+                            system_type,
                             update,
                             theta,
                             phi);
@@ -633,6 +645,7 @@ void test_deflection_results(std::string const & system_name,
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                             glazing_system,
+                            system_type,
                             update,
                             theta,
                             phi);
@@ -641,6 +654,7 @@ void test_deflection_results(std::string const & system_name,
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                             glazing_system,
+                            system_type,
                             update,
                             theta,
                             phi);

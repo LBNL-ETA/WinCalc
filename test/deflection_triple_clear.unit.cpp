@@ -61,16 +61,22 @@ protected:
 
 TEST_F(TestDeflectionTripleClear, Test_Deflection_Off)
 {
-    test_deflection_results(
-      "NFRC_102_NFRC_102_NFRC_102", "deflection/deflection_off", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102_NFRC_102",
+                            "deflection/deflection_off",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }
 
 TEST_F(TestDeflectionTripleClear, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
     glazing_system->set_deflection_properties(273, 101325);
-    test_deflection_results(
-      "NFRC_102_NFRC_102_NFRC_102", "deflection/deflection_on", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102_NFRC_102",
+                            "deflection/deflection_on",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }
 
 TEST_F(TestDeflectionTripleClear, Test_Deflection_Measured)
@@ -78,6 +84,9 @@ TEST_F(TestDeflectionTripleClear, Test_Deflection_Measured)
     glazing_system->enable_deflection(true);
     const std::vector<double> measured_deflected_gaps = {0.0135, 0.013};
     glazing_system->set_deflection_properties(measured_deflected_gaps);
-    test_deflection_results(
-      "NFRC_102_NFRC_102_NFRC_102", "deflection/deflection_measured", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102_NFRC_102",
+                            "deflection/deflection_measured",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }

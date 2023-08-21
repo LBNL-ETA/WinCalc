@@ -7,9 +7,11 @@ namespace wincalc
 {
     struct Deflection_Results
     {
-        std::vector<double> deflection_max;
-        std::vector<double> deflection_mean;
-		std::vector<double> panes_load;
+        std::vector<double> layer_deflection_max;
+        std::vector<double> layer_deflection_mean;
+        std::vector<double> panes_load;
+        std::vector<double> gap_width_max;
+        std::vector<double> gap_width_mean;
     };
 }   // namespace wincalc
 

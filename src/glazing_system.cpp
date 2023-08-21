@@ -212,10 +212,13 @@ namespace wincalc
     {
         do_deflection_updates(theta, phi);
         auto & system = get_system(theta, phi);
-        auto deflection_max = system.getMaxDeflections(system_type);
-        auto deflection_mean = system.getMeanDeflections(system_type);
-        auto panes_load = system.getPanesLoad(system_type);
-        return {deflection_max, deflection_mean, panes_load};
+        const auto layer_deflection_max = system.getMaxLayerDeflections(system_type);
+        const auto layer_deflection_mean = system.getMeanLayerDeflections(system_type);
+        const auto panes_load = system.getPanesLoad(system_type);
+        const auto gap_deflection_max = system.getMaxGapDeflections(system_type);
+        const auto gap_deflection_mean = system.getMeanGapDeflections(system_type);
+        return {layer_deflection_max, layer_deflection_mean, panes_load, gap_deflection_max,
+                gap_deflection_mean};
     }
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
