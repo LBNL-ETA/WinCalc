@@ -354,12 +354,6 @@ void test_deflection_results(std::string const & results_name,
 {
     auto expected = parse_expected_results(results_name);
 
-    auto const & expected_layer_temperatures =
-      expected.value("layer_temperatures_system", std::vector<double>());
-    auto temperatures =
-      glazing_system->layer_temperatures(system_type, theta, phi);
-    compare_vectors(expected_layer_temperatures, temperatures);
-
     auto deflection_results =
       glazing_system->calc_deflection_properties(system_type, theta, phi);
 
@@ -376,6 +370,12 @@ void test_deflection_results(std::string const & results_name,
     compare_vectors(expected_panes_load, deflection_results.panes_load);
     compare_vectors(expected_gaps_width_u_max, deflection_results.gap_width_max);
     compare_vectors(expected_gaps_width_u_mean, deflection_results.gap_width_mean);
+
+    auto const & expected_layer_temperatures =
+      expected.value("layer_temperatures_system", std::vector<double>());
+    auto temperatures =
+      glazing_system->layer_temperatures(system_type, theta, phi);
+    compare_vectors(expected_layer_temperatures, temperatures);
 
     if(update)
     {

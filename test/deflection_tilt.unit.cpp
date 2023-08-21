@@ -33,10 +33,10 @@ protected:
         products.push_back(clear_3);
         products.push_back(clear_3);
 
-		double gap_thickness = 0.0127;
-		double gap_pressure = Gases::DefaultPressure;
-		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
+        double gap_thickness = 0.0127;
+        double gap_pressure = Gases::DefaultPressure;
+        auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+          gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap);
 
@@ -52,18 +52,27 @@ protected:
 
 TEST_F(TestDeflectionTilt, Test_Deflection_Off)
 {
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/tilt/deflection_off", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/tilt/deflection_off",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }
 
 TEST_F(TestDeflectionTilt, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/tilt/deflection_on_tilt_1", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/tilt/deflection_on_tilt_1",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
     // change tilt, make sure results change
     glazing_system->set_tilt(10);
 
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/tilt/deflection_on_tilt_2", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/tilt/deflection_on_tilt_2",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }

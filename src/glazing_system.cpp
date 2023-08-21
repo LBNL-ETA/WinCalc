@@ -112,7 +112,8 @@ namespace wincalc
 
     Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
     {
-        if(current_system.has_value() && theta == last_theta && phi == last_phi)
+        if(current_system.has_value() && FenestrationCommon::isEqual(theta, last_theta)
+           && FenestrationCommon::isEqual(phi, last_phi))
         {
             return current_system.value();
         }
@@ -128,7 +129,8 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
-        do_deflection_updates(theta, phi);
+        //do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getUValue();
     }
@@ -140,13 +142,10 @@ namespace wincalc
         // files do not have conductivity and so can be used in optical calcs but not thermal.
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
-        do_deflection_updates(theta, phi);
-        auto & system = get_system(theta, phi);
-
-        auto absportances = get_solar_abs_front(theta, phi);
+        do_layer_absorptance_updates(theta, phi);
         auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
 
-        system.setAbsorptances(absportances);
+        auto & system = get_system(theta, phi);
         return system.getSHGC(solar_front_transmittance);
     }
 
@@ -169,17 +168,12 @@ namespace wincalc
         // files do not have conductivity and so can be used in optical calcs but not thermal.
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
-        if(theta != last_theta || phi != last_phi)
+        if(!FenestrationCommon::isEqual(theta, last_theta) || !FenestrationCommon::isEqual(phi, last_phi))
         {
-            do_deflection_updates(theta, phi);
+            do_updates_for_thermal(theta, phi);
         }
         auto & system = get_system(theta, phi);
 
-        if(system_type == Tarcog::ISO15099::System::SHGC)
-        {
-            auto solar_front_absorptances = get_solar_abs_front(theta, phi);
-            system.setAbsorptances(solar_front_absorptances);
-        }
         return system.getTemperatures(system_type);
     }
 
@@ -210,14 +204,17 @@ namespace wincalc
     Deflection_Results Glazing_System::calc_deflection_properties(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
-        do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         const auto layer_deflection_max = system.getMaxLayerDeflections(system_type);
         const auto layer_deflection_mean = system.getMeanLayerDeflections(system_type);
         const auto panes_load = system.getPanesLoad(system_type);
         const auto gap_deflection_max = system.getMaxGapDeflections(system_type);
         const auto gap_deflection_mean = system.getMeanGapDeflections(system_type);
-        return {layer_deflection_max, layer_deflection_mean, panes_load, gap_deflection_max,
+        return {layer_deflection_max,
+                layer_deflection_mean,
+                panes_load,
+                gap_deflection_max,
                 gap_deflection_mean};
     }
 
@@ -241,6 +238,18 @@ namespace wincalc
         }
     }
 
+    void Glazing_System::do_layer_absorptance_updates(double theta, double phi)
+    {
+        auto & system = get_system(theta, phi);
+        auto solar_front_absorptances = get_solar_abs_front(theta, phi);
+        system.setAbsorptances(solar_front_absorptances);
+    }
+
+    void Glazing_System::do_updates_for_thermal(double theta, double phi)
+    {
+        do_deflection_updates(theta, phi);
+        do_layer_absorptance_updates(theta, phi);
+    }
 
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
@@ -475,13 +484,15 @@ namespace wincalc
     void Glazing_System::set_spectral_data_wavelength_range(
       Spectal_Data_Wavelength_Range_Method const & type, int visible_bands, int solar_bands)
     {
-		if(this->spectral_data_wavelength_range_method != type || this->number_visible_bands != visible_bands || this->number_solar_bands != solar_bands)
-		{
-			this->spectral_data_wavelength_range_method = type;
-			this->number_visible_bands = visible_bands;
-			this->number_solar_bands = solar_bands;
-			this->optical_system_for_thermal_calcs = nullptr;
-		}
+        if(this->spectral_data_wavelength_range_method != type
+           || this->number_visible_bands != visible_bands
+           || this->number_solar_bands != solar_bands)
+        {
+            this->spectral_data_wavelength_range_method = type;
+            this->number_visible_bands = visible_bands;
+            this->number_solar_bands = solar_bands;
+            this->optical_system_for_thermal_calcs = nullptr;
+        }
     }
 
     void Glazing_System::enable_deflection(bool enable)
