@@ -95,7 +95,8 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
-        if(current_igu.has_value() && theta == last_theta && phi == last_phi)
+        if(current_igu.has_value() && FenestrationCommon::isEqual(theta, last_theta)
+           && FenestrationCommon::isEqual(phi, last_phi))
         {
             return current_igu.value();
         }
@@ -129,7 +130,6 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
-        //do_deflection_updates(theta, phi);
         do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getUValue();
@@ -142,9 +142,9 @@ namespace wincalc
         // files do not have conductivity and so can be used in optical calcs but not thermal.
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
-        do_layer_absorptance_updates(theta, phi);
-        auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
+        do_updates_for_thermal(theta, phi);
 
+        auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getSHGC(solar_front_transmittance);
     }
@@ -168,7 +168,8 @@ namespace wincalc
         // files do not have conductivity and so can be used in optical calcs but not thermal.
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
-        if(!FenestrationCommon::isEqual(theta, last_theta) || !FenestrationCommon::isEqual(phi, last_phi))
+        if(!FenestrationCommon::isEqual(theta, last_theta)
+           || !FenestrationCommon::isEqual(phi, last_phi))
         {
             do_updates_for_thermal(theta, phi);
         }
@@ -254,14 +255,14 @@ namespace wincalc
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
-        do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getSolidEffectiveLayerConductivities(system_type);
     }
     std::vector<double> Glazing_System::gap_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
-        do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getGapEffectiveLayerConductivities(system_type);
     }
@@ -269,7 +270,7 @@ namespace wincalc
                                                          double theta,
                                                          double phi)
     {
-        do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getEffectiveSystemConductivity(system_type);
     }
@@ -280,7 +281,7 @@ namespace wincalc
         // files do not have conductivity and so can be used in optical calcs but not thermal.
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
-        do_deflection_updates(theta, phi);
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
 
         auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
