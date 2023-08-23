@@ -8,27 +8,23 @@
 
 const double TEST_TOLARANCE = 1e-6;
 
-nlohmann::json & get_json_field(nlohmann::json & json, std::string const & field, bool update)
-{
-    if(update && json.count(field) == 0)
-    {
+nlohmann::json &get_json_field(nlohmann::json &json, std::string const &field, bool update) {
+    if (update && json.count(field) == 0) {
         json[field] = nlohmann::json::object();
     }
     return json.at(field);
 }
 
-std::filesystem::path expected_results_path(std::string const & test_name)
-{
+std::filesystem::path expected_results_path(std::string const &test_name) {
     std::filesystem::path path(test_dir);
     path /= "expected_results";
     path /= test_name + ".json";
     return path;
 }
-nlohmann::json parse_expected_results(std::string const & test_name)
-{
+
+nlohmann::json parse_expected_results(std::string const &test_name) {
     auto path = expected_results_path(test_name);
-    if(!std::filesystem::exists(path))
-    {
+    if (!std::filesystem::exists(path)) {
         return nlohmann::json::object();
     }
     std::ifstream fin(path);
@@ -38,110 +34,89 @@ nlohmann::json parse_expected_results(std::string const & test_name)
     return expected_results_json;
 }
 
-void update_expected_results(std::string const & test_name, nlohmann::json const & updated_results)
-{
+void update_expected_results(std::string const &test_name, nlohmann::json const &updated_results) {
     auto path = expected_results_path(test_name);
     auto directory = path.parent_path();
-    if(!std::filesystem::exists(directory))
-    {
+    if (!std::filesystem::exists(directory)) {
         std::filesystem::create_directories(directory);
     }
     std::ofstream fout(path);
     fout << std::setw(4) << updated_results << std::endl;
 }
 
-void compare_vectors(std::vector<double> const & v1, std::vector<double> const & v2)
-{
+void compare_vectors(std::vector<double> const &v1, std::vector<double> const &v2) {
     EXPECT_EQ(v1.size(), v2.size());
-    if(v1.size() != v2.size())
-    {
+    if (v1.size() != v2.size()) {
         return;
     }
-    for(size_t i = 0; i < v1.size(); ++i)
-    {
+    for (size_t i = 0; i < v1.size(); ++i) {
         EXPECT_NEAR(v1[i], v2[i], TEST_TOLARANCE);
     }
 }
 
-void test_trichromatic_result(nlohmann::json & expected,
-                              wincalc::Trichromatic const & results,
-                              bool update)
-{
+void test_trichromatic_result(nlohmann::json &expected,
+                              wincalc::Trichromatic const &results,
+                              bool update) {
     EXPECT_NEAR(results.X, expected.value("X", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.Y, expected.value("Y", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.Z, expected.value("Z", -1.0), TEST_TOLARANCE);
-    if(update)
-    {
+    if (update) {
         expected["X"] = results.X;
         expected["Y"] = results.Y;
         expected["Z"] = results.Z;
     }
 }
 
-void test_lab_result(nlohmann::json & expected, wincalc::Lab const & results, bool update)
-{
+void test_lab_result(nlohmann::json &expected, wincalc::Lab const &results, bool update) {
     EXPECT_NEAR(results.L, expected.value("L", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.a, expected.value("a", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.b, expected.value("b", -1.0), TEST_TOLARANCE);
-    if(update)
-    {
+    if (update) {
         expected["L"] = results.L;
         expected["a"] = results.a;
         expected["b"] = results.b;
     }
 }
 
-void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & results, bool update)
-{
+void test_rgb_result(nlohmann::json &expected, wincalc::WinCalc_RGB const &results, bool update) {
     EXPECT_NEAR(results.R, expected.value("R", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.G, expected.value("G", -1.0), TEST_TOLARANCE);
     EXPECT_NEAR(results.B, expected.value("B", -1.0), TEST_TOLARANCE);
-    if(update)
-    {
+    if (update) {
         expected["R"] = results.R;
         expected["G"] = results.G;
         expected["B"] = results.B;
     }
 }
 
-double get_possible_nan(nlohmann::json & expected, std::string const & field_name)
-{
-    if(expected.count(field_name) == 0 || expected.at(field_name).is_null())
-    {
+double get_possible_nan(nlohmann::json &expected, std::string const &field_name) {
+    if (expected.count(field_name) == 0 || expected.at(field_name).is_null()) {
         return -std::nan("ind");
-    }
-    else
-    {
+    } else {
         return expected.value(field_name, -1.0);
     }
 }
 
 void compare_possible_nan(double given,
-                          nlohmann::json & expected_json,
-                          std::string const & field_name)
-{
+                          nlohmann::json &expected_json,
+                          std::string const &field_name) {
     auto expected = get_possible_nan(expected_json, field_name);
-    if(!isnan(given) || !isnan(expected))
-    {
+    if (!isnan(given) || !isnan(expected)) {
         EXPECT_NEAR(given, expected, TEST_TOLARANCE);
-    }
-    else
-    {
+    } else {
         // if both values are nan then the test passes and nothing needs to be checked
     }
 }
 
-void test_wce_optical_result_simple(nlohmann::json & expected,
-                                    wincalc::WCE_Optical_Result_Simple<double> const & results,
-                                    bool update)
-{
+void test_wce_optical_result_simple(nlohmann::json &expected,
+                                    wincalc::WCE_Optical_Result_Simple<double> const &results,
+                                    bool update) {
     compare_possible_nan(results.direct_direct, expected, "direct_direct");
     compare_possible_nan(results.direct_diffuse, expected, "direct_diffuse");
     compare_possible_nan(results.direct_hemispherical, expected, "direct_hemispherical");
     compare_possible_nan(results.diffuse_diffuse, expected, "diffuse_diffuse");
 
-    if(update)
-    {
+    if (update) {
         expected["direct_direct"] = results.direct_direct;
         expected["direct_diffuse"] = results.direct_diffuse;
         expected["direct_hemispherical"] = results.direct_hemispherical;
@@ -149,27 +124,25 @@ void test_wce_optical_result_simple(nlohmann::json & expected,
     }
 }
 
-void test_wce_color_result(nlohmann::json & expected,
-                           wincalc::Color_Result const & results,
-                           bool update)
-{
-    auto & expected_rgb = get_json_field(expected, "rgb", update);
-    auto & expected_lab = get_json_field(expected, "lab", update);
-    auto & expected_trichromatic = get_json_field(expected, "trichromatic", update);
+void test_wce_color_result(nlohmann::json &expected,
+                           wincalc::Color_Result const &results,
+                           bool update) {
+    auto &expected_rgb = get_json_field(expected, "rgb", update);
+    auto &expected_lab = get_json_field(expected, "lab", update);
+    auto &expected_trichromatic = get_json_field(expected, "trichromatic", update);
     test_rgb_result(expected_rgb, results.rgb, update);
     test_trichromatic_result(expected_trichromatic, results.trichromatic, update);
     test_lab_result(expected_lab, results.lab, update);
 }
 
 void test_wce_optical_result_simple(
-  nlohmann::json & expected,
-  wincalc::WCE_Optical_Result_Simple<wincalc::Color_Result> const & results,
-  bool update)
-{
-    auto & expected_direct_direct = get_json_field(expected, "direct_direct", update);
-    auto & expected_direct_diffuse = get_json_field(expected, "direct_diffuse", update);
-    auto & expected_direct_hemispheric = get_json_field(expected, "direct_hemispheric", update);
-    auto & expected_diffuse_diffuse = get_json_field(expected, "diffuse_diffuse", update);
+        nlohmann::json &expected,
+        wincalc::WCE_Optical_Result_Simple<wincalc::Color_Result> const &results,
+        bool update) {
+    auto &expected_direct_direct = get_json_field(expected, "direct_direct", update);
+    auto &expected_direct_diffuse = get_json_field(expected, "direct_diffuse", update);
+    auto &expected_direct_hemispheric = get_json_field(expected, "direct_hemispheric", update);
+    auto &expected_diffuse_diffuse = get_json_field(expected, "diffuse_diffuse", update);
 
     test_wce_color_result(expected_direct_direct, results.direct_direct, update);
     test_wce_color_result(expected_direct_diffuse, results.direct_diffuse, update);
@@ -180,29 +153,26 @@ void test_wce_optical_result_simple(
 
 template<typename T>
 void test_wce_side_result(
-  nlohmann::json & expected,
-  wincalc::WCE_Optical_Transmission_Result<wincalc::WCE_Optical_Result_Simple<T>> const & results,
-  bool update)
-{
-    auto & expected_transmittance = get_json_field(expected, "transmittance", update);
-    auto & expected_reflectance = get_json_field(expected, "reflectance", update);
+        nlohmann::json &expected,
+        wincalc::WCE_Optical_Transmission_Result<wincalc::WCE_Optical_Result_Simple<T>> const &results,
+        bool update) {
+    auto &expected_transmittance = get_json_field(expected, "transmittance", update);
+    auto &expected_reflectance = get_json_field(expected, "reflectance", update);
     test_wce_optical_result_simple(expected_transmittance, results.transmittance, update);
     test_wce_optical_result_simple(expected_reflectance, results.reflectance, update);
 }
 
 
-void test_wce_absorptances(nlohmann::json & expected,
-                           wincalc::WCE_Optical_Result_Absorptance<double> const & results,
-                           bool update)
-{
+void test_wce_absorptances(nlohmann::json &expected,
+                           wincalc::WCE_Optical_Result_Absorptance<double> const &results,
+                           bool update) {
     compare_possible_nan(results.total_direct, expected, "total_direct");
     compare_possible_nan(results.total_diffuse, expected, "total_diffuse");
     compare_possible_nan(results.heat_direct, expected, "heat_direct");
     compare_possible_nan(results.heat_diffuse, expected, "heat_diffuse");
     compare_possible_nan(results.electricity_direct, expected, "electricity_direct");
     compare_possible_nan(results.electricity_diffuse, expected, "electricity_diffuse");
-    if(update)
-    {
+    if (update) {
         expected["total_direct"] = results.total_direct;
         expected["total_diffuse"] = results.total_diffuse;
         expected["heat_direct"] = results.heat_direct;
@@ -213,21 +183,19 @@ void test_wce_absorptances(nlohmann::json & expected,
 }
 
 template<typename T>
-void test_wce_side_result(nlohmann::json & expected,
-                          wincalc::WCE_Optical_Result_Layer<T> const & results,
-                          bool update)
-{
-    auto & absorptance = get_json_field(expected, "absorptance", update);
+void test_wce_side_result(nlohmann::json &expected,
+                          wincalc::WCE_Optical_Result_Layer<T> const &results,
+                          bool update) {
+    auto &absorptance = get_json_field(expected, "absorptance", update);
     test_wce_absorptances(absorptance, results.absorptance, update);
 }
 
 template<typename T>
-void test_wce_optical_result_by_side(nlohmann::json & expected,
-                                     wincalc::WCE_Optical_Result_By_Side<T> const & results,
-                                     bool update)
-{
-    auto & front = get_json_field(expected, "front", update);
-    auto & back = get_json_field(expected, "back", update);
+void test_wce_optical_result_by_side(nlohmann::json &expected,
+                                     wincalc::WCE_Optical_Result_By_Side<T> const &results,
+                                     bool update) {
+    auto &front = get_json_field(expected, "front", update);
+    auto &back = get_json_field(expected, "back", update);
     test_wce_side_result(front, results.front, update);
     test_wce_side_result(back, results.back, update);
 }
@@ -235,93 +203,79 @@ void test_wce_optical_result_by_side(nlohmann::json & expected,
 
 template<typename T>
 void test_layer_results(
-  nlohmann::json & expected,
-  std::vector<wincalc::WCE_Optical_Result_By_Side<wincalc::WCE_Optical_Result_Layer<T>>> const &
-    results,
-  bool update)
-{
-    for(size_t i = 0; i < results.size(); ++i)
-    {
-        auto & layer_result = get_json_field(expected, "layer " + std::to_string(i), update);
+        nlohmann::json &expected,
+        std::vector<wincalc::WCE_Optical_Result_By_Side<wincalc::WCE_Optical_Result_Layer<T>>> const &
+        results,
+        bool update) {
+    for (size_t i = 0; i < results.size(); ++i) {
+        auto &layer_result = get_json_field(expected, "layer " + std::to_string(i), update);
         test_wce_optical_result_by_side(layer_result, results.at(i), update);
     }
 }
 
 void test_wce_optical_results_template_double(
-  nlohmann::json & expected,
-  wincalc::WCE_Optical_Results_Template<double> const & results,
-  bool update)
-{
-    auto & system_results = get_json_field(expected, "system_results", update);
+        nlohmann::json &expected,
+        wincalc::WCE_Optical_Results_Template<double> const &results,
+        bool update) {
+    auto &system_results = get_json_field(expected, "system_results", update);
     test_wce_optical_result_by_side(system_results, results.system_results, update);
-    auto & layer_results = get_json_field(expected, "layer_results", update);
+    auto &layer_results = get_json_field(expected, "layer_results", update);
     test_layer_results(layer_results, results.layer_results, update);
 }
 
 void test_wce_optical_results_template_color(
-  nlohmann::json & expected,
-  wincalc::WCE_Optical_Results_Template<wincalc::Color_Result> const & results,
-  bool update)
-{
-    auto & system_results = get_json_field(expected, "system_results", update);
+        nlohmann::json &expected,
+        wincalc::WCE_Optical_Results_Template<wincalc::Color_Result> const &results,
+        bool update) {
+    auto &system_results = get_json_field(expected, "system_results", update);
     test_wce_optical_result_by_side(system_results, results.system_results, update);
 }
 
-void test_optical_results(std::string const & test_name,
-                          wincalc::WCE_Optical_Results const & results,
-                          bool update)
-{
+void test_optical_results(std::string const &test_name,
+                          wincalc::WCE_Optical_Results const &results,
+                          bool update) {
     auto expected = parse_expected_results(test_name);
     test_wce_optical_results_template_double(expected, results, update);
-    if(update)
-    {
+    if (update) {
         update_expected_results(test_name, expected);
     }
 }
 
-void test_optical_results(std::string const & test_name,
-                          wincalc::WCE_Color_Results const & results,
-                          bool update)
-{
+void test_optical_results(std::string const &test_name,
+                          wincalc::WCE_Color_Results const &results,
+                          bool update) {
     auto expected = parse_expected_results(test_name);
     test_wce_optical_results_template_color(expected, results, update);
-    if(update)
-    {
+    if (update) {
         update_expected_results(test_name, expected);
     }
 }
 
-bool isint(double v)
-{
+bool isint(double v) {
     double intpart;
     return modf(v, &intpart) == 0.0;
 }
 
-std::string get_angle_txt(double theta, double phi)
-{
+std::string get_angle_txt(double theta, double phi) {
     std::stringstream s;
     s << std::fixed;
-    if(isint(theta) && isint(phi))
-    {
+    if (isint(theta) && isint(phi)) {
         s << std::setprecision(0);
-    }
-    else
-    {
+    } else {
         s << std::setprecision(3);
     }
     s << "theta=" << theta << "_phi=" << phi;
     return s.str();
 }
 
-void test_all_optical_results(std::string const & system_name,
-                              std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+void test_all_optical_results(std::string const &system_name,
+                              std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                               bool update,
                               double theta = 0,
-                              double phi = 0)
-{
+                              double phi = 0) {
     std::string angle = "/" + get_angle_txt(theta, phi);
 
-	auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
+    auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
     test_optical_results(system_name + angle + "/solar", solar_results, update_results);
 
     auto photopic_results = glazing_system->optical_method_results("PHOTOPIC", theta, phi);
@@ -338,32 +292,30 @@ void test_all_optical_results(std::string const & system_name,
     auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
     test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
 
-    if(!glazing_system->isBSDF())
-    {
+    if (!glazing_system->isBSDF()) {
         auto color_results = glazing_system->color(theta, phi);
         test_optical_results(system_name + angle + "/color", color_results, update_results);
     }
 }
 
-void test_deflection_results(std::string const & results_name,
-                             std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+void test_deflection_results(std::string const &results_name,
+                             std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                              Tarcog::ISO15099::System system_type,
                              bool update,
                              double theta = 0,
-                             double phi = 0)
-{
+                             double phi = 0) {
     auto expected = parse_expected_results(results_name);
 
     auto deflection_results =
-      glazing_system->calc_deflection_properties(system_type, theta, phi);
+            glazing_system->calc_deflection_properties(system_type, theta, phi);
 
-    auto const & expected_max = expected.value("max_deflection_system", std::vector<double>());
-    auto const & expected_mean = expected.value("mean_deflection_system", std::vector<double>());
-    auto const & expected_panes_load = expected.value("panes_load_system", std::vector<double>());
-    auto const & expected_gaps_width_u_max =
-      expected.value("deflected_gaps_width_system_max", std::vector<double>());
-    auto const & expected_gaps_width_u_mean =
-      expected.value("deflected_gaps_width_system_mean", std::vector<double>());
+    auto const &expected_max = expected.value("max_deflection_system", std::vector<double>());
+    auto const &expected_mean = expected.value("mean_deflection_system", std::vector<double>());
+    auto const &expected_panes_load = expected.value("panes_load_system", std::vector<double>());
+    auto const &expected_gaps_width_u_max =
+            expected.value("deflected_gaps_width_system_max", std::vector<double>());
+    auto const &expected_gaps_width_u_mean =
+            expected.value("deflected_gaps_width_system_mean", std::vector<double>());
 
     compare_vectors(expected_max, deflection_results.layer_deflection_max);
     compare_vectors(expected_mean, deflection_results.layer_deflection_mean);
@@ -371,14 +323,13 @@ void test_deflection_results(std::string const & results_name,
     compare_vectors(expected_gaps_width_u_max, deflection_results.gap_width_max);
     compare_vectors(expected_gaps_width_u_mean, deflection_results.gap_width_mean);
 
-    auto const & expected_layer_temperatures =
-      expected.value("layer_temperatures_system", std::vector<double>());
+    auto const &expected_layer_temperatures =
+            expected.value("layer_temperatures_system", std::vector<double>());
     auto temperatures =
-      glazing_system->layer_temperatures(system_type, theta, phi);
+            glazing_system->layer_temperatures(system_type, theta, phi);
     compare_vectors(expected_layer_temperatures, temperatures);
 
-    if(update)
-    {
+    if (update) {
         expected["max_deflection_system"] = deflection_results.layer_deflection_max;
         expected["mean_deflection_system"] = deflection_results.layer_deflection_mean;
         expected["panes_load_system"] = deflection_results.panes_load;
@@ -389,35 +340,30 @@ void test_deflection_results(std::string const & results_name,
     }
 }
 
-void test_thermal_results(std::string const & results_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+void test_thermal_results(std::string const &results_name,
+                          std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                           bool update,
                           double theta = 0,
-                          double phi = 0)
-{
+                          double phi = 0) {
     auto expected = parse_expected_results(results_name);
     auto u = glazing_system->u(theta, phi);
     auto shgc = glazing_system->shgc(theta, phi);
     auto system_effective_conductivity_u =
-      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::Uvalue, theta, phi);
+            glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto system_effective_conductivity_shgc =
-      glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC, theta, phi);
+            glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC, theta, phi);
     auto relative_heat_gain = glazing_system->relative_heat_gain(theta, phi);
 
     auto expected_u = expected.value("U", -1.0);
     EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
 
-    if(expected.count("SHGC"))
-    {
-        if(expected.at("SHGC").is_null())
-        {
+    if (expected.count("SHGC")) {
+        if (expected.at("SHGC").is_null()) {
             // The json library serializes Nan, inf, and -inf to null
             // Trying to load those values back into a double causes an exception
             // So instead if it is null then check that the calculated SHGC is inf.
             EXPECT_TRUE(isinf(shgc));
-        }
-        else
-        {
+        } else {
             auto expected_shgc = expected.value("SHGC", -1.0);
             EXPECT_NEAR(shgc, expected_shgc, TEST_TOLARANCE);
         }
@@ -431,67 +377,62 @@ void test_thermal_results(std::string const & results_name,
                 expected.value("system_effective_conductivity_shgc", -1.0),
                 TEST_TOLARANCE);
 
-    if(expected.count("relative_heat_gain"))
-    {
-        if(expected.at("relative_heat_gain").is_null())
-        {
+    if (expected.count("relative_heat_gain")) {
+        if (expected.at("relative_heat_gain").is_null()) {
             // The json library serializes Nan, inf, and -inf to null
             // Trying to load those values back into a double causes an exception
             // So instead if it is null then check that the calculated SHGC is inf.
             EXPECT_TRUE(isinf(relative_heat_gain));
-        }
-        else
-        {
+        } else {
             auto expected_relative_heat_gain = expected.value("relative_heat_gain", -1.0);
             EXPECT_NEAR(relative_heat_gain, expected_relative_heat_gain, TEST_TOLARANCE);
         }
     }
     auto solid_layer_effective_conductivities_u =
-      glazing_system->solid_layers_effective_conductivities(
-        Tarcog::ISO15099::System::Uvalue, theta, phi);
+            glazing_system->solid_layers_effective_conductivities(
+                    Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto solid_layer_effective_conductivities_shgc =
-      glazing_system->solid_layers_effective_conductivities(
-        Tarcog::ISO15099::System::SHGC, theta, phi);
+            glazing_system->solid_layers_effective_conductivities(
+                    Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_solid_layer_effective_conductivities_u =
-      expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
+            expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
-      expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
+            expected.value("solid_layer_effective_conductivities_shgc", std::vector<double>());
     compare_vectors(solid_layer_effective_conductivities_u,
                     expected_solid_layer_effective_conductivities_u);
     compare_vectors(solid_layer_effective_conductivities_shgc,
                     expected_solid_layer_effective_conductivities_shgc);
 
     auto gap_layer_effective_conductivities_u = glazing_system->gap_layers_effective_conductivities(
-      Tarcog::ISO15099::System::Uvalue, theta, phi);
+            Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto gap_layer_effective_conductivities_shgc =
-      glazing_system->gap_layers_effective_conductivities(
-        Tarcog::ISO15099::System::SHGC, theta, phi);
+            glazing_system->gap_layers_effective_conductivities(
+                    Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_gap_layer_effective_conductivities_u =
-      expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
+            expected.value("gap_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_gap_layer_effective_conductivities_shgc =
-      expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
+            expected.value("gap_layer_effective_conductivities_shgc", std::vector<double>());
     compare_vectors(gap_layer_effective_conductivities_u,
                     expected_gap_layer_effective_conductivities_u);
     compare_vectors(gap_layer_effective_conductivities_shgc,
                     expected_gap_layer_effective_conductivities_shgc);
 
     auto layer_temperatures_u =
-      glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
+            glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
     auto layer_temperatures_shgc =
-      glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC, theta, phi);
+            glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC, theta, phi);
 
     std::vector<double> expected_layer_temperatures_u =
-      expected.value("layer_temperatures_u", std::vector<double>());
+            expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
-      expected.value("layer_temperatures_shgc", std::vector<double>());
+            expected.value("layer_temperatures_shgc", std::vector<double>());
     compare_vectors(layer_temperatures_u, expected_layer_temperatures_u);
     compare_vectors(layer_temperatures_shgc, expected_layer_temperatures_shgc);
 
 
-    if(update)
-    {
+    if (update) {
         expected["U"] = u;
         expected["SHGC"] = shgc;
         expected["system_effective_conductivity_u"] = system_effective_conductivity_u;
@@ -499,20 +440,19 @@ void test_thermal_results(std::string const & results_name,
         expected["relative_heat_gain"] = relative_heat_gain;
         expected["solid_layer_effective_conductivities_u"] = solid_layer_effective_conductivities_u;
         expected["solid_layer_effective_conductivities_shgc"] =
-          solid_layer_effective_conductivities_shgc;
+                solid_layer_effective_conductivities_shgc;
         expected["gap_layer_effective_conductivities_u"] = gap_layer_effective_conductivities_u;
         expected["gap_layer_effective_conductivities_shgc"] =
-          gap_layer_effective_conductivities_shgc;
+                gap_layer_effective_conductivities_shgc;
         expected["layer_temperatures_u"] = layer_temperatures_u;
         expected["layer_temperatures_shgc"] = layer_temperatures_shgc;
         update_expected_results(results_name, expected);
     }
 }
 
-void test_optical_results(std::string const & system_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update)
-{
+void test_optical_results(std::string const &system_name,
+                          std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
+                          bool update) {
     std::cerr << "TEST OPTICAL RESULTS" << std::endl;
     std::cerr << "--------------------------------------------------" << std::endl;
 
@@ -523,14 +463,14 @@ void test_optical_results(std::string const & system_name,
     std::cerr << "condensed spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
-      system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+            system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
 
     std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
     std::cerr << "full spectrum" << std::endl;
-	glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    glazing_system->set_spectral_data_wavelength_range(
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
 
     theta = 15;
@@ -540,22 +480,21 @@ void test_optical_results(std::string const & system_name,
     std::cerr << "condensed spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
-      system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+            system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
 
     std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
     std::cerr << "full spectrum" << std::endl;
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
 }
 
-void test_thermal_results(std::string const & system_name,
-                          std::string const & results_name,
-                          std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
-                          bool update)
-{
+void test_thermal_results(std::string const &system_name,
+                          std::string const &results_name,
+                          std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
+                          bool update) {
     std::cerr << "TEST THERMAL RESULTS" << std::endl;
     std::cerr << "--------------------------------------------------" << std::endl;
 
@@ -567,7 +506,7 @@ void test_thermal_results(std::string const & system_name,
 
     std::string angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_thermal_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                          glazing_system,
                          update,
@@ -578,7 +517,7 @@ void test_thermal_results(std::string const & system_name,
     std::cerr << "full spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_thermal_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                          glazing_system,
                          update,
@@ -593,7 +532,7 @@ void test_thermal_results(std::string const & system_name,
 
     angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_thermal_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                          glazing_system,
                          update,
@@ -604,24 +543,24 @@ void test_thermal_results(std::string const & system_name,
     std::cerr << "full spectrum" << std::endl;
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_thermal_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                          glazing_system,
                          update,
                          theta,
                          phi);
 }
-void test_deflection_results(std::string const & system_name,
-                             std::string const & results_name,
-                             std::shared_ptr<wincalc::Glazing_System> const & glazing_system,
+
+void test_deflection_results(std::string const &system_name,
+                             std::string const &results_name,
+                             std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                              Tarcog::ISO15099::System system_type,
-                             bool update)
-{
+                             bool update) {
     double theta = 0;
     double phi = 0;
     std::string angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
@@ -630,7 +569,7 @@ void test_deflection_results(std::string const & system_name,
                             phi);
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
@@ -642,7 +581,7 @@ void test_deflection_results(std::string const & system_name,
     phi = 270;
     angle = get_angle_txt(theta, phi);
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+            wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
@@ -651,7 +590,7 @@ void test_deflection_results(std::string const & system_name,
                             phi);
 
     glazing_system->set_spectral_data_wavelength_range(
-      wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+            wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
