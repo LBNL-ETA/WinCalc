@@ -210,8 +210,8 @@ namespace wincalc
         const auto layer_deflection_max = system.getMaxLayerDeflections(system_type);
         const auto layer_deflection_mean = system.getMeanLayerDeflections(system_type);
         const auto panes_load = system.getPanesLoad(system_type);
-        const auto gap_deflection_max = system.getMaxGapDeflections(system_type);
-        const auto gap_deflection_mean = system.getMeanGapDeflections(system_type);
+        const auto gap_deflection_max = system.getMaxGapWidth(system_type);
+        const auto gap_deflection_mean = system.getMeanGapWidth(system_type);
         return {layer_deflection_max,
                 layer_deflection_mean,
                 panes_load,

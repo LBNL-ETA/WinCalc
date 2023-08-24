@@ -1,10 +1,6 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <cstdlib>
-#include <memory>
-#include <iostream>
 #include <filesystem>
-#include <fstream>
 
 #include "wincalc/wincalc.h"
 #include "optical_calcs.h"
@@ -72,6 +68,9 @@ TEST_F(TestDeflection, Test_Deflection_On)
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
+
+          glazing_system_u->enable_deflection(true);
+
     test_deflection_results("NFRC_102_NFRC_102",
                             "deflection/deflection_on_winter_shgc_run",
                             glazing_system_u,
