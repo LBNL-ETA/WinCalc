@@ -1,10 +1,6 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <cstdlib>
-#include <memory>
-#include <iostream>
 #include <filesystem>
-#include <fstream>
 
 #include "wincalc/wincalc.h"
 #include "optical_calcs.h"
@@ -19,7 +15,8 @@ using namespace window_standards;
 class TestDeflection : public testing::Test
 {
 protected:
-    std::shared_ptr<Glazing_System> glazing_system;
+    std::shared_ptr<Glazing_System> glazing_system_u;
+    std::shared_ptr<Glazing_System> glazing_system_shgc;
 
     virtual void SetUp()
     {
@@ -33,10 +30,10 @@ protected:
         products.push_back(clear_3);
         products.push_back(clear_3);
 
-		double gap_thickness = 0.0127;
-		double gap_pressure = Gases::DefaultPressure;
-		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
+        double gap_thickness = 0.0127;
+        double gap_pressure = Gases::DefaultPressure;
+        auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+          gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap);
 
@@ -45,23 +42,51 @@ protected:
         standard_path /= "W5_NFRC_2003.std";
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
-        glazing_system = std::make_shared<Glazing_System>(
+        glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
+
+        glazing_system_shgc = std::make_shared<Glazing_System>(
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
     }
 };
 
 TEST_F(TestDeflection, Test_Deflection_Off)
 {
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/deflection_off", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/deflection_off",
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }
 
 TEST_F(TestDeflection, Test_Deflection_On)
 {
-    glazing_system->enable_deflection(true);
-    auto deflection_results =
-      glazing_system->calc_deflection_properties(Tarcog::ISO15099::System::Uvalue);
+    glazing_system_u->enable_deflection(true);
 
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/deflection_on", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/deflection_on_winter_u_run",
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
+
+          glazing_system_u->enable_deflection(true);
+
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/deflection_on_winter_shgc_run",
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::SHGC,
+                            update_results);
+
+    glazing_system_shgc->enable_deflection(true);
+
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/deflection_on_summer_u_run",
+                            glazing_system_shgc,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/deflection_on_summer_shgc_run",
+                            glazing_system_shgc,
+                            Tarcog::ISO15099::System::SHGC,
+                            update_results);
 }

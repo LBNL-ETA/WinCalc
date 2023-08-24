@@ -53,13 +53,19 @@ protected:
 
 TEST_F(TestDeflectionDensity, Test_Deflection_Off)
 {
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/density/deflection_off", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/density/deflection_off",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }
 
 TEST_F(TestDeflectionDensity, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
-    test_deflection_results(
-      "NFRC_102_NFRC_102", "deflection/density/deflection_on", glazing_system, update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/density/deflection_on",
+                            glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
 }

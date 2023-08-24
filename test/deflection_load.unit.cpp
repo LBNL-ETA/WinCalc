@@ -58,6 +58,7 @@ TEST_F(TestDeflectionLoad, Test_Deflection_Off)
     test_deflection_results("NFRC_102_NFRC_102",
                             "deflection/applied_loads/deflection_off",
                             glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
                             update_results);
 }
 
@@ -69,11 +70,13 @@ TEST_F(TestDeflectionLoad, Test_Deflection_On)
     test_deflection_results("NFRC_102_NFRC_102",
                             "deflection/applied_loads/deflection_on_applied_loads_1",
                             glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
                             update_results);
     // change applied loads, make sure results change
     glazing_system->set_applied_loads({1, 1000});
     test_deflection_results("NFRC_102_NFRC_102",
                             "deflection/applied_loads/deflection_on_applied_loads_2",
                             glazing_system,
+                            Tarcog::ISO15099::System::Uvalue,
                             update_results);
 }

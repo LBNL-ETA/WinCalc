@@ -19,7 +19,8 @@ using namespace window_standards;
 class TestDeflectionYoungsModulus : public testing::Test
 {
 protected:
-    std::shared_ptr<Glazing_System> glazing_system;
+    std::shared_ptr<Glazing_System> glazing_system_u;
+    std::shared_ptr<Glazing_System> glazing_system_shgc;
 
     virtual void SetUp()
     {
@@ -46,8 +47,11 @@ protected:
         standard_path /= "W5_NFRC_2003.std";
         Optical_Standard standard = load_optical_standard(standard_path.string());
 
-        glazing_system = std::make_shared<Glazing_System>(
+        glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
+
+        glazing_system_shgc = std::make_shared<Glazing_System>(
+                standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
     }
 };
 
@@ -55,15 +59,36 @@ TEST_F(TestDeflectionYoungsModulus, Test_Deflection_Off)
 {
     test_deflection_results("NFRC_102_NFRC_102",
                             "deflection/youngs_modulus/deflection_off",
-                            glazing_system,
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::Uvalue,
                             update_results);
 }
 
 TEST_F(TestDeflectionYoungsModulus, Test_Deflection_On)
 {
-    glazing_system->enable_deflection(true);
+    glazing_system_u->enable_deflection(true);
+
     test_deflection_results("NFRC_102_NFRC_102",
-                            "deflection/youngs_modulus/deflection_on",
-                            glazing_system,
+                            "deflection/youngs_modulus/deflection_on_winter_u_run",
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/youngs_modulus/deflection_on_winter_shgc_run",
+                            glazing_system_u,
+                            Tarcog::ISO15099::System::SHGC,
+                            update_results);
+
+    glazing_system_shgc->enable_deflection(true);
+
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/youngs_modulus/deflection_on_summer_u_run",
+                            glazing_system_shgc,
+                            Tarcog::ISO15099::System::Uvalue,
+                            update_results);
+    test_deflection_results("NFRC_102_NFRC_102",
+                            "deflection/youngs_modulus/deflection_on_summer_shgc_run",
+                            glazing_system_shgc,
+                            Tarcog::ISO15099::System::SHGC,
                             update_results);
 }

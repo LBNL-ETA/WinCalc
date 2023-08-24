@@ -150,6 +150,8 @@ namespace wincalc
         std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
+        void do_layer_absorptance_updates(double theta, double phi);
+        void do_updates_for_thermal(double theta, double phi);
 
         Tarcog::ISO15099::CIGU & get_igu(double theta, double phi);
         Tarcog::ISO15099::CSystem & get_system(double theta, double phi);
