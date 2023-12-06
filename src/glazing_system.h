@@ -118,6 +118,9 @@ namespace wincalc
         void solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers);
         std::vector<Product_Data_Optical_Thermal> solid_layers() const;
 
+        void gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers);
+        std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_layers() const;
+
         Environments environments() const;
         void environments(Environments const & environment);
 

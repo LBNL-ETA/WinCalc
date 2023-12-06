@@ -310,6 +310,17 @@ namespace wincalc
         return product_data;
     }
 
+    void Glazing_System::gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers)
+    {
+        reset_igu();
+        gap_values = layers;
+    }
+
+    std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> Glazing_System::gap_layers() const
+    {
+        return gap_values;
+    }
+
     void Glazing_System::sort_spectral_data()
     {
         for(auto & product : product_data)
