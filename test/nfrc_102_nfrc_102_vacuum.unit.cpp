@@ -306,7 +306,7 @@ TEST_F(TestNFRC102NFRC102Vacuum, Test_Thermal_Measured)
     Tarcog::ISO15099::Glass glass2{0.005, 1.0, 0.8};
     Tarcog::ISO15099::PillarMeasurement pillar{0.012, 0.5, 300, 350, glass1, glass2};
 
-    auto pillarGap = Tarcog::ISO15099::Layers::measuredPillar(pillar);
+    auto pillarGap = Tarcog::ISO15099::Layers::createPillar(pillar);
 
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
