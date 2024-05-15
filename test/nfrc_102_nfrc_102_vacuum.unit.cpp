@@ -137,11 +137,10 @@ TEST_F(TestNFRC102NFRC102Vacuum, Test_Thermal_Triangular)
     const auto pillarConductivity = 999.0;
     const auto pillarArea = 0.03 * 0.03;
 
-    Tarcog::ISO15099::PolygonalPillar pillar{pillarHeight,
+    Tarcog::ISO15099::TriangularPillar pillar{pillarHeight,
                                              pillarConductivity,
                                              pillarArea,
-                                             pillarLength,
-                                             Tarcog::ISO15099::PolygonType::Triangle};
+                                             pillarLength};
 
     auto pillarGap = Tarcog::ISO15099::Layers::createPillar(pillar, gapPressure);
 
@@ -167,11 +166,10 @@ TEST_F(TestNFRC102NFRC102Vacuum, Test_Thermal_Pentagon)
     const auto pillarConductivity = 999.0;
     const auto pillarArea = 0.03 * 0.03;
 
-    Tarcog::ISO15099::PolygonalPillar pillar{pillarHeight,
+    Tarcog::ISO15099::PentagonPillar pillar{pillarHeight,
                                              pillarConductivity,
                                              pillarArea,
-                                             pillarLength,
-                                             Tarcog::ISO15099::PolygonType::Pentagon};
+                                             pillarLength};
 
     auto pillarGap = Tarcog::ISO15099::Layers::createPillar(pillar, gapPressure);
 
@@ -196,11 +194,10 @@ TEST_F(TestNFRC102NFRC102Vacuum, Test_Thermal_Hexagon)
     const auto pillarConductivity = 999.0;
     const auto pillarArea = 0.03 * 0.03;
 
-    Tarcog::ISO15099::PolygonalPillar pillar{pillarHeight,
+    Tarcog::ISO15099::HexagonPillar pillar{pillarHeight,
                                              pillarConductivity,
                                              pillarArea,
-                                             pillarLength,
-                                             Tarcog::ISO15099::PolygonType::Hexagon};
+                                             pillarLength};
 
     auto pillarGap = Tarcog::ISO15099::Layers::createPillar(pillar, gapPressure);
 
