@@ -518,6 +518,16 @@ namespace wincalc
         return bsdf_hemisphere.has_value();
     }
 
+    double Glazing_System::overallThickness() const
+    {
+        if(current_igu.has_value())
+        {
+            return current_igu.value().getThickness();
+        }
+
+        return 0.0;
+    }
+
 
     SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs()
     {

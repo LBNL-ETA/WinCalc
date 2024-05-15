@@ -135,6 +135,8 @@ namespace wincalc
 
         bool isBSDF();
 
+        [[nodiscard]] double overallThickness() const;
+
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
