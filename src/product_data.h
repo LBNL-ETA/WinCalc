@@ -25,14 +25,20 @@ namespace wincalc
                              double opening_bottom = 0,
                              double opening_left = 0,
                              double opening_right = 0,
-                             double opening_front = 0);
+                             std::optional<double> effective_openness = std::nullopt,
+                             std::optional<double> effective_thickness = std::nullopt);
 
         std::optional<double> conductivity;
         double opening_top;
         double opening_bottom;
         double opening_left;
         double opening_right;
-        double opening_front;
+        //! effective openness and effective thickness are calculated by default and it is not
+        //! necessary to assign them manually. However, if doing research work with custom shading
+        //! device, these two can be calculated outside and the effect of the effective values can
+        //! be monitored by the user.
+        std::optional<double> effective_openness{std::nullopt};
+        std::optional<double> effective_thickness{std::nullopt};
         std::optional<double> youngs_modulus;
         std::optional<double> density;
     };

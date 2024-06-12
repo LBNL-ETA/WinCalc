@@ -82,21 +82,24 @@ namespace wincalc
         thickness_meters(thickness_meters), flipped(flipped)
     {}
 
-    Product_Data_Thermal::Product_Data_Thermal(std::optional<double> conductivity,
-                                               double thickness_meters,
-                                               bool flipped,
-                                               double opening_top,
-                                               double opening_bottom,
-                                               double opening_left,
-                                               double opening_right,
-                                               double opening_front) :
+    Product_Data_Thermal::Product_Data_Thermal(
+      std::optional<double> conductivity,
+      double thickness_meters,
+      bool flipped,
+      double opening_top,
+      double opening_bottom,
+      double opening_left,
+      double opening_right,
+      std::optional<double> effective_openness,
+      std::optional<double> effective_thickness) :
         Flippable_Solid_Layer(thickness_meters, flipped),
         conductivity(conductivity),
         opening_top(opening_top),
         opening_bottom(opening_bottom),
         opening_left(opening_left),
         opening_right(opening_right),
-        opening_front(opening_front),
+        effective_openness(effective_openness),
+        effective_thickness(effective_thickness),
         youngs_modulus(Tarcog::DeflectionConstants::YOUNGSMODULUS),
         density(Tarcog::MaterialConstants::GLASSDENSITY)
     {}
