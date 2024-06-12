@@ -24,9 +24,7 @@ namespace wincalc
                              double opening_top = 0,
                              double opening_bottom = 0,
                              double opening_left = 0,
-                             double opening_right = 0,
-                             std::optional<double> effective_openness = std::nullopt,
-                             std::optional<double> effective_thickness = std::nullopt);
+                             double opening_right = 0);
 
         std::optional<double> conductivity;
         double opening_top;

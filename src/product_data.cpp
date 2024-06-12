@@ -89,17 +89,13 @@ namespace wincalc
       double opening_top,
       double opening_bottom,
       double opening_left,
-      double opening_right,
-      std::optional<double> effective_openness,
-      std::optional<double> effective_thickness) :
+      double opening_right) :
         Flippable_Solid_Layer(thickness_meters, flipped),
         conductivity(conductivity),
         opening_top(opening_top),
         opening_bottom(opening_bottom),
         opening_left(opening_left),
         opening_right(opening_right),
-        effective_openness(effective_openness),
-        effective_thickness(effective_thickness),
         youngs_modulus(Tarcog::DeflectionConstants::YOUNGSMODULUS),
         density(Tarcog::MaterialConstants::GLASSDENSITY)
     {}
