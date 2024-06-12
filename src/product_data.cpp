@@ -82,14 +82,13 @@ namespace wincalc
         thickness_meters(thickness_meters), flipped(flipped)
     {}
 
-    Product_Data_Thermal::Product_Data_Thermal(
-      std::optional<double> conductivity,
-      double thickness_meters,
-      bool flipped,
-      double opening_top,
-      double opening_bottom,
-      double opening_left,
-      double opening_right) :
+    Product_Data_Thermal::Product_Data_Thermal(std::optional<double> conductivity,
+                                               double thickness_meters,
+                                               bool flipped,
+                                               double opening_top,
+                                               double opening_bottom,
+                                               double opening_left,
+                                               double opening_right) :
         Flippable_Solid_Layer(thickness_meters, flipped),
         conductivity(conductivity),
         opening_top(opening_top),
@@ -137,11 +136,11 @@ namespace wincalc
                                                               double gap_width_right) const
     {
         double front_openness =
-          ThermalPermeability::Venetian::openness(geometry.slat_tilt,
-                                                  geometry.slat_spacing,
-                                                  material_optical_data->thickness_meters,
-                                                  geometry.slat_curvature,
-                                                  geometry.slat_width);
+          ThermalPermeability::Venetian::frontOpenness(geometry.slat_tilt,
+                                                       geometry.slat_spacing,
+                                                       material_optical_data->thickness_meters,
+                                                       geometry.slat_curvature,
+                                                       geometry.slat_width);
 
         EffectiveLayers::ShadeOpenness openness{
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
@@ -169,8 +168,8 @@ namespace wincalc
                                                                  double gap_width_left,
                                                                  double gap_width_right) const
     {
-        double front_openness =
-          ThermalPermeability::Woven::openness(geometry.thread_diameter, geometry.thread_spacing);
+        double front_openness = ThermalPermeability::Woven::frontOpenness(geometry.thread_diameter,
+                                                                          geometry.thread_spacing);
         EffectiveLayers::ShadeOpenness openness{
           front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
@@ -200,19 +199,17 @@ namespace wincalc
     {
         std::map<Perforated_Geometry::Type, std::function<double(void)>> front_openness_calcs;
         front_openness_calcs[Perforated_Geometry::Type::CIRCULAR] = [=]() {
-            auto cell_dimension =
-              ThermalPermeability::Perforated::diameterToXYDimension(geometry.dimension_x * 2);
-            return ThermalPermeability::Perforated::openness(
-              ThermalPermeability::Perforated::Geometry::Circular,
+            return ThermalPermeability::Perforated::frontOpenness(
+              ThermalPermeability::Perforated::Type::Circular,
               geometry.spacing_x,
               geometry.spacing_y,
-              cell_dimension.x,
-              cell_dimension.y);
+              geometry.dimension_x * 2,
+              geometry.dimension_x * 2);
         };
 
         front_openness_calcs[Perforated_Geometry::Type::RECTANGULAR] = [=]() {
-            return ThermalPermeability::Perforated::openness(
-              ThermalPermeability::Perforated::Geometry::Rectangular,
+            return ThermalPermeability::Perforated::frontOpenness(
+              ThermalPermeability::Perforated::Type::Rectangular,
               geometry.spacing_x,
               geometry.spacing_y,
               geometry.dimension_x,
@@ -220,8 +217,8 @@ namespace wincalc
         };
 
         front_openness_calcs[Perforated_Geometry::Type::SQUARE] = [=]() {
-            return ThermalPermeability::Perforated::openness(
-              ThermalPermeability::Perforated::Geometry::Square,
+            return ThermalPermeability::Perforated::frontOpenness(
+              ThermalPermeability::Perforated::Type::Square,
               geometry.spacing_x,
               geometry.spacing_y,
               geometry.dimension_x,
