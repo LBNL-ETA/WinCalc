@@ -42,6 +42,7 @@ protected:
         converted_shade.thermal_data->opening_bottom = 0.01;
         converted_shade.thermal_data->opening_left = 0;
         converted_shade.thermal_data->opening_right = 0;
+
         products.push_back(clear_3);
         products.push_back(converted_shade);
 
