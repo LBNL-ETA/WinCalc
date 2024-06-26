@@ -25,20 +25,14 @@ namespace wincalc
                              double opening_bottom = 0,
                              double opening_left = 0,
                              double opening_right = 0,
-                             std::optional<double> effective_openness = std::nullopt,
-                             std::optional<double> effective_thickness = std::nullopt);
+                             double opening_front = 0);
 
         std::optional<double> conductivity;
         double opening_top;
         double opening_bottom;
         double opening_left;
         double opening_right;
-        //! effective openness and effective thickness are calculated by default and it is not
-        //! necessary to assign them manually. However, if doing research work with custom shading
-        //! device, these two can be calculated outside and the effect of the effective values can
-        //! be monitored by the user.
-        std::optional<double> effective_openness{std::nullopt};
-        std::optional<double> effective_thickness{std::nullopt};
+        double opening_front;
         std::optional<double> youngs_modulus;
         std::optional<double> density;
     };
@@ -151,7 +145,8 @@ namespace wincalc
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
           double permeability_factor = 0,
-          bool flipped = false);
+          bool flipped = false,
+          bool user_defined_effective_values = false);
 
         SingleLayerOptics::BSDFHemisphere bsdf_hemisphere;
 
@@ -163,7 +158,7 @@ namespace wincalc
         std::vector<std::vector<double>> tb_visible;
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
-
+        bool user_defined_effective_values;
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
                                    double height,

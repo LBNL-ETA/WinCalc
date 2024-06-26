@@ -1078,18 +1078,11 @@ namespace wincalc
                                                            layer.thermal_data->opening_bottom,
                                                            layer.thermal_data->opening_left,
                                                            layer.thermal_data->opening_right);
-            auto effective_openness = effective_thermal_values->getEffectiveOpenness();
-            //if(layer.thermal_data->effective_openness.has_value())
-            //{
-            //    effective_openness.Ah = layer.thermal_data->effective_openness.value();
-            //}
-            //auto effective_thickness = layer.thermal_data->effective_thickness.has_value()
-            //                             ? layer.thermal_data->effective_thickness.value()
-            //                             : effective_thermal_values->effectiveThickness();
+
             auto tarcog_layer =
               Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),
                                                 layer.thermal_data->conductivity.value(),
-                                                effective_openness,
+                                                effective_thermal_values->getEffectiveOpenness(),
                                                 ir_results.emissivity_front_hemispheric,
                                                 ir_results.transmittance_front_diffuse_diffuse,
                                                 ir_results.emissivity_back_hemispheric,

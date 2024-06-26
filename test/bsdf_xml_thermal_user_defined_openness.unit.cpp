@@ -16,7 +16,7 @@
 using namespace wincalc;
 using namespace window_standards;
 
-class TestBSDFThermalOpenness : public testing::Test
+class TestBSDFThermalUserDefinedOpenness : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
@@ -42,6 +42,11 @@ protected:
         converted_shade.thermal_data->opening_bottom = 0.01;
         converted_shade.thermal_data->opening_left = 0;
         converted_shade.thermal_data->opening_right = 0;
+		
+	std::dynamic_pointer_cast<Product_Data_Dual_Band_Optical_BSDF>(converted_shade.optical_data)
+            ->user_defined_effective_values = true;
+        converted_shade.optical_data->permeability_factor = 0.0789;
+        converted_shade.optical_data->thickness_meters = 0.0123;
 
         products.push_back(clear_3);
         products.push_back(converted_shade);
@@ -68,19 +73,19 @@ protected:
     }
 };
 
-TEST_F(TestBSDFThermalOpenness, Test_Thermal)
+TEST_F(TestBSDFThermalUserDefinedOpenness, Test_Thermal)
 {
-    test_thermal_results("thermal_openings_xml_shade_10mm_top_and_bottom",
+    test_thermal_results("thermal_user_defined_openings_xml_shade_10mm_top_and_bottom",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("thermal_openings_xml_shade_10mm_top_and_bottom",
+    test_thermal_results("thermal_user_defined_openings_xml_shade_10mm_top_and_bottom",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
 }
 
-TEST_F(TestBSDFThermalOpenness, Test_Optical)
+TEST_F(TestBSDFThermalUserDefinedOpenness, Test_Optical)
 {
     test_optical_results(
       "thermal_openings_xml_shade_10mm_top_and_bottom", glazing_system_u, update_results);
