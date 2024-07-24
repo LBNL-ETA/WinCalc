@@ -441,9 +441,8 @@ namespace wincalc
           SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
 
         std::shared_ptr<SingleLayerOptics::CMaterial> material =
-          SingleLayerOptics::Material::nBandMaterial(spectral_sample_data,
-                                                     product_data.thickness_meters,
-                                                     product_data.material_type);
+          SingleLayerOptics::Material::nBandMaterial(
+            spectral_sample_data, product_data.thickness_meters, product_data.material_type);
         return material;
     }
 
@@ -460,10 +459,8 @@ namespace wincalc
         auto pvSample = std::make_shared<SpectralAveraging::PhotovoltaicSampleData>(
           measured_wavelength_data, eqef, eqeb);
 
-        auto material =
-          SingleLayerOptics::Material::nBandPhotovoltaicMaterial(pvSample,
-                                                                 product_data.thickness_meters,
-                                                                 product_data.material_type);
+        auto material = SingleLayerOptics::Material::nBandPhotovoltaicMaterial(
+          pvSample, product_data.thickness_meters, product_data.material_type);
 
         return material;
     }
@@ -1081,11 +1078,11 @@ namespace wincalc
                                                            layer.thermal_data->opening_bottom,
                                                            layer.thermal_data->opening_left,
                                                            layer.thermal_data->opening_right);
-            auto effective_openness = effective_thermal_values->getEffectiveOpenness();
+
             auto tarcog_layer =
               Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),
                                                 layer.thermal_data->conductivity.value(),
-                                                effective_openness,
+                                                effective_thermal_values->getEffectiveOpenness(),
                                                 ir_results.emissivity_front_hemispheric,
                                                 ir_results.transmittance_front_diffuse_diffuse,
                                                 ir_results.emissivity_back_hemispheric,
@@ -1110,15 +1107,17 @@ namespace wincalc
         return system;
     }
 
-	Gases::CGas create_gas(std::vector<std::pair<double, std::variant<Gases::GasDef, Gases::CGasData>>> const& components)
-	{
-		auto gas = Gases::CGas();
-		for(const auto & item : components)
-		{
-			auto percent = item.first;
-			std::visit([&gas, percent](auto arg) { gas.addGasItem(percent, arg); }, item.second);
-		}
+    Gases::CGas create_gas(
+      std::vector<std::pair<double, std::variant<Gases::GasDef, Gases::CGasData>>> const &
+        components)
+    {
+        auto gas = Gases::CGas();
+        for(const auto & item : components)
+        {
+            auto percent = item.first;
+            std::visit([&gas, percent](auto arg) { gas.addGasItem(percent, arg); }, item.second);
+        }
 
-		return gas;
-	}
+        return gas;
+    }
 }   // namespace wincalc

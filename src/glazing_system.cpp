@@ -310,6 +310,17 @@ namespace wincalc
         return product_data;
     }
 
+    void Glazing_System::gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers)
+    {
+        reset_igu();
+        gap_values = layers;
+    }
+
+    std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> Glazing_System::gap_layers() const
+    {
+        return gap_values;
+    }
+
     void Glazing_System::sort_spectral_data()
     {
         for(auto & product : product_data)
@@ -505,6 +516,16 @@ namespace wincalc
     bool Glazing_System::isBSDF()
     {
         return bsdf_hemisphere.has_value();
+    }
+
+    double Glazing_System::overallThickness() const
+    {
+        if(current_igu.has_value())
+        {
+            return current_igu.value().getThickness();
+        }
+
+        return 0.0;
     }
 
 

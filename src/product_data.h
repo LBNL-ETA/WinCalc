@@ -145,7 +145,8 @@ namespace wincalc
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
           double permeability_factor = 0,
-          bool flipped = false);
+          bool flipped = false,
+          bool user_defined_effective_values = false);
 
         SingleLayerOptics::BSDFHemisphere bsdf_hemisphere;
 
@@ -157,7 +158,7 @@ namespace wincalc
         std::vector<std::vector<double>> tb_visible;
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
-
+        bool user_defined_effective_values;
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
                                    double height,

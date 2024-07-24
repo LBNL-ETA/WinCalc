@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, windows-2022, macos-11.0, ubuntu-latest]
+        os: [windows-2019, windows-2022, macos-12, macos-14, ubuntu-latest]
         # arch: [x86, x64]
         
     steps:

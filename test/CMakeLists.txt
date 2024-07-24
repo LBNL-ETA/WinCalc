@@ -28,7 +28,9 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		bsdf_xml_thermal_user_defined_openness.unit.cpp
 		nfrc_102_nfrc_102_forced_ventilation.unit.cpp
+		nfrc_102_nfrc_102_vacuum.unit.cpp
 		deflection_triple_clear.unit.cpp
 		deflection_youngs_modulus.unit.cpp
  		deflection.unit.cpp
@@ -43,7 +45,7 @@ add_executable(${PROJECT_TEST_NAME}
 		perforated_screen.unit.cpp
 		#double_layer_perfect_clear_exterior_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
-		bsdf_xml_thermal_openness.unit.cpp
+		bsdf_xml_thermal_openness.unit.cpp		
 		CS03_genBSDF.unit.cpp
 		SEATEX_Midnight.unit.cpp
 		nfrc_102_as_bsdf.unit.cpp
