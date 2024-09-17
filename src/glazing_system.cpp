@@ -151,25 +151,7 @@ namespace wincalc
                                                            double theta,
                                                            double phi)
     {
-        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
-        // present then the CSystem m_solved value will get set to false causing the deflection
-        // solver to go through another iteration resulting in slightly differnt temperatures
-        // While these results are not incorrect they will not match the results from
-        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
-        // iteration are used in the Stephen Morse code it will not result in the same
-        // deflection values.
-        //
-        // The whole interaction involving do_deflection_updates needs to be refactored
-        //
-        // Doing deflection updates and creating the system before calculating the optical results
-        // because there are cases where the thermal system cannot be created.  E.G. genSDF XML
-        // files do not have conductivity and so can be used in optical calcs but not thermal.
-        // Creating the system is much less expensive than doing the optical calcs so do that first
-        // to save time if there are any errors.
-        if(!is_current_igu_calculated(theta, phi))
-        {
-            do_updates_for_thermal(theta, phi);
-        }
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
 
         return system.getTemperatures(system_type);
