@@ -51,6 +51,7 @@ add_executable(${PROJECT_TEST_NAME}
 		nfrc_102_as_bsdf.unit.cpp
 		pv_single_layer.unit.cpp
 		nfrc_102.unit.cpp
+		nfrc_102_102.unit.cpp
 		nfrc_20748.unit.cpp
 		nfrc_6046.unit.cpp
  		nfrc_9023.unit.cpp
