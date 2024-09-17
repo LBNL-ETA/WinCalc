@@ -61,7 +61,8 @@ namespace wincalc
                                    double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
-                                   double gap_width_right) const;
+                                   double gap_width_right,
+                                   double front_openness) const;
         std::optional<double> ir_transmittance_front;
         std::optional<double> ir_transmittance_back;
         std::optional<double> emissivity_front;
@@ -165,7 +166,8 @@ namespace wincalc
                                    double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
-                                   double gap_width_right) const override;
+                                   double gap_width_right,
+                                   double front_openness) const override;
     };
 
     enum class CoatedSide
@@ -256,7 +258,8 @@ namespace wincalc
                                    double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
-                                   double gap_width_right) const override;
+                                   double gap_width_right,
+                                   double front_openness) const override;
 
         Venetian_Geometry geometry;
     };
@@ -282,7 +285,8 @@ namespace wincalc
                                    double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
-                                   double gap_width_right) const override;
+                                   double gap_width_right,
+                                   double front_openness) const override;
 
         Woven_Geometry geometry;
     };
@@ -321,7 +325,8 @@ namespace wincalc
                                    double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
-                                   double gap_width_right) const override;
+                                   double gap_width_right,
+                                   double front_openness) const override;
 
         Perforated_Geometry geometry;
     };

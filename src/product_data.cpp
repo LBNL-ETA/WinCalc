@@ -34,10 +34,11 @@ namespace wincalc
                                                      double gap_width_top,
                                                      double gap_width_bottom,
                                                      double gap_width_left,
-                                                     double gap_width_right) const
+                                                     double gap_width_right,
+                                                     double front_openness) const
     {
         EffectiveLayers::ShadeOpenness openness{
-          permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
           width, height, thickness_meters, openness);
@@ -135,9 +136,10 @@ namespace wincalc
                                                               double gap_width_top,
                                                               double gap_width_bottom,
                                                               double gap_width_left,
-                                                              double gap_width_right) const
+                                                              double gap_width_right,
+                                                              double ) const // Front openness is automatically calculated by the model
     {
-        double front_openness =
+        double front_openness_venetian =
           ThermalPermeability::Venetian::frontOpenness(geometry.slat_tilt,
                                                        geometry.slat_spacing,
                                                        material_optical_data->thickness_meters,
@@ -145,7 +147,7 @@ namespace wincalc
                                                        geometry.slat_width);
 
         EffectiveLayers::ShadeOpenness openness{
-          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+          front_openness_venetian, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveHorizontalVenetian>(
           width,
@@ -168,7 +170,8 @@ namespace wincalc
                                                                  double gap_width_top,
                                                                  double gap_width_bottom,
                                                                  double gap_width_left,
-                                                                 double gap_width_right) const
+                                                                 double gap_width_right,
+                                                                 double ) const // calculated automatically by the code
     {
         double front_openness = ThermalPermeability::Woven::frontOpenness(geometry.thread_diameter,
                                                                           geometry.thread_spacing);
@@ -197,7 +200,8 @@ namespace wincalc
                                                                        double gap_width_top,
                                                                        double gap_width_bottom,
                                                                        double gap_width_left,
-                                                                       double gap_width_right) const
+                                                                       double gap_width_right,
+                                                                       double ) const // Calculated automatically by the code
     {
         std::map<Perforated_Geometry::Type, std::function<double(void)>> front_openness_calcs;
         front_openness_calcs[Perforated_Geometry::Type::CIRCULAR] = [=]() {
@@ -290,10 +294,11 @@ namespace wincalc
                                                                     double gap_width_top,
                                                                     double gap_width_bottom,
                                                                     double gap_width_left,
-                                                                    double gap_width_right) const
+                                                                    double gap_width_right,
+                                                                    double front_openness) const
     {
         EffectiveLayers::ShadeOpenness openness{
-          permeability_factor, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
         if(user_defined_effective_values)
         {
             return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
