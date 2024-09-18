@@ -25,7 +25,10 @@ namespace wincalc
                              double opening_bottom = 0,
                              double opening_left = 0,
                              double opening_right = 0,
-                             double opening_front = 0);
+                             double opening_front = 0,
+                             double permeability_factor = 0,
+                             std::optional<double> youngs_modulus = Tarcog::DeflectionConstants::YOUNGSMODULUS,
+                             std::optional<double> density = Tarcog::MaterialConstants::GLASSDENSITY);
 
         std::optional<double> conductivity;
         double opening_top;
@@ -33,6 +36,7 @@ namespace wincalc
         double opening_left;
         double opening_right;
         double opening_front;
+        double permeability_factor;
         std::optional<double> youngs_modulus;
         std::optional<double> density;
     };
@@ -45,7 +49,6 @@ namespace wincalc
                              std::optional<double> ir_transmittance_back = std::optional<double>(),
                              std::optional<double> emissivity_front = std::optional<double>(),
                              std::optional<double> emissivity_back = std::optional<double>(),
-                             double permeability_factor = 0,
                              bool flipped = false);
         virtual ~Product_Data_Optical();
         virtual std::shared_ptr<Product_Data_Optical> optical_data();
@@ -62,12 +65,12 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness) const;
+                                   double front_openness,
+                                   double permeability_factor) const;
         std::optional<double> ir_transmittance_front;
         std::optional<double> ir_transmittance_back;
         std::optional<double> emissivity_front;
         std::optional<double> emissivity_back;
-        double permeability_factor;
         virtual std::vector<double> wavelengths() const = 0;
         std::optional<OpticsParser::PVPowerProperties> pv_power_properties;
     };
@@ -81,14 +84,12 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
-          double permeability_factor = 0,
           bool flipped = false) :
             Product_Data_Optical(thickness_meters,
                                  ir_transmittance_front,
                                  ir_transmittance_back,
                                  emissivity_front,
                                  emissivity_back,
-                                 permeability_factor,
                                  flipped)
         {}
 
@@ -115,7 +116,6 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
-          double permeability_factor = 0,
           bool flipped = false);
 
         double tf_solar;
@@ -145,7 +145,6 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
-          double permeability_factor = 0,
           bool flipped = false,
           bool user_defined_effective_values = false);
 
@@ -167,7 +166,8 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness) const override;
+                                   double front_openness,
+                                   double permeability_factor) const override;
     };
 
     enum class CoatedSide
@@ -189,7 +189,6 @@ namespace wincalc
           std::optional<double> ir_transmittance_back = std::optional<double>(),
           std::optional<double> emissivity_front = std::optional<double>(),
           std::optional<double> emissivity_back = std::optional<double>(),
-          double permeability_factor = 0,
           bool flipped = false);
         FenestrationCommon::MaterialType material_type;
         std::vector<OpticsParser::WLData> wavelength_data;
@@ -259,7 +258,8 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness) const override;
+                                   double front_openness,
+                                   double permeability_factor) const override;
 
         Venetian_Geometry geometry;
     };
@@ -286,7 +286,8 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness) const override;
+                                   double front_openness,
+                                   double permeability_factor) const override;
 
         Woven_Geometry geometry;
     };
@@ -326,7 +327,8 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness) const override;
+                                   double front_openness,
+                                   double permeability_factor) const override;
 
         Perforated_Geometry geometry;
     };
