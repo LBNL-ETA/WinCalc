@@ -33,11 +33,14 @@ namespace wincalc
                                                      double gap_width_bottom,
                                                      double gap_width_left,
                                                      double gap_width_right,
-                                                     double front_openness,
+                                                     double effective_thermal_front_openness_area,
                                                      double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{
-          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{effective_thermal_front_openness_area,
+                                                gap_width_left,
+                                                gap_width_right,
+                                                gap_width_top,
+                                                gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
           width, height, thickness_meters, openness, permeability_factor);
@@ -87,7 +90,7 @@ namespace wincalc
                                                double opening_bottom,
                                                double opening_left,
                                                double opening_right,
-                                               double opening_front,
+                                               double effective_front_thermal_openness_area,
                                                double permeability_factor,
                                                std::optional<double> youngs_modulus,
                                                std::optional<double> density) :
@@ -97,7 +100,7 @@ namespace wincalc
         opening_bottom(opening_bottom),
         opening_left(opening_left),
         opening_right(opening_right),
-        opening_front(opening_front),
+        effective_front_thermal_openness_area(effective_front_thermal_openness_area),
         permeability_factor(permeability_factor),
         youngs_modulus(youngs_modulus),
         density(density)

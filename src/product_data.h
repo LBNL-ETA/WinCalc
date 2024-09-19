@@ -25,7 +25,7 @@ namespace wincalc
                              double opening_bottom = 0,
                              double opening_left = 0,
                              double opening_right = 0,
-                             double opening_front = 0,
+                             double effective_front_thermal_openness_area = 0,
                              double permeability_factor = 0,
                              std::optional<double> youngs_modulus = Tarcog::DeflectionConstants::YOUNGSMODULUS,
                              std::optional<double> density = Tarcog::MaterialConstants::GLASSDENSITY);
@@ -35,7 +35,7 @@ namespace wincalc
         double opening_bottom;
         double opening_left;
         double opening_right;
-        double opening_front;
+        double effective_front_thermal_openness_area;
         double permeability_factor;
         std::optional<double> youngs_modulus;
         std::optional<double> density;
@@ -65,7 +65,7 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness,
+                                   double effective_thermal_front_openness_area,
                                    double permeability_factor) const;
         std::optional<double> ir_transmittance_front;
         std::optional<double> ir_transmittance_back;
