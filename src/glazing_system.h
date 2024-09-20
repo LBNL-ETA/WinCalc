@@ -166,7 +166,6 @@ namespace wincalc
         std::optional<Tarcog::ISO15099::CSystem> current_system;
 
         bool is_current_igu_calculated(double theta, double phi);
-        bool is_current_igu_created_and_calculated(double theta, double phi);
 
         std::vector<double> get_solar_abs_front(double theta, double phi);
         double get_solar_transmittance_front(double theta, double phi);

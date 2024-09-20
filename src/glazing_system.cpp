@@ -95,7 +95,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
-        if(is_current_igu_created_and_calculated(theta, phi))
+        if(current_igu.has_value() && is_current_igu_calculated(theta, phi))
         {
             return current_igu.value();
         }
@@ -112,7 +112,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
     {
-        if(is_current_igu_created_and_calculated(theta, phi))
+        if(current_system.has_value() && is_current_igu_calculated(theta, phi))
         {
             return current_system.value();
         }
@@ -568,11 +568,6 @@ namespace wincalc
     {
         return last_theta.has_value() && FenestrationCommon::isEqual(theta, last_theta.value())
                && last_phi.has_value() && FenestrationCommon::isEqual(phi, last_phi.value());
-    }
-
-    bool Glazing_System::is_current_igu_created_and_calculated(double theta, double phi)
-    {
-        return current_igu.has_value() && is_current_igu_calculated(theta, phi);
     }
 
     std::vector<double> Glazing_System::get_solar_abs_front(double theta, double phi)
