@@ -49,5 +49,13 @@ Option(BUILD_WinCalc_tests "Build WinCalc tests." ON)
 if(BUILD_WinCalc_tests)
 	enable_testing()
 	add_subdirectory( test )
+
+	# Set the path to the test directory
+    set(TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test")
+    target_compile_definitions(wincalc-test PRIVATE TEST_DATA_DIR="${TEST_DATA_DIR}")
+
+    # Add the test with the specified arguments
+    add_test(NAME wincalc-test
+             COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/wincalc-test --gtest_catch_exceptions=0)
 endif()
 

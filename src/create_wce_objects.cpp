@@ -1071,13 +1071,15 @@ namespace wincalc
             }
             auto ir_results = calc_thermal_ir(standard, layer);
 
-            auto effective_thermal_values =
-              layer.optical_data->effective_thermal_values(width,
-                                                           height,
-                                                           layer.thermal_data->opening_top,
-                                                           layer.thermal_data->opening_bottom,
-                                                           layer.thermal_data->opening_left,
-                                                           layer.thermal_data->opening_right);
+            auto effective_thermal_values = layer.optical_data->effective_thermal_values(
+              width,
+              height,
+              layer.thermal_data->opening_top,
+              layer.thermal_data->opening_bottom,
+              layer.thermal_data->opening_left,
+              layer.thermal_data->opening_right,
+              layer.thermal_data->effective_front_thermal_openness_area,
+              layer.thermal_data->permeability_factor);
 
             auto tarcog_layer =
               Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),

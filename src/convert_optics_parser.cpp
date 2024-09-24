@@ -263,6 +263,10 @@ namespace wincalc
         auto thermal_data = wincalc::Product_Data_Thermal(
           data.conductivity, data.thickness.value() * length_conversion, false);
 
+        if(data.permeabilityFactor.has_value())
+        {
+            thermal_data.permeability_factor = data.permeabilityFactor.value();
+        }
         thermal_data.density = data.density;
         thermal_data.youngs_modulus = data.youngsModulus;
 

@@ -95,8 +95,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
-        if(current_igu.has_value() && FenestrationCommon::isEqual(theta, last_theta)
-           && FenestrationCommon::isEqual(phi, last_phi))
+        if(current_igu.has_value() && is_current_igu_calculated(theta, phi))
         {
             return current_igu.value();
         }
@@ -113,8 +112,7 @@ namespace wincalc
 
     Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
     {
-        if(current_system.has_value() && FenestrationCommon::isEqual(theta, last_theta)
-           && FenestrationCommon::isEqual(phi, last_phi))
+        if(current_system.has_value() && is_current_igu_calculated(theta, phi))
         {
             return current_system.value();
         }
@@ -153,26 +151,7 @@ namespace wincalc
                                                            double theta,
                                                            double phi)
     {
-        // Don't do deflection updates if theta and phi are unchanged.  If this check is not
-        // present then the CSystem m_solved value will get set to false causing the deflection
-        // solver to go through another iteration resulting in slightly differnt temperatures
-        // While these results are not incorrect they will not match the results from
-        // Windows-CalcEngine unit tests.  And also if those temperates from the extra
-        // iteration are used in the Stephen Morse code it will not result in the same
-        // deflection values.
-        //
-        // The whole interaction involving do_deflection_updates needs to be refactored
-        //
-        // Doing deflection updates and creating the system before calculating the optical results
-        // because there are cases where the thermal system cannot be created.  E.G. genSDF XML
-        // files do not have conductivity and so can be used in optical calcs but not thermal.
-        // Creating the system is much less expensive than doing the optical calcs so do that first
-        // to save time if there are any errors.
-        if(!FenestrationCommon::isEqual(theta, last_theta)
-           || !FenestrationCommon::isEqual(phi, last_phi))
-        {
-            do_updates_for_thermal(theta, phi);
-        }
+        do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
 
         return system.getTemperatures(system_type);
@@ -236,6 +215,15 @@ namespace wincalc
         else
         {
             system.clearDeflection();
+        }
+    }
+
+    void Glazing_System::do_deflection_updates(std::optional<double> theta,
+                                               std::optional<double> phi)
+    {
+        if(theta.has_value() && phi.has_value())
+        {
+            do_deflection_updates(theta.value(), phi.value());
         }
     }
 
@@ -310,7 +298,8 @@ namespace wincalc
         return product_data;
     }
 
-    void Glazing_System::gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers)
+    void Glazing_System::gap_layers(
+      std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers)
     {
         reset_igu();
         gap_values = layers;
@@ -510,6 +499,17 @@ namespace wincalc
     void Glazing_System::enable_deflection(bool enable)
     {
         model_deflection = enable;
+
+        // If last theta and phi are not set then set them to 0.0 for the deflection updates
+        if(!last_theta.has_value())
+        {
+            last_theta = 0.0;
+        }
+        if(!last_phi.has_value())
+        {
+            last_phi = 0.0;
+        }
+
         do_deflection_updates(last_theta, last_phi);
     }
 
@@ -564,6 +564,12 @@ namespace wincalc
                                                 phi);
     }
 
+    bool Glazing_System::is_current_igu_calculated(double theta, double phi)
+    {
+        return last_theta.has_value() && FenestrationCommon::isEqual(theta, last_theta.value())
+               && last_phi.has_value() && FenestrationCommon::isEqual(phi, last_phi.value());
+    }
+
     std::vector<double> Glazing_System::get_solar_abs_front(double theta, double phi)
     {
         auto & optical_system = get_optical_system_for_thermal_calcs();
@@ -580,6 +586,5 @@ namespace wincalc
                                                        theta,
                                                        phi);
     }
-
 
 }   // namespace wincalc

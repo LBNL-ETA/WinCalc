@@ -155,6 +155,7 @@ namespace wincalc
         std::vector<double> applied_loads;
 
         void do_deflection_updates(double theta, double phi);
+        void do_deflection_updates(std::optional<double> theta, std::optional<double> phi);
         void do_layer_absorptance_updates(double theta, double phi);
         void do_updates_for_thermal(double theta, double phi);
 
@@ -164,14 +165,16 @@ namespace wincalc
         std::optional<Tarcog::ISO15099::CIGU> current_igu;
         std::optional<Tarcog::ISO15099::CSystem> current_system;
 
+        bool is_current_igu_calculated(double theta, double phi);
+
         std::vector<double> get_solar_abs_front(double theta, double phi);
         double get_solar_transmittance_front(double theta, double phi);
         SingleLayerOptics::IScatteringLayer & get_optical_system_for_thermal_calcs();
         std::unique_ptr<SingleLayerOptics::IScatteringLayer> optical_system_for_thermal_calcs;
 
 
-        double last_theta = 0;
-        double last_phi = 0;
+        std::optional<double> last_theta = std::nullopt;
+        std::optional<double> last_phi = std::nullopt;
         void reset_system();
         void reset_igu();
         void sort_spectral_data();

@@ -38,10 +38,11 @@ protected:
         auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
         auto shade = OpticsParser::parseBSDFXMLFile(shade_path.string());
         auto converted_shade = wincalc::convert_to_solid_layer(shade);
-        converted_shade.thermal_data->opening_top = 0.01;
-        converted_shade.thermal_data->opening_bottom = 0.01;
-        converted_shade.thermal_data->opening_left = 0;
-        converted_shade.thermal_data->opening_right = 0;
+        converted_shade.thermal_data->opening_top = 0.01;       // m
+        converted_shade.thermal_data->opening_bottom = 0.01;    // m
+        converted_shade.thermal_data->opening_left = 0;         // m
+        converted_shade.thermal_data->opening_right = 0;        // m
+        converted_shade.thermal_data->effective_front_thermal_openness_area = 0;        // m²
 
         products.push_back(clear_3);
         products.push_back(converted_shade);

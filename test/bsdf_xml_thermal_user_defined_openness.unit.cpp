@@ -42,10 +42,11 @@ protected:
         converted_shade.thermal_data->opening_bottom = 0.01;
         converted_shade.thermal_data->opening_left = 0;
         converted_shade.thermal_data->opening_right = 0;
+        converted_shade.thermal_data->effective_front_thermal_openness_area = 0.222;
+        converted_shade.thermal_data->permeability_factor = 0.0789;
 		
 	std::dynamic_pointer_cast<Product_Data_Dual_Band_Optical_BSDF>(converted_shade.optical_data)
             ->user_defined_effective_values = true;
-        converted_shade.optical_data->permeability_factor = 0.0789;
         converted_shade.optical_data->thickness_meters = 0.0123;
 
         products.push_back(clear_3);
