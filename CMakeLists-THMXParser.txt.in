@@ -4,7 +4,7 @@ include(ExternalProject)
 
 ExternalProject_Add(THMXParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/THMXParser.git
-    GIT_TAG "v1.1.0"
+    GIT_TAG "v1.1.1"
     
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
