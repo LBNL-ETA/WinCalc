@@ -71,31 +71,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Set up Docker Buildx for Multi-arch Builds
-        uses: docker/setup-buildx-action@v2
-
-      - name: Install QEMU for Multi-arch Emulation
+      - name: Install QEMU for aarch64 emulation
         uses: docker/setup-qemu-action@v2
         with:
           platforms: all
-
-      - name: Set up Docker Image
-        run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker build --platform=linux/${{ matrix.arch }} -t my-cpp-build-env:$GITHUB_SHA -f Dockerfile.${{ matrix.os }} .
-
         
       - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-      - name: Run CMake Build and Test
-        run: |
-          docker run --platform=linux/${{ matrix.arch }} my-cpp-build-env:$GITHUB_SHA /bin/bash -c "
-          mkdir build &&
-          cd build &&
-          cmake .. &&
-          cmake --config ${{env.BUILD_TYPE}} --build .  &&
-          ctest -C RELEASE -V
-          "
+      - name: Build
+      # Build your program with the given configuration
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C RELEASE -V
