@@ -8,7 +8,7 @@ env:
     
 jobs:
   windows:
-    name: ${{ matrix.os }}
+    name: ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -59,7 +59,7 @@ jobs:
         run: ctest -C RELEASE -V
         
   linux:
-    name: ${{ matrix.os }}
+    name: ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
