@@ -75,6 +75,9 @@ jobs:
         uses: docker/setup-qemu-action@v2
         with:
           platforms: all
+          
+      - name: Upgrade gcc
+        run:  yum install -y gcc gcc-c++
         
       - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
