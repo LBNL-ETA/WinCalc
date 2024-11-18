@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iostream>
 
 #include "glazing_system.h"
 #include "optical_calcs.h"
@@ -128,6 +129,7 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
+        std::cout << "Starting U calc" << std::endl;
         do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getUValue();
