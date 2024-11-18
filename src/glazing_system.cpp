@@ -129,9 +129,11 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
-        std::cout << "Starting U calc" << std::endl;
+        std::cout << "Starting U calc 2" << std::endl;
         do_updates_for_thermal(theta, phi);
+        std::cout << "After do_updates_for_thermal" << std::endl;
         auto & system = get_system(theta, phi);
+        std::cout << "After get_system" << std::endl;
         return system.getUValue();
     }
 
