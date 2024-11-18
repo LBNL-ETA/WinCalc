@@ -129,7 +129,7 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
-        std::cout << "Starting U calc 2" << std::endl;
+        std::cout << "Starting U calc" << std::endl;
         do_updates_for_thermal(theta, phi);
         std::cout << "After do_updates_for_thermal" << std::endl;
         auto & system = get_system(theta, phi);
@@ -204,21 +204,32 @@ namespace wincalc
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
     {
+        std::cout << "do_deflection_updates" << std::endl;
         auto & system = get_system(theta, phi);
+        std::cout << "after get_system" << std::endl;
         if(model_deflection)
         {
+            std::cout << "in model_deflection" << std::endl;
             if(auto state_ptr = std::get_if<Temperature_Pressure>(&deflection_properties))
             {
+                std::cout << "before system.setDeflectionProperties(state_ptr->temperature, "
+                             "state_ptr->pressure);"
+                          << std::endl;
                 system.setDeflectionProperties(state_ptr->temperature, state_ptr->pressure);
+                std::cout << "after system.setDeflectionProperties(state_ptr->temperature, state_ptr->pressure);" << std::endl;
             }
             else if(auto vector_ptr = std::get_if<std::vector<double>>(&deflection_properties))
             {
+                std::cout << "before system.setDeflectionProperties(*vector_ptr);" << std::endl;
                 system.setDeflectionProperties(*vector_ptr);
+                std::cout << "after system.setDeflectionProperties(*vector_ptr);" << std::endl;
             }
         }
         else
         {
+            std::cout << "not in model_deflection" << std::endl;
             system.clearDeflection();
+            std::cout << "after system.clearDeflection()" << std::endl;
         }
     }
 
@@ -233,15 +244,22 @@ namespace wincalc
 
     void Glazing_System::do_layer_absorptance_updates(double theta, double phi)
     {
+        std::cout << "do_layer_absorptance_updates" << std::endl;
         auto & system = get_system(theta, phi);
+        std::cout << "after auto & system = get_system(theta, phi);" << std::endl;
         auto solar_front_absorptances = get_solar_abs_front(theta, phi);
+        std::cout << "after auto solar_front_absorptances = get_solar_abs_front(theta, phi);" << std::endl;
         system.setAbsorptances(solar_front_absorptances);
+        std::cout << "after system.setAbsorptances(solar_front_absorptances);" << std::endl;
     }
 
     void Glazing_System::do_updates_for_thermal(double theta, double phi)
     {
+        std::cout << "do_updates_for_thermal" << std::endl;
         do_deflection_updates(theta, phi);
+        std::cout << "after do_deflection_updates" << std::endl;
         do_layer_absorptance_updates(theta, phi);
+        std::cout << "after do_layer_absorptance_updates" << std::endl;
     }
 
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
