@@ -27,4 +27,13 @@ namespace wincalc
                                std::shared_ptr<Product_Data_Optical> material_optical_data,
                                std::shared_ptr<Product_Data_Thermal> material_thermal_data);
 
+    Product_Data_Optical_Thermal
+      create_homogeneous_diffusing_shade(std::shared_ptr<Product_Data_Optical> material_optical_data,
+      std::shared_ptr<Product_Data_Thermal> material_thermal_data,
+      double effective_front_thermal_openness_area = 0);
+
+    Product_Data_Optical_Thermal
+      create_homogeneous_diffusing_shade(OpticsParser::ProductData const & material,
+                                         double effective_front_thermal_openness_area = 0);
+
 }   // namespace wincalc
