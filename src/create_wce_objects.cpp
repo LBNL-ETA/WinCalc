@@ -1063,7 +1063,9 @@ namespace wincalc
     {
         std::cout << "get_igu" << std::endl;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
+        std::cout << "standard.methods.size = " << standard.methods.size() << std::endl;
         auto ir_method = standard.methods.at("THERMAL IR");
+        std::cout << "after auto ir_method = standard.methods.at(THERMAL IR);" << std::endl;
 
         for(auto const & layer : layers)
         {
