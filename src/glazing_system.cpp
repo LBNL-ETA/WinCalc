@@ -96,16 +96,22 @@ namespace wincalc
 
     Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
+        std::cout << "get_igu" << std::endl;
         if(current_igu.has_value() && is_current_igu_calculated(theta, phi))
         {
+            std::cout << "in current_igu.has_value() && is_current_igu_calculated(theta, phi)" << std::endl;
             return current_igu.value();
         }
         else
         {
+            std::cout << "in else" << std::endl;
             current_igu = create_igu(product_data, gap_values, width, height, tilt, standard);
+            std::cout << "after create_igu" << std::endl;
             if(!applied_loads.empty())
             {
+                std::cout << "in !applied_loads.empty()" << std::endl;
                 current_igu.value().setAppliedLoad(applied_loads);
+                std::cout << "after current_igu.value().setAppliedLoad(applied_loads);" << std::endl;
             }
             return current_igu.value();
         }
@@ -113,14 +119,19 @@ namespace wincalc
 
     Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
     {
+        std::cout << "get_system" << std::endl;
         if(current_system.has_value() && is_current_igu_calculated(theta, phi))
         {
+            std::cout << "current_system.has_value() && is_current_igu_calculated(theta, phi)" << std::endl;
             return current_system.value();
         }
         else
         {
+            std::cout << "in else" << std::endl;
             auto & igu = get_igu(theta, phi);
+            std::cout << "after get_igu" << std::endl;
             current_system = create_system(igu, environment);
+            std::cout << "after create_system" << std::endl;
             last_theta = theta;
             last_phi = phi;
             return current_system.value();

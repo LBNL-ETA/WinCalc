@@ -1,5 +1,6 @@
 #include "create_wce_objects.h"
 #include <sstream>
+#include <iostream>
 #include "convert_optics_parser.h"
 #include "optical_calcs.h"
 #include "util.h"
@@ -1060,6 +1061,7 @@ namespace wincalc
                  double tilt,
                  window_standards::Optical_Standard const & standard)
     {
+        std::cout << "get_igu" << std::endl;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUSolidLayer>> tarcog_solid_layers;
         auto ir_method = standard.methods.at("THERMAL IR");
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "thermal_ir.h"
 #include "convert_optics_parser.h"
 #include "create_wce_objects.h"
@@ -6,7 +7,9 @@ wincalc::ThermalIRResults
   wincalc::calc_thermal_ir(window_standards::Optical_Standard const & standard,
                            Product_Data_Optical_Thermal const & product_data)
 {
+    std::cout << "calc_thermal_ir" << std::endl;
     auto method = standard.methods.at("THERMAL IR");
+    std::cout << "after auto method = standard.methods.at(THERMAL IR);" << std::endl;
     auto bsdf = SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
 
     auto bsdf_layer = create_bsdf_layer(product_data.optical_data, method, 1, bsdf);
