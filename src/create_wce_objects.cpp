@@ -764,6 +764,18 @@ namespace wincalc
         return layer;
     }
 
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_homogeneous_diffuse(
+      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      size_t number_of_layers,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
+    {
+        auto material = create_material(product_data, method, number_of_layers);
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getHomogeneousDiffuseLayer(material, bsdf_hemisphere);
+        return layer;
+    }
+
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_preloaded_matrices(
       std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
       window_standards::Optical_Standard_Method const & method,
@@ -877,6 +889,17 @@ namespace wincalc
         {
             layer = create_bsdf_layer_perfectly_diffuse(
               std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(
+                product_data)
+                ->material_optical_data,
+              method,
+              number_of_layers,
+              bsdf_hemisphere);
+        }
+        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Uniform_Diffuse>(
+                  product_data))
+        {
+            layer = create_bsdf_layer_homogeneous_diffuse(
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Uniform_Diffuse>(
                 product_data)
                 ->material_optical_data,
               method,

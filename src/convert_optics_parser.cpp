@@ -97,6 +97,32 @@ namespace wincalc
         return length_conversion;
     }
 
+    double get_wavelength_unit_conversion_factor(OpticsParser::ProductData const & product)
+    {
+        // Seems like most wavelengths are in microns so default to that.
+        double wavelength_conversion = 1.0;
+        if(product.wavelengthUnit.has_value())
+        {
+            auto wavelength_unit = to_lower(product.wavelengthUnit.value());
+            if(wavelength_unit == "micron" || wavelength_unit == "microns")
+            {
+                // Default case, do nothing
+            }
+            else if(wavelength_unit == "nanometer" || wavelength_unit == "nanometers")
+            {
+                wavelength_conversion = 1.0 / 1000.0;
+            }
+            else
+            {
+                std::stringstream msg;
+                msg << "Unsupported wlvelength unit: " << product.wavelengthUnit.value()
+                    << " Currently only micron and nanometer are supported.";
+                throw std::runtime_error(msg.str());
+            }
+        }
+        return wavelength_conversion;
+    }
+
     std::shared_ptr<Product_Data_Optical> convert_optical(OpticsParser::ProductData const & product)
     {
         auto length_conversion = get_length_unit_conversion_factor(product);
@@ -199,10 +225,23 @@ namespace wincalc
                     coated_side = convert_coated_side(product.coatedSide.value());
                 }
 
+                auto wl_values =
+                  std::get<std::vector<OpticsParser::WLData>>(wavelength_measured_values);
+
+                auto wl_unit_conversion_factor = get_wavelength_unit_conversion_factor(product);
+
+                if (wl_unit_conversion_factor != 1.0)
+                {
+                    for (auto& val : wl_values)
+                    {
+                        val.wavelength *= wl_unit_conversion_factor;
+                    }
+                }
+
                 converted.reset(new Product_Data_N_Band_Optical(
                   material_type,
                   product.thickness.value() * length_conversion,
-                  std::get<std::vector<OpticsParser::WLData>>(wavelength_measured_values),
+                  wl_values,
                   coated_side,
                   product.IRTransmittance,
                   product.IRTransmittance,

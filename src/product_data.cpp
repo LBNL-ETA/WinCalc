@@ -33,17 +33,16 @@ namespace wincalc
                                                      double gap_width_bottom,
                                                      double gap_width_left,
                                                      double gap_width_right,
-                                                     double effective_thermal_front_openness_area,
+                                                     double,
                                                      double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{effective_thermal_front_openness_area,
-                                                gap_width_left,
+        EffectiveLayers::ShadeOpenness openness{gap_width_left,
                                                 gap_width_right,
                                                 gap_width_top,
                                                 gap_width_bottom};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
-          width, height, thickness_meters, openness, permeability_factor);
+        return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
+          width, height, thickness_meters, permeability_factor, openness);
     }
 
 
@@ -126,6 +125,11 @@ namespace wincalc
         Product_Data_Optical_With_Material(material_data)
     {}
 
+    Product_Data_Optical_Uniform_Diffuse::Product_Data_Optical_Uniform_Diffuse(
+      const std::shared_ptr<Product_Data_Optical> & material_data) :
+        Product_Data_Optical_With_Material(material_data)
+    {}
+
     Product_Data_Optical_Venetian::Product_Data_Optical_Venetian(
       std::shared_ptr<Product_Data_Optical> const & optical_data,
       Venetian_Geometry const & geometry) :
@@ -143,15 +147,14 @@ namespace wincalc
         double,
         double ) const   // Front openness is automatically calculated by the model
     {
-        double front_openness_venetian =
-          ThermalPermeability::Venetian::frontOpenness(geometry.slat_tilt,
-                                                       geometry.slat_spacing,
-                                                       material_optical_data->thickness_meters,
-                                                       geometry.slat_curvature,
-                                                       geometry.slat_width);
+        //TODO: make sure units match
+        FenestrationCommon::Venetian::Geometry wce_geometry{
+          geometry.slat_width, geometry.slat_spacing, geometry.slat_tilt, geometry.slat_curvature};
 
-        EffectiveLayers::ShadeOpenness openness{front_openness_venetian,
-                                                gap_width_left,
+        //double front_openness_venetian =
+        //  ThermalPermeability::Venetian::permeabilityFactor(material_optical_data->thickness_meters, wce_geometry);
+
+        EffectiveLayers::ShadeOpenness openness{gap_width_left,
                                                 gap_width_right,
                                                 gap_width_top,
                                                 gap_width_bottom};
@@ -160,9 +163,8 @@ namespace wincalc
           width,
           height,
           material_optical_data->thickness_meters,
-          openness,
-          geometry.slat_tilt,
-          geometry.slat_width);
+          wce_geometry, 
+          openness);
     }
 
     Product_Data_Optical_Woven_Shade::Product_Data_Optical_Woven_Shade(
@@ -182,13 +184,13 @@ namespace wincalc
         double,
         double ) const   // calculated automatically by the code
     {
-        double front_openness = ThermalPermeability::Woven::frontOpenness(geometry.thread_diameter,
-                                                                          geometry.thread_spacing);
-        EffectiveLayers::ShadeOpenness openness{
-          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+
+        FenestrationCommon::Woven::Geometry wce_geometry{geometry.thread_diameter,
+                                                         geometry.thread_spacing};
+        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
-          width, height, geometry.shade_thickness, openness);
+          width, height, geometry.shade_thickness, wce_geometry, openness);
     }
 
     Product_Data_Optical_Thermal::Product_Data_Optical_Thermal(
@@ -214,52 +216,26 @@ namespace wincalc
         double,
         double) const   // Calculated automatically by the code
     {
-        std::map<Perforated_Geometry::Type, std::function<double(void)>> front_openness_calcs;
-        front_openness_calcs[Perforated_Geometry::Type::CIRCULAR] = [=]() {
-            return ThermalPermeability::Perforated::frontOpenness(
-              ThermalPermeability::Perforated::Type::Circular,
-              geometry.spacing_x,
-              geometry.spacing_y,
-              geometry.dimension_x * 2,
-              geometry.dimension_x * 2);
-        };
+        std::map<wincalc::Perforated_Geometry::Type, FenestrationCommon::Perforated::Type> wce_map{
+          {wincalc::Perforated_Geometry::Type::CIRCULAR,
+           FenestrationCommon::Perforated::Type::Circular},
+          {wincalc::Perforated_Geometry::Type::SQUARE,
+           FenestrationCommon::Perforated::Type::Square},
+          {wincalc::Perforated_Geometry::Type::RECTANGULAR,
+           FenestrationCommon::Perforated::Type::Rectangular}};
 
-        front_openness_calcs[Perforated_Geometry::Type::RECTANGULAR] = [=]() {
-            return ThermalPermeability::Perforated::frontOpenness(
-              ThermalPermeability::Perforated::Type::Rectangular,
-              geometry.spacing_x,
-              geometry.spacing_y,
-              geometry.dimension_x,
-              geometry.dimension_y);
-        };
+        FenestrationCommon::Perforated::Geometry wce_geometry{
+          wce_map[geometry.perforation_type],
+          geometry.spacing_x,
+          geometry.spacing_y,
+          geometry.dimension_x,
+          geometry.dimension_y};
 
-        front_openness_calcs[Perforated_Geometry::Type::SQUARE] = [=]() {
-            return ThermalPermeability::Perforated::frontOpenness(
-              ThermalPermeability::Perforated::Type::Square,
-              geometry.spacing_x,
-              geometry.spacing_y,
-              geometry.dimension_x,
-              geometry.dimension_x);
-        };
-
-        auto front_openness_calc = front_openness_calcs.find(geometry.perforation_type);
-
-        if(front_openness_calc == front_openness_calcs.end())
-        {
-            std::stringstream msg;
-            msg << "Unsupported perforation type: "
-                << static_cast<std::underlying_type<Perforated_Geometry::Type>::type>(
-                     geometry.perforation_type);
-            throw std::runtime_error(msg.str());
-        }
-
-        double front_openness = front_openness_calc->second();
-
-        EffectiveLayers::ShadeOpenness openness{
-          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        
+        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerPerforated>(
-          width, height, material_optical_data->thickness_meters, openness);
+          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Dual_Band_Optical_BSDF::Product_Data_Dual_Band_Optical_BSDF(
@@ -304,20 +280,25 @@ namespace wincalc
                                                                     double gap_width_bottom,
                                                                     double gap_width_left,
                                                                     double gap_width_right,
-                                                                    double front_openness,
+                                                                    double effective_thermal_front_openness_area,
                                                                     double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{
-          front_openness, gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
-        if(user_defined_effective_values)
+        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+
+        if(!user_defined_effective_values)
         {
-            return std::make_unique<EffectiveLayers::EffectiveLayerOther>(
-              width, height, thickness_meters, openness, permeability_factor);
+            return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
+              width, height, thickness_meters, permeability_factor, openness);
         }
         else
         {
-            return std::make_unique<EffectiveLayers::EffectiveLayerBSDF>(
-              width, height, thickness_meters, openness, permeability_factor);
+            return std::make_unique<EffectiveLayers::EffectiveLayerUserDefined>(
+              width,
+              height,
+              thickness_meters,
+              permeability_factor,
+              effective_thermal_front_openness_area,
+              openness);
         }
     }
 

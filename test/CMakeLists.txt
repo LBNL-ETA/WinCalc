@@ -28,8 +28,10 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
-        nfrc_102_single_band_homogeneous_diffusing_shade.unit.cpp
 		nfrc_102_homogeneous_diffusing_shade.unit.cpp
+		optics_file_nanometers.unit.cpp
+        nfrc_102_single_band_homogeneous_diffusing_shade.unit.cpp
+		nfrc_102_perfectly_diffusing_shade.unit.cpp
 		#bsdf_xml_thermal_openness.unit.cpp
 		nfrc_102_102_2011_SA1_custom_openings.unit.cpp
 		bsdf_xml_thermal_user_defined_openness.unit.cpp
