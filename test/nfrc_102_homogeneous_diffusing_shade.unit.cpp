@@ -68,8 +68,8 @@ protected:
 
 TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_0_Permeability_Factor)
 {
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0_Permeability_Factor", "thermal_U_Environment", glazing_system_u, update_results);
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0_Permeability_Factor",
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0_Permeability_Factor", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0_Permeability_Factor",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -78,7 +78,7 @@ TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_0_Permeability_Factor)
 
 TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Optical_0_Permeability_Factor)
 {
-    test_optical_results("NFRC_102_Homogeneous_Diffusing_Shade\\0_Permeability_Factor", glazing_system_u, update_results);
+    test_optical_results("NFRC_102_Homogeneous_Diffusing_Shade/0_Permeability_Factor", glazing_system_u, update_results);
 }
 
 TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_15_Permeability_Factor)
@@ -87,11 +87,11 @@ TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_15_Permeability_Factor
     layers[1].thermal_data->permeability_factor = 0.15;
     glazing_system_u->solid_layers(layers);
     glazing_system_shgc->solid_layers(layers);
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0.15_Permeability_Factor",
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0.15_Permeability_Factor",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0.15_Permeability_Factor",
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0.15_Permeability_Factor",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -104,7 +104,7 @@ TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Optical_15_Permeability_Factor
     layers[1].thermal_data->permeability_factor = 0.15;
     glazing_system_u->solid_layers(layers);\
     test_optical_results(
-      "NFRC_102_Homogeneous_Diffusing_Shade\\0.15_Permeability_Factor", glazing_system_u, update_results);
+      "NFRC_102_Homogeneous_Diffusing_Shade/0.15_Permeability_Factor", glazing_system_u, update_results);
 }
 
 TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_75_Permeability_Factor)
@@ -113,11 +113,11 @@ TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Thermal_75_Permeability_Factor
     layers[1].thermal_data->permeability_factor = 0.75;
     glazing_system_u->solid_layers(layers);
     glazing_system_shgc->solid_layers(layers);
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0.75_Permeability_Factor",
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0.75_Permeability_Factor",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade\\0.75_Permeability_Factor",
+    test_thermal_results("NFRC_102_Homogeneous_Diffusing_Shade/0.75_Permeability_Factor",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -130,5 +130,5 @@ TEST_F(TestNFRC102HomogeneousDiffusingShade, Test_Optical_75_Permeability_Factor
     layers[1].thermal_data->permeability_factor = 0.75;
     glazing_system_u->solid_layers(layers);
     test_optical_results(
-      "NFRC_102_Homogeneous_Diffusing_Shade\\0.75_Permeability_Factor", glazing_system_u, update_results);
+      "NFRC_102_Homogeneous_Diffusing_Shade/0.75_Permeability_Factor", glazing_system_u, update_results);
 }
