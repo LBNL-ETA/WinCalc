@@ -23,28 +23,17 @@ std::filesystem::path expected_results_path(std::string const &test_name) {
 }
 
 nlohmann::json parse_expected_results(std::string const &test_name) {
-    try
+    auto path = expected_results_path(test_name);
+    if(!std::filesystem::exists(path))
     {
-        std::cerr << "Attempting to parse expected results for test: " << test_name << std::endl;
-        auto path = expected_results_path(test_name);
-        std::cerr << "Expected results path: " << path << std::endl;
-        if(!std::filesystem::exists(path))
-        {
-            std::cerr << "Expected results file not found" << std::endl;
-            return nlohmann::json::object();
-        }
-        std::ifstream fin(path);
-        std::string content((std::istreambuf_iterator<char>(fin)),
-                            (std::istreambuf_iterator<char>()));
+        return nlohmann::json::object();
+    }
+    std::ifstream fin(path);
+    std::string content((std::istreambuf_iterator<char>(fin)),
+                        (std::istreambuf_iterator<char>()));
 
-        nlohmann::json expected_results_json = nlohmann::json::parse(content);
-        return expected_results_json;
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Error parsing expect results file: " << e.what() << std::endl;
-        throw e;
-    }
+    nlohmann::json expected_results_json = nlohmann::json::parse(content);
+    return expected_results_json;
 }
 
 void update_expected_results(std::string const &test_name, nlohmann::json const &updated_results) {
