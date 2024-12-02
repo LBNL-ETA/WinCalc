@@ -4,7 +4,7 @@ include(ExternalProject)
 
 ExternalProject_Add(OpticalMeasurementParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/OpticalMeasurementParser.git
-    GIT_TAG "build_refactor_oct_2024"
+    GIT_TAG "v2.3.1"
     
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
