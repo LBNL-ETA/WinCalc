@@ -5,20 +5,20 @@
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.020464298683447353,
-                    "heat_direct": 0.02767188361619254,
-                    "total_diffuse": 0.020464298683447353,
-                    "total_direct": 0.02767188361619254
+                    "heat_diffuse": 0.02046429868344729,
+                    "heat_direct": 0.02767188361619252,
+                    "total_diffuse": 0.02046429868344729,
+                    "total_direct": 0.02767188361619252
                 }
             },
             "front": {
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.23684994103749052,
-                    "heat_direct": 0.23560431154847833,
-                    "total_diffuse": 0.23684994103749052,
-                    "total_direct": 0.23560431154847833
+                    "heat_diffuse": 0.2368499410374902,
+                    "heat_direct": 0.2356043115484779,
+                    "total_diffuse": 0.2368499410374902,
+                    "total_direct": 0.2356043115484779
                 }
             }
         },
@@ -28,9 +28,9 @@
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
                     "heat_diffuse": 0.34651293079420364,
-                    "heat_direct": 0.36391867942370487,
+                    "heat_direct": 0.36391867942370476,
                     "total_diffuse": 0.34651293079420364,
-                    "total_direct": 0.36391867942370487
+                    "total_direct": 0.36391867942370476
                 }
             },
             "front": {
@@ -38,9 +38,9 @@
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
                     "heat_diffuse": 0.27012502358606244,
-                    "heat_direct": 0.32365111244304967,
+                    "heat_direct": 0.3236511124430498,
                     "total_diffuse": 0.27012502358606244,
-                    "total_direct": 0.32365111244304967
+                    "total_direct": 0.3236511124430498
                 }
             }
         }
@@ -49,28 +49,28 @@
         "back": {
             "reflectance": {
                 "diffuse_diffuse": 0.5762984613853933,
-                "direct_diffuse": 0.5242399897411457,
+                "direct_diffuse": 0.5242399897411452,
                 "direct_direct": 0.004086313319724614,
-                "direct_hemispherical": 0.5283263030608704
+                "direct_hemispherical": 0.5283263030608698
             },
             "transmittance": {
-                "diffuse_diffuse": 0.05672430913698706,
-                "direct_diffuse": 0.04592408567337036,
+                "diffuse_diffuse": 0.056724309136987144,
+                "direct_diffuse": 0.04592408567337035,
                 "direct_direct": 0.03415904822586292,
-                "direct_hemispherical": 0.08008313389923329
+                "direct_hemispherical": 0.08008313389923327
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.42023018059533923,
-                "direct_diffuse": 0.2753891817520483,
+                "diffuse_diffuse": 0.42023018059534134,
+                "direct_diffuse": 0.2753891817520485,
                 "direct_direct": 0.07865985257950583,
-                "direct_hemispherical": 0.3540490343315541
+                "direct_hemispherical": 0.3540490343315543
             },
             "transmittance": {
-                "diffuse_diffuse": 0.07279485478114198,
-                "direct_diffuse": 0.052538662403836874,
-                "direct_direct": 0.03415687927308069,
+                "diffuse_diffuse": 0.07279485478114218,
+                "direct_diffuse": 0.05253866240383687,
+                "direct_direct": 0.0341568792730807,
                 "direct_hemispherical": 0.08669554167691756
             }
         }
