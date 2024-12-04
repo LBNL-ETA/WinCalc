@@ -5,10 +5,10 @@
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.4575682130603516,
-                    "heat_direct": 0.47814817271826693,
-                    "total_diffuse": 0.4575682130603516,
-                    "total_direct": 0.47814817271826693
+                    "heat_diffuse": 0.45756821306035,
+                    "heat_direct": 0.47814817271826543,
+                    "total_diffuse": 0.45756821306035,
+                    "total_direct": 0.47814817271826543
                 }
             },
             "front": {
@@ -27,20 +27,20 @@
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.3263038565865816,
-                    "heat_direct": 0.34077710513823345,
-                    "total_diffuse": 0.3263038565865816,
-                    "total_direct": 0.34077710513823345
+                    "heat_diffuse": 0.3263038565865837,
+                    "heat_direct": 0.34077710513823545,
+                    "total_diffuse": 0.3263038565865837,
+                    "total_direct": 0.34077710513823545
                 }
             },
             "front": {
                 "absorptance": {
                     "electricity_diffuse": 0.0,
                     "electricity_direct": 0.0,
-                    "heat_diffuse": 0.01254023667994247,
-                    "heat_direct": 0.0332900574719157,
-                    "total_diffuse": 0.01254023667994247,
-                    "total_direct": 0.0332900574719157
+                    "heat_diffuse": 0.01254023667994254,
+                    "heat_direct": 0.033290057471915886,
+                    "total_diffuse": 0.01254023667994254,
+                    "total_direct": 0.033290057471915886
                 }
             }
         }
@@ -48,30 +48,30 @@
     "system_results": {
         "back": {
             "reflectance": {
-                "diffuse_diffuse": 0.19415016221483672,
-                "direct_diffuse": 0.048419860204934426,
-                "direct_direct": 0.07427670025516699,
-                "direct_hemispherical": 0.12269656046010141
+                "diffuse_diffuse": 0.19415016221483558,
+                "direct_diffuse": 0.04841986020493402,
+                "direct_direct": 0.07427670025516696,
+                "direct_hemispherical": 0.12269656046010098
             },
             "transmittance": {
-                "diffuse_diffuse": 0.02197776813823061,
-                "direct_diffuse": 0.0001940537897891781,
-                "direct_direct": 0.05818410789360884,
-                "direct_hemispherical": 0.05837816168339802
+                "diffuse_diffuse": 0.021977768138230557,
+                "direct_diffuse": 0.00019405378978917115,
+                "direct_direct": 0.058184107893608665,
+                "direct_hemispherical": 0.058378161683397836
             }
         },
         "front": {
             "reflectance": {
-                "diffuse_diffuse": 0.10036395670114577,
-                "direct_diffuse": 0.09162081523122027,
-                "direct_direct": 0.0028340943261213236,
-                "direct_hemispherical": 0.0944549095573416
+                "diffuse_diffuse": 0.10036395670114578,
+                "direct_diffuse": 0.09162081523122023,
+                "direct_direct": 0.0028340943261213228,
+                "direct_hemispherical": 0.09445490955734155
             },
             "transmittance": {
-                "diffuse_diffuse": 0.021969509262810546,
-                "direct_diffuse": 0.00046975422843653636,
-                "direct_direct": 0.05818410789360884,
-                "direct_hemispherical": 0.058653862122045375
+                "diffuse_diffuse": 0.021969509262810494,
+                "direct_diffuse": 0.0004697542284365294,
+                "direct_direct": 0.058184107893608665,
+                "direct_hemispherical": 0.058653862122045194
             }
         }
     }
