@@ -22,7 +22,7 @@ protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
     std::shared_ptr<Glazing_System> glazing_system_shgc;
 
-    virtual void SetUp()
+    void SetUp() override
     {
         std::filesystem::path clear_3_path(test_dir);
         clear_3_path /= "products";
@@ -33,23 +33,21 @@ protected:
         venetian_material_path /= "products";
         venetian_material_path /= "igsdb_12852.json";
 
-        std::vector<
-          std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>>
-          products;
+        std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> products;
 
         auto clear_3 = OpticsParser::parseJSONFile(clear_3_path.string());
         auto shade_material = OpticsParser::parseJSONFile(venetian_material_path.string());
 
-		wincalc::Venetian_Geometry geometry{45, 0.05, 0.07, 0.03};
-		auto shade = wincalc::create_venetian_blind(geometry, shade_material);
+        wincalc::Venetian_Geometry geometry{45, 0.05, 0.07, 0.00};
+        auto shade = wincalc::create_venetian_blind(geometry, shade_material);
 
-		products.push_back(shade);
-		products.push_back(clear_3);
+        products.push_back(shade);
+        products.push_back(clear_3);
 
-		double gap_thickness = 0.0127;
-		double gap_pressure = Gases::DefaultPressure;
-		auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
-			gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
+        double gap_thickness = 0.0127;
+        double gap_pressure = Gases::DefaultPressure;
+        auto air_gap = std::make_shared<Tarcog::ISO15099::CIGUGapLayer>(
+          gap_thickness, gap_pressure, Gases::CGas({{1.0, Gases::GasDef::Air}}));
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gaps;
         gaps.push_back(air_gap);
 
