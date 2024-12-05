@@ -5,6 +5,7 @@
 #include <string>
 #include <gtest/gtest.h>
 #include "paths.h"
+#include "thermal_ir.h"
 
 const double TEST_TOLARANCE = 1e-6;
 
@@ -184,6 +185,24 @@ void test_wce_absorptances(nlohmann::json &expected,
     }
 }
 
+void test_thermal_ir(nlohmann::json & expected,
+                           wincalc::ThermalIRResults const & results,
+                           bool update)
+{
+    compare_possible_nan(results.emissivity_front_hemispheric, expected, "emissivity_front_hemispheric");
+    compare_possible_nan(results.emissivity_back_hemispheric, expected, "emissivity_back_hemispheric");
+    compare_possible_nan(results.transmittance_front_diffuse_diffuse, expected, "transmittance_front_diffuse_diffuse");
+    compare_possible_nan(results.transmittance_back_diffuse_diffuse, expected, "transmittance_back_diffuse_diffuse");
+    if(update)
+    {
+        expected["emissivity_front_hemispheric"] = results.emissivity_front_hemispheric;
+        expected["emissivity_back_hemispheric"] = results.emissivity_back_hemispheric;
+        expected["transmittance_front_diffuse_diffuse"] =
+          results.transmittance_front_diffuse_diffuse;
+        expected["transmittance_back_diffuse_diffuse"] = results.transmittance_back_diffuse_diffuse;
+    }
+}
+
 template<typename T>
 void test_wce_side_result(nlohmann::json &expected,
                           wincalc::WCE_Optical_Result_Layer<T> const &results,
@@ -243,6 +262,20 @@ void test_optical_results(std::string const &test_name,
     }
 }
 
+void test_ir_results(std::string const & test_name,
+                     wincalc::ThermalIRResults const & results,
+                          bool update)
+{
+    auto expected = parse_expected_results(test_name);
+    test_thermal_ir(expected, results, update);
+    if(update)
+    {
+        update_expected_results(test_name, expected);
+    }
+}
+
+
+
 void test_optical_results(std::string const &test_name,
                           wincalc::WCE_Color_Results const &results,
                           bool update) {
@@ -293,6 +326,14 @@ void test_all_optical_results(std::string const &system_name,
 
     auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
     test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
+
+    auto solid_layers = glazing_system->solid_layers();
+    for(size_t i = 0; i < solid_layers.size(); ++i)
+    {
+        auto ir_results =
+          calc_thermal_ir(glazing_system->optical_standard(), glazing_system->solid_layers()[i]);
+        test_ir_results(system_name + angle + "/thermal ir layer " + std::to_string(i), ir_results, update_results);
+    }
 
     if (!glazing_system->isBSDF()) {
         auto color_results = glazing_system->color(theta, phi);
