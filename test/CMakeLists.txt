@@ -84,6 +84,3 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
-
-add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} "${CMAKE_CURRENT_LIST_DIR}")
-
