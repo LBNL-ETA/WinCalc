@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.273592412227687,
+                    "heat_direct": 0.25542412252042596,
+                    "total_diffuse": 0.273592412227687,
+                    "total_direct": 0.25542412252042596
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.2882626206356057,
+                    "heat_direct": 0.2683703064783876,
+                    "total_diffuse": 0.2882626206356057,
+                    "total_direct": 0.2683703064783876
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.4660461460137903,
+                "direct_diffuse": 0.4124210014981562,
+                "direct_direct": 0.0018967763138308192,
+                "direct_hemispherical": 0.41431777781198703
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.2603614417585176,
+                "direct_diffuse": 0.3249824132676936,
+                "direct_direct": 0.005275686399894627,
+                "direct_hemispherical": 0.33025809966758823
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.4519626734851326,
+                "direct_diffuse": 0.4019459583119753,
+                "direct_direct": 5.226956097206249e-05,
+                "direct_hemispherical": 0.40199822787294737
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.2597747058792751,
+                "direct_diffuse": 0.32508072560452755,
+                "direct_direct": 0.00455074004413729,
+                "direct_hemispherical": 0.32963146564866486
+            }
+        }
+    }
+}

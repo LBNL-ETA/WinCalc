@@ -28,9 +28,14 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		1_layer_genBSDF_pleated_shade_cgdb_24040.unit.cpp
+		1_layer_bsdf_xml_cgdb_14060.unit.cpp
+		1_layer_bsdf_xml_cgdb_46016.unit.cpp
+		1_layer_venetian_cgdb_24000.unit.cpp
+		1_layer_venetian_cgdb_24001.unit.cpp
+		1_layer_venetian_cgdb_24002.unit.cpp		
 		1_layer_nfrc_102.unit.cpp	
 		1_layer_CS03_genBSDF.unit.cpp
-		1_layer_bsdf_xml_cgdb_46016.unit.cpp
 		1_layer_nfrc_102_as_bsdf.unit.cpp
 		1_layer_pv_generic.unit.cpp
 		1_layer_perforated_screen_cgdb_18000.unit.cpp
@@ -40,7 +45,7 @@ add_executable(${PROJECT_TEST_NAME}
 		1_layer_coated_nfrc_6046.unit.cpp
 		1_layer_applied_film_nfrc_9223.unit.cpp
  		1_layer_coated_nfrc_18100.unit.cpp
- 		1_layer_nfrc_21467.unit.cpp
+ 		1_layer_coated_nfrc_21467.unit.cpp
 		1_layer_coated_nfrc_6400.cpp
 		2_layers_nfrc_102_air_nfrc_102_deflection_youngs_modulus.unit.cpp
 		2_layers_nfrc_102_air_nfrc_102_deflection_tilt.unit.cpp

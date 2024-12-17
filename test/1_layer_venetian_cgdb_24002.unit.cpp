@@ -16,7 +16,7 @@
 using namespace wincalc;
 using namespace window_standards;
 
-class Test_1_layer_nfrc_21467 : public testing::Test
+class Test_1_layer_venetian_cgdb_24002 : public testing::Test
 {
 protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
@@ -26,7 +26,7 @@ protected:
     {
         std::filesystem::path product_path(test_dir);
         product_path /= "products";
-        product_path /= "nfrc_21467.json";
+        product_path /= "cgdb_24002_Alabaster Venetian Blind +45 (Intigral)_Alabaster_+45_12.5.json";
 
         std::vector<OpticsParser::ProductData> products;
         auto product = OpticsParser::parseJSONFile(product_path.string());
@@ -38,22 +38,24 @@ protected:
         standard_path /= "standards";
         standard_path /= "W5_NFRC_2003.std";
         Optical_Standard standard = load_optical_standard(standard_path.string());
+		auto bsdf_hemisphere =
+			SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
+		 
         glazing_system_u = std::make_shared<Glazing_System>(
-          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
         glazing_system_shgc = std::make_shared<Glazing_System>(
-          standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
     }
 };
 
-
-TEST_F(Test_1_layer_nfrc_21467, Test_Thermal)
+TEST_F(Test_1_layer_venetian_cgdb_24002, Test_Thermal)
 {
-    test_thermal_results("1_layer/nfrc_21467/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/venetian_cgdb_24002/full_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/nfrc_21467/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/venetian_cgdb_24002/full_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
-TEST_F(Test_1_layer_nfrc_21467, Test_Optical)
+TEST_F(Test_1_layer_venetian_cgdb_24002, Test_Optical)
 {
-    test_optical_results("1_layer/nfrc_21467/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/venetian_cgdb_24002/full_basis", glazing_system_u, update_results);
 }
