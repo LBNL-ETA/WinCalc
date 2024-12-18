@@ -52,8 +52,8 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_tilt, Test_Deflection_Off)
 {
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/tilt/deflection_off",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/tilt",
+                            "deflection_off",
                             glazing_system,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
@@ -62,16 +62,16 @@ TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_tilt, Test_Deflection_Off)
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_tilt, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/tilt/deflection_on_tilt_1",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/tilt",
+                            "deflection_on_tilt_1",
                             glazing_system,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
     // change tilt, make sure results change
     glazing_system->set_tilt(10);
 
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/tilt/deflection_on_tilt_2",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/tilt",
+                            "deflection_on_tilt_2",
                             glazing_system,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);

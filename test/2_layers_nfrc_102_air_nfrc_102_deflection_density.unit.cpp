@@ -53,8 +53,8 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_density, Test_Deflection_Off)
 {
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/density/deflection_off",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/density",
+                            "deflection_off",
                             glazing_system,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
@@ -63,8 +63,8 @@ TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_density, Test_Deflection_O
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_density, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/density/deflection_on",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/density",
+                            "deflection_on",
                             glazing_system,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);

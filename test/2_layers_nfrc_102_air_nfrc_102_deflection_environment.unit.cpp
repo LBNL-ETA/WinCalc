@@ -52,8 +52,8 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_environment, Test_Deflection_Off)
 {
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/environment/deflection_off",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/environment",
+                            "deflection_off",
                             glazing_system,
                             Tarcog::ISO15099::System::SHGC,
                             update_results);
@@ -62,8 +62,8 @@ TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_environment, Test_Deflecti
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_environment, Test_Deflection_On)
 {
     glazing_system->enable_deflection(true);
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/environment/deflection_on_environment_1",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/environment",
+                            "deflection_on_environment_1",
                             glazing_system,
                             Tarcog::ISO15099::System::SHGC,
                             update_results);
@@ -73,8 +73,8 @@ TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_environment, Test_Deflecti
     new_env.outside.pressure = 110000;
     glazing_system->environments(new_env);
 
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/environment/deflection_on_environment_2",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/environment",
+                            "deflection_on_environment_2",
                             glazing_system,
                             Tarcog::ISO15099::System::SHGC,
                             update_results);

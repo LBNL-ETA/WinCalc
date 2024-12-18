@@ -57,8 +57,8 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_youngs_modulus, Test_Deflection_Off)
 {
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/youngs_modulus/deflection_off",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/youngs_modulus",
+                            "deflection_off",
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
@@ -68,26 +68,26 @@ TEST_F(Test_2_layers_nfrc_102_air_nfrc_102_deflection_youngs_modulus, Test_Defle
 {
     glazing_system_u->enable_deflection(true);
 
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/youngs_modulus/deflection_on_winter_u_run",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/youngs_modulus",
+                            "deflection_on_winter_u_run",
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/youngs_modulus/deflection_on_winter_shgc_run",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/youngs_modulus",
+                            "deflection_on_winter_shgc_run",
                             glazing_system_u,
                             Tarcog::ISO15099::System::SHGC,
                             update_results);
 
     glazing_system_shgc->enable_deflection(true);
 
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/youngs_modulus/deflection_on_summer_u_run",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/youngs_modulus",
+                            "deflection_on_summer_u_run",
                             glazing_system_shgc,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
-    test_deflection_results("2_layers/nfrc_102_air_nfrc_102",
-                            "deflection/youngs_modulus/deflection_on_summer_shgc_run",
+    test_deflection_results("2_layers/nfrc_102_air_nfrc_102/deflection/youngs_modulus",
+                            "deflection_on_summer_shgc_run",
                             glazing_system_shgc,
                             Tarcog::ISO15099::System::SHGC,
                             update_results);
