@@ -397,6 +397,24 @@ void test_thermal_results(std::string const &results_name,
             glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC, theta, phi);
     auto relative_heat_gain = glazing_system->relative_heat_gain(theta, phi);
 
+    auto heat_flow_u_indoor = glazing_system->heat_flow(
+      Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    auto heat_flow_u_outdoor = glazing_system->heat_flow(
+      Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+    auto heat_flow_shgc_indoor = glazing_system->heat_flow(
+      Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    auto heat_flow_shgc_outdoor = glazing_system->heat_flow(
+      Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+
+    auto H_u_indoor = glazing_system->H(
+      Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    auto H_u_outdoor = glazing_system->H(
+      Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+    auto H_shgc_indoor = glazing_system->H(
+      Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    auto H_shgc_outdoor = glazing_system->H(
+      Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+
     auto expected_u = expected.value("U", -1.0);
     EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
 
@@ -418,6 +436,58 @@ void test_thermal_results(std::string const &results_name,
                 TEST_TOLARANCE);
     EXPECT_NEAR(system_effective_conductivity_shgc,
                 expected.value("system_effective_conductivity_shgc", -1.0),
+                TEST_TOLARANCE);
+
+    EXPECT_NEAR(heat_flow_u_indoor,
+                expected.value("heat_flow_u_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_u_indoor,
+                expected.value("heat_flow_u_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_u_outdoor,
+                expected.value("heat_flow_u_outdoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_u_outdoor,
+                expected.value("heat_flow_u_outdoor", -1.0),
+                TEST_TOLARANCE);
+
+    EXPECT_NEAR(heat_flow_shgc_indoor,
+                expected.value("heat_flow_shgc_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_shgc_indoor,
+                expected.value("heat_flow_shgc_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_shgc_outdoor,
+                expected.value("heat_flow_shgc_outdoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(heat_flow_shgc_outdoor,
+                expected.value("heat_flow_shgc_outdoor", -1.0),
+                TEST_TOLARANCE);
+
+    EXPECT_NEAR(H_u_indoor,
+                expected.value("H_u_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_u_indoor,
+                expected.value("H_u_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_u_outdoor,
+                expected.value("H_u_outdoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_u_outdoor,
+                expected.value("H_u_outdoor", -1.0),
+                TEST_TOLARANCE);
+
+    EXPECT_NEAR(H_shgc_indoor,
+                expected.value("H_shgc_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_shgc_indoor,
+                expected.value("H_shgc_indoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_shgc_outdoor,
+                expected.value("H_shgc_outdoor", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(H_shgc_outdoor,
+                expected.value("H_shgc_outdoor", -1.0),
                 TEST_TOLARANCE);
 
     if (expected.count("relative_heat_gain")) {
@@ -489,6 +559,15 @@ void test_thermal_results(std::string const &results_name,
                 gap_layer_effective_conductivities_shgc;
         expected["layer_temperatures_u"] = layer_temperatures_u;
         expected["layer_temperatures_shgc"] = layer_temperatures_shgc;
+        expected["heat_flow_u_indoor"] = heat_flow_u_indoor;
+        expected["heat_flow_u_outdoor"] = heat_flow_u_outdoor;
+        expected["heat_flow_shgc_indoor"] = heat_flow_shgc_indoor;
+        expected["heat_flow_shgc_outdoor"] = heat_flow_shgc_outdoor;
+        expected["H_u_indoor"] = H_u_indoor;
+        expected["H_u_outdoor"] = H_u_outdoor;
+        expected["H_shgc_indoor"] = H_shgc_indoor;
+        expected["H_shgc_outdoor"] = H_shgc_outdoor;
+
         update_expected_results(results_name, expected);
     }
 }

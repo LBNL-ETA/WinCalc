@@ -587,4 +587,24 @@ namespace wincalc
                                                        phi);
     }
 
+    double Glazing_System::heat_flow(Tarcog::ISO15099::System system_type,
+                                     Tarcog::ISO15099::Environment env,
+                                     double theta,
+                                     double phi)
+    {
+        do_updates_for_thermal(theta, phi);
+        auto & system = get_system(theta, phi);
+        return system.getHeatFlow(system_type, env);
+    }
+
+    double Glazing_System::H(Tarcog::ISO15099::System system_type,
+        Tarcog::ISO15099::Environment env,
+        double theta,
+        double phi)
+    {
+        do_updates_for_thermal(theta, phi);
+        auto & system = get_system(theta, phi);
+        return system.getH(system_type, env);
+    }
+
 }   // namespace wincalc
