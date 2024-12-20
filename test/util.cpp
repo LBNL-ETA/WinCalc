@@ -406,14 +406,17 @@ void test_thermal_results(std::string const &results_name,
     auto heat_flow_shgc_outdoor = glazing_system->heat_flow(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
 
-    auto H_u_indoor = glazing_system->H(
+    auto H_u_indoor = glazing_system->h(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Indoor, theta, phi);
-    auto H_u_outdoor = glazing_system->H(
+    auto H_u_outdoor = glazing_system->h(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
-    auto H_shgc_indoor = glazing_system->H(
+    auto H_shgc_indoor = glazing_system->h(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Indoor, theta, phi);
-    auto H_shgc_outdoor = glazing_system->H(
+    auto H_shgc_outdoor = glazing_system->h(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+
+    auto radiosities_u = glazing_system->radiosities(Tarcog::ISO15099::System::Uvalue);
+    auto radiosities_shgc = glazing_system->radiosities(Tarcog::ISO15099::System::SHGC);
 
     auto expected_u = expected.value("U", -1.0);
     EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
@@ -489,6 +492,15 @@ void test_thermal_results(std::string const &results_name,
     EXPECT_NEAR(H_shgc_outdoor,
                 expected.value("H_shgc_outdoor", -1.0),
                 TEST_TOLARANCE);
+
+    std::vector<double> expected_radiosities_u =
+      expected.value("radiosities_u", std::vector<double>());
+    std::vector<double> expected_radiosities_shgc =
+      expected.value("radiosities_shgc", std::vector<double>());
+    compare_vectors(radiosities_u,
+                    expected_radiosities_u);
+    compare_vectors(radiosities_shgc,
+                    expected_radiosities_shgc);
 
     if (expected.count("relative_heat_gain")) {
         if (expected.at("relative_heat_gain").is_null()) {
@@ -567,6 +579,8 @@ void test_thermal_results(std::string const &results_name,
         expected["H_u_outdoor"] = H_u_outdoor;
         expected["H_shgc_indoor"] = H_shgc_indoor;
         expected["H_shgc_outdoor"] = H_shgc_outdoor;
+        expected["radiosities_u"] = radiosities_u;
+        expected["radiosities_shgc"] = radiosities_shgc;
 
         update_expected_results(results_name, expected);
     }

@@ -597,7 +597,7 @@ namespace wincalc
         return system.getHeatFlow(system_type, env);
     }
 
-    double Glazing_System::H(Tarcog::ISO15099::System system_type,
+    double Glazing_System::h(Tarcog::ISO15099::System system_type,
         Tarcog::ISO15099::Environment env,
         double theta,
         double phi)
@@ -605,6 +605,15 @@ namespace wincalc
         do_updates_for_thermal(theta, phi);
         auto & system = get_system(theta, phi);
         return system.getH(system_type, env);
+    }
+
+    std::vector<double> Glazing_System::radiosities(Tarcog::ISO15099::System system_type,
+                                                    double theta,
+                                                    double phi)
+    {
+        do_updates_for_thermal(theta, phi);
+        auto & system = get_system(theta, phi);
+        return system.getRadiosities(system_type);
     }
 
 }   // namespace wincalc

@@ -117,10 +117,14 @@ namespace wincalc
                          double theta = 0,
                          double phi = 0);
 
-        double H(Tarcog::ISO15099::System system_type,
-                         Tarcog::ISO15099::Environment env,
-                         double theta = 0,
-                         double phi = 0);
+        double h(Tarcog::ISO15099::System system_type,
+                 Tarcog::ISO15099::Environment env,
+                 double theta = 0,
+                 double phi = 0);
+
+        std::vector<double> radiosities(Tarcog::ISO15099::System system_type,
+                                        double theta = 0,
+                                        double phi = 0);
 
 
         void optical_standard(window_standards::Optical_Standard const & s);
