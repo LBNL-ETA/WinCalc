@@ -7,6 +7,11 @@
 #include "paths.h"
 #include "thermal_ir.h"
 
+void logMsg(std::string const& msg)
+{
+    std::cerr << msg << std::endl;
+}
+
 const double TEST_TOLARANCE = 1e-6;
 
 nlohmann::json &get_json_field(nlohmann::json &json, std::string const &field, bool update) {
@@ -24,6 +29,7 @@ std::filesystem::path expected_results_path(std::string const &test_name) {
 }
 
 nlohmann::json parse_expected_results(std::string const &test_name) {
+    logMsg("start parse_expected_results: " + test_name);
     auto path = expected_results_path(test_name);
     if(!std::filesystem::exists(path))
     {
@@ -34,10 +40,12 @@ nlohmann::json parse_expected_results(std::string const &test_name) {
                         (std::istreambuf_iterator<char>()));
 
     nlohmann::json expected_results_json = nlohmann::json::parse(content);
+    logMsg("end parse_expected_results: " + test_name);
     return expected_results_json;
 }
 
 void update_expected_results(std::string const &test_name, nlohmann::json const &updated_results) {
+    logMsg("start update_expected_results: " + test_name);
     auto path = expected_results_path(test_name);
     auto directory = path.parent_path();
     if (!std::filesystem::exists(directory)) {
@@ -45,6 +53,7 @@ void update_expected_results(std::string const &test_name, nlohmann::json const 
     }
     std::ofstream fout(path);
     fout << std::setw(4) << updated_results << std::endl;
+    logMsg("end update_expected_results: " + test_name);
 }
 
 void compare_vectors(std::vector<double> const &v1, std::vector<double> const &v2) {
@@ -238,10 +247,15 @@ void test_wce_optical_results_template_double(
         nlohmann::json &expected,
         wincalc::WCE_Optical_Results_Template<double> const &results,
         bool update) {
+    logMsg("start test_wce_optical_results_template_double");
     auto &system_results = get_json_field(expected, "system_results", update);
+    logMsg("after system_results = get_json_field");
     test_wce_optical_result_by_side(system_results, results.system_results, update);
+    logMsg("after test_wce_optical_result_by_side");
     auto &layer_results = get_json_field(expected, "layer_results", update);
+    logMsg("after layer_results = get_json_field");
     test_layer_results(layer_results, results.layer_results, update);
+    logMsg("end test_wce_optical_results_template_double");
 }
 
 void test_wce_optical_results_template_color(
@@ -255,23 +269,29 @@ void test_wce_optical_results_template_color(
 void test_optical_results(std::string const &test_name,
                           wincalc::WCE_Optical_Results const &results,
                           bool update) {
+    logMsg("start test_optical_results: " + test_name);
     auto expected = parse_expected_results(test_name);
+    logMsg("after parse_expected_results: " + test_name);
     test_wce_optical_results_template_double(expected, results, update);
+    logMsg("after test_wce_optical_results_template_double: " + test_name);
     if (update) {
         update_expected_results(test_name, expected);
     }
+    logMsg("end test_optical_results: " + test_name);
 }
 
 void test_ir_results(std::string const & test_name,
                      wincalc::ThermalIRResults const & results,
                           bool update)
 {
+    logMsg("start test_ir_results: " + test_name);
     auto expected = parse_expected_results(test_name);
     test_thermal_ir(expected, results, update);
     if(update)
     {
         update_expected_results(test_name, expected);
     }
+    logMsg("end test_ir_results: " + test_name);
 }
 
 
@@ -279,11 +299,13 @@ void test_ir_results(std::string const & test_name,
 void test_optical_results(std::string const &test_name,
                           wincalc::WCE_Color_Results const &results,
                           bool update) {
+    logMsg("start color test_optical_results: " + test_name);
     auto expected = parse_expected_results(test_name);
     test_wce_optical_results_template_color(expected, results, update);
     if (update) {
         update_expected_results(test_name, expected);
     }
+    logMsg("end color test_optical_results: " + test_name);
 }
 
 bool isint(double v) {
@@ -347,6 +369,8 @@ void test_deflection_results(std::string const &results_name,
                              bool update,
                              double theta = 0,
                              double phi = 0) {
+
+    logMsg("start test_deflection_results: " + results_name);
     auto expected = parse_expected_results(results_name);
 
     auto deflection_results =
@@ -381,6 +405,7 @@ void test_deflection_results(std::string const &results_name,
         expected["layer_temperatures_system"] = temperatures;
         update_expected_results(results_name, expected);
     }
+    logMsg("end test_deflection_results: " + results_name);
 }
 
 void test_thermal_results(std::string const &results_name,
@@ -388,6 +413,7 @@ void test_thermal_results(std::string const &results_name,
                           bool update,
                           double theta = 0,
                           double phi = 0) {
+    logMsg("start test_thermal_results: " + results_name);
     auto expected = parse_expected_results(results_name);
     auto u = glazing_system->u(theta, phi);
     auto shgc = glazing_system->shgc(theta, phi);
@@ -584,6 +610,7 @@ void test_thermal_results(std::string const &results_name,
 
         update_expected_results(results_name, expected);
     }
+    logMsg("end test_thermal_results: " + results_name);
 }
 
 void test_optical_results(std::string const &system_name,
