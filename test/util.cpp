@@ -9,7 +9,7 @@
 
 void logMsg(std::string const& msg)
 {
-    //std::cerr << msg << std::endl;
+    std::cerr << msg << std::endl;
 }
 
 const double TEST_TOLARANCE = 1e-6;
@@ -247,15 +247,15 @@ void test_wce_optical_results_template_double(
         nlohmann::json &expected,
         wincalc::WCE_Optical_Results_Template<double> const &results,
         bool update) {
-    logMsg("start test_wce_optical_results_template_double");
+    //logMsg("start test_wce_optical_results_template_double");
     auto &system_results = get_json_field(expected, "system_results", update);
-    logMsg("after system_results = get_json_field");
+    //logMsg("after system_results = get_json_field");
     test_wce_optical_result_by_side(system_results, results.system_results, update);
-    logMsg("after test_wce_optical_result_by_side");
+    //logMsg("after test_wce_optical_result_by_side");
     auto &layer_results = get_json_field(expected, "layer_results", update);
-    logMsg("after layer_results = get_json_field");
+    //logMsg("after layer_results = get_json_field");
     test_layer_results(layer_results, results.layer_results, update);
-    logMsg("end test_wce_optical_results_template_double");
+    //logMsg("end test_wce_optical_results_template_double");
 }
 
 void test_wce_optical_results_template_color(
@@ -269,15 +269,15 @@ void test_wce_optical_results_template_color(
 void test_optical_results(std::string const &test_name,
                           wincalc::WCE_Optical_Results const &results,
                           bool update) {
-    logMsg("start test_optical_results: " + test_name);
+    //logMsg("start test_optical_results: " + test_name);
     auto expected = parse_expected_results(test_name);
-    logMsg("after parse_expected_results: " + test_name);
+    //logMsg("after parse_expected_results: " + test_name);
     test_wce_optical_results_template_double(expected, results, update);
-    logMsg("after test_wce_optical_results_template_double: " + test_name);
+    //logMsg("after test_wce_optical_results_template_double: " + test_name);
     if (update) {
         update_expected_results(test_name, expected);
     }
-    logMsg("end test_optical_results: " + test_name);
+    //logMsg("end test_optical_results: " + test_name);
 }
 
 void test_ir_results(std::string const & test_name,
