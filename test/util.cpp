@@ -28,6 +28,8 @@ std::filesystem::path expected_results_path(std::string const &test_name) {
     return path;
 }
 
+#include <cerrno>
+
 nlohmann::json parse_expected_results(std::string const &test_name) {
     //logMsg("start parse_expected_results: " + test_name);
     auto path = expected_results_path(test_name);
@@ -36,10 +38,35 @@ nlohmann::json parse_expected_results(std::string const &test_name) {
         return nlohmann::json::object();
     }
     std::ifstream fin(path);
+    if(fin.eof())
+    {
+        logMsg("****************************************************");
+        logMsg("fin eof before content");
+        logMsg("****************************************************");
+    }
+    if(fin.bad())
+    {
+        logMsg("****************************************************");
+        logMsg("fin bad before content.  error: " + std::string(std::strerror(errno)));
+        logMsg("****************************************************");
+    }
     std::string content((std::istreambuf_iterator<char>(fin)),
                         (std::istreambuf_iterator<char>()));
 
+    if(fin.bad())
+    {
+        logMsg("****************************************************");
+        logMsg("fin bad after content.  error: " + std::string(std::strerror(errno)));
+        logMsg("****************************************************");
+    }
+
     nlohmann::json expected_results_json = nlohmann::json::parse(content);
+    if (expected_results_json.is_discarded())
+    {
+        logMsg("****************************************************");
+        logMsg("expected_results_json.is_discarded()");
+        logMsg("****************************************************");
+    }
     //logMsg("end parse_expected_results: " + test_name);
     return expected_results_json;
 }
