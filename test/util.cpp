@@ -441,35 +441,47 @@ void test_thermal_results(std::string const &results_name,
                           double phi = 0) {
     logMsg("start test_thermal_results: " + results_name);
     auto expected = parse_expected_results(results_name);
+    logMsg("before u: " + results_name);
     auto u = glazing_system->u(theta, phi);
+    logMsg("before shgc: " + results_name);
     auto shgc = glazing_system->shgc(theta, phi);
+    logMsg("before system_effective_conductivity_u: " + results_name);
     auto system_effective_conductivity_u =
             glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::Uvalue, theta, phi);
+    logMsg("before system_effective_conductivity_shgc: " + results_name);
     auto system_effective_conductivity_shgc =
             glazing_system->system_effective_conductivity(Tarcog::ISO15099::System::SHGC, theta, phi);
+    logMsg("before relative_heat_gain: " + results_name);
     auto relative_heat_gain = glazing_system->relative_heat_gain(theta, phi);
-
+    logMsg("before heat_flow_u_indoor: " + results_name);
     auto heat_flow_u_indoor = glazing_system->heat_flow(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    logMsg("before heat_flow_u_outdoor: " + results_name);
     auto heat_flow_u_outdoor = glazing_system->heat_flow(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+    logMsg("before heat_flow_shgc_indoor: " + results_name);
     auto heat_flow_shgc_indoor = glazing_system->heat_flow(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    logMsg("before heat_flow_shgc_outdoor: " + results_name);
     auto heat_flow_shgc_outdoor = glazing_system->heat_flow(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
-
+    logMsg("before H_u_indoor: " + results_name);
     auto H_u_indoor = glazing_system->h(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    logMsg("before H_u_outdoor: " + results_name);
     auto H_u_outdoor = glazing_system->h(
       Tarcog::ISO15099::System::Uvalue, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
+    logMsg("before H_shgc_indoor: " + results_name);
     auto H_shgc_indoor = glazing_system->h(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Indoor, theta, phi);
+    logMsg("before H_shgc_outdoor: " + results_name);
     auto H_shgc_outdoor = glazing_system->h(
       Tarcog::ISO15099::System::SHGC, Tarcog::ISO15099::Environment::Outdoor, theta, phi);
-
+    logMsg("before radiosities_u: " + results_name);
     auto radiosities_u = glazing_system->radiosities(Tarcog::ISO15099::System::Uvalue);
+    logMsg("before radiosities_shgc: " + results_name);
     auto radiosities_shgc = glazing_system->radiosities(Tarcog::ISO15099::System::SHGC);
-
+    logMsg("after radiosities_shgc: " + results_name);
     auto expected_u = expected.value("U", -1.0);
     EXPECT_NEAR(u, expected_u, TEST_TOLARANCE);
 
@@ -572,6 +584,7 @@ void test_thermal_results(std::string const &results_name,
             glazing_system->solid_layers_effective_conductivities(
                     Tarcog::ISO15099::System::SHGC, theta, phi);
 
+    logMsg("before expected_solid_layer_effective_conductivities_u: " + results_name);
     std::vector<double> expected_solid_layer_effective_conductivities_u =
             expected.value("solid_layer_effective_conductivities_u", std::vector<double>());
     std::vector<double> expected_solid_layer_effective_conductivities_shgc =
@@ -581,8 +594,10 @@ void test_thermal_results(std::string const &results_name,
     compare_vectors(solid_layer_effective_conductivities_shgc,
                     expected_solid_layer_effective_conductivities_shgc);
 
+    logMsg("before gap_layer_effective_conductivities_u: " + results_name);
     auto gap_layer_effective_conductivities_u = glazing_system->gap_layers_effective_conductivities(
             Tarcog::ISO15099::System::Uvalue, theta, phi);
+    logMsg("before gap_layer_effective_conductivities_shgc: " + results_name);
     auto gap_layer_effective_conductivities_shgc =
             glazing_system->gap_layers_effective_conductivities(
                     Tarcog::ISO15099::System::SHGC, theta, phi);
@@ -596,18 +611,20 @@ void test_thermal_results(std::string const &results_name,
     compare_vectors(gap_layer_effective_conductivities_shgc,
                     expected_gap_layer_effective_conductivities_shgc);
 
+    logMsg("before layer_temperatures_u: " + results_name);
     auto layer_temperatures_u =
             glazing_system->layer_temperatures(Tarcog::ISO15099::System::Uvalue, theta, phi);
+    logMsg("before layer_temperatures_shgc: " + results_name);
     auto layer_temperatures_shgc =
             glazing_system->layer_temperatures(Tarcog::ISO15099::System::SHGC, theta, phi);
-
+    logMsg("after layer_temperatures_shgc: " + results_name);
     std::vector<double> expected_layer_temperatures_u =
             expected.value("layer_temperatures_u", std::vector<double>());
     std::vector<double> expected_layer_temperatures_shgc =
             expected.value("layer_temperatures_shgc", std::vector<double>());
     compare_vectors(layer_temperatures_u, expected_layer_temperatures_u);
     compare_vectors(layer_temperatures_shgc, expected_layer_temperatures_shgc);
-
+    logMsg("before if(update): " + results_name);
 
     if (update) {
         expected["U"] = u;
