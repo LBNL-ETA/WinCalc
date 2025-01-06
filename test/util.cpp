@@ -31,43 +31,40 @@ std::filesystem::path expected_results_path(std::string const &test_name) {
 #include <cerrno>
 
 nlohmann::json parse_expected_results(std::string const &test_name) {
-    //logMsg("start parse_expected_results: " + test_name);
+    logMsg("start parse_expected_results: " + test_name);
     auto path = expected_results_path(test_name);
     if(!std::filesystem::exists(path))
     {
+        logMsg("******************************************************************");
+        logMsg("Returning empty object because !std::filesystem::exists(path)");
+        logMsg("******************************************************************");
         return nlohmann::json::object();
     }
     std::ifstream fin(path);
     if(fin.eof())
     {
-        logMsg("****************************************************");
-        logMsg("fin eof before content");
-        logMsg("****************************************************");
+        throw std::runtime_error("fin eof before content");
     }
     if(fin.bad())
     {
-        logMsg("****************************************************");
-        logMsg("fin bad before content.  error: " + std::string(std::strerror(errno)));
-        logMsg("****************************************************");
+        throw std::runtime_error("fin bad before content.  error: "
+                                 + std::string(std::strerror(errno)));
     }
     std::string content((std::istreambuf_iterator<char>(fin)),
                         (std::istreambuf_iterator<char>()));
 
     if(fin.bad())
     {
-        logMsg("****************************************************");
-        logMsg("fin bad after content.  error: " + std::string(std::strerror(errno)));
-        logMsg("****************************************************");
+        throw std::runtime_error("fin bad after content.  error: "
+                                 + std::string(std::strerror(errno)));
     }
 
     nlohmann::json expected_results_json = nlohmann::json::parse(content);
     if (expected_results_json.is_discarded())
     {
-        logMsg("****************************************************");
-        logMsg("expected_results_json.is_discarded()");
-        logMsg("****************************************************");
+        throw std::runtime_error("expected_results_json.is_discarded()");
     }
-    //logMsg("end parse_expected_results: " + test_name);
+    logMsg("end parse_expected_results: " + test_name);
     return expected_results_json;
 }
 
@@ -274,15 +271,15 @@ void test_wce_optical_results_template_double(
         nlohmann::json &expected,
         wincalc::WCE_Optical_Results_Template<double> const &results,
         bool update) {
-    //logMsg("start test_wce_optical_results_template_double");
+    logMsg("start test_wce_optical_results_template_double");
     auto &system_results = get_json_field(expected, "system_results", update);
-    //logMsg("after system_results = get_json_field");
+    logMsg("after system_results = get_json_field");
     test_wce_optical_result_by_side(system_results, results.system_results, update);
-    //logMsg("after test_wce_optical_result_by_side");
+    logMsg("after test_wce_optical_result_by_side");
     auto &layer_results = get_json_field(expected, "layer_results", update);
-    //logMsg("after layer_results = get_json_field");
+    logMsg("after layer_results = get_json_field");
     test_layer_results(layer_results, results.layer_results, update);
-    //logMsg("end test_wce_optical_results_template_double");
+    logMsg("end test_wce_optical_results_template_double");
 }
 
 void test_wce_optical_results_template_color(
@@ -313,7 +310,9 @@ void test_ir_results(std::string const & test_name,
 {
     logMsg("start test_ir_results: " + test_name);
     auto expected = parse_expected_results(test_name);
+    logMsg("after parse_expected_results: " + test_name);
     test_thermal_ir(expected, results, update);
+    logMsg("after test_thermal_ir: " + test_name);
     if(update)
     {
         update_expected_results(test_name, expected);
