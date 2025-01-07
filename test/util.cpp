@@ -293,15 +293,15 @@ void test_wce_optical_results_template_color(
 void test_optical_results(std::string const &test_name,
                           wincalc::WCE_Optical_Results const &results,
                           bool update) {
-    //logMsg("start test_optical_results: " + test_name);
+    logMsg("start test_optical_results: " + test_name);
     auto expected = parse_expected_results(test_name);
-    //logMsg("after parse_expected_results: " + test_name);
+    logMsg("after parse_expected_results: " + test_name);
     test_wce_optical_results_template_double(expected, results, update);
-    //logMsg("after test_wce_optical_results_template_double: " + test_name);
+    logMsg("after test_wce_optical_results_template_double: " + test_name);
     if (update) {
         update_expected_results(test_name, expected);
     }
-    //logMsg("end test_optical_results: " + test_name);
+    logMsg("end test_optical_results: " + test_name);
 }
 
 void test_ir_results(std::string const & test_name,
@@ -356,37 +356,46 @@ void test_all_optical_results(std::string const &system_name,
                               bool update,
                               double theta = 0,
                               double phi = 0) {
+    logMsg("start test_all_optical_results: " + system_name);
     std::string angle = "/" + get_angle_txt(theta, phi);
-
+    logMsg("before optical_method_results SOLAR: " + system_name + angle);
     auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
     test_optical_results(system_name + angle + "/solar", solar_results, update_results);
-
+    logMsg("before optical_method_results PHOTOPIC: " + system_name + angle);
     auto photopic_results = glazing_system->optical_method_results("PHOTOPIC", theta, phi);
     test_optical_results(system_name + angle + "/photopic", photopic_results, update_results);
 
+    logMsg("before optical_method_results SPF: " + system_name + angle);
     EXPECT_THROW(glazing_system->optical_method_results("SPF"), std::runtime_error);
 
+    logMsg("before optical_method_results TDW: " + system_name + angle);
     auto tdw_results = glazing_system->optical_method_results("TDW", theta, phi);
     test_optical_results(system_name + angle + "/tdw", tdw_results, update_results);
 
+    logMsg("before optical_method_results TKR: " + system_name + angle);
     auto tkr_results = glazing_system->optical_method_results("TKR", theta, phi);
     test_optical_results(system_name + angle + "/tkr", tkr_results, update_results);
 
+    logMsg("before optical_method_results TUV: " + system_name + angle);
     auto tuv_results = glazing_system->optical_method_results("TUV", theta, phi);
     test_optical_results(system_name + angle + "/tuv", tuv_results, update_results);
-
+    logMsg("before glazing_system->solid_layers(): " + system_name + angle);
     auto solid_layers = glazing_system->solid_layers();
     for(size_t i = 0; i < solid_layers.size(); ++i)
     {
+        logMsg("before calc_thermal_ir(): " + system_name + angle + "thermal ir layer " + std::to_string(i));
         auto ir_results =
           calc_thermal_ir(glazing_system->optical_standard(), glazing_system->solid_layers()[i]);
         test_ir_results(system_name + angle + "/thermal ir layer " + std::to_string(i), ir_results, update_results);
     }
 
+    logMsg("before glazing_system->isBSDF(): " + system_name + angle);
     if (!glazing_system->isBSDF()) {
+        logMsg("before glazing_system->color(): " + system_name + angle);
         auto color_results = glazing_system->color(theta, phi);
         test_optical_results(system_name + angle + "/color", color_results, update_results);
     }
+    logMsg("end test_all_optical_results: " + system_name);
 }
 
 void test_deflection_results(std::string const &results_name,
@@ -659,7 +668,7 @@ void test_thermal_results(std::string const &results_name,
 void test_optical_results(std::string const &system_name,
                           std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                           bool update) {
-    std::cerr << "TEST OPTICAL RESULTS" << std::endl;
+    std::cerr << "TEST OPTICAL RESULTS: " << system_name << std::endl;
     std::cerr << "--------------------------------------------------" << std::endl;
 
     double theta = 0;
@@ -695,13 +704,14 @@ void test_optical_results(std::string const &system_name,
     glazing_system->set_spectral_data_wavelength_range(
             wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
+    logMsg("end test_optical_results: " + system_name);
 }
 
 void test_thermal_results(std::string const &system_name,
                           std::string const &results_name,
                           std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                           bool update) {
-    std::cerr << "TEST THERMAL RESULTS" << std::endl;
+    std::cerr << "TEST THERMAL RESULTS: " << system_name << std::endl;
     std::cerr << "--------------------------------------------------" << std::endl;
 
     double theta = 0;
@@ -755,6 +765,7 @@ void test_thermal_results(std::string const &system_name,
                          update,
                          theta,
                          phi);
+    logMsg("end test_thermal_results: " + system_name);
 }
 
 void test_deflection_results(std::string const &system_name,
@@ -762,11 +773,14 @@ void test_deflection_results(std::string const &system_name,
                              std::shared_ptr<wincalc::Glazing_System> const &glazing_system,
                              Tarcog::ISO15099::System system_type,
                              bool update) {
+    logMsg("start test_deflection_results: " + system_name + "/" + results_name);
     double theta = 0;
     double phi = 0;
     std::string angle = get_angle_txt(theta, phi);
+    logMsg("before set_spectral_data_wavelength_range CONDENSED: " + system_name + angle);
     glazing_system->set_spectral_data_wavelength_range(
             wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
+    logMsg("before test_deflection_results: " + system_name + angle);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
@@ -774,8 +788,10 @@ void test_deflection_results(std::string const &system_name,
                             theta,
                             phi);
 
+    logMsg("before set_spectral_data_wavelength_range FULL: " + system_name + "/" + angle);
     glazing_system->set_spectral_data_wavelength_range(
             wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
+    logMsg("before test_deflection_results: " + system_name + "/" + angle);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
                             glazing_system,
                             system_type,
@@ -786,6 +802,7 @@ void test_deflection_results(std::string const &system_name,
     theta = 15;
     phi = 270;
     angle = get_angle_txt(theta, phi);
+    logMsg("before set_spectral_data_wavelength_range CONDENSED: " + system_name + angle);
     glazing_system->set_spectral_data_wavelength_range(
             wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_deflection_results(system_name + "/condensed_spectrum/" + angle + "/" + results_name,
@@ -795,6 +812,7 @@ void test_deflection_results(std::string const &system_name,
                             theta,
                             phi);
 
+    logMsg("before set_spectral_data_wavelength_range FULL: " + system_name + angle);
     glazing_system->set_spectral_data_wavelength_range(
             wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_deflection_results(system_name + "/full_spectrum/" + angle + "/" + results_name,
@@ -803,4 +821,5 @@ void test_deflection_results(std::string const &system_name,
                             update,
                             theta,
                             phi);
+    logMsg("end test_deflection_results: " + system_name);
 }
