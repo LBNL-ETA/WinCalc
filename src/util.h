@@ -41,4 +41,6 @@ namespace wincalc
 
     std::vector<std::vector<double>> get_wavelengths(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data);
+
+    void logMsg(std::string const & msg);
 }   // namespace wincalc

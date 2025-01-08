@@ -1,5 +1,6 @@
 #include "util.h"
 #include <algorithm>
+#include <iostream>
 #include "convert_optics_parser.h"
 
 namespace wincalc
@@ -101,4 +102,9 @@ namespace wincalc
 
 		return res;
 	}
+
+    void logMsg(std::string const & msg)
+    {
+        std::cerr << msg << std::endl;
+    }
 }   // namespace wincalc
