@@ -714,29 +714,37 @@ namespace wincalc
       int number_visible_bands,
       int number_solar_bands)
     {
+        logMsg("begin create_multi_pane_specular(product_data, " + method.name + ")");
         std::vector<std::shared_ptr<SingleLayerOptics::SpecularLayer>> layers;
+        logMsg("before number_of_layers = product_data.size()");
         auto number_of_layers = product_data.size();
         for(std::shared_ptr<wincalc::Product_Data_Optical> const & product : product_data)
         {
+            logMsg("in for(std::shared_ptr<wincalc::Product_Data_Optical> const & product : "
+                   "product_data)");
             layers.push_back(create_specular_layer(product, method, number_of_layers));
         }
 
+        logMsg("before wavelengths = get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
+        logMsg("before source_spectrum = get_spectum_values");
         auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
+        logMsg("before detector_spectrum = get_spectum_values");
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
-
+        logMsg("before combined_layer_wavelengths = combined_layer_wavelength_range_factory");
         auto combined_layer_wavelengths = combined_layer_wavelength_range_factory(
           wavelengths, type, number_visible_bands, number_solar_bands);
-
+        logMsg("before MultiLayerOptics::CMultiPaneSpecular::create");
         auto layer =
           MultiLayerOptics::CMultiPaneSpecular::create(layers, combined_layer_wavelengths);
-
+        logMsg("before standard_wavelengths = optical_standard_wavelength_set");
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
-
+        logMsg("before SingleLayerOptics::CalculationProperties input");
         const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
+        logMsg("before layer->setCalculationProperties");
         layer->setCalculationProperties(input);
-
+        logMsg("end create_multi_pane_specular(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -746,9 +754,12 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_specular(product_data, " + method.name + ")");
         auto material = create_material(product_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer");
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
+        logMsg("begin create_bsdf_layer_specular(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -758,9 +769,12 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_perfectly_diffuse(product_data, " + method.name + ")");
         auto material = create_material(product_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getPerfectlyDiffuseLayer");
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getPerfectlyDiffuseLayer(material, bsdf_hemisphere);
+        logMsg("end create_bsdf_layer_perfectly_diffuse(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -770,9 +784,12 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_homogeneous_diffuse(product_data, " + method.name + ")");
         auto material = create_material(product_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getHomogeneousDiffuseLayer");
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getHomogeneousDiffuseLayer(material, bsdf_hemisphere);
+        logMsg("end create_bsdf_layer_homogeneous_diffuse(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -782,9 +799,12 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_preloaded_matrices(product_data, " + method.name + ")");
         auto material = create_material(product_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer");
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
+        logMsg("end create_bsdf_layer_preloaded_matrices(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -794,8 +814,10 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_venetian(product_data, " + method.name + ")");
         auto material =
           create_material(product_data->material_optical_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer");
         auto layer = SingleLayerOptics::CBSDFLayerMaker::getVenetianLayer(
           material,
           bsdf_hemisphere,
@@ -806,6 +828,7 @@ namespace wincalc
           product_data->geometry.number_slat_segments,
           product_data->geometry.distribution_method,
           product_data->geometry.is_horizontal);
+        logMsg("end create_bsdf_layer_venetian(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -815,13 +838,16 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_woven_shade(product_data, " + method.name + ")");
         auto material =
           create_material(product_data->material_optical_data, method, number_of_layers);
+        logMsg("before SingleLayerOptics::CBSDFLayerMaker::getWovenLayer");
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getWovenLayer(material,
                                                             bsdf_hemisphere,
                                                             product_data->geometry.thread_diameter,
                                                             product_data->geometry.thread_spacing);
+        logMsg("end create_bsdf_layer_woven_shade(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -831,10 +857,13 @@ namespace wincalc
       size_t number_of_layers,
       SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer_perforated_screen(product_data, " + method.name + ")");
         auto material =
           create_material(product_data->material_optical_data, method, number_of_layers);
+        logMsg("before if in create_bsdf_layer_perforated_screen");
         if(product_data->geometry.perforation_type == wincalc::Perforated_Geometry::Type::CIRCULAR)
         {
+            logMsg("in circular in create_bsdf_layer_perforated_screen");
             return SingleLayerOptics::CBSDFLayerMaker::getCircularPerforatedLayer(
               material,
               bsdf_hemisphere,
@@ -846,6 +875,7 @@ namespace wincalc
         else if(product_data->geometry.perforation_type
                 == wincalc::Perforated_Geometry::Type::RECTANGULAR)
         {
+            logMsg("in rectangular in create_bsdf_layer_perforated_screen");
             return SingleLayerOptics::CBSDFLayerMaker::getRectangularPerforatedLayer(
               material,
               bsdf_hemisphere,
@@ -858,6 +888,7 @@ namespace wincalc
         else if(product_data->geometry.perforation_type
                 == wincalc::Perforated_Geometry::Type::SQUARE)
         {
+            logMsg("in square in create_bsdf_layer_perforated_screen");
             return SingleLayerOptics::CBSDFLayerMaker::getRectangularPerforatedLayer(
               material,
               bsdf_hemisphere,
@@ -869,6 +900,7 @@ namespace wincalc
         }
         else
         {
+            logMsg("in else of create_bsdf_layer_perforated_screen");
             std::stringstream msg;
             msg << "Unsupported perforation type for optical bsdf layer: "
                 << static_cast<std::underlying_type<Perforated_Geometry::Type>::type>(
@@ -884,6 +916,7 @@ namespace wincalc
                         size_t number_of_layers,
                         SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
     {
+        logMsg("begin create_bsdf_layer(product_data, " + method.name + ")");
         std::shared_ptr<SingleLayerOptics::CBSDFLayer> layer;
         if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perfectly_Diffuse>(product_data))
         {
@@ -945,8 +978,10 @@ namespace wincalc
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                   product_data))
         {
+            logMsg("in dual band in if in create_bsdf_layer");
             if(method.name == "THERMAL IR")
             {
+                logMsg("in if(method.name == THERMAL IR)");
                 // Thermal IR is a special case that can be calculated despite a lack of
                 // BSDF data.  Since there is no BSDF for the IR range yet the IR range
                 // is instead modeled as a perfectly diffusing shade
@@ -955,6 +990,7 @@ namespace wincalc
             }
             else
             {
+                logMsg("in else of if(method.name == THERMAL IR)");
                 layer = create_bsdf_layer_preloaded_matrices(
                   std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
                     product_data),
@@ -965,11 +1001,12 @@ namespace wincalc
         }
         else
         {
+            logMsg("in else in create_bsdf_layer");
             layer =
               create_bsdf_layer_specular(product_data, method, number_of_layers, bsdf_hemisphere);
         }
 
-
+        logMsg("end create_bsdf_layer(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -981,30 +1018,38 @@ namespace wincalc
       int number_visible_bands,
       int number_solar_bands)
     {
+        logMsg("begin create_multi_pane_bsdf(products, " + method.name + ")");
         std::vector<std::shared_ptr<SingleLayerOptics::CBSDFLayer>> layers;
         std::vector<std::vector<double>> wavelengths;
+        logMsg("before number_of_layers");
         auto number_of_layers = products.size();
         for(auto const & product : products)
         {
+            logMsg("in for(auto const & product : products)");
             layers.push_back(create_bsdf_layer(product, method, number_of_layers, bsdf_hemisphere));
+            logMsg("before wavelengths.push_back(product->wavelengths());");
             wavelengths.push_back(product->wavelengths());
         }
 
+        logMsg("before source_spectrum");
         auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
-
+        logMsg("before detector_spectrum");
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
-
+        logMsg("before combined_layer_wavelength_range_factory");
         auto combined_layer_wavelengths = combined_layer_wavelength_range_factory(
           wavelengths, type, number_visible_bands, number_solar_bands);
 
+        logMsg("before MultiLayerOptics::CMultiPaneBSDF::create");
         auto layer = MultiLayerOptics::CMultiPaneBSDF::create(layers, combined_layer_wavelengths);
-
+        logMsg("before standard_wavelengths = optical_standard_wavelength_set");
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
-
+        logMsg("before SingleLayerOptics::CalculationProperties input");
         const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
+        logMsg("before layer->setCalculationProperties");
         layer->setCalculationProperties(input);
 
+        logMsg("end create_multi_pane_bsdf(products, " + method.name + ")");
         return layer;
     }
 
@@ -1016,9 +1061,11 @@ namespace wincalc
       int number_visible_bands,
       int number_solar_bands)
     {
+        logMsg("begin create_multi_pane(product_data, " + method.name + ")");
         bool as_bsdf = false;
         for(auto product : product_data)
         {
+            logMsg("in for(auto product : product_data)");
             if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product)
                || std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product))
             {
@@ -1026,8 +1073,11 @@ namespace wincalc
                 break;
             }
         }
+
+        logMsg("before if(as_bsdf && !bsdf_hemisphere.has_value())");
         if(as_bsdf && !bsdf_hemisphere.has_value())
         {
+            logMsg("in if(as_bsdf && !bsdf_hemisphere.has_value())");
             throw std::runtime_error(
               "No BSDF hemisphere provided for a system with at least one bsdf type.");
         }
@@ -1038,6 +1088,7 @@ namespace wincalc
 
         if(as_bsdf)
         {
+            logMsg("in if(as_bsdf)");
             return create_multi_pane_bsdf(product_data,
                                           method,
                                           bsdf_hemisphere.value(),
@@ -1047,6 +1098,7 @@ namespace wincalc
         }
         else
         {
+            logMsg("in else of if(as_bsdf)");
             return create_multi_pane_specular(
               product_data, method, type, number_visible_bands, number_solar_bands);
         }
