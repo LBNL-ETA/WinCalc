@@ -106,27 +106,50 @@ namespace wincalc
                                   double product_data_min_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
+        logMsg(
+          "begin get_minimum_wavelength for method " + method.name
+          + " with product_data_min_wavelength = " + std::to_string(product_data_min_wavelength));
         double result = std::numeric_limits<double>::quiet_NaN();
 
         if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
         {
+            logMsg("in if(method.min_wavelength.type == "
+                   "window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)");
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
+                logMsg(
+                  "in if(method.wavelength_set.type == "
+                  "window_standards::Wavelength_Set_Type::FILE) with "
+                  "method.wavelength_set.values.size = " + std::to_string(method.wavelength_set.values.size()));
                 result = method.wavelength_set.values[0];
             }
             else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
             {
+                logMsg("in else if(method.wavelength_set.type == "
+                       "window_standards::Wavelength_Set_Type::SOURCE) with "
+                       "source_spectrum.getXArray().size() = "
+                       + std::to_string(source_spectrum.getXArray().size()));
                 result = source_spectrum.getXArray().front();
             }
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
+                logMsg("method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA");
                 result = product_data_min_wavelength;
             }
         }
         else if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
         {
+            logMsg("in else if(method.min_wavelength.type == "
+                   "window_standards::Wavelength_Boundary_Type::NUMBER) with "
+                   "method.min_wavelength.value = " 
+                   + std::to_string(method.min_wavelength.value));
             result = method.min_wavelength.value;
         }
+
+        logMsg("end get_minimum_wavelength for method " + method.name
+               + " with product_data_min_wavelength = "
+               + std::to_string(product_data_min_wavelength)
+               + " result = " + std::to_string(result));
 
         return result;
     }
@@ -136,28 +159,51 @@ namespace wincalc
                                   double product_data_max_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
+        logMsg("begin get_maximum_wavelength for method " + method.name
+               + " with product_data_max_wavelength = "
+               + std::to_string(product_data_max_wavelength));
+
         double result = std::numeric_limits<double>::quiet_NaN();
 
         if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
         {
+            logMsg("in if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)");
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
+                logMsg("in if(method.wavelength_set.type == "
+                       "window_standards::Wavelength_Set_Type::FILE) with "
+                       "method.wavelength_set.values.size = "
+                       + std::to_string(method.wavelength_set.values.size()));
+
                 result = method.wavelength_set.values.back();
             }
             else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
             {
+                logMsg("in else if(method.wavelength_set.type == "
+                       "window_standards::Wavelength_Set_Type::SOURCE) with "
+                       "source_spectrum.getXArray().size() = "
+                       + std::to_string(source_spectrum.getXArray().size()));
                 result = source_spectrum.getXArray().back();
             }
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA)
             {
+                logMsg("method.wavelength_set.type == window_standards::Wavelength_Set_Type::DATA");
                 result = product_data_max_wavelength;
             }
         }
         else if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::NUMBER)
         {
+            logMsg("in else if(method.max_wavelength.type == "
+                   "window_standards::Wavelength_Boundary_Type::NUMBER) with "
+                   "method.max_wavelength.value = "
+                   + std::to_string(method.max_wavelength.value));
             result = method.max_wavelength.value;
         }
 
+        logMsg("end get_maximum_wavelength for method " + method.name
+               + " with product_data_max_wavelength = "
+               + std::to_string(product_data_max_wavelength)
+               + " result = " + std::to_string(result));
         return result;
     }
 
@@ -389,21 +435,27 @@ namespace wincalc
     Lambda_Range get_lambda_range(std::vector<std::vector<double>> const & products_wavelengths,
                                   window_standards::Optical_Standard_Method const & method)
     {
+        logMsg("begin get_lambda_range");
         auto source_spectrum =
           get_spectum_values(method.source_spectrum, method, products_wavelengths);
         std::vector<double> min_wavelengths;
         std::vector<double> max_wavelengths;
         for(auto product_wavelengths : products_wavelengths)
         {
+            logMsg("in for(auto product_wavelengths : products_wavelengths)");
             min_wavelengths.push_back(
               get_minimum_wavelength(method, product_wavelengths[0], source_spectrum));
+            logMsg("before max_wavelengths.push_back");
             max_wavelengths.push_back(
               get_maximum_wavelength(method, product_wavelengths.back(), source_spectrum));
         }
         // The min and max lambda should be the tighest boundary not the loosest
         //  So it should be the largest minimum and smallest maximum
+        logMsg("before min_wavelength = with min_wavelengths.size = " + std::to_string(min_wavelengths.size()));
         double min_wavelength = *std::max_element(min_wavelengths.begin(), min_wavelengths.end());
+        logMsg("before max_wavelength = with max_wavelengths.size = " + std::to_string(max_wavelengths.size()));
         double max_wavelength = *std::min_element(max_wavelengths.begin(), max_wavelengths.end());
+        logMsg("end get_lambda_range");
         return Lambda_Range{min_wavelength, max_wavelength};
     }
 
