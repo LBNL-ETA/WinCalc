@@ -103,7 +103,7 @@ namespace wincalc
 		return res;
 	}
 
-    void logMsg(std::string const & msg)
+    void logMsg(std::string const & )
     {
         //std::cerr << msg << std::endl;
     }
