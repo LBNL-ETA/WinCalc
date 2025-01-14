@@ -86,9 +86,10 @@ namespace wincalc
                                  double phi)
     {
         logMsg("begin calc_optical_property");
-        return layers->getPropertySimple(
+        double result = layers->getPropertySimple(
           min_lambda, max_lambda, property_choice, side_choice, scattering_choice, theta, phi);
         logMsg("end calc_optical_property");
+        return result;
     }
 
     std::vector<WCE_Optical_Result_Absorptance<double>>
