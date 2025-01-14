@@ -9,7 +9,7 @@
 
 void logMsg(std::string const& msg)
 {
-    std::cerr << msg << std::endl;
+    //std::cerr << msg << std::endl;
 }
 
 const double TEST_TOLARANCE = 1e-6;

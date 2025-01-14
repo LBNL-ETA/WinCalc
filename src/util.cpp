@@ -105,6 +105,6 @@ namespace wincalc
 
     void logMsg(std::string const & msg)
     {
-        std::cerr << msg << std::endl;
+        //std::cerr << msg << std::endl;
     }
 }   // namespace wincalc
