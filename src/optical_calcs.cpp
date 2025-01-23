@@ -20,17 +20,17 @@ namespace wincalc
     WCE_Optical_Result_Simple<T>
       do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> const & f)
     {
-        logMsg("begin do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> "
+        LOGMSG("begin do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> "
                "const & f)");
         WCE_Optical_Result_Simple<T> calc_result;
         calc_result.direct_direct = f(FenestrationCommon::Scattering::DirectDirect);
-        logMsg("before DirectDiffuse");
+        LOGMSG("before DirectDiffuse");
         calc_result.direct_diffuse = f(FenestrationCommon::Scattering::DirectDiffuse);
-        logMsg("before DiffuseDiffuse");
+        LOGMSG("before DiffuseDiffuse");
         calc_result.diffuse_diffuse = f(FenestrationCommon::Scattering::DiffuseDiffuse);
-        logMsg("before DirectHemispherical");
+        LOGMSG("before DirectHemispherical");
         calc_result.direct_hemispherical = f(FenestrationCommon::Scattering::DirectHemispherical);
-        logMsg("end do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> "
+        LOGMSG("end do_calc(std::function<T(const FenestrationCommon::Scattering scattering)> "
                "const & f)");
         return calc_result;
     }
@@ -42,7 +42,7 @@ namespace wincalc
                                const FenestrationCommon::Side side,
                                const FenestrationCommon::Scattering scattering)> const & f)
     {
-        logMsg("begin do_calcs(prop, side, scattering)");
+        LOGMSG("begin do_calcs(prop, side, scattering)");
         WCE_Optical_Results_Template<T> calc_result;
 
         calc_result.system_results.front.transmittance =
@@ -51,28 +51,28 @@ namespace wincalc
                 FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
           });
 
-        logMsg("before back transmittance");
+        LOGMSG("before back transmittance");
         calc_result.system_results.back.transmittance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
                 FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back, scattering);
           });
 
-        logMsg("before front reflectance");
+        LOGMSG("before front reflectance");
         calc_result.system_results.front.reflectance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
                 FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front, scattering);
           });
 
-        logMsg("before back reflectance");
+        LOGMSG("before back reflectance");
         calc_result.system_results.back.reflectance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
                 FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back, scattering);
           });
 
-        logMsg("end do_calcs(prop, side, scattering)");
+        LOGMSG("end do_calcs(prop, side, scattering)");
         return calc_result;
     }
 
@@ -85,10 +85,10 @@ namespace wincalc
                                  double theta,
                                  double phi)
     {
-        logMsg("begin calc_optical_property");
+        LOGMSG("begin calc_optical_property");
         double result = layers->getPropertySimple(
           min_lambda, max_lambda, property_choice, side_choice, scattering_choice, theta, phi);
-        logMsg("end calc_optical_property");
+        LOGMSG("end calc_optical_property");
         return result;
     }
 
@@ -100,7 +100,7 @@ namespace wincalc
                              double theta = 0,
                              double phi = 0)
     {
-        logMsg("begin get_layer_absorptances");
+        LOGMSG("begin get_layer_absorptances");
         std::vector<WCE_Optical_Result_Absorptance<double>> absorptances;
         auto direct_absorptances_total =
           layers->getAbsorptanceLayers(min_lambda,
@@ -109,7 +109,7 @@ namespace wincalc
                                        FenestrationCommon::ScatteringSimple::Direct,
                                        theta,
                                        phi);
-        logMsg("before diffuse_absorptances_total");
+        LOGMSG("before diffuse_absorptances_total");
         auto diffuse_absorptances_total =
           layers->getAbsorptanceLayers(min_lambda,
                                        max_lambda,
@@ -118,7 +118,7 @@ namespace wincalc
                                        theta,
                                        phi);
 
-        logMsg("before direct_absorptances_heat");
+        LOGMSG("before direct_absorptances_heat");
         auto direct_absorptances_heat =
           layers->getAbsorptanceLayersHeat(min_lambda,
                                            max_lambda,
@@ -126,7 +126,7 @@ namespace wincalc
                                            FenestrationCommon::ScatteringSimple::Direct,
                                            theta,
                                            phi);
-        logMsg("before diffuse_absorptances_heat");
+        LOGMSG("before diffuse_absorptances_heat");
         auto diffuse_absorptances_heat =
           layers->getAbsorptanceLayersHeat(min_lambda,
                                            max_lambda,
@@ -134,7 +134,7 @@ namespace wincalc
                                            FenestrationCommon::ScatteringSimple::Diffuse,
                                            theta,
                                            phi);
-        logMsg("before direct_absorptances_electricity");
+        LOGMSG("before direct_absorptances_electricity");
         auto direct_absorptances_electricity =
           layers->getAbsorptanceLayersElectricity(min_lambda,
                                                   max_lambda,
@@ -142,7 +142,7 @@ namespace wincalc
                                                   FenestrationCommon::ScatteringSimple::Direct,
                                                   theta,
                                                   phi);
-        logMsg("before diffuse_absorptances_electricity");
+        LOGMSG("before diffuse_absorptances_electricity");
         auto diffuse_absorptances_electricity =
           layers->getAbsorptanceLayersElectricity(min_lambda,
                                                   max_lambda,
@@ -151,28 +151,28 @@ namespace wincalc
                                                   theta,
                                                   phi);
 
-        logMsg("before bsdf_system");
+        LOGMSG("before bsdf_system");
         auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(layers);
 
         for(size_t i = 0; i < diffuse_absorptances_heat.size(); ++i)
         {
-            logMsg("in loop iteration: " + std::to_string(i));
+            LOGMSG("in loop iteration: " + std::to_string(i));
             std::optional<std::vector<double>> angular_total;
             std::optional<std::vector<double>> angular_heat;
             std::optional<std::vector<double>> angular_electricity;
 
             if(bsdf_system)
             {
-                logMsg("in if(bsdf_system)");
+                LOGMSG("in if(bsdf_system)");
                 angular_total = bsdf_system->Abs(min_lambda, max_lambda, side_choice, i + 1);
-                logMsg("before angular_heat");
+                LOGMSG("before angular_heat");
                 angular_heat = bsdf_system->AbsHeat(min_lambda, max_lambda, side_choice, i + 1);
-                logMsg("before angular_electricity");
+                LOGMSG("before angular_electricity");
                 angular_electricity =
                   bsdf_system->AbsElectricity(min_lambda, max_lambda, side_choice, i + 1);
             }
 
-            logMsg("before absorptances.push_back");
+            LOGMSG("before absorptances.push_back");
             absorptances.push_back(WCE_Optical_Result_Absorptance<double>{
               direct_absorptances_total[i],
               diffuse_absorptances_total[i],
@@ -186,7 +186,7 @@ namespace wincalc
             });
         }
 
-        logMsg("end get_layer_absorptances");
+        LOGMSG("end get_layer_absorptances");
         return absorptances;
     }
 
@@ -196,28 +196,28 @@ namespace wincalc
                                  double theta,
                                  double phi)
     {
-        logMsg("begin calc_all(system, " + std::to_string(min_lambda) + ", "
+        LOGMSG("begin calc_all(system, " + std::to_string(min_lambda) + ", "
                + std::to_string(max_lambda) + ", " + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         if(max_lambda < min_lambda)
         {
-            logMsg("in if(max_lambda < min_lambda)");
+            LOGMSG("in if(max_lambda < min_lambda)");
             max_lambda = min_lambda + 1;
         }
-        logMsg("before calc_f = ");
+        LOGMSG("before calc_f = ");
         auto calc_f = [=, &system](const FenestrationCommon::PropertySimple prop,
                                    const FenestrationCommon::Side side,
                                    const FenestrationCommon::Scattering scattering) {
             return calc_optical_property(
               system, prop, side, scattering, min_lambda, max_lambda, theta, phi);
         };
-        logMsg("before optical_results");
+        LOGMSG("before optical_results");
         auto optical_results = do_calcs<double>(calc_f);
-        logMsg("before bsdf_system");
+        LOGMSG("before bsdf_system");
         auto bsdf_system = std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(system);
         if(bsdf_system)
         {
-            logMsg("in if(bsdf_system)");
+            LOGMSG("in if(bsdf_system)");
             // Include matrix results for BSDF systems
             optical_results.system_results.front.transmittance.matrix =
               bsdf_system
@@ -227,7 +227,7 @@ namespace wincalc
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
 
-            logMsg("before front.reflectance.matrix");
+            LOGMSG("before front.reflectance.matrix");
             optical_results.system_results.front.reflectance.matrix =
               bsdf_system
                 ->getMatrix(min_lambda,
@@ -236,7 +236,7 @@ namespace wincalc
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
 
-            logMsg("before back.transmittance.matrix");
+            LOGMSG("before back.transmittance.matrix");
             optical_results.system_results.back.transmittance.matrix =
               bsdf_system
                 ->getMatrix(min_lambda,
@@ -245,7 +245,7 @@ namespace wincalc
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
 
-            logMsg("before back.reflectance.matrix");
+            LOGMSG("before back.reflectance.matrix");
             optical_results.system_results.back.reflectance.matrix =
               bsdf_system
                 ->getMatrix(min_lambda,
@@ -255,23 +255,23 @@ namespace wincalc
                 .getMatrix();
         }
 
-        logMsg("before absorptances_front");
+        LOGMSG("before absorptances_front");
         auto absorptances_front = get_layer_absorptances(
           system, FenestrationCommon::Side::Front, min_lambda, max_lambda, theta, phi);
-        logMsg("before absorptances_back");
+        LOGMSG("before absorptances_back");
         auto absorptances_back = get_layer_absorptances(
           system, FenestrationCommon::Side::Back, min_lambda, max_lambda, theta, phi);
 
         for(size_t i = 0; i < absorptances_front.size(); ++i)
         {
-            logMsg("in absorptances loop iteration: " + std::to_string(i));
+            LOGMSG("in absorptances loop iteration: " + std::to_string(i));
             optical_results.layer_results.push_back(
               WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<double>>{
                 WCE_Optical_Result_Absorptance<double>{absorptances_front[i]},
                 WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}});
         }
 
-        logMsg("end calc_all(system, " + std::to_string(min_lambda) + ", "
+        LOGMSG("end calc_all(system, " + std::to_string(min_lambda) + ", "
                + std::to_string(max_lambda) + ", " + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return optical_results;
@@ -287,18 +287,18 @@ namespace wincalc
                int number_visible_bands,
                int number_solar_bands)
     {
-        logMsg("begin calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
+        LOGMSG("begin calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         auto layers = create_multi_pane(
           product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
-        logMsg("before get_lambda_range");
+        LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, method);
-        logMsg("before result = calc_all");
+        LOGMSG("before result = calc_all");
         auto result = calc_all(
           std::move(layers), lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
-        logMsg("end calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
+        LOGMSG("end calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return result;
     }
@@ -311,15 +311,15 @@ namespace wincalc
                             double theta = 0,
                             double phi = 0)
     {
-        logMsg("begin calc_color_properties");
+        LOGMSG("begin calc_color_properties");
         auto trichromatic = color_props->getTrichromatic(prop, side, scattering, theta, phi);
-        logMsg("before getRGB");
+        LOGMSG("before getRGB");
         auto rgb = color_props->getRGB(prop, side, scattering, theta, phi);
-        logMsg("before getCIE_Lab");
+        LOGMSG("before getCIE_Lab");
         auto lab = color_props->getCIE_Lab(prop, side, scattering, theta, phi);
-        logMsg("before result = Color_Result");
+        LOGMSG("before result = Color_Result");
         auto result = Color_Result(trichromatic, rgb, lab);
-        logMsg("end calc_color_properties");
+        LOGMSG("end calc_color_properties");
         return result;
     }
 
@@ -349,7 +349,7 @@ namespace wincalc
                  int number_visible_bands,
                  int number_solar_bands)
     {
-        logMsg("begin calc_color");
+        LOGMSG("begin calc_color");
         auto layer_x = create_multi_pane(
           product_data, method_x, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
         // auto layer_y = create_multi_pane(
@@ -358,7 +358,7 @@ namespace wincalc
         // auto layer_z = create_multi_pane(
         //  product_data, method_z, bsdf_hemisphere, type, number_visible_bands,
         //  number_solar_bands);
-        logMsg("before layer_x->getWavelengths()");
+        LOGMSG("before layer_x->getWavelengths()");
         auto x_wavelengths = layer_x->getWavelengths();
         // auto y_wavelengths = layer_y->getWavelengths();
         // auto z_wavelengths = layer_z->getWavelengths();
@@ -377,46 +377,46 @@ namespace wincalc
         ///    throw std::runtime_error(err_msg.str());
         ///}
 
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
 
-        logMsg("before get_spectum_values X");
+        LOGMSG("before get_spectum_values X");
         auto detector_x = get_spectum_values(method_x.detector_spectrum, method_x, wavelengths);
-        logMsg("before get_spectum_values Y");
+        LOGMSG("before get_spectum_values Y");
         auto detector_y = get_spectum_values(method_y.detector_spectrum, method_y, wavelengths);
-        logMsg("before get_spectum_values Z");
+        LOGMSG("before get_spectum_values Z");
         auto detector_z = get_spectum_values(method_z.detector_spectrum, method_z, wavelengths);
 
         FenestrationCommon::CCommonWavelengths wavelength_combiner;
         for(auto & wavelength_set : wavelengths)
         {
-            logMsg("in for(auto & wavelength_set : wavelengths)");
+            LOGMSG("in for(auto & wavelength_set : wavelengths)");
             wavelength_combiner.addWavelength(wavelength_set);
         }
 
-        logMsg("before common_wavelengths");
+        LOGMSG("before common_wavelengths");
         auto common_wavelengths =
           wavelength_combiner.getCombinedWavelengths(FenestrationCommon::Combine::Interpolate);
 
 
         // All methods must have the same source
         // spectrum? (Should it be checked above?)
-        logMsg("before source_spectrum");
+        LOGMSG("before source_spectrum");
         auto source_spectrum =
           get_spectum_values(method_x.source_spectrum, method_x, common_wavelengths);
 
         // and the same wavelength set?
-        logMsg("before wavelength_set");
+        LOGMSG("before wavelength_set");
         std::vector<double> wavelength_set = combined_layer_wavelength_range_factory(
           {common_wavelengths}, type, number_visible_bands, number_solar_bands);
 
-        logMsg("before color_props");
+        LOGMSG("before color_props");
         auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(
           std::move(layer_x), source_spectrum, detector_x, detector_y, detector_z, wavelength_set);
 
-        logMsg("before calc_color_properties");
+        LOGMSG("before calc_color_properties");
         auto result = calc_color_properties(color_props, theta, phi);
-        logMsg("end calc_color");
+        LOGMSG("end calc_color");
         return result;
     }
 
@@ -424,7 +424,7 @@ namespace wincalc
       Product_Data_Optical_Thermal const & product_data,
       window_standards::Optical_Standard const & standard)
     {
-        logMsg("begin optical_ir_results_needed_for_thermal_calcs layer");
+        LOGMSG("begin optical_ir_results_needed_for_thermal_calcs layer");
         auto ir_results = calc_thermal_ir(standard, product_data);
 
         double tf = ir_results.transmittance_front_diffuse_diffuse;
@@ -434,7 +434,7 @@ namespace wincalc
 
         auto result = Layer_Optical_IR_Results_Needed_For_Thermal_Calcs{
           tf, tb, absorptance_front, absorptance_back};
-        logMsg("end optical_ir_results_needed_for_thermal_calcs layer");
+        LOGMSG("end optical_ir_results_needed_for_thermal_calcs layer");
         return result;
     }
 
@@ -443,14 +443,14 @@ namespace wincalc
         std::vector<Product_Data_Optical_Thermal> const & product_data,
         window_standards::Optical_Standard const & standard)
     {
-        logMsg("begin optical_ir_results_needed_for_thermal_calcs");
+        LOGMSG("begin optical_ir_results_needed_for_thermal_calcs");
         std::vector<Layer_Optical_IR_Results_Needed_For_Thermal_Calcs> result;
         for(auto product : product_data)
         {
-            logMsg("in for(auto product : product_data)");
+            LOGMSG("in for(auto product : product_data)");
             result.push_back(optical_ir_results_needed_for_thermal_calcs(product, standard));
         }
-        logMsg("end optical_ir_results_needed_for_thermal_calcs layer");
+        LOGMSG("end optical_ir_results_needed_for_thermal_calcs layer");
         return result;
     }
 
@@ -509,20 +509,20 @@ namespace wincalc
         int number_visible_bands,
         int number_solar_bands)
     {
-        logMsg("begin optical_solar_results_system_needed_for_thermal_calcs");
+        LOGMSG("begin optical_solar_results_system_needed_for_thermal_calcs");
         auto optical_layers = get_optical_layers(product_data);
-        logMsg("before solar_method");
+        LOGMSG("before solar_method");
         auto solar_method = standard.methods.at("SOLAR");
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
-        logMsg("before create_multi_pane");
+        LOGMSG("before create_multi_pane");
         auto result = create_multi_pane(optical_layers,
                                  solar_method,
                                  bsdf_hemisphere,
                                  type,
                                  number_visible_bands,
                                  number_solar_bands);
-        logMsg("end optical_solar_results_system_needed_for_thermal_calcs");
+        LOGMSG("end optical_solar_results_system_needed_for_thermal_calcs");
         return result;
     }
 
@@ -539,14 +539,14 @@ namespace wincalc
       int number_visible_bands,
       int number_solar_bands)
     {
-        logMsg("begin calc_optical_property");
+        LOGMSG("begin calc_optical_property");
         auto layers = create_multi_pane(
           product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
-        logMsg("before get_lambda_range");
+        LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, method);
-        logMsg("before calc_optical_property");
+        LOGMSG("before calc_optical_property");
         auto result = calc_optical_property(std::move(layers),
                                      property_choice,
                                      side_choice,
@@ -555,7 +555,7 @@ namespace wincalc
                                      lambda_range.max_lambda,
                                      theta,
                                      phi);
-        logMsg("end calc_optical_property");
+        LOGMSG("end calc_optical_property");
         return result;
     }
 }   // namespace wincalc

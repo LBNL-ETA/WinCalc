@@ -12,7 +12,7 @@ namespace wincalc
                                                                double theta,
                                                                double phi) const
     {
-        logMsg("begin Glazing_System::optical_method_results(" + method_name + ", "
+        LOGMSG("begin Glazing_System::optical_method_results(" + method_name + ", "
                + std::to_string(theta) + ", " + std::to_string(phi) + ")");
             
         if(method_name == "THERMAL IR")
@@ -27,11 +27,11 @@ namespace wincalc
         }
         std::vector<std::string> color_methods{
           "COLOR_TRISTIMX", "COLOR_TRISTIMY", "COLOR_TRISTIMZ", "CRI_X", "CRI_Y", "CRI_Z"};
-        logMsg("before std::find");
+        LOGMSG("before std::find");
         if(std::find(color_methods.begin(), color_methods.end(), method_name)
            != color_methods.end())
         {
-            logMsg("in std::find");
+            LOGMSG("in std::find");
             throw std::runtime_error(
               "Individual tristimulus color optical methods should not be calculated using the "
               "generic method for optical calculations.  The color function which takes the X, Y "
@@ -40,9 +40,9 @@ namespace wincalc
               "standard file but care should be taken in interpreting any results calculated this "
               "way.");
         }
-        logMsg("before get_method");
+        LOGMSG("before get_method");
         auto method = get_method(method_name);
-        logMsg("before calc_all");
+        LOGMSG("before calc_all");
         auto result = calc_all(get_optical_layers(product_data),
                         method,
                         theta,
@@ -51,7 +51,7 @@ namespace wincalc
                         spectral_data_wavelength_range_method,
                         number_visible_bands,
                         number_solar_bands);
-        logMsg("end Glazing_System::optical_method_results(" + method_name + ", "
+        LOGMSG("end Glazing_System::optical_method_results(" + method_name + ", "
                + std::to_string(theta) + ", " + std::to_string(phi) + ")");
         return result;
     }
@@ -62,13 +62,13 @@ namespace wincalc
                                             std::string const & tristimulus_y_method,
                                             std::string const & tristimulus_z_method) const
     {
-        logMsg("begin Glazing_System::color(" + std::to_string(theta) + ", " + std::to_string(phi) + ")");
+        LOGMSG("begin Glazing_System::color(" + std::to_string(theta) + ", " + std::to_string(phi) + ")");
         window_standards::Optical_Standard_Method tristim_x = get_method(tristimulus_x_method);
-        logMsg("before get_method Y");
+        LOGMSG("before get_method Y");
         window_standards::Optical_Standard_Method tristim_y = get_method(tristimulus_y_method);
-        logMsg("before get_method Z");
+        LOGMSG("before get_method Z");
         window_standards::Optical_Standard_Method tristim_z = get_method(tristimulus_z_method);
-        logMsg("before calc_color");
+        LOGMSG("before calc_color");
         auto result = calc_color(get_optical_layers(product_data),
                           tristim_x,
                           tristim_y,
@@ -79,7 +79,7 @@ namespace wincalc
                           spectral_data_wavelength_range_method,
                           number_visible_bands,
                           number_solar_bands);
-        logMsg("end Glazing_System::color(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("end Glazing_System::color(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         return result;
 
@@ -87,81 +87,81 @@ namespace wincalc
 
     void Glazing_System::reset_igu()
     {
-        logMsg("begin Glazing_System::reset_igu");
+        LOGMSG("begin Glazing_System::reset_igu");
         optical_system_for_thermal_calcs = nullptr;
         current_igu = std::nullopt;
-        logMsg("before reset_system");
+        LOGMSG("before reset_system");
         reset_system();
-        logMsg("end Glazing_System::reset_igu");
+        LOGMSG("end Glazing_System::reset_igu");
     }
 
     void Glazing_System::reset_system()
     {
-        logMsg("begin Glazing_System::reset_system");
+        LOGMSG("begin Glazing_System::reset_system");
         current_system = std::nullopt;
-        logMsg("end Glazing_System::reset_system");
+        LOGMSG("end Glazing_System::reset_system");
     }
 
     window_standards::Optical_Standard_Method
       Glazing_System::get_method(std::string const & method_name) const
     {
-        logMsg("begin Glazing_System::get_method(" + method_name + ")");
+        LOGMSG("begin Glazing_System::get_method(" + method_name + ")");
         auto method_itr = standard.methods.find(method_name);
-        logMsg("before if(method_itr == standard.methods.end())");
+        LOGMSG("before if(method_itr == standard.methods.end())");
         if(method_itr == standard.methods.end())
         {
-            logMsg("in if(method_itr == standard.methods.end())");
+            LOGMSG("in if(method_itr == standard.methods.end())");
             std::stringstream err_msg;
             err_msg << "Standard " << standard.name << " does not include a " << method_name
                     << " method";
             throw std::runtime_error(err_msg.str());
         }
-        logMsg("end Glazing_System::get_method(" + method_name + ")");
+        LOGMSG("end Glazing_System::get_method(" + method_name + ")");
         return method_itr->second;
     }
 
     Tarcog::ISO15099::CIGU & Glazing_System::get_igu(double theta, double phi)
     {
-        logMsg("begin Glazing_System::get_igu(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("begin Glazing_System::get_igu(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         if(current_igu.has_value() && is_current_igu_calculated(theta, phi))
         {
-            logMsg("in if(current_igu.has_value() && is_current_igu_calculated(theta, phi))");
+            LOGMSG("in if(current_igu.has_value() && is_current_igu_calculated(theta, phi))");
             return current_igu.value();
         }
         else
         {
-            logMsg("in else branch of if(current_igu.has_value() && is_current_igu_calculated(theta, phi))");
+            LOGMSG("in else branch of if(current_igu.has_value() && is_current_igu_calculated(theta, phi))");
             current_igu = create_igu(product_data, gap_values, width, height, tilt, standard);
-            logMsg("before if(!applied_loads.empty())");
+            LOGMSG("before if(!applied_loads.empty())");
             if(!applied_loads.empty())
             {
-                logMsg("in if(!applied_loads.empty())");
+                LOGMSG("in if(!applied_loads.empty())");
                 current_igu.value().setAppliedLoad(applied_loads);
             }
-            logMsg("end of else branch");
+            LOGMSG("end of else branch");
             return current_igu.value();
         }
     }
 
     Tarcog::ISO15099::CSystem & Glazing_System::get_system(double theta, double phi)
     {
-        logMsg("begin Glazing_System::get_system(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("begin Glazing_System::get_system(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         if(current_system.has_value() && is_current_igu_calculated(theta, phi))
         {
-            logMsg("in if(current_system.has_value() && is_current_igu_calculated(theta, phi))");
+            LOGMSG("in if(current_system.has_value() && is_current_igu_calculated(theta, phi))");
             return current_system.value();
         }
         else
         {
-            logMsg("in else branch of if(current_system.has_value() && is_current_igu_calculated(theta, phi))");
+            LOGMSG("in else branch of if(current_system.has_value() && is_current_igu_calculated(theta, phi))");
             auto & igu = get_igu(theta, phi);
-            logMsg("before create_system");
+            LOGMSG("before create_system");
             current_system = create_system(igu, environment);
             last_theta = theta;
             last_phi = phi;
-            logMsg("end else branch of if(current_system.has_value() && "
+            LOGMSG("end else branch of if(current_system.has_value() && "
                    "is_current_igu_calculated(theta, phi))");
             
             return current_system.value();
@@ -170,14 +170,14 @@ namespace wincalc
 
     double Glazing_System::u(double theta, double phi)
     {
-        logMsg("begin Glazing_System::u(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("begin Glazing_System::u(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         do_updates_for_thermal(theta, phi);
-        logMsg("before get_system");
+        LOGMSG("before get_system");
         auto & system = get_system(theta, phi);
-        logMsg("before getUValue");
+        LOGMSG("before getUValue");
         auto result = system.getUValue();
-        logMsg("end Glazing_System::u(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("end Glazing_System::u(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         return result;
     }
@@ -190,17 +190,17 @@ namespace wincalc
         // Creating the system is much less expensive than doing the optical calcs so do that first
         // to save time if there are any errors.
 
-        logMsg("begin Glazing_System::shgc(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("begin Glazing_System::shgc(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
 
         do_updates_for_thermal(theta, phi);
-        logMsg("befoe get_solar_transmittance_front");
+        LOGMSG("befoe get_solar_transmittance_front");
         auto solar_front_transmittance = get_solar_transmittance_front(theta, phi);
-        logMsg("befoe get_system");
+        LOGMSG("befoe get_system");
         auto & system = get_system(theta, phi);
-        logMsg("befoe system.getSHGC");
+        LOGMSG("befoe system.getSHGC");
         auto result = system.getSHGC(solar_front_transmittance);
-        logMsg("end Glazing_System::shgc(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("end Glazing_System::shgc(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         return result;
     }
@@ -209,14 +209,14 @@ namespace wincalc
                                                            double theta,
                                                            double phi)
     {
-        logMsg("begin Glazing_System::layer_temperatures(" + std::to_string(theta) + ", " + std::to_string(phi)
+        LOGMSG("begin Glazing_System::layer_temperatures(" + std::to_string(theta) + ", " + std::to_string(phi)
                + ")");
         do_updates_for_thermal(theta, phi);
-        logMsg("before get_system");
+        LOGMSG("before get_system");
         auto & system = get_system(theta, phi);
-        logMsg("before system.getTemperatures");
+        LOGMSG("before system.getTemperatures");
         auto result = system.getTemperatures(system_type);
-        logMsg("end Glazing_System::layer_temperatures(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::layer_temperatures(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return result;
     }
@@ -224,14 +224,14 @@ namespace wincalc
     void Glazing_System::set_deflection_properties(double temperature_at_construction,
                                                    double pressure_at_construction)
     {
-        logMsg("begin Glazing_System::set_deflection_properties("
+        LOGMSG("begin Glazing_System::set_deflection_properties("
                + std::to_string(pressure_at_construction) + ", "
                + std::to_string(temperature_at_construction) + ")");        
         deflection_properties =
           Temperature_Pressure{temperature_at_construction, pressure_at_construction};
-        logMsg("before do_deflection_updates");
+        LOGMSG("before do_deflection_updates");
         do_deflection_updates(last_theta, last_phi);
-        logMsg("end Glazing_System::set_deflection_properties("
+        LOGMSG("end Glazing_System::set_deflection_properties("
                + std::to_string(pressure_at_construction) + ", "
                + std::to_string(temperature_at_construction) + ")");
     }
@@ -239,60 +239,60 @@ namespace wincalc
     void
       Glazing_System::set_deflection_properties(const std::vector<double> & measured_deflected_gaps)
     {
-        logMsg("begin Glazing_System::set_deflection_properties");
+        LOGMSG("begin Glazing_System::set_deflection_properties");
         deflection_properties = measured_deflected_gaps;
         do_deflection_updates(last_theta, last_phi);
-        logMsg("end Glazing_System::set_deflection_properties");
+        LOGMSG("end Glazing_System::set_deflection_properties");
     }
 
     void Glazing_System::set_applied_loads(std::vector<double> const & loads)
     {
-        logMsg("begin Glazing_System::set_applied_loads");
+        LOGMSG("begin Glazing_System::set_applied_loads");
         applied_loads = loads;
         if(current_system)
         {
-            logMsg("in if(current_system)");
+            LOGMSG("in if(current_system)");
             current_system.value().setAppliedLoad(applied_loads);
         }
-        logMsg("end Glazing_System::set_applied_loads");
+        LOGMSG("end Glazing_System::set_applied_loads");
     }
 
     Deflection_Results Glazing_System::calc_deflection_properties(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
-        logMsg("begin Glazing_System::calc_deflection_properties(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::calc_deflection_properties(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         do_updates_for_thermal(theta, phi);
-        logMsg("before get_system");
+        LOGMSG("before get_system");
         auto & system = get_system(theta, phi);
-        logMsg("before getMaxLayerDeflections");
+        LOGMSG("before getMaxLayerDeflections");
         const auto layer_deflection_max = system.getMaxLayerDeflections(system_type);
-        logMsg("before getMeanLayerDeflections");
+        LOGMSG("before getMeanLayerDeflections");
         const auto layer_deflection_mean = system.getMeanLayerDeflections(system_type);
-        logMsg("before getPanesLoad");
+        LOGMSG("before getPanesLoad");
         const auto panes_load = system.getPanesLoad(system_type);
-        logMsg("before getMaxGapWidth");
+        LOGMSG("before getMaxGapWidth");
         const auto gap_deflection_max = system.getMaxGapWidth(system_type);
-        logMsg("before getMeanGapWidth");
+        LOGMSG("before getMeanGapWidth");
         const auto gap_deflection_mean = system.getMeanGapWidth(system_type);
         auto result = Deflection_Results{layer_deflection_max,
                 layer_deflection_mean,
                 panes_load,
                 gap_deflection_max,
                 gap_deflection_mean};
-        logMsg("end Glazing_System::calc_deflection_properties(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::calc_deflection_properties(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return result;
     }
 
     void Glazing_System::do_deflection_updates(double theta, double phi)
     {
-        logMsg("begin Glazing_System::do_deflection_updates(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::do_deflection_updates(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         auto & system = get_system(theta, phi);
         if(model_deflection)
         {
-            logMsg("in if(model_deflection)");
+            LOGMSG("in if(model_deflection)");
             if(auto state_ptr = std::get_if<Temperature_Pressure>(&deflection_properties))
             {
                 system.setDeflectionProperties(state_ptr->temperature, state_ptr->pressure);
@@ -304,10 +304,10 @@ namespace wincalc
         }
         else
         {
-            logMsg("in else calling system.clearDeflection();");
+            LOGMSG("in else calling system.clearDeflection();");
             system.clearDeflection();
         }
-        logMsg("end Glazing_System::do_deflection_updates(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::do_deflection_updates(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
     }
 
@@ -322,39 +322,39 @@ namespace wincalc
 
     void Glazing_System::do_layer_absorptance_updates(double theta, double phi)
     {
-        logMsg("begin Glazing_System::do_layer_absorptance_updates(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::do_layer_absorptance_updates(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         auto & system = get_system(theta, phi);
-        logMsg("before get_solar_abs_front");
+        LOGMSG("before get_solar_abs_front");
         auto solar_front_absorptances = get_solar_abs_front(theta, phi);
-        logMsg("before system.setAbsorptances");
+        LOGMSG("before system.setAbsorptances");
         system.setAbsorptances(solar_front_absorptances);
-        logMsg("end Glazing_System::do_layer_absorptance_updates(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::do_layer_absorptance_updates(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
     }
 
     void Glazing_System::do_updates_for_thermal(double theta, double phi)
     {
-        logMsg("begin Glazing_System::do_updates_for_thermal(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::do_updates_for_thermal(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         do_deflection_updates(theta, phi);
-        logMsg("before do_layer_absorptance_updates");
+        LOGMSG("before do_layer_absorptance_updates");
         do_layer_absorptance_updates(theta, phi);
-        logMsg("end Glazing_System::do_updates_for_thermal(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::do_updates_for_thermal(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
     }
 
     std::vector<double> Glazing_System::solid_layers_effective_conductivities(
       Tarcog::ISO15099::System system_type, double theta, double phi)
     {
-        logMsg("begin Glazing_System::solid_layers_effective_conductivities(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::solid_layers_effective_conductivities(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         do_updates_for_thermal(theta, phi);
-        logMsg("before get_system");
+        LOGMSG("before get_system");
         auto & system = get_system(theta, phi);
-        logMsg("before getSolidEffectiveLayerConductivities");
+        LOGMSG("before getSolidEffectiveLayerConductivities");
         auto result = system.getSolidEffectiveLayerConductivities(system_type);
-        logMsg("end Glazing_System::solid_layers_effective_conductivities("
+        LOGMSG("end Glazing_System::solid_layers_effective_conductivities("
                + std::to_string(theta) + ", " + std::to_string(phi) + ")");
         return result;
     }
@@ -390,10 +390,10 @@ namespace wincalc
 
     void Glazing_System::optical_standard(window_standards::Optical_Standard const & s)
     {
-        logMsg("begin Glazing_System::optical_standard");
+        LOGMSG("begin Glazing_System::optical_standard");
         reset_igu();
         standard = s;
-        logMsg("end Glazing_System::optical_standard");
+        LOGMSG("end Glazing_System::optical_standard");
     }
     window_standards::Optical_Standard Glazing_System::optical_standard() const
     {
@@ -402,10 +402,10 @@ namespace wincalc
 
     void Glazing_System::solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers)
     {
-        logMsg("begin Glazing_System::solid_layers");
+        LOGMSG("begin Glazing_System::solid_layers");
         reset_igu();
         product_data = layers;
-        logMsg("end Glazing_System::solid_layers");
+        LOGMSG("end Glazing_System::solid_layers");
     }
 
     std::vector<Product_Data_Optical_Thermal> Glazing_System::solid_layers() const
@@ -416,10 +416,10 @@ namespace wincalc
     void Glazing_System::gap_layers(
       std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers)
     {
-        logMsg("begin Glazing_System::gap_layers");
+        LOGMSG("begin Glazing_System::gap_layers");
         reset_igu();
         gap_values = layers;
-        logMsg("end Glazing_System::gap_layers");
+        LOGMSG("end Glazing_System::gap_layers");
     }
 
     std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> Glazing_System::gap_layers() const
@@ -429,15 +429,15 @@ namespace wincalc
 
     void Glazing_System::sort_spectral_data()
     {
-        logMsg("begin Glazing_System::sort_spectral_data");
+        LOGMSG("begin Glazing_System::sort_spectral_data");
         for(auto & product : product_data)
         {
-            logMsg("in for(auto & product : product_data)");
+            LOGMSG("in for(auto & product : product_data)");
             auto nband_optical_data = std::dynamic_pointer_cast<Product_Data_N_Band_Optical>(
               product.optical_data->optical_data());
             if(nband_optical_data)
             {
-                logMsg("in if(nband_optical_data)");
+                LOGMSG("in if(nband_optical_data)");
                 auto & measurements = nband_optical_data->wavelength_data;
                 std::sort(measurements.begin(),
                           measurements.end(),
@@ -446,7 +446,7 @@ namespace wincalc
                           });
             }
         }
-        logMsg("end Glazing_System::sort_spectral_data");
+        LOGMSG("end Glazing_System::sort_spectral_data");
     }
 
     Glazing_System::Glazing_System(
@@ -507,31 +507,31 @@ namespace wincalc
       std::vector<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> const &
         product_data)
     {
-        logMsg("begin create_solid_layers");
+        LOGMSG("begin create_solid_layers");
         std::vector<Product_Data_Optical_Thermal> solid_layers;
         for(auto product : product_data)
         {
-            logMsg("in for(auto product : product_data)");
+            LOGMSG("in for(auto product : product_data)");
             Product_Data_Optical_Thermal * solid_layer =
               std::get_if<Product_Data_Optical_Thermal>(&product);
             if(solid_layer)
             {
-                logMsg("in if(solid_layer)");
+                LOGMSG("in if(solid_layer)");
                 // If the variant was already holding a converted object use it
                 solid_layers.push_back(*solid_layer);
             }
             else
             {
-                logMsg("in else");
+                LOGMSG("in else");
                 // Otherwise the variant was holding OpticsParser::ProductData
                 // Convert that and use it
                 auto converted_layer =
                   convert_to_solid_layer(std::get<OpticsParser::ProductData>(product));
-                logMsg("before solid_layers.push_back");
+                LOGMSG("before solid_layers.push_back");
                 solid_layers.push_back(converted_layer);
             }
         }
-        logMsg("end create_solid_layers");
+        LOGMSG("end create_solid_layers");
         return solid_layers;
     }
 
@@ -570,34 +570,34 @@ namespace wincalc
 
     void Glazing_System::environments(Environments const & environments)
     {
-        logMsg("begin Glazing_System::environments");
+        LOGMSG("begin Glazing_System::environments");
         environment = environments;
         reset_system();
-        logMsg("end Glazing_System::environments");
+        LOGMSG("end Glazing_System::environments");
     }
 
     void Glazing_System::set_width(double w)
     {
-        logMsg("begin Glazing_System::set_width(" + std::to_string(w) + ")");
+        LOGMSG("begin Glazing_System::set_width(" + std::to_string(w) + ")");
         width = w;
         if(current_system)
         {
-            logMsg("in if(current_system)");
+            LOGMSG("in if(current_system)");
             current_system.value().setWidth(width);
         }
-        logMsg("end Glazing_System::set_width(" + std::to_string(w) + ")");
+        LOGMSG("end Glazing_System::set_width(" + std::to_string(w) + ")");
     }
 
     void Glazing_System::set_height(double h)
     {
-        logMsg("begin Glazing_System::set_height(" + std::to_string(h) + ")");
+        LOGMSG("begin Glazing_System::set_height(" + std::to_string(h) + ")");
         height = h;
         if(current_system)
         {
-            logMsg("in if(current_system)");
+            LOGMSG("in if(current_system)");
             current_system.value().setHeight(height);
         }
-        logMsg("end Glazing_System::set_height(" + std::to_string(h) + ")");
+        LOGMSG("end Glazing_System::set_height(" + std::to_string(h) + ")");
     }
 
     void Glazing_System::set_tilt(double t)
@@ -620,18 +620,18 @@ namespace wincalc
     void Glazing_System::set_spectral_data_wavelength_range(
       Spectal_Data_Wavelength_Range_Method const & type, int visible_bands, int solar_bands)
     {
-        logMsg("begin Glazing_System::set_spectral_data_wavelength_range");
+        LOGMSG("begin Glazing_System::set_spectral_data_wavelength_range");
         if(this->spectral_data_wavelength_range_method != type
            || this->number_visible_bands != visible_bands
            || this->number_solar_bands != solar_bands)
         {
-            logMsg("in if(this->spectral_data_wavelength_range_method etc...");
+            LOGMSG("in if(this->spectral_data_wavelength_range_method etc...");
             this->spectral_data_wavelength_range_method = type;
             this->number_visible_bands = visible_bands;
             this->number_solar_bands = solar_bands;
             this->optical_system_for_thermal_calcs = nullptr;
         }
-        logMsg("end Glazing_System::set_spectral_data_wavelength_range");
+        LOGMSG("end Glazing_System::set_spectral_data_wavelength_range");
     }
 
     void Glazing_System::enable_deflection(bool enable)
@@ -658,23 +658,23 @@ namespace wincalc
 
     double Glazing_System::overallThickness() const
     {
-        logMsg("begin Glazing_System::overallThickness");
+        LOGMSG("begin Glazing_System::overallThickness");
         if(current_igu.has_value())
         {
-            logMsg("in if(current_igu.has_value()) returning " + std::to_string(current_igu.value().getThickness()));
+            LOGMSG("in if(current_igu.has_value()) returning " + std::to_string(current_igu.value().getThickness()));
             return current_igu.value().getThickness();
         }
-        logMsg("not in if(current_igu.has_value()) returning 0.0");
+        LOGMSG("not in if(current_igu.has_value()) returning 0.0");
         return 0.0;
     }
 
 
     SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs()
     {
-        logMsg("begin Glazing_System::get_optical_system_for_thermal_calcs");
+        LOGMSG("begin Glazing_System::get_optical_system_for_thermal_calcs");
         if(optical_system_for_thermal_calcs == nullptr)
         {
-            logMsg("in if(optical_system_for_thermal_calcs == nullptr)");
+            LOGMSG("in if(optical_system_for_thermal_calcs == nullptr)");
             optical_system_for_thermal_calcs =
               optical_solar_results_system_needed_for_thermal_calcs(
                 product_data,
@@ -685,24 +685,24 @@ namespace wincalc
                 number_solar_bands);
         }
 
-        logMsg("end Glazing_System::get_optical_system_for_thermal_calcs");
+        LOGMSG("end Glazing_System::get_optical_system_for_thermal_calcs");
         return *optical_system_for_thermal_calcs;
     }
 
     double Glazing_System::get_solar_transmittance_front(double theta, double phi)
     {
-        logMsg("begin Glazing_System::get_solar_transmittance_front("
+        LOGMSG("begin Glazing_System::get_solar_transmittance_front("
                + std::to_string(theta) + ", " + std::to_string(phi) + ")");
         auto & optical_system = get_optical_system_for_thermal_calcs();
-        logMsg("before get_optical_layers");
+        LOGMSG("before get_optical_layers");
         auto optical_layers = get_optical_layers(product_data);
-        logMsg("before standard.methods.at(SOLAR)");
+        LOGMSG("before standard.methods.at(SOLAR)");
         auto solar_method = standard.methods.at("SOLAR");
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
-        logMsg("before get_lambda_range");
+        LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, solar_method);
-        logMsg("before optical_system.getPropertySimple");
+        LOGMSG("before optical_system.getPropertySimple");
         auto result = optical_system.getPropertySimple(lambda_range.min_lambda,
                                                 lambda_range.max_lambda,
                                                 FenestrationCommon::PropertySimple::T,
@@ -710,36 +710,36 @@ namespace wincalc
                                                 FenestrationCommon::Scattering::DirectHemispherical,
                                                 theta,
                                                 phi);
-        logMsg("end Glazing_System::get_solar_transmittance_front(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::get_solar_transmittance_front(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return result;
     }
 
     bool Glazing_System::is_current_igu_calculated(double theta, double phi)
     {
-        logMsg("begin Glazing_System::is_current_igu_calculated(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::is_current_igu_calculated(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         bool result = last_theta.has_value() && FenestrationCommon::isEqual(theta, last_theta.value())
                && last_phi.has_value() && FenestrationCommon::isEqual(phi, last_phi.value());
-        logMsg("begin Glazing_System::is_current_igu_calculated(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::is_current_igu_calculated(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")" + " returning " + std::to_string(result));
         return result;
     }
 
     std::vector<double> Glazing_System::get_solar_abs_front(double theta, double phi)
     {
-        logMsg("begin Glazing_System::get_solar_abs_front(" + std::to_string(theta) + ", "
+        LOGMSG("begin Glazing_System::get_solar_abs_front(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         auto & optical_system = get_optical_system_for_thermal_calcs();
-        logMsg("before get_optical_layers");
+        LOGMSG("before get_optical_layers");
         auto optical_layers = get_optical_layers(product_data);
-        logMsg("before standard.methods.at(SOLAR)");
+        LOGMSG("before standard.methods.at(SOLAR)");
         auto solar_method = standard.methods.at("SOLAR");
-        logMsg("before get_wavelengths");
+        LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
-        logMsg("before get_lambda_range");
+        LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, solar_method);
-        logMsg("before optical_system.getAbsorptanceLayersHeat");
+        LOGMSG("before optical_system.getAbsorptanceLayersHeat");
         auto result = optical_system.getAbsorptanceLayersHeat(lambda_range.min_lambda,
                                                        lambda_range.max_lambda,
                                                        FenestrationCommon::Side::Front,
@@ -747,7 +747,7 @@ namespace wincalc
                                                        theta,
                                                        phi);
 
-        logMsg("end Glazing_System::get_solar_abs_front(" + std::to_string(theta) + ", "
+        LOGMSG("end Glazing_System::get_solar_abs_front(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");
         return result;
     }
