@@ -53,21 +53,7 @@ nlohmann::json parse_expected_results(std::string const & test_name)
         throw std::runtime_error("fin eof before content");
     }
 
-    if(fin.bad())
-    {
-        char buffer[256];   // Buffer for thread-safe strerror_s
-        strerror_s(buffer, sizeof(buffer), errno);
-        throw std::runtime_error("fin bad before content.  error: " + std::string(buffer));
-    }
-
     std::string content((std::istreambuf_iterator<char>(fin)), (std::istreambuf_iterator<char>()));
-
-    if(fin.bad())
-    {
-        char buffer[256];
-        strerror_s(buffer, sizeof(buffer), errno);
-        throw std::runtime_error("fin bad after content.  error: " + std::string(buffer));
-    }
 
     nlohmann::json expected_results_json = nlohmann::json::parse(content);
 
