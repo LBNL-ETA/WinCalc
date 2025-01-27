@@ -166,7 +166,7 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness,
+                                   double effective_thermal_front_openness_area,
                                    double permeability_factor) const override;
     };
 
@@ -218,6 +218,12 @@ namespace wincalc
         std::shared_ptr<Product_Data_Optical> material_optical_data;
     };
 
+    struct Product_Data_Optical_Uniform_Diffuse : Product_Data_Optical_With_Material
+    {
+        Product_Data_Optical_Uniform_Diffuse(
+          std::shared_ptr<Product_Data_Optical> const & material_optical_data);
+    };
+
     struct Product_Data_Optical_Perfectly_Diffuse : Product_Data_Optical_With_Material
     {
         Product_Data_Optical_Perfectly_Diffuse(
@@ -258,7 +264,7 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness,
+                                   double effective_thermal_front_openness_area,
                                    double permeability_factor) const override;
 
         Venetian_Geometry geometry;
@@ -286,7 +292,7 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness,
+                                   double effective_thermal_front_openness_area,
                                    double permeability_factor) const override;
 
         Woven_Geometry geometry;
@@ -327,7 +333,7 @@ namespace wincalc
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
-                                   double front_openness,
+                                   double effective_thermal_front_openness_area,
                                    double permeability_factor) const override;
 
         Perforated_Geometry geometry;

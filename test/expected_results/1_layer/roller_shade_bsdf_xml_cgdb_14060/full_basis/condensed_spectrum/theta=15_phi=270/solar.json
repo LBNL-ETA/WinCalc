@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.26528249160169504,
+                    "heat_direct": 0.24686728621541126,
+                    "total_diffuse": 0.26528249160169504,
+                    "total_direct": 0.24686728621541126
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.280534951449245,
+                    "heat_direct": 0.2601054176462518,
+                    "total_diffuse": 0.280534951449245,
+                    "total_direct": 0.2601054176462518
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.4657123356797392,
+                "direct_diffuse": 0.4112904310004776,
+                "direct_direct": 0.0023371138051526087,
+                "direct_hemispherical": 0.4136275448056302
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.26900517271855545,
+                "direct_diffuse": 0.3332619659487702,
+                "direct_direct": 0.006243203030188323,
+                "direct_hemispherical": 0.33950516897895855
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.45114962900638467,
+                "direct_diffuse": 0.4010562695370344,
+                "direct_direct": 6.677334741237563e-05,
+                "direct_hemispherical": 0.4011230428844468
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.2683154195443802,
+                "direct_diffuse": 0.3335987390865076,
+                "direct_direct": 0.005172800382793643,
+                "direct_hemispherical": 0.3387715394693013
+            }
+        }
+    }
+}

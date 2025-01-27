@@ -1,4 +1,4 @@
-Berkeley Lab WINDOW Calc Engine (CalcEngine) Copyright (c) 2016 - 2024, The
+Berkeley Lab WINDOW Calc Engine (CalcEngine) Copyright (c) 2016 - 2025, The
 Regents of the University of California, through Lawrence Berkeley National
 Laboratory (subject to receipt of any required approvals from the U.S.
 Dept. of Energy).  All rights reserved.
@@ -14,4 +14,7 @@ its behalf a paid-up, nonexclusive, irrevocable, worldwide license in the
 Software to reproduce, distribute copies to the public, prepare derivative
 works, and perform publicly and display publicly, and to permit other to do
 so.
+ 
+## Detailed package relation diagram
 
+[Located here](./doc/WinCalc.md)

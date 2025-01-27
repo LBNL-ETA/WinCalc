@@ -62,4 +62,56 @@ namespace wincalc
           std::make_shared<Product_Data_Optical_Perforated_Screen>(material_optical_data, geometry);
         return Product_Data_Optical_Thermal(optical_data, material_thermal_data);
     }
+
+    Product_Data_Optical_Thermal create_homogeneous_diffusing_shade(
+                            std::shared_ptr<Product_Data_Optical> material_optical_data,
+      std::shared_ptr<Product_Data_Thermal> material_thermal_data,
+      double permeability_factor)
+    {
+        auto optical_data =
+          std::make_shared<Product_Data_Optical_Uniform_Diffuse>(material_optical_data);
+        auto data = Product_Data_Optical_Thermal(optical_data, material_thermal_data);
+        data.thermal_data->permeability_factor =
+          permeability_factor;
+        return data;
+    }
+
+    Product_Data_Optical_Thermal
+      create_homogeneous_diffusing_shade(OpticsParser::ProductData const & material,
+                                         double permeability_factor)
+    {
+        auto converted_material = convert_to_solid_layer(material);
+        auto optical_data = std::make_shared<Product_Data_Optical_Uniform_Diffuse>(
+          converted_material.optical_data);
+        converted_material.thermal_data->permeability_factor =
+          permeability_factor;
+        return Product_Data_Optical_Thermal(optical_data, converted_material.thermal_data);
+    }
+
+    Product_Data_Optical_Thermal
+      create_perfectly_diffusing_shade(
+      std::shared_ptr<Product_Data_Optical> material_optical_data,
+      std::shared_ptr<Product_Data_Thermal> material_thermal_data,
+      double permeability_factor)
+    {
+        auto optical_data =
+          std::make_shared<Product_Data_Optical_Perfectly_Diffuse>(material_optical_data);
+        auto data = Product_Data_Optical_Thermal(optical_data, material_thermal_data);
+        data.thermal_data->permeability_factor =
+          permeability_factor;
+        return data;
+    }
+
+
+    Product_Data_Optical_Thermal
+      create_perfectly_diffusing_shade(OpticsParser::ProductData const & material,
+                                         double permeability_factor)
+    {
+        auto converted_material = convert_to_solid_layer(material);
+        auto optical_data =
+          std::make_shared<Product_Data_Optical_Perfectly_Diffuse>(converted_material.optical_data);
+        converted_material.thermal_data->permeability_factor =
+          permeability_factor;
+        return Product_Data_Optical_Thermal(optical_data, converted_material.thermal_data);
+    }
 }   // namespace wincalc

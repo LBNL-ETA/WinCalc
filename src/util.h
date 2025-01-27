@@ -41,4 +41,20 @@ namespace wincalc
 
     std::vector<std::vector<double>> get_wavelengths(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data);
+
+    void logMsg(std::string const & msg);
 }   // namespace wincalc
+
+#ifdef LOGMESSAGES
+#    define LOGMSG(msg)           \
+        do                        \
+        {                         \
+            wincalc::logMsg(msg); \
+        } while(0)
+#else
+    // Expand to nothing in no-logging mode
+#    define LOGMSG(msg) \
+        do              \
+        {               \
+        } while(0)
+#endif

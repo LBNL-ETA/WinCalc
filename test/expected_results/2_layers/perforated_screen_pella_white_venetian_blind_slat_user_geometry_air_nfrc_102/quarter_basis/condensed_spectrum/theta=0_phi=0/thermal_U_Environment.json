@@ -1,0 +1,53 @@
+{
+    "H_shgc_indoor": 7.352195141683625,
+    "H_shgc_outdoor": 29.656930193517155,
+    "H_u_indoor": 7.352195141684394,
+    "H_u_outdoor": 29.656930193516917,
+    "SHGC": 0.0,
+    "U": 2.815300846616102,
+    "gap_layer_effective_conductivities_shgc": [
+        0.06935073635083093
+    ],
+    "gap_layer_effective_conductivities_u": [
+        0.06935073635082743
+    ],
+    "heat_flow_shgc_indoor": 109.79673301824029,
+    "heat_flow_shgc_outdoor": 109.17743817632442,
+    "heat_flow_u_indoor": 109.79673301824175,
+    "heat_flow_u_outdoor": 109.17743817631967,
+    "layer_temperatures_shgc": [
+        258.83134656769676,
+        258.83141497129895,
+        278.8814686551441,
+        279.21612910806414
+    ],
+    "layer_temperatures_u": [
+        258.83134656769647,
+        258.8314149712987,
+        278.8814686551427,
+        279.21612910806283
+    ],
+    "radiosities_shgc": [
+        253.7561195355978,
+        261.81579397180445,
+        329.97376522897235,
+        357.3819441366393
+    ],
+    "radiosities_u": [
+        253.75611953559607,
+        261.81579397180246,
+        329.9737652289697,
+        357.38194413663723
+    ],
+    "relative_heat_gain": 21.90304058671527,
+    "solid_layer_effective_conductivities_shgc": [
+        159.60773210679403,
+        1.0
+    ],
+    "solid_layer_effective_conductivities_u": [
+        159.6077321077975,
+        1.0
+    ],
+    "system_effective_conductivity_shgc": 0.08536066706170861,
+    "system_effective_conductivity_u": 0.08536066706168655
+}

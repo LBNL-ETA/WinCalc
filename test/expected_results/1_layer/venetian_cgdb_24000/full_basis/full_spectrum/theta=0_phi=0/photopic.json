@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.29456966300628057,
+                    "heat_direct": 0.032153889974903635,
+                    "total_diffuse": 0.29456966300628057,
+                    "total_direct": 0.032153889974903635
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.29456966300628057,
+                    "heat_direct": 0.032153889974903635,
+                    "total_diffuse": 0.29456966300628057,
+                    "total_direct": 0.032153889974903635
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.2032805634451816,
+                "direct_diffuse": 0.030684932255154083,
+                "direct_direct": 6.499183315396672e-05,
+                "direct_hemispherical": 0.03074992408830805
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.5021497735485445,
+                "direct_diffuse": 0.010039663494421425,
+                "direct_direct": 0.927056522442367,
+                "direct_hemispherical": 0.9370961859367885
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.2032805634451816,
+                "direct_diffuse": 0.030684932255154083,
+                "direct_direct": 6.499183315396672e-05,
+                "direct_hemispherical": 0.03074992408830805
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.5021497735485445,
+                "direct_diffuse": 0.010039663494421425,
+                "direct_direct": 0.927056522442367,
+                "direct_hemispherical": 0.9370961859367885
+            }
+        }
+    }
+}
