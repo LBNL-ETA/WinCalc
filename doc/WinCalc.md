@@ -9,7 +9,7 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.2</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.50</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.1</font>]
-    WinCalc[WinCalc<br/><font color='red'>v2.5.1</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.5.2</font>]
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
