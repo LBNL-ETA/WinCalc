@@ -28,7 +28,12 @@ std::filesystem::path expected_results_path(std::string const & test_name)
     std::filesystem::path path(test_dir);
     path /= "expected_results";
     path /= test_name + ".json";
+#ifdef _WIN32
+    // Ensure long path support only on Windows
+    return std::filesystem::path(R"(\\?\)") / std::filesystem::absolute(path);
+#else
     return path;
+#endif
 }
 
 #include <cerrno>
