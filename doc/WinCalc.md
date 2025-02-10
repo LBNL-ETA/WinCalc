@@ -7,9 +7,9 @@ graph TD
     nlohmann[nlohmann<br/><font color='red'>v3.11.3</font>]
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.2</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.2</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.50</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>LouveredShutters</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.1</font>]
-    WinCalc[WinCalc<br/><font color='red'>v2.5.2</font>]
+    WinCalc[WinCalc<br/><font color='red'>LouveredShutters</font>]
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
