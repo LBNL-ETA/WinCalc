@@ -36,10 +36,8 @@ namespace wincalc
                                                      double,
                                                      double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{gap_width_left,
-                                                gap_width_right,
-                                                gap_width_top,
-                                                gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
           width, height, thickness_meters, permeability_factor, openness);
@@ -145,26 +143,21 @@ namespace wincalc
         double gap_width_left,
         double gap_width_right,
         double,
-        double ) const   // Front openness is automatically calculated by the model
+        double) const   // Front openness is automatically calculated by the model
     {
-        //TODO: make sure units match
+        // TODO: make sure units match
         FenestrationCommon::Venetian::Geometry wce_geometry{
           geometry.slat_width, geometry.slat_spacing, geometry.slat_tilt, geometry.slat_curvature};
 
-        //double front_openness_venetian =
-        //  ThermalPermeability::Venetian::permeabilityFactor(material_optical_data->thickness_meters, wce_geometry);
+        // double front_openness_venetian =
+        //   ThermalPermeability::Venetian::permeabilityFactor(material_optical_data->thickness_meters,
+        //   wce_geometry);
 
-        EffectiveLayers::ShadeOpenness openness{gap_width_left,
-                                                gap_width_right,
-                                                gap_width_top,
-                                                gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveHorizontalVenetian>(
-          width,
-          height,
-          material_optical_data->thickness_meters,
-          wce_geometry, 
-          openness);
+          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Optical_Woven_Shade::Product_Data_Optical_Woven_Shade(
@@ -182,12 +175,12 @@ namespace wincalc
         double gap_width_left,
         double gap_width_right,
         double,
-        double ) const   // calculated automatically by the code
+        double) const   // calculated automatically by the code
     {
-
         FenestrationCommon::Woven::Geometry wce_geometry{geometry.thread_diameter,
                                                          geometry.thread_spacing};
-        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
           width, height, geometry.shade_thickness, wce_geometry, openness);
@@ -224,15 +217,15 @@ namespace wincalc
           {wincalc::Perforated_Geometry::Type::RECTANGULAR,
            FenestrationCommon::Perforated::Type::Rectangular}};
 
-        FenestrationCommon::Perforated::Geometry wce_geometry{
-          wce_map[geometry.perforation_type],
-          geometry.spacing_x,
-          geometry.spacing_y,
-          geometry.dimension_x,
-          geometry.dimension_y};
+        FenestrationCommon::Perforated::Geometry wce_geometry{wce_map[geometry.perforation_type],
+                                                              geometry.spacing_x,
+                                                              geometry.spacing_y,
+                                                              geometry.dimension_x,
+                                                              geometry.dimension_y};
 
-        
-        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerPerforated>(
           width, height, material_optical_data->thickness_meters, wce_geometry, openness);
@@ -274,16 +267,18 @@ namespace wincalc
     {}
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(double width,
-                                                                    double height,
-                                                                    double gap_width_top,
-                                                                    double gap_width_bottom,
-                                                                    double gap_width_left,
-                                                                    double gap_width_right,
-                                                                    double effective_thermal_front_openness_area,
-                                                                    double permeability_factor) const
+      Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(
+        double width,
+        double height,
+        double gap_width_top,
+        double gap_width_bottom,
+        double gap_width_left,
+        double gap_width_right,
+        double effective_thermal_front_openness_area,
+        double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         if(!user_defined_effective_values)
         {
@@ -332,6 +327,8 @@ namespace wincalc
         rf_visible(rf_visible),
         rb_visible(rb_visible)
     {}
+
+
     Venetian_Geometry::Venetian_Geometry(double slat_tilt,
                                          double slat_width,
                                          double slat_spacing,
@@ -366,5 +363,15 @@ namespace wincalc
         dimension_x(dimension_x),
         dimension_y(dimension_y),
         perforation_type(perforation_type)
+    {}
+
+    Louvered_Shutter_Geometry::Louvered_Shutter_Geometry(double slat_width,
+                                                         double slat_thickness,
+                                                         double slat_angle,
+                                                         double slat_spacing) :
+        slat_width(slat_width),
+        slat_thickness(slat_thickness),
+        slat_angle(slat_angle),
+        slat_spacing(slat_spacing)
     {}
 }   // namespace wincalc

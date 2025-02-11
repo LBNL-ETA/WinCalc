@@ -339,6 +339,17 @@ namespace wincalc
         Perforated_Geometry geometry;
     };
 
-    // etc...
+    struct Louvered_Shutter_Geometry
+    {
+        Louvered_Shutter_Geometry(double slat_width,
+                                  double slat_thickness,
+                                  double slat_angle,
+                                  double slat_spacing);
+
+        double slat_width;
+        double slat_thickness;
+        double slat_angle;
+        double slat_spacing;
+    };
 
 }   // namespace wincalc

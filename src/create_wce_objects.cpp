@@ -844,6 +844,21 @@ namespace wincalc
         return layer;
     }
 
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_louvered_shutter(
+      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      size_t number_of_layers,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
+    {
+        LOGMSG("begin create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
+        auto material = create_material(product_data, method, number_of_layers);
+        LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer");
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
+        LOGMSG("end create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
+        return layer;
+    }
+
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_preloaded_matrices(
       std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
       window_standards::Optical_Standard_Method const & method,
