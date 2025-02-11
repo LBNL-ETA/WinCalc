@@ -874,6 +874,21 @@ namespace wincalc
         return layer;
     }
 
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_louvered_shutter(
+      std::shared_ptr<wincalc::Product_Data_Optical_Louvered_Shutter> const & product_data,
+      window_standards::Optical_Standard_Method const & method,
+      size_t number_of_layers,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
+    {
+        LOGMSG("begin create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
+        auto material = create_material(product_data, method, number_of_layers);
+        LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer");
+        auto layer =
+          SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
+        LOGMSG("end create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
+        return layer;
+    }
+
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_venetian(
       std::shared_ptr<wincalc::Product_Data_Optical_Venetian> const & product_data,
       window_standards::Optical_Standard_Method const & method,
@@ -1025,6 +1040,16 @@ namespace wincalc
                   product_data))
         {
             layer = create_bsdf_layer_perforated_screen(
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perforated_Screen>(
+                product_data),
+              method,
+              number_of_layers,
+              bsdf_hemisphere);
+        }
+        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Louvered_Shutter>(
+                  product_data))
+        {
+            layer = create_bsdf_layer_louvered_shutter(
               std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Perforated_Screen>(
                 product_data),
               method,

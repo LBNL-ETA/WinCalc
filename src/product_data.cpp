@@ -365,13 +365,27 @@ namespace wincalc
         perforation_type(perforation_type)
     {}
 
-    Louvered_Shutter_Geometry::Louvered_Shutter_Geometry(double slat_width,
-                                                         double slat_thickness,
-                                                         double slat_angle,
-                                                         double slat_spacing) :
-        slat_width(slat_width),
-        slat_thickness(slat_thickness),
-        slat_angle(slat_angle),
-        slat_spacing(slat_spacing)
+    Product_Data_Optical_Louvered_Shutter::Product_Data_Optical_Louvered_Shutter(
+      std::shared_ptr<Product_Data_Optical> const & material_optical_data,
+      FenestrationCommon::LouveredShutter::Geometry const & geometry) :
+        Product_Data_Optical_With_Material(material_optical_data), geometry(geometry)
     {}
+
+    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+      Product_Data_Optical_Louvered_Shutter::effective_thermal_values(
+        double width,
+        double height,
+        double gap_width_top,
+        double gap_width_bottom,
+        double gap_width_left,
+        double gap_width_right,
+        double ,
+        double ) const
+    {
+        EffectiveLayers::ShadeOpenness openness{
+            gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+
+        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
+          width, height, thickness_meters, geometry, openness);
+    }
 }   // namespace wincalc

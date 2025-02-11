@@ -339,17 +339,23 @@ namespace wincalc
         Perforated_Geometry geometry;
     };
 
-    struct Louvered_Shutter_Geometry
+    struct Product_Data_Optical_Louvered_Shutter : Product_Data_Optical_With_Material
     {
-        Louvered_Shutter_Geometry(double slat_width,
-                                  double slat_thickness,
-                                  double slat_angle,
-                                  double slat_spacing);
+        Product_Data_Optical_Louvered_Shutter(
+          std::shared_ptr<Product_Data_Optical> const & material_optical_data,
+          FenestrationCommon::LouveredShutter::Geometry const & geometry);
 
-        double slat_width;
-        double slat_thickness;
-        double slat_angle;
-        double slat_spacing;
+        std::unique_ptr<EffectiveLayers::EffectiveLayer>
+          effective_thermal_values(double width,
+                                   double height,
+                                   double gap_width_top,
+                                   double gap_width_bottom,
+                                   double gap_width_left,
+                                   double gap_width_right,
+                                   double effective_thermal_front_openness_area,
+                                   double permeability_factor) const override;
+
+        FenestrationCommon::LouveredShutter::Geometry geometry;
     };
 
 }   // namespace wincalc
