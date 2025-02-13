@@ -3,7 +3,7 @@ graph TD
     %% Package definitions
     xmlParser[xmlParser<br/><font color='red'>v1.0.2</font>]
     FileParse[FileParse<br/><font color='red'>Version_1.0.4</font>]
-    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.2</font>]
+    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>DeviceType</font>]
     nlohmann[nlohmann<br/><font color='red'>v3.11.3</font>]
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.2</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.2</font>]
