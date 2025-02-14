@@ -127,10 +127,10 @@ namespace wincalc
     {
         auto length_conversion = get_length_unit_conversion_factor(product);
 
-        if(product.composition.has_value())
+        if(product.materialDefinition && product.geometry)
         {
-            auto material = convert_optical(*product.composition.value().material);
-            auto product_geometry = product.composition.value().geometry;
+            auto material = convert_optical(*product.materialDefinition);
+            auto product_geometry = product.geometry;
             std::shared_ptr<OpticsParser::VenetianGeometry> venetian_geometry =
               std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(product_geometry);
             if(venetian_geometry)
@@ -292,7 +292,7 @@ namespace wincalc
         auto length_conversion = get_length_unit_conversion_factor(product);
 
         OpticsParser::ProductData const & data =
-          product.composition.has_value() ? *product.composition.value().material : product;
+          product.materialDefinition ? *product.materialDefinition : product;
 
         if(!data.thickness.has_value())
         {
