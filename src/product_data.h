@@ -339,7 +339,7 @@ namespace wincalc
         Perforated_Geometry geometry;
     };
 
-    struct Product_Data_Optical_Louvered_Shutter : Product_Data_Optical_With_Material
+    struct Product_Data_Optical_Louvered_Shutter_BSDF : Product_Data_Dual_Band_Optical_BSDF
     {
         Product_Data_Optical_Louvered_Shutter(
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,

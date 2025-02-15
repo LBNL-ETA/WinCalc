@@ -127,9 +127,14 @@ namespace wincalc
     {
         auto length_conversion = get_length_unit_conversion_factor(product);
 
-        if(product.materialDefinition && product.geometry)
+        std::shared_ptr<Product_Data_Optical> material{nullptr};
+        if(product.materialDefinition)
         {
-            auto material = convert_optical(*product.materialDefinition);
+            material = convert_optical(*product.materialDefinition);
+        }
+
+        if(product.geometry && material)
+        {
             auto product_geometry = product.geometry;
             std::shared_ptr<OpticsParser::VenetianGeometry> venetian_geometry =
               std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(product_geometry);
@@ -264,23 +269,33 @@ namespace wincalc
                 validate_bsdf(visible.tb);
                 validate_bsdf(visible.rf);
                 validate_bsdf(visible.rb);
-                converted.reset(new Product_Data_Dual_Band_Optical_BSDF(
-                  solar.tf.data,
-                  solar.tb.data,
-                  solar.rf.data,
-                  solar.rb.data,
-                  visible.tf.data,
-                  visible.tb.data,
-                  visible.rf.data,
-                  visible.rb.data,
-                  bsdfHemisphere,
-                  product.thickness.value() * length_conversion,
-                  product.IRTransmittance,
-                  product.IRTransmittance,
-                  product.frontEmissivity,
-                  product.backEmissivity,
-                  product.permeabilityFactor.value_or(
-                    0)));   // If permeability factor is not defined assume it is zero
+                if(product.geometry)
+                {
+                    if(product.deviceType == BSDFData::DeviceType::LouveredShutter)
+                    {
+                        //converted.reset(new Product_Data_Optical_Louvered_Shutter_BSDF etc...
+                    }
+                }
+                else
+                {
+                    converted.reset(new Product_Data_Dual_Band_Optical_BSDF(
+                        solar.tf.data,
+                        solar.tb.data,
+                        solar.rf.data,
+                        solar.rb.data,
+                        visible.tf.data,
+                        visible.tb.data,
+                        visible.rf.data,
+                        visible.rb.data,
+                        bsdfHemisphere,
+                        product.thickness.value() * length_conversion,
+                        product.IRTransmittance,
+                        product.IRTransmittance,
+                        product.frontEmissivity,
+                        product.backEmissivity,
+                        product.permeabilityFactor.value_or(
+                            0)));   // If permeability factor is not defined assume it is zero
+                }
             }
             return converted;
         }
