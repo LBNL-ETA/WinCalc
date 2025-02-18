@@ -847,21 +847,6 @@ namespace wincalc
         return layer;
     }
 
-    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_louvered_shutter(
-      std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
-      window_standards::Optical_Standard_Method const & method,
-      size_t number_of_layers,
-      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
-    {
-        LOGMSG("begin create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
-        auto material = create_material(product_data, method, number_of_layers);
-        LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer");
-        auto layer =
-          SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
-        LOGMSG("end create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
-        return layer;
-    }
-
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_preloaded_matrices(
       std::shared_ptr<wincalc::Product_Data_Dual_Band_Optical_BSDF> const & product_data,
       window_standards::Optical_Standard_Method const & method,
@@ -874,21 +859,6 @@ namespace wincalc
         auto layer =
           SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
         LOGMSG("end create_bsdf_layer_preloaded_matrices(product_data, " + method.name + ")");
-        return layer;
-    }
-
-    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_louvered_shutter(
-      std::shared_ptr<wincalc::Product_Data_Optical_Louvered_Shutter_BSDF> const & product_data,
-      window_standards::Optical_Standard_Method const & method,
-      size_t number_of_layers,
-      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
-    {
-        LOGMSG("begin create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
-        auto material = create_material(product_data, method, number_of_layers);
-        LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer");
-        auto layer =
-          SingleLayerOptics::CBSDFLayerMaker::getPreLoadedBSDFLayer(material, bsdf_hemisphere);
-        LOGMSG("end create_bsdf_layer_louvered_shutter(product_data, " + method.name + ")");
         return layer;
     }
 
@@ -1076,30 +1046,6 @@ namespace wincalc
                 LOGMSG("in else of if(method.name == THERMAL IR)");
                 layer = create_bsdf_layer_preloaded_matrices(
                   std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(
-                    product_data),
-                  method,
-                  number_of_layers,
-                  bsdf_hemisphere);
-            }
-        }
-        else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Louvered_Shutter_BSDF>(
-                  product_data))
-        {
-            LOGMSG("in dual band in if in create_louvered_shutter_bsdf_layer");
-            if(method.name == "THERMAL IR")
-            {
-                LOGMSG("in if(method.name == THERMAL IR)");
-                // Thermal IR is a special case that can be calculated despite a lack of
-                // BSDF data.  Since there is no BSDF for the IR range yet the IR range
-                // is instead modeled as a perfectly diffusing shade
-                layer = create_bsdf_layer_perfectly_diffuse(
-                  product_data, method, number_of_layers, bsdf_hemisphere);
-            }
-            else
-            {
-                LOGMSG("in else of if(method.name == THERMAL IR)");
-                layer = create_bsdf_layer_louvered_shutter(
-                  std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Louvered_Shutter_BSDF>(
                     product_data),
                   method,
                   number_of_layers,

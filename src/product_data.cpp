@@ -297,6 +297,63 @@ namespace wincalc
         }
     }
 
+    Product_Data_Optical_Louvered_Shutter_BSDF::Product_Data_Optical_Louvered_Shutter_BSDF(
+      std::vector<std::vector<double>> const & tf_solar,
+      std::vector<std::vector<double>> const & tb_solar,
+      std::vector<std::vector<double>> const & rf_solar,
+      std::vector<std::vector<double>> const & rb_solar,
+      std::vector<std::vector<double>> const & tf_visible,
+      std::vector<std::vector<double>> const & tb_visible,
+      std::vector<std::vector<double>> const & rf_visible,
+      std::vector<std::vector<double>> const & rb_visible,
+      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
+      double thickness_meteres,
+      OpticsParser::LouveredGeometry const & geometry,
+      std::optional<double> ir_transmittance_front,
+      std::optional<double> ir_transmittance_back,
+      std::optional<double> emissivity_front,
+      std::optional<double> emissivity_back,
+      bool flipped,
+      bool user_defined_effective_values) :
+        Product_Data_Dual_Band_Optical_BSDF(tf_solar,
+                                            tb_solar,
+                                            rf_solar,
+                                            rb_solar,
+                                            tf_visible,
+                                            tb_visible,
+                                            rf_visible,
+                                            rb_visible,
+                                            bsdf_hemisphere,
+                                            thickness_meteres,
+                                            ir_transmittance_front,
+                                            ir_transmittance_back,
+                                            emissivity_front,
+                                            emissivity_back,
+                                            flipped,
+                                            user_defined_effective_values),
+        geometry(geometry)
+    {}
+
+    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(double width,
+                                                                           double height,
+                                                                           double gap_width_top,
+                                                                           double gap_width_bottom,
+                                                                           double gap_width_left,
+                                                                           double gap_width_right,
+                                                                           double,
+                                                                           double) const
+    {
+        EffectiveLayers::ShadeOpenness openness{
+          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+
+        FenestrationCommon::LouveredShutter::Geometry wce_geometry{
+          geometry.slatWidth, geometry.slatThickness, geometry.slatAngle, geometry.slatSpacing};
+
+        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
+          width, height, thickness_meters, wce_geometry, openness);
+    }
+
     Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(
       double tf_solar,
       double tb_solar,
@@ -364,58 +421,4 @@ namespace wincalc
         dimension_y(dimension_y),
         perforation_type(perforation_type)
     {}
-
-    Product_Data_Optical_Louvered_Shutter_BSDF::Product_Data_Optical_Louvered_Shutter_BSDF(
-      std::vector<std::vector<double>> const & tf_solar,
-      std::vector<std::vector<double>> const & tb_solar,
-      std::vector<std::vector<double>> const & rf_solar,
-      std::vector<std::vector<double>> const & rb_solar,
-      std::vector<std::vector<double>> const & tf_visible,
-      std::vector<std::vector<double>> const & tb_visible,
-      std::vector<std::vector<double>> const & rf_visible,
-      std::vector<std::vector<double>> const & rb_visible,
-      SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
-      double thickness_meteres,
-      FenestrationCommon::LouveredShutter::Geometry const & geometry,
-      std::optional<double> ir_transmittance_front,
-      std::optional<double> ir_transmittance_back,
-      std::optional<double> emissivity_front,
-      std::optional<double> emissivity_back,
-      bool flipped,
-      bool user_defined_effective_values) :
-        Product_Data_Dual_Band_Optical_BSDF(tf_solar,
-                                            tb_solar,
-                                            rf_solar,
-                                            rb_solar,
-                                            tf_visible,
-                                            tb_visible,
-                                            rf_visible,
-                                            rb_visible,
-                                            bsdf_hemisphere,
-                                            thickness_meteres,
-                                            ir_transmittance_front,
-                                            ir_transmittance_back,
-                                            emissivity_front,
-                                            emissivity_back,
-                                            flipped,
-                                            user_defined_effective_values), geometry(geometry)
-    {}
-
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(
-        double width,
-        double height,
-        double gap_width_top,
-        double gap_width_bottom,
-        double gap_width_left,
-        double gap_width_right,
-        double ,
-        double ) const
-    {
-        EffectiveLayers::ShadeOpenness openness{
-            gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
-
-        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
-              width, height, thickness_meters, geometry, openness);
-    }
 }   // namespace wincalc

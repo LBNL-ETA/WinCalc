@@ -271,9 +271,12 @@ namespace wincalc
                 validate_bsdf(visible.rb);
                 if(product.geometry)
                 {
-                    if(product.deviceType == BSDFData::DeviceType::LouveredShutter)
+                    if(product.deviceType == BSDFData::DeviceType::LouveredShutter
+                       && std::dynamic_pointer_cast<OpticsParser::LouveredGeometry>(
+                         product.geometry))
                     {
-                        FenestrationCommon::LouveredShutter::Geometry geometry;
+                        OpticsParser::LouveredGeometry geometry = *std::dynamic_pointer_cast<
+                          OpticsParser::LouveredGeometry>(product.geometry);
 
                         converted.reset(new Product_Data_Optical_Louvered_Shutter_BSDF(
                           solar.tf.data,

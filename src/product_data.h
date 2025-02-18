@@ -171,6 +171,40 @@ namespace wincalc
                                    double permeability_factor) const override;
     };
 
+    struct Product_Data_Optical_Louvered_Shutter_BSDF : Product_Data_Dual_Band_Optical_BSDF
+    {
+        Product_Data_Optical_Louvered_Shutter_BSDF(
+          std::vector<std::vector<double>> const & tf_solar,
+          std::vector<std::vector<double>> const & tb_solar,
+          std::vector<std::vector<double>> const & rf_solar,
+          std::vector<std::vector<double>> const & rb_solar,
+          std::vector<std::vector<double>> const & tf_visible,
+          std::vector<std::vector<double>> const & tb_visible,
+          std::vector<std::vector<double>> const & rf_visible,
+          std::vector<std::vector<double>> const & rb_visible,
+          SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
+          double thickness_meteres,
+          OpticsParser::LouveredGeometry const & geometry,
+          std::optional<double> ir_transmittance_front = std::optional<double>(),
+          std::optional<double> ir_transmittance_back = std::optional<double>(),
+          std::optional<double> emissivity_front = std::optional<double>(),
+          std::optional<double> emissivity_back = std::optional<double>(),
+          bool flipped = false,
+          bool user_defined_effective_values = false);
+
+        std::unique_ptr<EffectiveLayers::EffectiveLayer>
+          effective_thermal_values(double width,
+                                   double height,
+                                   double gap_width_top,
+                                   double gap_width_bottom,
+                                   double gap_width_left,
+                                   double gap_width_right,
+                                   double effective_thermal_front_openness_area,
+                                   double permeability_factor) const override;
+
+        OpticsParser::LouveredGeometry geometry;
+    };
+
     enum class CoatedSide
     {
         FRONT,
@@ -338,40 +372,6 @@ namespace wincalc
                                    double permeability_factor) const override;
 
         Perforated_Geometry geometry;
-    };
-
-    struct Product_Data_Optical_Louvered_Shutter_BSDF : Product_Data_Dual_Band_Optical_BSDF
-    {
-        Product_Data_Optical_Louvered_Shutter_BSDF(
-          std::vector<std::vector<double>> const & tf_solar,
-          std::vector<std::vector<double>> const & tb_solar,
-          std::vector<std::vector<double>> const & rf_solar,
-          std::vector<std::vector<double>> const & rb_solar,
-          std::vector<std::vector<double>> const & tf_visible,
-          std::vector<std::vector<double>> const & tb_visible,
-          std::vector<std::vector<double>> const & rf_visible,
-          std::vector<std::vector<double>> const & rb_visible,
-          SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
-          double thickness_meteres,
-          FenestrationCommon::LouveredShutter::Geometry const & geometry,
-          std::optional<double> ir_transmittance_front = std::optional<double>(),
-          std::optional<double> ir_transmittance_back = std::optional<double>(),
-          std::optional<double> emissivity_front = std::optional<double>(),
-          std::optional<double> emissivity_back = std::optional<double>(),
-          bool flipped = false,
-          bool user_defined_effective_values = false);
-
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
-                                   double gap_width_bottom,
-                                   double gap_width_left,
-                                   double gap_width_right,
-                                   double effective_thermal_front_openness_area,
-                                   double permeability_factor) const override;
-
-        FenestrationCommon::LouveredShutter::Geometry geometry;
     };
 
 }   // namespace wincalc
