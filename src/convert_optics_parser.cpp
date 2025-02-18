@@ -235,23 +235,23 @@ namespace wincalc
 
                 auto wl_unit_conversion_factor = get_wavelength_unit_conversion_factor(product);
 
-                if (wl_unit_conversion_factor != 1.0)
+                if(wl_unit_conversion_factor != 1.0)
                 {
-                    for (auto& val : wl_values)
+                    for(auto & val : wl_values)
                     {
                         val.wavelength *= wl_unit_conversion_factor;
                     }
                 }
 
-                converted.reset(new Product_Data_N_Band_Optical(
-                  material_type,
-                  product.thickness.value() * length_conversion,
-                  wl_values,
-                  coated_side,
-                  product.IRTransmittance,
-                  product.IRTransmittance,
-                  product.frontEmissivity,
-                  product.backEmissivity));
+                converted.reset(
+                  new Product_Data_N_Band_Optical(material_type,
+                                                  product.thickness.value() * length_conversion,
+                                                  wl_values,
+                                                  coated_side,
+                                                  product.IRTransmittance,
+                                                  product.IRTransmittance,
+                                                  product.frontEmissivity,
+                                                  product.backEmissivity));
             }
             else if(std::holds_alternative<OpticsParser::DualBandBSDF>(wavelength_measured_values))
             {
@@ -273,28 +273,46 @@ namespace wincalc
                 {
                     if(product.deviceType == BSDFData::DeviceType::LouveredShutter)
                     {
-                        //converted.reset(new Product_Data_Optical_Louvered_Shutter_BSDF etc...
+                        FenestrationCommon::LouveredShutter::Geometry geometry;
+
+                        converted.reset(new Product_Data_Optical_Louvered_Shutter_BSDF(
+                          solar.tf.data,
+                          solar.tb.data,
+                          solar.rf.data,
+                          solar.rb.data,
+                          visible.tf.data,
+                          visible.tb.data,
+                          visible.rf.data,
+                          visible.rb.data,
+                          bsdfHemisphere,
+                          product.thickness.value() * length_conversion,
+                          geometry,
+                          product.IRTransmittance,
+                          product.IRTransmittance,
+                          product.frontEmissivity,
+                          product.backEmissivity,
+                          product.permeabilityFactor.value_or(0)));
                     }
                 }
                 else
                 {
                     converted.reset(new Product_Data_Dual_Band_Optical_BSDF(
-                        solar.tf.data,
-                        solar.tb.data,
-                        solar.rf.data,
-                        solar.rb.data,
-                        visible.tf.data,
-                        visible.tb.data,
-                        visible.rf.data,
-                        visible.rb.data,
-                        bsdfHemisphere,
-                        product.thickness.value() * length_conversion,
-                        product.IRTransmittance,
-                        product.IRTransmittance,
-                        product.frontEmissivity,
-                        product.backEmissivity,
-                        product.permeabilityFactor.value_or(
-                            0)));   // If permeability factor is not defined assume it is zero
+                      solar.tf.data,
+                      solar.tb.data,
+                      solar.rf.data,
+                      solar.rb.data,
+                      visible.tf.data,
+                      visible.tb.data,
+                      visible.rf.data,
+                      visible.rb.data,
+                      bsdfHemisphere,
+                      product.thickness.value() * length_conversion,
+                      product.IRTransmittance,
+                      product.IRTransmittance,
+                      product.frontEmissivity,
+                      product.backEmissivity,
+                      product.permeabilityFactor.value_or(
+                        0)));   // If permeability factor is not defined assume it is zero
                 }
             }
             return converted;
@@ -337,8 +355,8 @@ namespace wincalc
         return wincalc::Product_Data_Optical_Thermal{optical, thermal};
     }
 
-    std::vector<wincalc::Product_Data_Optical_Thermal> convert_to_solid_layers(
-      std::vector<OpticsParser::ProductData> const & products)
+    std::vector<wincalc::Product_Data_Optical_Thermal>
+      convert_to_solid_layers(std::vector<OpticsParser::ProductData> const & products)
     {
         std::vector<wincalc::Product_Data_Optical_Thermal> converted;
         for(auto product : products)

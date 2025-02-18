@@ -18,17 +18,18 @@ namespace wincalc
 
     struct Product_Data_Thermal : Flippable_Solid_Layer
     {
-        Product_Data_Thermal(std::optional<double> conductivity,
-                             double thickness_meters,
-                             bool flipped = false,
-                             double opening_top = 0,
-                             double opening_bottom = 0,
-                             double opening_left = 0,
-                             double opening_right = 0,
-                             double effective_front_thermal_openness_area = 0,
-                             double permeability_factor = 0,
-                             std::optional<double> youngs_modulus = Tarcog::DeflectionConstants::YOUNGSMODULUS,
-                             std::optional<double> density = Tarcog::MaterialConstants::GLASSDENSITY);
+        Product_Data_Thermal(
+          std::optional<double> conductivity,
+          double thickness_meters,
+          bool flipped = false,
+          double opening_top = 0,
+          double opening_bottom = 0,
+          double opening_left = 0,
+          double opening_right = 0,
+          double effective_front_thermal_openness_area = 0,
+          double permeability_factor = 0,
+          std::optional<double> youngs_modulus = Tarcog::DeflectionConstants::YOUNGSMODULUS,
+          std::optional<double> density = Tarcog::MaterialConstants::GLASSDENSITY);
 
         std::optional<double> conductivity;
         double opening_top;
@@ -341,9 +342,24 @@ namespace wincalc
 
     struct Product_Data_Optical_Louvered_Shutter_BSDF : Product_Data_Dual_Band_Optical_BSDF
     {
-        Product_Data_Optical_Louvered_Shutter(
-          std::shared_ptr<Product_Data_Optical> const & material_optical_data,
-          FenestrationCommon::LouveredShutter::Geometry const & geometry);
+        Product_Data_Optical_Louvered_Shutter_BSDF(
+          std::vector<std::vector<double>> const & tf_solar,
+          std::vector<std::vector<double>> const & tb_solar,
+          std::vector<std::vector<double>> const & rf_solar,
+          std::vector<std::vector<double>> const & rb_solar,
+          std::vector<std::vector<double>> const & tf_visible,
+          std::vector<std::vector<double>> const & tb_visible,
+          std::vector<std::vector<double>> const & rf_visible,
+          std::vector<std::vector<double>> const & rb_visible,
+          SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere,
+          double thickness_meteres,
+          FenestrationCommon::LouveredShutter::Geometry const & geometry,
+          std::optional<double> ir_transmittance_front = std::optional<double>(),
+          std::optional<double> ir_transmittance_back = std::optional<double>(),
+          std::optional<double> emissivity_front = std::optional<double>(),
+          std::optional<double> emissivity_back = std::optional<double>(),
+          bool flipped = false,
+          bool user_defined_effective_values = false);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
           effective_thermal_values(double width,
