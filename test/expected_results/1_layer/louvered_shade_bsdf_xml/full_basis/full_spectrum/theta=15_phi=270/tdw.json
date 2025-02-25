@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.19418128514565586,
+                    "heat_direct": 0.2136773893866208,
+                    "total_diffuse": 0.19418128514565586,
+                    "total_direct": 0.2136773893866208
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.1933677024108617,
+                    "heat_direct": 0.21604435762397417,
+                    "total_diffuse": 0.1933677024108617,
+                    "total_direct": 0.21604435762397417
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6134177182194964,
+                "direct_diffuse": 0.5858831904674188,
+                "direct_direct": 0.003884809942919459,
+                "direct_hemispherical": 0.5897680004103383
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.1924009966348488,
+                "direct_diffuse": 0.1939450954870399,
+                "direct_direct": 0.0026095147160012156,
+                "direct_hemispherical": 0.1965546102030411
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6161793677575659,
+                "direct_diffuse": 0.5910740839001865,
+                "direct_direct": 0.00374385265503529,
+                "direct_hemispherical": 0.5948179365552217
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.1904529298315752,
+                "direct_diffuse": 0.186583825282737,
+                "direct_direct": 0.0025538805380673634,
+                "direct_hemispherical": 0.18913770582080439
+            }
+        }
+    }
+}
