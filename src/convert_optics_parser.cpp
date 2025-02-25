@@ -1,5 +1,8 @@
 #include "convert_optics_parser.h"
 #include <sstream>
+
+#include <bsdfdata/Enumerators.hpp>
+
 #include "util.h"
 
 namespace wincalc
@@ -271,7 +274,9 @@ namespace wincalc
                 validate_bsdf(visible.rb);
                 if(product.geometry)
                 {
-                    if(product.deviceType == BSDFData::DeviceType::LouveredShutter
+                    if(product.deviceType.has_value()
+                       && BSDFData::DeviceTypeFromString(product.deviceType.value())
+                            == BSDFData::DeviceType::LouveredShutter
                        && std::dynamic_pointer_cast<OpticsParser::LouveredGeometry>(
                          product.geometry))
                     {
