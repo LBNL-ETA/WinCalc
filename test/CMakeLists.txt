@@ -37,6 +37,7 @@ add_executable(${PROJECT_TEST_NAME}
 		1_layer_coated_nfrc_20748.unit.cpp
  		1_layer_coated_nfrc_21467.unit.cpp
 		1_layer_laminate_optics_nanometers.unit.cpp
+		1_layer_louvered_shade_bsdf_xml.unit.cpp
 		1_layer_nfrc_102.unit.cpp
 		1_layer_nfrc_102_as_bsdf.unit.cpp
 		1_layer_perforated_screen_cgdb_18000.unit.cpp

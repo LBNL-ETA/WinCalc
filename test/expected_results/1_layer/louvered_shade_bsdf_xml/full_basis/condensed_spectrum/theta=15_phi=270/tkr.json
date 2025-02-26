@@ -1,0 +1,56 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.20362237657473087,
+                    "heat_direct": 0.2232221023774796,
+                    "total_diffuse": 0.20362237657473087,
+                    "total_direct": 0.2232221023774796
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.20284193602586906,
+                    "heat_direct": 0.22551909132085365,
+                    "total_diffuse": 0.20284193602586906,
+                    "total_direct": 0.22551909132085365
+                }
+            }
+        }
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6036249200174656,
+                "direct_diffuse": 0.5762697737123418,
+                "direct_direct": 0.003802879694136329,
+                "direct_hemispherical": 0.5800726534064781
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.19275270340780246,
+                "direct_diffuse": 0.1940682991083781,
+                "direct_direct": 0.002636945107664289,
+                "direct_hemispherical": 0.1967052442160424
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.6063096885921447,
+                "direct_diffuse": 0.5815502693401887,
+                "direct_direct": 0.003736535167276274,
+                "direct_hemispherical": 0.585286804507465
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.19084837538199012,
+                "direct_diffuse": 0.18660489361515004,
+                "direct_direct": 0.0025892105565315394,
+                "direct_hemispherical": 0.1891941041716816
+            }
+        }
+    }
+}

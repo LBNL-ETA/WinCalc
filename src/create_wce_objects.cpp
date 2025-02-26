@@ -105,9 +105,9 @@ namespace wincalc
                                   double product_data_min_wavelength,
                                   FenestrationCommon::CSeries const & source_spectrum)
     {
-        LOGMSG(
-          "begin get_minimum_wavelength for method " + method.name
-          + " with product_data_min_wavelength = " + std::to_string(product_data_min_wavelength));
+        LOGMSG("begin get_minimum_wavelength for method " + method.name
+               + " with product_data_min_wavelength = "
+               + std::to_string(product_data_min_wavelength));
         double result = std::numeric_limits<double>::quiet_NaN();
 
         if(method.min_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
@@ -116,10 +116,10 @@ namespace wincalc
                    "window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)");
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
-                LOGMSG(
-                  "in if(method.wavelength_set.type == "
-                  "window_standards::Wavelength_Set_Type::FILE) with "
-                  "method.wavelength_set.values.size = " + std::to_string(method.wavelength_set.values.size()));
+                LOGMSG("in if(method.wavelength_set.type == "
+                       "window_standards::Wavelength_Set_Type::FILE) with "
+                       "method.wavelength_set.values.size = "
+                       + std::to_string(method.wavelength_set.values.size()));
                 result = method.wavelength_set.values[0];
             }
             else if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::SOURCE)
@@ -140,7 +140,7 @@ namespace wincalc
         {
             LOGMSG("in else if(method.min_wavelength.type == "
                    "window_standards::Wavelength_Boundary_Type::NUMBER) with "
-                   "method.min_wavelength.value = " 
+                   "method.min_wavelength.value = "
                    + std::to_string(method.min_wavelength.value));
             result = method.min_wavelength.value;
         }
@@ -166,7 +166,8 @@ namespace wincalc
 
         if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)
         {
-            LOGMSG("in if(method.max_wavelength.type == window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)");
+            LOGMSG("in if(method.max_wavelength.type == "
+                   "window_standards::Wavelength_Boundary_Type::WAVELENGTH_SET)");
             if(method.wavelength_set.type == window_standards::Wavelength_Set_Type::FILE)
             {
                 LOGMSG("in if(method.wavelength_set.type == "
@@ -450,9 +451,11 @@ namespace wincalc
         }
         // The min and max lambda should be the tighest boundary not the loosest
         //  So it should be the largest minimum and smallest maximum
-        LOGMSG("before min_wavelength = with min_wavelengths.size = " + std::to_string(min_wavelengths.size()));
+        LOGMSG("before min_wavelength = with min_wavelengths.size = "
+               + std::to_string(min_wavelengths.size()));
         double min_wavelength = *std::max_element(min_wavelengths.begin(), min_wavelengths.end());
-        LOGMSG("before max_wavelength = with max_wavelengths.size = " + std::to_string(max_wavelengths.size()));
+        LOGMSG("before max_wavelength = with max_wavelengths.size = "
+               + std::to_string(max_wavelengths.size()));
         double max_wavelength = *std::min_element(max_wavelengths.begin(), max_wavelengths.end());
         LOGMSG("end get_lambda_range");
         return Lambda_Range{min_wavelength, max_wavelength};
@@ -983,8 +986,7 @@ namespace wincalc
                   product_data))
         {
             layer = create_bsdf_layer_homogeneous_diffuse(
-              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Uniform_Diffuse>(
-                product_data)
+              std::dynamic_pointer_cast<wincalc::Product_Data_Optical_Uniform_Diffuse>(product_data)
                 ->material_optical_data,
               method,
               number_of_layers,
