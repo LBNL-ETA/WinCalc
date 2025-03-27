@@ -83,7 +83,8 @@ namespace wincalc
                                                double phi = 0);
 
         void enable_deflection(bool model);
-        void set_deflection_properties(double temperature_at_construction, double pressure_at_construction);
+        void set_deflection_properties(double temperature_at_construction,
+                                       double pressure_at_construction);
         void set_deflection_properties(std::vector<double> const & measured_deflected_gaps);
         void set_applied_loads(std::vector<double> const & loads);
         Deflection_Results calc_deflection_properties(Tarcog::ISO15099::System system_type,
@@ -122,9 +123,8 @@ namespace wincalc
                  double theta = 0,
                  double phi = 0);
 
-        std::vector<double> radiosities(Tarcog::ISO15099::System system_type,
-                                        double theta = 0,
-                                        double phi = 0);
+        std::vector<double>
+          radiosities(Tarcog::ISO15099::System system_type, double theta = 0, double phi = 0);
 
 
         void optical_standard(window_standards::Optical_Standard const & s);
@@ -133,7 +133,8 @@ namespace wincalc
         void solid_layers(std::vector<Product_Data_Optical_Thermal> const & layers);
         std::vector<Product_Data_Optical_Thermal> solid_layers() const;
 
-        void gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers);
+        void
+          gap_layers(std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & layers);
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_layers() const;
 
         Environments environments() const;
@@ -152,6 +153,8 @@ namespace wincalc
 
         [[nodiscard]] double overallThickness() const;
 
+        void set_solid_layer_conductivites(const std::vector<double> & conductivities);
+        void set_solid_layer_conductivity(size_t index, double conductivity);
 
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;

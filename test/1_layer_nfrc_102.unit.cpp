@@ -54,6 +54,23 @@ TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal)
       "1_layer/nfrc_102/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
+TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal_Conductivity_0_2)
+{
+    glazing_system_u->set_solid_layer_conductivites({0.2});
+    glazing_system_shgc->set_solid_layer_conductivites({0.2});
+    test_thermal_results("1_layer/nfrc_102/conductivity_0.2", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "1_layer/nfrc_102/conductivity_0.2", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+}
+
+TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal_Conductivity_0_5)
+{
+    glazing_system_u->set_solid_layer_conductivity(0, 0.5);
+    glazing_system_shgc->set_solid_layer_conductivity(0, 0.5);
+    test_thermal_results("1_layer/nfrc_102/conductivity_0.5", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results(
+      "1_layer/nfrc_102/conductivity_0.5", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+}
 
 TEST_F(Test_1_layer_nfrc_102_default, Test_Optical)
 {
