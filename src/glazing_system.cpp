@@ -674,7 +674,12 @@ namespace wincalc
     {
         if(current_igu)
         {
-            current_igu->setSolidLayerConductivites(conductivities);
+            current_igu->setSolidLayerConductivities(conductivities);
+        }
+
+        if(current_system)
+        {
+            current_system->setSolidLayerConductivities(conductivities);
         }
 
         if(conductivities.size() != product_data.size())
@@ -694,6 +699,11 @@ namespace wincalc
         if(current_igu)
         {
             current_igu->setSolidLayerConductivity(index, conductivity);
+        }
+
+        if(current_system)
+        {
+            current_system->setSolidLayerConductivity(index, conductivity);
         }
 
         if(index >= product_data.size())
