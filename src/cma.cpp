@@ -73,11 +73,11 @@ namespace wincalc
                 }
             }
             results[std::make_pair(spacer_option, glazing_option)] =
-              Tarcog::ISO15099::FrameData(u_value.value(),
+              Tarcog::ISO15099::FrameData{u_value.value(),
                                           u_edge.value(),
                                           projected_frame_dimension.value() / 1000,
                                           wetted_length.value() / 1000,
-                                          absorptance);
+                                          absorptance};
         }
 
         return results;
