@@ -43,7 +43,7 @@ if ( MSVC )
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
 
-target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
+target_compile_features(${LIB_NAME} PUBLIC cxx_std_20)
 target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine LibraryFEMTHERM)
 
 
