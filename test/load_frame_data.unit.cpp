@@ -10,15 +10,19 @@ TEST(WincalcLoadFrameData, LoadsSampleSillFile)
     // Construct path using macro passed from CMake
     const std::string path = std::string(TEST_DATA_DIR) + "/products/sample-sill.thmz";
 
-    // Load frame data
-    const auto frame_data = wincalc::load_frame_data(path);
+    // Tags will already contain default tag values
+    const wincalc::Tags tags;
+    const auto frame_data = wincalc::load_frame_data(path.data(), tags).value();
 
     // Basic checks — adapt as needed based on file contents
-    EXPECT_GT(frame_data.UValue, 0.0);
-    EXPECT_GT(frame_data.ProjectedFrameDimension, 0.0);
-    EXPECT_GE(frame_data.Absorptance, 0.0);
-    EXPECT_LE(frame_data.Absorptance, 1.0);
+    EXPECT_DOUBLE_EQ(frame_data.UValue, 2.017913);
+    EXPECT_DOUBLE_EQ(frame_data.EdgeUValue, 2.339591);
+    EXPECT_DOUBLE_EQ(frame_data.ProjectedFrameDimension, 42.875183);
+    EXPECT_DOUBLE_EQ(frame_data.WettedLength, 56.332821);
+    EXPECT_DOUBLE_EQ(frame_data.Absorptance, 0.3);
 
-    // Optional: verify against expected values if known
-    // EXPECT_NEAR(frame_data.UValue, 2.123, 1e-6);
+    // IGU data checks
+    ASSERT_TRUE(frame_data.iguData.has_value());
+    EXPECT_DOUBLE_EQ(frame_data.iguData->UValue, 1.934666);
+    EXPECT_DOUBLE_EQ(frame_data.iguData->Thickness, 25.9334);
 }
