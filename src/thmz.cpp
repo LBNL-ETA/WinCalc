@@ -1,3 +1,5 @@
+#include <numeric>
+
 #include <THMZ/Model/THMX.hxx>
 #include <THMZ/Model/DB.hxx>
 #include <THMZ/SteadyStateResults/Results.hxx>
