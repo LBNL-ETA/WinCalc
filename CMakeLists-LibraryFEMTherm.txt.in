@@ -2,7 +2,7 @@ cmake_minimum_required( VERSION 2.8.7 )
 
 include(ExternalProject)
 
-ExternalProject_Add(LibraryFEMTHERM
+ExternalProject_Add(LibraryFEMTherm
     GIT_REPOSITORY https://github.com/LBNL-ETA/LibraryFEMTherm.git
     GIT_TAG "main"
     
