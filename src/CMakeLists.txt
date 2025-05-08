@@ -46,7 +46,7 @@ if ( MSVC )
 endif()
 
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_20)
-target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine LibraryFEMTherm)
+target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine LibraryFEMTHERM)
 
 
 

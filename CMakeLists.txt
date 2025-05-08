@@ -33,7 +33,7 @@ include(CMakeLists-Windows-Standards.txt)
 include(CMakeLists-OpticalMeasurementParser.txt)
 include(CMakeLists-THMXParser.txt)
 include(CMakeLists-Windows-CalcEngine.txt)
-include(CMakeLists-LibraryFEMTherm.txt)
+include(CMakeLists-LibraryFEMTHERM.txt)
 
 add_subdirectory(src)
 

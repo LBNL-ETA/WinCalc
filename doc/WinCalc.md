@@ -9,7 +9,7 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.3</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.54</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTherm[LibraryFEMTherm<br/><font color='red'>main</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>main</font>]
     WinCalc[WinCalc<br/><font color='red'>v2.5.4</font>]
 
     %% Package relations
@@ -22,4 +22,4 @@ graph TD
     WinCalc --> THMXParser    
     WinCalc --> Windows-CalcStandards
     WinCalc --> WindowsCalcEngine
-    WinCalc --> LibraryFEMTherm
+    WinCalc --> LibraryFEMTHERM
