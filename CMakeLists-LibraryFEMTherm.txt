@@ -8,7 +8,7 @@ set(LibraryFEMTHERM_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-src/src")
 include_directories(${LibraryFEMTHERM_INCLUDE_DIRS})
 
 # Download and create Windows Calculation Engine library
-configure_file(CMakeLists-LibraryFEMTHERM.txt.in ${CMAKE_BINARY_DIR}/LibraryFEMTHERM-download/CMakeLists.txt)
+configure_file(CMakeLists-LibraryFEMTherm.txt.in ${CMAKE_BINARY_DIR}/LibraryFEMTHERM-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/LibraryFEMTHERM-download)
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
