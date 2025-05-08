@@ -4,6 +4,7 @@
 #include <THMZ/SteadyStateResults/DB.hxx>
 
 #include <lbnl/algorithm.hxx>
+#include <lbnl/optional.hxx>
 
 #include "thmz.h"
 
@@ -46,28 +47,20 @@ namespace wincalc
 
         std::optional<double> get_projected_uvalue(const ThermFile::SteadyStateUFactors & factors)
         {
-            const auto proj = Helper::find_projection(
-              factors.projections, ThermFile::UValueDimensionType::GlassRotationProjected);
-
-            if(proj && proj->uFactor)
-            {
-                return *proj->uFactor;
-            }
-
-            return std::nullopt;
+            return lbnl::extend(
+                     find_projection(factors.projections,
+                                     ThermFile::UValueDimensionType::GlassRotationProjected))
+              .and_then([](const ThermFile::Projection & p) { return p.uFactor; })
+              .raw();
         }
 
         std::optional<double> get_projected_length(const ThermFile::SteadyStateUFactors & factors)
         {
-            const auto proj = Helper::find_projection(
-              factors.projections, ThermFile::UValueDimensionType::GlassRotationProjected);
-
-            if(proj && proj->length)
-            {
-                return *proj->length;
-            }
-
-            return std::nullopt;
+            return lbnl::extend(
+                     find_projection(factors.projections,
+                                     ThermFile::UValueDimensionType::GlassRotationProjected))
+              .and_then([](const ThermFile::Projection & p) { return p.length; })
+              .raw();
         }
 
         std::optional<double> get_wetted_length(const ThermFile::SteadyStateResultsCase & ucase,
