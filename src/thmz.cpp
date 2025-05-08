@@ -35,6 +35,89 @@ namespace wincalc
             };
             return sum(g.layers) + sum(g.gases);
         }
+
+        std::optional<ThermFile::SteadyStateResultsCase>
+          get_u_case(const ThermFile::SteadyStateResults & results)
+        {
+            return lbnl::find_element(results.cases, [](const auto & c) {
+                return c.modelType == ThermFile::RunType::UFactor;
+            });
+        }
+
+        std::optional<double> get_projected_uvalue(const ThermFile::SteadyStateUFactors & factors)
+        {
+            const auto proj = Helper::find_projection(
+              factors.projections, ThermFile::UValueDimensionType::GlassRotationProjected);
+
+            if(proj && proj->uFactor)
+            {
+                return *proj->uFactor;
+            }
+
+            return std::nullopt;
+        }
+
+        std::optional<double> get_projected_length(const ThermFile::SteadyStateUFactors & factors)
+        {
+            const auto proj = Helper::find_projection(
+              factors.projections, ThermFile::UValueDimensionType::GlassRotationProjected);
+
+            if(proj && proj->length)
+            {
+                return *proj->length;
+            }
+
+            return std::nullopt;
+        }
+
+        std::optional<double> get_wetted_length(const ThermFile::SteadyStateResultsCase & ucase,
+                                                const Tags & tags)
+        {
+            if(auto shgc = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.shgc))
+            {
+                auto p = Helper::find_projection(shgc->projections,
+                                                 ThermFile::UValueDimensionType::TotalLength);
+                if(p && p->length && *p->length >= 0.0)
+                {
+                    return *p->length;
+                }
+            }
+
+            if(auto frame = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.frame))
+            {
+                auto p = Helper::find_projection(frame->projections,
+                                                 ThermFile::UValueDimensionType::TotalLength);
+                if(p && p->length)
+                {
+                    return *p->length;
+                }
+            }
+
+            return std::nullopt;
+        }
+
+        std::optional<Tarcog::ISO15099::IGUData> get_igu_data(const ThermFile::ThermModel & model)
+        {
+            if(model.glazingSystems.empty())
+            {
+                return std::nullopt;
+            }
+
+            const auto & glz = model.glazingSystems.front();
+
+            auto winter = lbnl::find_element(glz.properties, [](const auto & p) {
+                return p.environmentalCondition == ThermFile::EnvironmentalCondition::Winter;
+            });
+
+            if(!winter)
+            {
+                return std::nullopt;
+            }
+
+            return Tarcog::ISO15099::IGUData{.UValue = winter->uValue,
+                                             .Thickness = Helper::glz_sys_thickness(glz)};
+        }
+
     }   // namespace Helper
 
     std::optional<Tarcog::ISO15099::FrameData> load_frame_data(std::string_view file_name,
@@ -44,109 +127,37 @@ namespace wincalc
         auto modelOpt = ThermFile::loadThermModelFromZipFile(file_name.data());
 
         if(!resultsOpt || !modelOpt)
-        {
             return std::nullopt;
-        }
 
         const auto & results = *resultsOpt;
         const auto & model = *modelOpt;
 
-        const auto uCaseOpt =
-          lbnl::find_element(results.cases, [](const ThermFile::SteadyStateResultsCase & c) {
-              return c.modelType == ThermFile::RunType::UFactor;
-          });
-
-        if(!uCaseOpt)
-        {
+        const auto ucaseOpt = Helper::get_u_case(results);
+        if(!ucaseOpt)
             return std::nullopt;
-        }
 
-        auto frameFactor = Helper::find_u_factor_by_tag(uCaseOpt->steadyStateUFactors, tags.frame);
-        auto edgeFactor = Helper::find_u_factor_by_tag(uCaseOpt->steadyStateUFactors, tags.edge);
+        const auto & ucase = *ucaseOpt;
 
+        auto frameFactor = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.frame);
+        auto edgeFactor = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.edge);
         if(!frameFactor || !edgeFactor)
-        {
-            return std::nullopt;
-        }
-
-        const auto frameProj = Helper::find_projection(
-          frameFactor->projections, ThermFile::UValueDimensionType::GlassRotationProjected);
-        const auto edgeProj = Helper::find_projection(
-          edgeFactor->projections, ThermFile::UValueDimensionType::GlassRotationProjected);
-
-        if(!frameProj || !edgeProj || !frameProj->uFactor || !edgeProj->uFactor)
             return std::nullopt;
 
-        double uValue = *frameProj->uFactor;
-        double edgeUValue = *edgeProj->uFactor;
+        auto uValue = Helper::get_projected_uvalue(*frameFactor);
+        auto edgeUValue = Helper::get_projected_uvalue(*edgeFactor);
+        auto projected = Helper::get_projected_length(*frameFactor);
+        auto wetted = Helper::get_wetted_length(ucase, tags);
+        auto igu = Helper::get_igu_data(model);
 
-        if(!frameProj->length)
+        if(!uValue || !edgeUValue || !projected || !wetted || !igu)
             return std::nullopt;
 
-        double projectedLength = *frameProj->length;
-
-        double wettedLength = 0.0;
-        bool hasValidSHGCWettedLength = false;
-
-        if(auto shgcFactor = Helper::find_u_factor_by_tag(uCaseOpt->steadyStateUFactors, tags.shgc))
-        {
-            if(auto shgcProj = Helper::find_projection(shgcFactor->projections,
-                                                       ThermFile::UValueDimensionType::TotalLength))
-            {
-                if(shgcProj->length && *shgcProj->length >= 0.0)
-                {
-                    wettedLength = *shgcProj->length;
-                    hasValidSHGCWettedLength = true;
-                }
-            }
-        }
-
-        if(!hasValidSHGCWettedLength)
-        {
-            if(auto frameTotalProj = Helper::find_projection(
-                 frameFactor->projections, ThermFile::UValueDimensionType::TotalLength))
-            {
-                if(frameTotalProj->length)
-                {
-                    wettedLength = *frameTotalProj->length;
-                }
-                else
-                {
-                    return std::nullopt;
-                }
-            }
-            else
-            {
-                return std::nullopt;
-            }
-        }
-
-        const auto & glazingSystems = model.glazingSystems;
-        if(glazingSystems.empty())
-        {
-            return std::nullopt;
-        }
-
-        const auto & properties = glazingSystems[0].properties;
-        const auto winter =
-          lbnl::find_element(properties, [](const ThermFile::GlazingSystemProperties & p) {
-              return p.environmentalCondition == ThermFile::EnvironmentalCondition::Winter;
-          });
-
-        if(!winter)
-        {
-            return std::nullopt;
-        }
-
-        const double centerU = winter->uValue;
-        const double thickness = Helper::glz_sys_thickness(glazingSystems.front());
-
-        return Tarcog::ISO15099::FrameData{.UValue = uValue,
-                                           .EdgeUValue = edgeUValue,
-                                           .ProjectedFrameDimension = projectedLength,
-                                           .WettedLength = wettedLength,
+        return Tarcog::ISO15099::FrameData{.UValue = *uValue,
+                                           .EdgeUValue = *edgeUValue,
+                                           .ProjectedFrameDimension = *projected,
+                                           .WettedLength = *wetted,
                                            .Absorptance = 0.3,
-                                           .iguData =
-                                             Tarcog::ISO15099::IGUData{centerU, thickness}};
+                                           .iguData = *igu};
     }
+
 }   // namespace wincalc
