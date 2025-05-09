@@ -156,6 +156,8 @@ namespace wincalc
         void set_solid_layer_conductivites(const std::vector<double> & conductivities);
         void set_solid_layer_conductivity(size_t index, double conductivity);
 
+        Tarcog::ISO15099::CSystem & get_thermal_system(double theta = 0, double phi = 0);
+
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_values;
