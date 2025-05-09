@@ -4,14 +4,20 @@ include(ExternalProject)
 
 ExternalProject_Add(LibraryFEMTHERM
     GIT_REPOSITORY https://github.com/LBNL-ETA/LibraryFEMTHERM.git
-    GIT_TAG "UpdatesForWCE"
-    
-    UPDATE_COMMAND ""
+    GIT_TAG UpdatesForWCE
+    GIT_SHALLOW FALSE
+
+    UPDATE_COMMAND
+        ${CMAKE_COMMAND} -E echo "Fetching latest for UpdatesForWCE branch" &&
+        git fetch origin UpdatesForWCE &&
+        git reset --hard origin/UpdatesForWCE &&
+        git clean -fdx
+
     PATCH_COMMAND ""
-  	
+
     SOURCE_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-src"
     BINARY_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-build"
-  	
+
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     TEST_COMMAND ""

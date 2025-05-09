@@ -1,4 +1,6 @@
 #include <numeric>
+#include <algorithm>
+#include <string_view>
 
 #include <THMZ/Model/THMX.hxx>
 #include <THMZ/Model/DB.hxx>
@@ -7,29 +9,25 @@
 
 #include <lbnl/algorithm.hxx>
 #include <lbnl/optional.hxx>
+#include <lbnl/expected.hxx>
 
-#include "thmz.h"
+#include "thmz.h"   // contains struct Tags and resource‑ID macros like IDS_NOTHERMRESULTS
 
 namespace wincalc
 {
     namespace Helper
     {
-        std::optional<ThermFile::SteadyStateUFactors>
-          find_u_factor_by_tag(const std::vector<ThermFile::SteadyStateUFactors> & factors,
-                               std::string_view tag)
+        template<class Vec, class Pred>
+        inline auto expect_element(const Vec & v, Pred && p, FrameLoadErr err)
+          -> lbnl::ExpectedExt<const typename Vec::value_type *, FrameLoadErr>
         {
-            return lbnl::find_element(factors, [&](const auto & f) { return f.tag == tag; });
+            auto it = std::ranges::find_if(v, std::forward<Pred>(p));
+            if(it != v.end())
+                return &*it;
+            return lbnl::make_unexpected<const typename Vec::value_type *, FrameLoadErr>(err);
         }
 
-        std::optional<ThermFile::Projection>
-          find_projection(const std::vector<ThermFile::Projection> & projections,
-                          ThermFile::UValueDimensionType type)
-        {
-            return lbnl::find_element(projections,
-                                      [&](const auto & p) { return p.lengthType == type; });
-        }
-
-        double glz_sys_thickness(const ThermFile::GlazingSystem & g)
+        inline double glz_sys_thickness(const ThermFile::GlazingSystem & g)
         {
             const auto sum = [](auto && rng) {
                 return std::accumulate(rng.begin(), rng.end(), 0.0, [](double acc, const auto & x) {
@@ -39,120 +37,162 @@ namespace wincalc
             return sum(g.layers) + sum(g.gases);
         }
 
-        std::optional<ThermFile::SteadyStateResultsCase>
-          get_u_case(const ThermFile::SteadyStateResults & results)
+        inline auto get_u_case(const ThermFile::SteadyStateResults & r)
+          -> lbnl::ExpectedExt<const ThermFile::SteadyStateResultsCase *, FrameLoadErr>
         {
-            return lbnl::find_element(results.cases, [](const auto & c) {
-                return c.modelType == ThermFile::RunType::UFactor;
-            });
+            return expect_element(
+              r.cases,
+              [](const auto & c) { return c.modelType == ThermFile::RunType::UFactor; },
+              FrameLoadErr::NoUFactorCase);
         }
 
-        std::optional<double> get_projected_uvalue(const ThermFile::SteadyStateUFactors & factors)
+        inline auto expect_projected_uvalue(const ThermFile::SteadyStateUFactors * f)
+          -> lbnl::ExpectedExt<double, FrameLoadErr>
         {
-            return lbnl::extend(
-                     find_projection(factors.projections,
-                                     ThermFile::UValueDimensionType::GlassRotationProjected))
-              .and_then([](const ThermFile::Projection & p) { return p.uFactor; })
-              .raw();
+            auto proj = expect_element(
+              f->projections,
+              [](const auto & p) {
+                  return p.lengthType == ThermFile::UValueDimensionType::GlassRotationProjected;
+              },
+              FrameLoadErr::ProjectedLenMissing);
+            if(!proj.has_value())
+                return lbnl::make_unexpected<double, FrameLoadErr>(proj.error());
+            if(proj.value()->uFactor)
+                return *proj.value()->uFactor;
+            return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::UValuesMissing);
         }
 
-        std::optional<double> get_projected_length(const ThermFile::SteadyStateUFactors & factors)
+        inline auto expect_projected_length(const ThermFile::SteadyStateUFactors * f)
+          -> lbnl::ExpectedExt<double, FrameLoadErr>
         {
-            return lbnl::extend(
-                     find_projection(factors.projections,
-                                     ThermFile::UValueDimensionType::GlassRotationProjected))
-              .and_then([](const ThermFile::Projection & p) { return p.length; })
-              .raw();
+            auto proj = expect_element(
+              f->projections,
+              [](const auto & p) {
+                  return p.lengthType == ThermFile::UValueDimensionType::GlassRotationProjected;
+              },
+              FrameLoadErr::ProjectedLenMissing);
+            if(!proj.has_value())
+                return lbnl::make_unexpected<double, FrameLoadErr>(proj.error());
+            if(proj.value()->length)
+                return *proj.value()->length;
+            return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::ProjectedLenMissing);
         }
 
-        std::optional<double> get_wetted_length(const ThermFile::SteadyStateResultsCase & ucase,
-                                                const Tags & tags)
+        inline auto expect_wetted_length(const ThermFile::SteadyStateResultsCase * ucase,
+                                         const Tags & tags)
+          -> lbnl::ExpectedExt<double, FrameLoadErr>
         {
-            if(auto shgc = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.shgc))
-            {
-                auto p = Helper::find_projection(shgc->projections,
-                                                 ThermFile::UValueDimensionType::TotalLength);
-                if(p && p->length && *p->length >= 0.0)
-                {
-                    return *p->length;
-                }
+            auto shgcF = expect_element(
+              ucase->steadyStateUFactors,
+              [&](const auto & f) { return f.tag == tags.shgc; },
+              FrameLoadErr::FrameOrEdgeTagMissing);
+            if(shgcF.has_value()) {
+                auto proj = expect_element(
+                  shgcF.value()->projections,
+                  [](const auto & p) {
+                      return p.lengthType == ThermFile::UValueDimensionType::TotalLength;
+                  },
+                  FrameLoadErr::WettedLenMissing);
+                if(proj.has_value() && proj.value()->length && *proj.value()->length >= 0.0)
+                    return *proj.value()->length;
             }
 
-            if(auto frame = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.frame))
-            {
-                auto p = Helper::find_projection(frame->projections,
-                                                 ThermFile::UValueDimensionType::TotalLength);
-                if(p && p->length)
-                {
-                    return *p->length;
-                }
+            auto frameF = expect_element(
+              ucase->steadyStateUFactors,
+              [&](const auto & f) { return f.tag == tags.frame; },
+              FrameLoadErr::FrameOrEdgeTagMissing);
+            if(frameF.has_value()) {
+                auto proj = expect_element(
+                  frameF.value()->projections,
+                  [](const auto & p) {
+                      return p.lengthType == ThermFile::UValueDimensionType::TotalLength;
+                  },
+                  FrameLoadErr::WettedLenMissing);
+                if(proj.has_value() && proj.value()->length)
+                    return *proj.value()->length;
             }
 
-            return std::nullopt;
+            return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::WettedLenMissing);
         }
 
-        std::optional<Tarcog::ISO15099::IGUData> get_igu_data(const ThermFile::ThermModel & model)
+        inline auto expect_igu_data(const ThermFile::ThermModel & model)
+          -> lbnl::ExpectedExt<Tarcog::ISO15099::IGUData, FrameLoadErr>
         {
             if(model.glazingSystems.empty())
-            {
-                return std::nullopt;
-            }
+                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(FrameLoadErr::IGUDataMissing);
 
             const auto & glz = model.glazingSystems.front();
-
             auto winter = lbnl::find_element(glz.properties, [](const auto & p) {
                 return p.environmentalCondition == ThermFile::EnvironmentalCondition::Winter;
             });
 
             if(!winter)
-            {
-                return std::nullopt;
-            }
+                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(FrameLoadErr::IGUDataMissing);
 
-            return Tarcog::ISO15099::IGUData{.UValue = winter->uValue,
-                                             .Thickness = Helper::glz_sys_thickness(glz)};
+            return Tarcog::ISO15099::IGUData{winter->uValue, glz_sys_thickness(glz)};
         }
 
     }   // namespace Helper
 
-    std::optional<Tarcog::ISO15099::FrameData> load_frame_data(std::string_view file_name,
-                                                               const Tags & tags)
+    FrameLoadResult load_frame_data(std::string_view fileName, const Tags & tags)
     {
-        auto resultsOpt = ThermFile::loadSteadyStateResultsFromZipFile(file_name.data());
-        auto modelOpt = ThermFile::loadThermModelFromZipFile(file_name.data());
+        auto resultsOpt = ThermFile::loadSteadyStateResultsFromZipFile(fileName.data());
+        if(!resultsOpt.has_value())
+            return FrameLoadErr::MissingThermResults;
 
-        if(!resultsOpt || !modelOpt)
-            return std::nullopt;
+        auto modelOpt = ThermFile::loadThermModelFromZipFile(fileName.data());
+        if(!modelOpt.has_value())
+            return FrameLoadErr::MissingThermModel;
 
         const auto & results = *resultsOpt;
         const auto & model = *modelOpt;
 
-        const auto ucaseOpt = Helper::get_u_case(results);
-        if(!ucaseOpt)
-            return std::nullopt;
+        auto ucase = Helper::get_u_case(results);
+        if(!ucase.has_value())
+            return ucase.error();
 
-        const auto & ucase = *ucaseOpt;
+        auto frameF = Helper::expect_element(
+          ucase.value()->steadyStateUFactors,
+          [&](const auto & f) { return f.tag == tags.frame; },
+          FrameLoadErr::FrameOrEdgeTagMissing);
+        if(!frameF.has_value())
+            return frameF.error();
 
-        auto frameFactor = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.frame);
-        auto edgeFactor = Helper::find_u_factor_by_tag(ucase.steadyStateUFactors, tags.edge);
-        if(!frameFactor || !edgeFactor)
-            return std::nullopt;
+        auto edgeF = Helper::expect_element(
+          ucase.value()->steadyStateUFactors,
+          [&](const auto & f) { return f.tag == tags.edge; },
+          FrameLoadErr::FrameOrEdgeTagMissing);
+        if(!edgeF.has_value())
+            return edgeF.error();
 
-        auto uValue = Helper::get_projected_uvalue(*frameFactor);
-        auto edgeUValue = Helper::get_projected_uvalue(*edgeFactor);
-        auto projected = Helper::get_projected_length(*frameFactor);
-        auto wetted = Helper::get_wetted_length(ucase, tags);
-        auto igu = Helper::get_igu_data(model);
+        auto uVal = Helper::expect_projected_uvalue(frameF.value());
+        if(!uVal.has_value())
+            return uVal.error();
 
-        if(!uValue || !edgeUValue || !projected || !wetted || !igu)
-            return std::nullopt;
+        auto edgeUVal = Helper::expect_projected_uvalue(edgeF.value());
+        if(!edgeUVal.has_value())
+            return edgeUVal.error();
 
-        return Tarcog::ISO15099::FrameData{.UValue = *uValue,
-                                           .EdgeUValue = *edgeUValue,
-                                           .ProjectedFrameDimension = *projected,
-                                           .WettedLength = *wetted,
-                                           .Absorptance = 0.3,
-                                           .iguData = *igu};
+        auto projLen = Helper::expect_projected_length(frameF.value());
+        if(!projLen.has_value())
+            return projLen.error();
+
+        auto wettedLen = Helper::expect_wetted_length(ucase.value(), tags);
+        if(!wettedLen.has_value())
+            return wettedLen.error();
+
+        auto iguData = Helper::expect_igu_data(model);
+        if(!iguData.has_value())
+            return iguData.error();
+
+        return Tarcog::ISO15099::FrameData{
+            uVal.value(),
+            edgeUVal.value(),
+            projLen.value(),
+            wettedLen.value(),
+            0.3,
+            iguData.value()
+        };
     }
 
 }   // namespace wincalc
