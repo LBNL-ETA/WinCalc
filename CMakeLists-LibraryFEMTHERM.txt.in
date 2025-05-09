@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)  # Upgrade if possible; 2.8.7 is very old
 
 include(ExternalProject)
 
@@ -6,15 +6,8 @@ set(LIBRARY_FEMTHERM_BRANCH "UpdatesForWCE")
 
 ExternalProject_Add(LibraryFEMTHERM
     GIT_REPOSITORY https://github.com/LBNL-ETA/LibraryFEMTHERM.git
-    GIT_TAG        ""  # Prevents CMake from trying to checkout 'master' or a tag
-    GIT_SHALLOW    FALSE
-
-    UPDATE_COMMAND
-        ${CMAKE_COMMAND} -E echo "Fetching latest for ${LIBRARY_FEMTHERM_BRANCH}" &&
-        git fetch origin ${LIBRARY_FEMTHERM_BRANCH} &&
-        git checkout ${LIBRARY_FEMTHERM_BRANCH} &&
-        git reset --hard origin/${LIBRARY_FEMTHERM_BRANCH} &&
-        git clean -fdx
+    GIT_TAG ${LIBRARY_FEMTHERM_BRANCH}
+    GIT_SHALLOW FALSE
 
     SOURCE_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-src"
     BINARY_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-build"
