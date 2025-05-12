@@ -26,20 +26,22 @@ namespace wincalc
     struct Glazing_System
     {
         Glazing_System(
-          window_standards::Optical_Standard const & standard,
-          std::vector<Product_Data_Optical_Thermal> const & product_data,
-          std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const & gap_values =
+            window_standards::Optical_Standard const& standard,
+            std::vector<Product_Data_Optical_Thermal> const& product_data,
+            std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> const& gap_values =
             std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>>(),
-          double width = 1.0,
-          double height = 1.0,
-          double tilt = 90,
-          Environments const & environment = nfrc_u_environments(),
-          std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere =
+            double width = 1.0,
+            double height = 1.0,
+            double tilt = 90,
+            Environments const& environment = nfrc_u_environments(),
+            std::optional<SingleLayerOptics::BSDFHemisphere> const& bsdf_hemisphere =
             std::optional<SingleLayerOptics::BSDFHemisphere>(),
-          Spectal_Data_Wavelength_Range_Method const & type =
+            Spectal_Data_Wavelength_Range_Method const& type =
             Spectal_Data_Wavelength_Range_Method::FULL,
-          int number_visible_bands = 5,
-          int number_solar_bands = 10);
+            int number_visible_bands = 5,
+            int number_solar_bands = 10,
+            std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior = std::nullopt,
+            std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior = std::nullopt);
 
         Glazing_System(
           window_standards::Optical_Standard const & standard,
@@ -55,7 +57,9 @@ namespace wincalc
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
-          int number_solar_bands = 10);
+          int number_solar_bands = 10,
+            std::optional<OpticsParser::ProductData> non_coplanar_attachment_exterior = std::nullopt,
+            std::optional<OpticsParser::ProductData> non_coplanar_attachment_interior = std::nullopt);
 
         // Constructor with vector of variants added for ease of use in python
         Glazing_System(
@@ -73,7 +77,9 @@ namespace wincalc
           Spectal_Data_Wavelength_Range_Method const & type =
             Spectal_Data_Wavelength_Range_Method::FULL,
           int number_visible_bands = 5,
-          int number_solar_bands = 10);
+          int number_solar_bands = 10,
+            std::optional<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> non_coplanar_attachment_exterior = std::nullopt,
+            std::optional<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> non_coplanar_attachment_interior = std::nullopt);
 
         double u(double theta = 0, double phi = 0);
 
@@ -159,6 +165,8 @@ namespace wincalc
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_values;
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior;
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior;
         window_standards::Optical_Standard standard;
         double width;
         double height;

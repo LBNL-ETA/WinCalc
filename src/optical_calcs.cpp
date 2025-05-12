@@ -503,6 +503,8 @@ namespace wincalc
     std::unique_ptr<SingleLayerOptics::IScatteringLayer>
       optical_solar_results_system_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
+        std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_exterior,
+        std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_interior,
         window_standards::Optical_Standard const & standard,
         std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
         Spectal_Data_Wavelength_Range_Method const & type,
@@ -510,7 +512,7 @@ namespace wincalc
         int number_solar_bands)
     {
         LOGMSG("begin optical_solar_results_system_needed_for_thermal_calcs");
-        auto optical_layers = get_optical_layers(product_data);
+        auto optical_layers = get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior);
         LOGMSG("before solar_method");
         auto solar_method = standard.methods.at("SOLAR");
         LOGMSG("before get_wavelengths");

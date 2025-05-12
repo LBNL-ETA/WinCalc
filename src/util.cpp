@@ -6,13 +6,22 @@
 namespace wincalc
 {
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
-      get_optical_layers(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers)
+      get_optical_layers(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                         std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior,
+                         std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior)
     {
         std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> optical_layers;
-
+        if(non_coplanar_attachment_exterior)
+        {
+            optical_layers.push_back(non_coplanar_attachment_exterior.value().optical_data);
+        }
         for(auto layer : layers)
         {
             optical_layers.push_back(layer.optical_data);
+        }
+        if (non_coplanar_attachment_interior)
+        {
+            optical_layers.push_back(non_coplanar_attachment_interior.value().optical_data);
         }
 
         return optical_layers;
@@ -28,7 +37,7 @@ namespace wincalc
         }
         return thermal_layers;
     }
-
+#if 0
     bool all_optical_layers_the_same(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & layers)
     {
@@ -50,7 +59,7 @@ namespace wincalc
     {
         return all_optical_layers_the_same(get_optical_layers(layers));
     }
-
+#endif
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
       get_optical_layers(std::vector<std::shared_ptr<Product_Data_Optical_Thermal>> const & layers)
     {

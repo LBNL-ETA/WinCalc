@@ -46,6 +46,8 @@ namespace wincalc
 	std::unique_ptr<SingleLayerOptics::IScatteringLayer>
 		optical_solar_results_system_needed_for_thermal_calcs(
 			std::vector<Product_Data_Optical_Thermal> const & product_data,
+            std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_exterior,
+            std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_interior,
 			window_standards::Optical_Standard const & standard,
 			std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
 			std::optional<SingleLayerOptics::BSDFHemisphere>(),

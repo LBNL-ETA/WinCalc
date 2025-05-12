@@ -28,6 +28,9 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		2_layers_nfrc_103_air_nfrc_5487.unit.cpp
+		1_layer_nfrc_102_awning_generic.unit.cpp
+		1_layer_nfrc_102_awning_2011-SA1.unit.cpp
 		1_layer_nfrc_102_WCE.unit.cpp
 		1_layer_applied_film_nfrc_9223.unit.cpp
 		1_layer_cellular_shade_CS03_genBSDF.unit.cpp

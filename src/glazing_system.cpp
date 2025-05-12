@@ -43,7 +43,7 @@ namespace wincalc
         LOGMSG("before get_method");
         auto method = get_method(method_name);
         LOGMSG("before calc_all");
-        auto result = calc_all(get_optical_layers(product_data),
+        auto result = calc_all(get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior),
                                method,
                                theta,
                                phi,
@@ -53,6 +53,16 @@ namespace wincalc
                                number_solar_bands);
         LOGMSG("end Glazing_System::optical_method_results(" + method_name + ", "
                + std::to_string(theta) + ", " + std::to_string(phi) + ")");
+        if(non_coplanar_attachment_exterior)
+        {
+            result.non_coplanar_attachment_exterior_results = result.layer_results.front();
+            result.layer_results.erase(result.layer_results.begin());
+        }
+        if (non_coplanar_attachment_interior)
+        {
+            result.non_coplanar_attachment_interior_results = result.layer_results.back();
+            result.layer_results.pop_back();
+        }
         return result;
     }
 
@@ -70,7 +80,7 @@ namespace wincalc
         LOGMSG("before get_method Z");
         window_standards::Optical_Standard_Method tristim_z = get_method(tristimulus_z_method);
         LOGMSG("before calc_color");
-        auto result = calc_color(get_optical_layers(product_data),
+        auto result = calc_color(get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior),
                                  tristim_x,
                                  tristim_y,
                                  tristim_z,
@@ -328,6 +338,16 @@ namespace wincalc
         auto & system = get_system(theta, phi);
         LOGMSG("before get_solar_abs_front");
         auto solar_front_absorptances = get_solar_abs_front(theta, phi);
+        // if there are any non-coplanar attachments those results need to be removed
+        // since they do not contribute thermally
+        if(non_coplanar_attachment_exterior)
+        {
+            solar_front_absorptances.erase(solar_front_absorptances.begin());
+        }
+        if (non_coplanar_attachment_interior)
+        {
+            solar_front_absorptances.pop_back();
+        }
         LOGMSG("before system.setAbsorptances");
         system.setAbsorptances(solar_front_absorptances);
         LOGMSG("end Glazing_System::do_layer_absorptance_updates(" + std::to_string(theta) + ", "
@@ -461,9 +481,13 @@ namespace wincalc
       std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
-      int number_solar_bands) :
+      int number_solar_bands,
+      std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior,
+      std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior) :
         product_data(product_data),
         gap_values(gap_values),
+        non_coplanar_attachment_exterior(non_coplanar_attachment_exterior),
+        non_coplanar_attachment_interior(non_coplanar_attachment_interior),
         standard(standard),
         width(width),
         height(height),
@@ -488,7 +512,9 @@ namespace wincalc
       std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
-      int number_solar_bands) :
+      int number_solar_bands,
+      std::optional<OpticsParser::ProductData> non_coplanar_attachment_ext,
+      std::optional<OpticsParser::ProductData> non_coplanar_attachment_int) :
         product_data(convert_to_solid_layers(product_data)),
         gap_values(gap_values),
         standard(standard),
@@ -501,7 +527,41 @@ namespace wincalc
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
     {
+        if(non_coplanar_attachment_ext)
+        {
+            non_coplanar_attachment_exterior = convert_to_solid_layer(non_coplanar_attachment_ext.value());
+        }
+
+        if (non_coplanar_attachment_int)
+        {
+            non_coplanar_attachment_interior = convert_to_solid_layer(non_coplanar_attachment_int.value());
+        }
         sort_spectral_data();
+    }
+
+    Product_Data_Optical_Thermal create_solid_layer(
+        std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal> const&
+        product_data)
+    {
+        LOGMSG("begin create_solid_layer");
+            Product_Data_Optical_Thermal const* solid_layer =
+                std::get_if<Product_Data_Optical_Thermal>(&product_data);
+        if (solid_layer)
+        {
+            LOGMSG("in if(solid_layer)");
+            // If the variant was already holding a converted object use it
+            return *solid_layer;
+        }
+        else
+        {
+            LOGMSG("in else");
+            // Otherwise the variant was holding OpticsParser::ProductData
+            // Convert that and use it
+            auto converted_layer =
+                convert_to_solid_layer(std::get<OpticsParser::ProductData>(product_data));
+            LOGMSG("returning converted_layer");
+            return converted_layer;
+        }
     }
 
     std::vector<Product_Data_Optical_Thermal> create_solid_layers(
@@ -513,24 +573,9 @@ namespace wincalc
         for(auto product : product_data)
         {
             LOGMSG("in for(auto product : product_data)");
-            Product_Data_Optical_Thermal * solid_layer =
-              std::get_if<Product_Data_Optical_Thermal>(&product);
-            if(solid_layer)
-            {
-                LOGMSG("in if(solid_layer)");
-                // If the variant was already holding a converted object use it
-                solid_layers.push_back(*solid_layer);
-            }
-            else
-            {
-                LOGMSG("in else");
-                // Otherwise the variant was holding OpticsParser::ProductData
-                // Convert that and use it
-                auto converted_layer =
-                  convert_to_solid_layer(std::get<OpticsParser::ProductData>(product));
-                LOGMSG("before solid_layers.push_back");
-                solid_layers.push_back(converted_layer);
-            }
+            auto converted_layer = create_solid_layer(product);
+            LOGMSG("before solid_layers.push_back");
+            solid_layers.push_back(converted_layer);
         }
         LOGMSG("end create_solid_layers");
         return solid_layers;
@@ -548,7 +593,9 @@ namespace wincalc
       std::optional<SingleLayerOptics::BSDFHemisphere> const & bsdf_hemisphere,
       Spectal_Data_Wavelength_Range_Method const & spectral_data_wavelength_range_method,
       int number_visible_bands,
-      int number_solar_bands) :
+      int number_solar_bands,
+        std::optional<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> non_coplanar_attachment_ext,
+        std::optional<std::variant<OpticsParser::ProductData, Product_Data_Optical_Thermal>> non_coplanar_attachment_int) :
         product_data(create_solid_layers(product_data)),
         gap_values(gap_values),
         standard(standard),
@@ -561,6 +608,15 @@ namespace wincalc
         number_visible_bands(number_visible_bands),
         number_solar_bands(number_solar_bands)
     {
+        if (non_coplanar_attachment_ext)
+        {
+            non_coplanar_attachment_exterior = create_solid_layer(non_coplanar_attachment_ext.value());
+        }
+
+        if (non_coplanar_attachment_int)
+        {
+            non_coplanar_attachment_interior = create_solid_layer(non_coplanar_attachment_int.value());
+        }
         sort_spectral_data();
     }
 
@@ -724,6 +780,8 @@ namespace wincalc
             optical_system_for_thermal_calcs =
               optical_solar_results_system_needed_for_thermal_calcs(
                 product_data,
+                non_coplanar_attachment_exterior,
+                non_coplanar_attachment_interior,
                 optical_standard(),
                 bsdf_hemisphere,
                 spectral_data_wavelength_range_method,
@@ -741,7 +799,7 @@ namespace wincalc
                + std::to_string(phi) + ")");
         auto & optical_system = get_optical_system_for_thermal_calcs();
         LOGMSG("before get_optical_layers");
-        auto optical_layers = get_optical_layers(product_data);
+        auto optical_layers = get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior);
         LOGMSG("before standard.methods.at(SOLAR)");
         auto solar_method = standard.methods.at("SOLAR");
         LOGMSG("before get_wavelengths");
@@ -780,7 +838,7 @@ namespace wincalc
                + std::to_string(phi) + ")");
         auto & optical_system = get_optical_system_for_thermal_calcs();
         LOGMSG("before get_optical_layers");
-        auto optical_layers = get_optical_layers(product_data);
+        auto optical_layers = get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior);
         LOGMSG("before standard.methods.at(SOLAR)");
         auto solar_method = standard.methods.at("SOLAR");
         LOGMSG("before get_wavelengths");
@@ -795,6 +853,7 @@ namespace wincalc
                                                   FenestrationCommon::ScatteringSimple::Direct,
                                                   theta,
                                                   phi);
+        
 
         LOGMSG("end Glazing_System::get_solar_abs_front(" + std::to_string(theta) + ", "
                + std::to_string(phi) + ")");

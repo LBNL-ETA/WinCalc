@@ -14,9 +14,9 @@ void logMsg(std::string const & msg)
 
 const double TEST_TOLARANCE = 1e-6;
 
-nlohmann::json & get_json_field(nlohmann::json & json, std::string const & field, bool update)
+nlohmann::json & get_json_field(nlohmann::json & json, std::string const & field, bool )
 {
-    if(update && json.count(field) == 0)
+    if(json.count(field) == 0)
     {
         json[field] = nlohmann::json::object();
     }
@@ -296,12 +296,35 @@ void test_layer_results(
   nlohmann::json & expected,
   std::vector<wincalc::WCE_Optical_Result_By_Side<wincalc::WCE_Optical_Result_Layer<T>>> const &
     results,
+    std::optional<wincalc::WCE_Optical_Result_By_Side<wincalc::WCE_Optical_Result_Layer<T>>> const&
+    noncoplanar_attachment_exterior_results,
+    std::optional<wincalc::WCE_Optical_Result_By_Side<wincalc::WCE_Optical_Result_Layer<T>>> const&
+    noncoplanar_attachment_interior_results,
   bool update)
 {
     for(size_t i = 0; i < results.size(); ++i)
     {
         auto & layer_result = get_json_field(expected, "layer " + std::to_string(i), update);
         test_wce_optical_result_by_side(layer_result, results.at(i), update);
+    }
+
+    auto & expected_noncoplanar_attachment_exterior_results = get_json_field(expected, "noncoplanar_attachment_exterior", update);
+    if (noncoplanar_attachment_exterior_results)
+    {
+        test_wce_optical_result_by_side(expected_noncoplanar_attachment_exterior_results, noncoplanar_attachment_exterior_results.value(), update);
+    }
+    else
+    {
+        EXPECT_TRUE(expected_noncoplanar_attachment_exterior_results.empty());
+    }
+    auto & expected_noncoplanar_attachment_interior_results = get_json_field(expected, "noncoplanar_attachment_interior", update);
+    if (noncoplanar_attachment_interior_results)
+    {
+        test_wce_optical_result_by_side(expected_noncoplanar_attachment_interior_results, noncoplanar_attachment_interior_results.value(), update);
+    }
+    else
+    {
+        EXPECT_TRUE(expected_noncoplanar_attachment_interior_results.empty());
     }
 }
 
@@ -317,7 +340,7 @@ void test_wce_optical_results_template_double(
     logMsg("after test_wce_optical_result_by_side");
     auto & layer_results = get_json_field(expected, "layer_results", update);
     logMsg("after layer_results = get_json_field");
-    test_layer_results(layer_results, results.layer_results, update);
+    test_layer_results(layer_results, results.layer_results, results.non_coplanar_attachment_exterior_results, results.non_coplanar_attachment_interior_results, update);
     logMsg("end test_wce_optical_results_template_double");
 }
 

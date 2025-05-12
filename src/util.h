@@ -8,20 +8,22 @@
 namespace wincalc
 {
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
-      get_optical_layers(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers);
+      get_optical_layers(std::vector<wincalc::Product_Data_Optical_Thermal> const & layers,
+                         std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior,
+                         std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior);
 
     std::vector<std::shared_ptr<Product_Data_Thermal>>
       get_thermal_layers(std::vector<Product_Data_Optical_Thermal> const & layers);
 
     std::vector<std::shared_ptr<wincalc::Product_Data_Optical>>
       get_optical_layers(std::vector<std::shared_ptr<Product_Data_Optical_Thermal>> const & layers);
-
+#if 0
     bool all_optical_layers_the_same(
       std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & layers);
 
     bool all_optical_layers_the_same(
       std::vector<wincalc::Product_Data_Optical_Thermal> const & layers);
-
+#endif
     std::string to_lower(std::string s);
 
     template<typename T>

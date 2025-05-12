@@ -1,0 +1,79 @@
+{
+    "layer_results": {
+        "layer 0": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.020777967302873752,
+                    "heat_direct": 0.0186767241998217,
+                    "total_diffuse": 0.020777967302873752,
+                    "total_direct": 0.0186767241998217
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.01416399413620349,
+                    "heat_direct": 0.011136181806947682,
+                    "total_diffuse": 0.01416399413620349,
+                    "total_direct": 0.011136181806947682
+                }
+            }
+        },
+        "noncoplanar_attachment_exterior": {
+            "back": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.4936957991906102,
+                    "heat_direct": 0.4322770141653415,
+                    "total_diffuse": 0.4936957991906102,
+                    "total_direct": 0.4322770141653415
+                }
+            },
+            "front": {
+                "absorptance": {
+                    "electricity_diffuse": 0.0,
+                    "electricity_direct": 0.0,
+                    "heat_diffuse": 0.3939823672957004,
+                    "heat_direct": 0.41926658072813605,
+                    "total_diffuse": 0.3939823672957004,
+                    "total_direct": 0.41926658072813605
+                }
+            }
+        },
+        "noncoplanar_attachment_interior": {}
+    },
+    "system_results": {
+        "back": {
+            "reflectance": {
+                "diffuse_diffuse": 0.170587926842155,
+                "direct_diffuse": 0.004525937280387082,
+                "direct_direct": 0.08292922655985731,
+                "direct_hemispherical": 0.08745516384024439
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.3149383066643616,
+                "direct_diffuse": 0.000523951224123298,
+                "direct_direct": 0.461067146570469,
+                "direct_hemispherical": 0.4615910977945923
+            }
+        },
+        "front": {
+            "reflectance": {
+                "diffuse_diffuse": 0.03560681184064978,
+                "direct_diffuse": 0.005386156571493342,
+                "direct_direct": 0.025531693070844887,
+                "direct_hemispherical": 0.03091784964233823
+            },
+            "transmittance": {
+                "diffuse_diffuse": 0.5562468267274456,
+                "direct_diffuse": 0.0009973871494531883,
+                "direct_direct": 0.5376820006731253,
+                "direct_hemispherical": 0.5386793878225785
+            }
+        }
+    }
+}
