@@ -4,7 +4,7 @@ include(ExternalProject)
 
 ExternalProject_Add(Windows-CalcEngine
     GIT_REPOSITORY https://github.com/LBNL-ETA/Windows-CalcEngine.git
-    GIT_TAG "Version_1.0.53"
+    GIT_TAG "Version_1.0.54"
     
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
