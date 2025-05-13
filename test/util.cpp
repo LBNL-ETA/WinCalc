@@ -99,6 +99,19 @@ void compare_vectors(std::vector<double> const & v1, std::vector<double> const &
     }
 }
 
+void compare_matrices(std::vector<std::vector<double>> const& m1, std::vector<std::vector<double>> const& m2)
+{
+    EXPECT_EQ(m1.size(), m2.size());
+    if (m1.size() != m2.size())
+    {
+        return;
+    }
+    for (size_t i = 0; i < m1.size(); ++i)
+    {
+        compare_vectors(m1[i], m2[i]);
+    }
+}
+
 void test_trichromatic_result(nlohmann::json & expected,
                               wincalc::Trichromatic const & results,
                               bool update)
@@ -176,12 +189,25 @@ void test_wce_optical_result_simple(nlohmann::json & expected,
     compare_possible_nan(results.direct_hemispherical, expected, "direct_hemispherical");
     compare_possible_nan(results.diffuse_diffuse, expected, "diffuse_diffuse");
 
+    auto const& expected_matrix = expected.value("matrix", std::vector<std::vector<double>>());
+    if(results.matrix)
+    {
+        compare_matrices(results.matrix.value(), expected_matrix);
+    }
+    else
+    {
+        EXPECT_TRUE(expected_matrix.empty());
+    }
     if(update)
     {
         expected["direct_direct"] = results.direct_direct;
         expected["direct_diffuse"] = results.direct_diffuse;
         expected["direct_hemispherical"] = results.direct_hemispherical;
         expected["diffuse_diffuse"] = results.diffuse_diffuse;
+        if(results.matrix)
+        {
+            expected["matrix"] = results.matrix.value();
+        }
     }
 }
 
