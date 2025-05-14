@@ -84,6 +84,7 @@ add_executable(${PROJECT_TEST_NAME}
 		3_layers_nfrc_102_air_nfrc_102_air_nfrc_102_deflection_triple_clear.unit.cpp
 		4_layers_coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_11561_air_bsdf_shade_all_sides_0.01_opening.unit.cpp
 		WINDOW_issue_1216.unit.cpp
+		load_frame_data.unit.cpp
 		nfrc_9023.unit.cpp
 		main.cpp
 		paths.h 

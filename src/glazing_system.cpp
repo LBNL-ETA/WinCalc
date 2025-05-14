@@ -764,12 +764,18 @@ namespace wincalc
 
         if(index >= product_data.size())
         {
-            throw std::runtime_error("Index out of bounds: The provided index exceeds the number of available layers.");
+            throw std::runtime_error(
+              "Index out of bounds: The provided index exceeds the number of available layers.");
         }
 
         product_data[index].thermal_data->conductivity = conductivity;
     }
 
+    Tarcog::ISO15099::CSystem & Glazing_System::get_thermal_system(double theta, double phi)
+    {
+        do_updates_for_thermal(theta, phi);
+        return get_system(theta, phi);
+    }
 
     SingleLayerOptics::IScatteringLayer & Glazing_System::get_optical_system_for_thermal_calcs()
     {
