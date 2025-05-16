@@ -164,11 +164,16 @@ namespace wincalc
 
         Tarcog::ISO15099::CSystem & get_thermal_system(double theta = 0, double phi = 0);
 
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior() const;
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior() const;
+        void non_coplanar_attachment_exterior(std::optional<Product_Data_Optical_Thermal> attachment);
+        void non_coplanar_attachment_interior(std::optional<Product_Data_Optical_Thermal> attachment);
+
     protected:
         std::vector<Product_Data_Optical_Thermal> product_data;
         std::vector<std::shared_ptr<Tarcog::ISO15099::CIGUGapLayer>> gap_values;
-        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior;
-        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior;
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_exterior_;
+        std::optional<Product_Data_Optical_Thermal> non_coplanar_attachment_interior_;
         window_standards::Optical_Standard standard;
         double width;
         double height;
