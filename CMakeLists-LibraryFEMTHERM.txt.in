@@ -4,7 +4,7 @@ include(ExternalProject)
 
 ExternalProject_Add(LibraryFEMTHERM
     GIT_REPOSITORY https://github.com/LBNL-ETA/LibraryFEMTHERM.git
-    GIT_TAG UpdatesForWCE
+    GIT_TAG 2025May_pywincalc_fixes
 
     SOURCE_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-src"
     BINARY_DIR "${CMAKE_BINARY_DIR}/LibraryFEMTHERM-build"
