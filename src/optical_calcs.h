@@ -83,6 +83,12 @@ namespace wincalc
                int number_visible_bands = 5,
                int number_solar_bands = 10);
 
+    WCE_Optical_Results calc_all(std::shared_ptr<SingleLayerOptics::IScatteringLayer> system,
+                              double min_lambda,
+                              double max_lambda,
+                              double theta,
+                              double phi);
+
     WCE_Color_Results
       calc_color(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
                  window_standards::Optical_Standard_Method const & method_x,

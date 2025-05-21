@@ -9,6 +9,7 @@ add_library( ${LIB_NAME}
 		create_wce_objects.cpp
 		glazing_system.h
 		glazing_system.cpp
+		layer_cache.h
 		optical_calc_params.h
 		environmental_conditions.h
 		environmental_conditions.cpp
