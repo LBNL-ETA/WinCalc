@@ -277,32 +277,6 @@ namespace wincalc
         return optical_results;
     }
 
-    WCE_Optical_Results
-      calc_all(std::vector<std::shared_ptr<wincalc::Product_Data_Optical>> const & product_data,
-               window_standards::Optical_Standard_Method const & method,
-               double theta,
-               double phi,
-               std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
-               Spectal_Data_Wavelength_Range_Method const & type,
-               int number_visible_bands,
-               int number_solar_bands)
-    {
-        LOGMSG("begin calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
-               + std::to_string(phi) + ")");
-        auto layers = create_multi_pane(
-          product_data, method, bsdf_hemisphere, type, number_visible_bands, number_solar_bands);
-        LOGMSG("before get_wavelengths");
-        std::vector<std::vector<double>> wavelengths = get_wavelengths(product_data);
-        LOGMSG("before get_lambda_range");
-        auto lambda_range = get_lambda_range(wavelengths, method);
-        LOGMSG("before result = calc_all");
-        auto result = calc_all(
-          std::move(layers), lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
-        LOGMSG("end calc_all(product_data, " + method.name + ", " + std::to_string(theta) + ", "
-               + std::to_string(phi) + ")");
-        return result;
-    }
-
     Color_Result
       calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
                             const FenestrationCommon::PropertySimple prop,

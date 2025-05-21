@@ -71,18 +71,6 @@ namespace wincalc
                             int number_visible_bands = 5,
                             int number_solar_bands = 10);
 
-    WCE_Optical_Results
-      calc_all(std::vector<std::shared_ptr<Product_Data_Optical>> const & product_data,
-               window_standards::Optical_Standard_Method const & method,
-               double theta = 0,
-               double phi = 0,
-               std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere =
-                 std::optional<SingleLayerOptics::BSDFHemisphere>(),
-               Spectal_Data_Wavelength_Range_Method const & type =
-                 Spectal_Data_Wavelength_Range_Method::FULL,
-               int number_visible_bands = 5,
-               int number_solar_bands = 10);
-
     WCE_Optical_Results calc_all(std::shared_ptr<SingleLayerOptics::IScatteringLayer> system,
                               double min_lambda,
                               double max_lambda,

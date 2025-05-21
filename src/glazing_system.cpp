@@ -57,25 +57,6 @@ namespace wincalc
         LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, method);
 
-        ////  TEMPORARY TEST ONLY
-        //auto layer_test = create_multi_pane(get_optical_layers(product_data,
-        //                                                       non_coplanar_attachment_exterior_,
-        //                                                       non_coplanar_attachment_interior_),
-        //                                    method,
-        //                                    bsdf_hemisphere,
-        //                                    spectral_data_wavelength_range_method,
-        //                                    number_visible_bands,
-        //                                    number_solar_bands);
-//
-        //auto result_old =
-        //  calc_all(std::shared_ptr<SingleLayerOptics::IScatteringLayer>(std::move(layer_test)),
-        //           lambda_range.min_lambda,
-        //           lambda_range.max_lambda,
-        //           theta,
-        //           phi);
-//
-        //// END OF TEMPORARY TEST
-
         LOGMSG("before final calc_all");
         auto result =
           calc_all(layer, lambda_range.min_lambda, lambda_range.max_lambda, theta, phi);
