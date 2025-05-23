@@ -15,7 +15,7 @@ namespace wincalc
         {
             optical_layers.push_back(non_coplanar_attachment_exterior.value().optical_data);
         }
-        for(auto layer : layers)
+        for(const auto& layer : layers)
         {
             optical_layers.push_back(layer.optical_data);
         }
@@ -31,7 +31,7 @@ namespace wincalc
       get_thermal_layers(std::vector<Product_Data_Optical_Thermal> const & layers)
     {
         std::vector<std::shared_ptr<Product_Data_Thermal>> thermal_layers;
-        for(auto layer : layers)
+        for(const auto& layer : layers)
         {
             thermal_layers.push_back(layer.thermal_data);
         }
