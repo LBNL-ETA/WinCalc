@@ -211,19 +211,11 @@ namespace wincalc
             {
                 throw std::runtime_error("Missing wavelength measurements");
             }
-            if(!product.thickness.has_value())
-            {
-                throw std::runtime_error("Missing product thickness");
-            }
             auto wavelength_measured_values = product.measurements.value();
             std::shared_ptr<Product_Data_Optical> converted;
             if(std::holds_alternative<std::vector<OpticsParser::WLData>>(
                  wavelength_measured_values))
             {
-                if(!product.productSubtype.has_value())
-                {
-                    throw std::runtime_error("Missing product subtype");
-                }
                 FenestrationCommon::MaterialType material_type =
                   convert_material_type(product.productSubtype.value());
 

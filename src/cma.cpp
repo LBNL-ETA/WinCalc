@@ -73,11 +73,11 @@ namespace wincalc
                 }
             }
             results[std::make_pair(spacer_option, glazing_option)] =
-              Tarcog::ISO15099::FrameData(u_value.value(),
+              Tarcog::ISO15099::FrameData{u_value.value(),
                                           u_edge.value(),
                                           projected_frame_dimension.value() / 1000,
                                           wetted_length.value() / 1000,
-                                          absorptance);
+                                          absorptance};
         }
 
         return results;
@@ -206,10 +206,15 @@ namespace wincalc
                                          worst_spacer_keff,
                                          best_worst_u_factors.best,
                                          best_worst_u_factors.worst));
-        cma_window->setFrameTop(top_cma_frame);
-        cma_window->setFrameBottom(bottom_cma_frame);
-        cma_window->setFrameLeft(left_cma_frame);
-        cma_window->setFrameRight(right_cma_frame);
+        using Tarcog::ISO15099::SingleVisionFramePosition;
+
+        cma_window->setFrameData({
+            {SingleVisionFramePosition::Top, top_cma_frame},
+            {SingleVisionFramePosition::Bottom, bottom_cma_frame},
+            {SingleVisionFramePosition::Left, left_cma_frame},
+            {SingleVisionFramePosition::Right, right_cma_frame}
+        });
+
         return cma_window;
     }
 
@@ -232,10 +237,15 @@ namespace wincalc
                                          worst_spacer_keff,
                                          best_u_factors,
                                          worst_u_factors));
-        cma_window->setFrameTop(top_frame);
-        cma_window->setFrameBottom(bottom_frame);
-        cma_window->setFrameLeft(left_frame);
-        cma_window->setFrameRight(right_frame);
+        using Tarcog::ISO15099::SingleVisionFramePosition;
+
+        cma_window->setFrameData({
+            {SingleVisionFramePosition::Top, top_frame},
+            {SingleVisionFramePosition::Bottom, bottom_frame},
+            {SingleVisionFramePosition::Left, left_frame},
+            {SingleVisionFramePosition::Right, right_frame}
+        });
+
         return cma_window;
     }
 
@@ -271,13 +281,18 @@ namespace wincalc
                                                worst_spacer_keff,
                                                best_worst_u_factors.best,
                                                best_worst_u_factors.worst));
-        cma_window->setFrameTop(top_cma_frame);
-        cma_window->setFrameBottom(bottom_cma_frame);
-        cma_window->setFrameTopLeft(top_left_cma_frame);
-        cma_window->setFrameTopRight(top_right_cma_frame);
-        cma_window->setFrameBottomLeft(bottom_left_cma_frame);
-        cma_window->setFrameBottomRight(bottom_right_cma_frame);
-        cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
+        using Tarcog::ISO15099::DualVerticalFramePosition;
+
+        cma_window->setFrameData({
+            {DualVerticalFramePosition::Top, top_cma_frame},
+            {DualVerticalFramePosition::Bottom, bottom_cma_frame},
+            {DualVerticalFramePosition::TopLeft, top_left_cma_frame},
+            {DualVerticalFramePosition::TopRight, top_right_cma_frame},
+            {DualVerticalFramePosition::BottomLeft, bottom_left_cma_frame},
+            {DualVerticalFramePosition::BottomRight, bottom_right_cma_frame},
+            {DualVerticalFramePosition::MeetingRail, meeting_rail_cma_frame}
+        });
+
         return cma_window;
     }
 
@@ -303,13 +318,18 @@ namespace wincalc
                                                worst_spacer_keff,
                                                best_u_factors,
                                                worst_u_factors));
-        cma_window->setFrameTop(top_frame);
-        cma_window->setFrameBottom(bottom_frame);
-        cma_window->setFrameTopLeft(top_left_frame);
-        cma_window->setFrameTopRight(top_right_frame);
-        cma_window->setFrameBottomLeft(bottom_left_frame);
-        cma_window->setFrameBottomRight(bottom_right_frame);
-        cma_window->setFrameMeetingRail(meeting_rail);
+        using Tarcog::ISO15099::DualVerticalFramePosition;
+
+        cma_window->setFrameData({
+            {DualVerticalFramePosition::Top, top_frame},
+            {DualVerticalFramePosition::Bottom, bottom_frame},
+            {DualVerticalFramePosition::TopLeft, top_left_frame},
+            {DualVerticalFramePosition::TopRight, top_right_frame},
+            {DualVerticalFramePosition::BottomLeft, bottom_left_frame},
+            {DualVerticalFramePosition::BottomRight, bottom_right_frame},
+            {DualVerticalFramePosition::MeetingRail, meeting_rail}
+        });
+
         return cma_window;
     }
 
@@ -345,13 +365,18 @@ namespace wincalc
                                                  worst_spacer_keff,
                                                  best_worst_u_factors.best,
                                                  best_worst_u_factors.worst));
-        cma_window->setFrameTopLeft(top_left_cma_frame);
-        cma_window->setFrameTopRight(top_right_cma_frame);
-        cma_window->setFrameBottomLeft(bottom_left_cma_frame);
-        cma_window->setFrameBottomRight(bottom_right_cma_frame);
-        cma_window->setFrameLeft(left_cma_frame);
-        cma_window->setFrameRight(right_cma_frame);
-        cma_window->setFrameMeetingRail(meeting_rail_cma_frame);
+        using Tarcog::ISO15099::DualHorizontalFramePosition;
+
+        cma_window->setFrameData({
+            {DualHorizontalFramePosition::TopLeft, top_left_cma_frame},
+            {DualHorizontalFramePosition::TopRight, top_right_cma_frame},
+            {DualHorizontalFramePosition::BottomLeft, bottom_left_cma_frame},
+            {DualHorizontalFramePosition::BottomRight, bottom_right_cma_frame},
+            {DualHorizontalFramePosition::Left, left_cma_frame},
+            {DualHorizontalFramePosition::Right, right_cma_frame},
+            {DualHorizontalFramePosition::MeetingRail, meeting_rail_cma_frame}
+        });
+
         return cma_window;
     }
 
@@ -377,13 +402,18 @@ namespace wincalc
                                                  worst_spacer_keff,
                                                  best_u_factors,
                                                  worst_u_factors));
-        cma_window->setFrameTopLeft(top_left_frame);
-        cma_window->setFrameTopRight(top_right_frame);
-        cma_window->setFrameBottomLeft(bottom_left_frame);
-        cma_window->setFrameBottomRight(bottom_right_frame);
-        cma_window->setFrameLeft(left_frame);
-        cma_window->setFrameRight(right_frame);
-        cma_window->setFrameMeetingRail(meeting_rail);
+        using Tarcog::ISO15099::DualHorizontalFramePosition;
+
+        cma_window->setFrameData({
+            {DualHorizontalFramePosition::TopLeft, top_left_frame},
+            {DualHorizontalFramePosition::TopRight, top_right_frame},
+            {DualHorizontalFramePosition::BottomLeft, bottom_left_frame},
+            {DualHorizontalFramePosition::BottomRight, bottom_right_frame},
+            {DualHorizontalFramePosition::Left, left_frame},
+            {DualHorizontalFramePosition::Right, right_frame},
+            {DualHorizontalFramePosition::MeetingRail, meeting_rail}
+        });
+
         return cma_window;
 	}
 

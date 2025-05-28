@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project( wincalc VERSION 2.5.4 LANGUAGES CXX )
+project( wincalc VERSION 2.5.5 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")
@@ -33,6 +33,7 @@ include(CMakeLists-Windows-Standards.txt)
 include(CMakeLists-OpticalMeasurementParser.txt)
 include(CMakeLists-THMXParser.txt)
 include(CMakeLists-Windows-CalcEngine.txt)
+include(CMakeLists-LibraryFEMTHERM.txt)
 
 add_subdirectory(src)
 

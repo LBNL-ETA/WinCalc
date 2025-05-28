@@ -3,13 +3,15 @@ graph TD
     %% Package definitions
     xmlParser[xmlParser<br/><font color='red'>v1.0.3</font>]
     FileParse[FileParse<br/><font color='red'>Version_1.0.5</font>]
-    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.4</font>]
-    nlohmann[nlohmann<br/><font color='red'>v3.11.3</font>]
-    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.3</font>]
+    miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
+    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.5</font>]
+    nlohmann[nlohmann<br/><font color='red'>v3.12.0</font>]
+    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.5</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.3</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.53</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.55</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    WinCalc[WinCalc<br/><font color='red'>v2.5.4</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.9</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.5.5</font>]
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
@@ -21,3 +23,5 @@ graph TD
     WinCalc --> THMXParser    
     WinCalc --> Windows-CalcStandards
     WinCalc --> WindowsCalcEngine
+    LibraryFEMTHERM --> miniz
+    WinCalc --> LibraryFEMTHERM

@@ -9,6 +9,7 @@ add_library( ${LIB_NAME}
 		create_wce_objects.cpp
 		glazing_system.h
 		glazing_system.cpp
+		layer_cache.h
 		optical_calc_params.h
 		environmental_conditions.h
 		environmental_conditions.cpp
@@ -22,6 +23,8 @@ add_library( ${LIB_NAME}
 		cma.cpp
 		thermal_ir.h
 		thermal_ir.cpp
+		thmz.h
+		thmz.cpp
 		deflection_results.h
 		shade_factories.h
 		shade_factories.cpp)
@@ -43,8 +46,8 @@ if ( MSVC )
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
 
-target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
-target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine)
+target_compile_features(${LIB_NAME} PUBLIC cxx_std_20)
+target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine LibraryFEMTHERM)
 
 
 

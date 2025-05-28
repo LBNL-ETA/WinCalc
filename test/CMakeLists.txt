@@ -28,6 +28,10 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
+		2_layers_nfrc_102_as_awning_nfrc_102.unit.cpp
+		2_layers_nfrc_103_air_nfrc_5487.unit.cpp
+		1_layer_nfrc_102_awning_generic.unit.cpp
+		#1_layer_nfrc_102_awning_2011-SA1.unit.cpp
 		1_layer_nfrc_102_WCE.unit.cpp
 		1_layer_applied_film_nfrc_9223.unit.cpp
 		1_layer_cellular_shade_CS03_genBSDF.unit.cpp
@@ -81,6 +85,7 @@ add_executable(${PROJECT_TEST_NAME}
 		3_layers_nfrc_102_air_nfrc_102_air_nfrc_102_deflection_triple_clear.unit.cpp
 		4_layers_coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_11561_air_bsdf_shade_all_sides_0.01_opening.unit.cpp
 		WINDOW_issue_1216.unit.cpp
+		load_frame_data.unit.cpp
 		nfrc_9023.unit.cpp
 		main.cpp
 		paths.h 

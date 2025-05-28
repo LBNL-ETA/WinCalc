@@ -56,6 +56,8 @@ namespace wincalc
         WCE_Optical_Result_By_Side<WCE_Optical_Transmission_Result<WCE_Optical_Result_Simple<T>>>
           system_results;
         std::vector<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> layer_results;
+        std::optional<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> non_coplanar_attachment_exterior_results;
+        std::optional<WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<T>>> non_coplanar_attachment_interior_results;
     };
 
     using WCE_Optical_Results = WCE_Optical_Results_Template<double>;
