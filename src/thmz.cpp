@@ -186,6 +186,7 @@ namespace wincalc
             return iguData.error();
 
         return Tarcog::ISO15099::FrameData{
+            std::nullopt,
             uVal.value(),
             edgeUVal.value(),
             projLen.value(),
