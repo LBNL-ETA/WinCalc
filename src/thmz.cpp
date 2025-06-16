@@ -86,7 +86,8 @@ namespace wincalc
               ucase->steadyStateUFactors,
               [&](const auto & f) { return f.tag == tags.shgc; },
               FrameLoadErr::FrameOrEdgeTagMissing);
-            if(shgcF.has_value()) {
+            if(shgcF.has_value())
+            {
                 auto proj = expect_element(
                   shgcF.value()->projections,
                   [](const auto & p) {
@@ -101,7 +102,8 @@ namespace wincalc
               ucase->steadyStateUFactors,
               [&](const auto & f) { return f.tag == tags.frame; },
               FrameLoadErr::FrameOrEdgeTagMissing);
-            if(frameF.has_value()) {
+            if(frameF.has_value())
+            {
                 auto proj = expect_element(
                   frameF.value()->projections,
                   [](const auto & p) {
@@ -119,7 +121,8 @@ namespace wincalc
           -> lbnl::ExpectedExt<Tarcog::ISO15099::IGUData, FrameLoadErr>
         {
             if(model.glazingSystems.empty())
-                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(FrameLoadErr::IGUDataMissing);
+                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(
+                  FrameLoadErr::IGUDataMissing);
 
             const auto & glz = model.glazingSystems.front();
             auto winter = lbnl::find_element(glz.properties, [](const auto & p) {
@@ -127,7 +130,8 @@ namespace wincalc
             });
 
             if(!winter)
-                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(FrameLoadErr::IGUDataMissing);
+                return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(
+                  FrameLoadErr::IGUDataMissing);
 
             return Tarcog::ISO15099::IGUData{winter->uValue, glz_sys_thickness(glz)};
         }
@@ -185,14 +189,12 @@ namespace wincalc
         if(!iguData.has_value())
             return iguData.error();
 
-        return Tarcog::ISO15099::FrameData{
-            uVal.value(),
-            edgeUVal.value(),
-            projLen.value(),
-            wettedLen.value(),
-            0.3,
-            iguData.value()
-        };
+        return Tarcog::ISO15099::FrameData{.UValue = uVal.value(),
+                                           .EdgeUValue = edgeUVal.value(),
+                                           .ProjectedFrameDimension = projLen.value(),
+                                           .WettedLength = wettedLen.value(),
+                                           .Absorptance = 0.3,
+                                           .iguData = iguData.value()};
     }
 
 }   // namespace wincalc

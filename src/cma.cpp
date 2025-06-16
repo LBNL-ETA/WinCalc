@@ -27,7 +27,7 @@ namespace wincalc
     std::map<BestWorstSpacerIGU, Tarcog::ISO15099::FrameData>
       cma_frame_parameters(thmxParser::ThmxFileContents const & frame)
     {
-        const double absorptance = 0.3;   // Absorptance is alwasys 0.3 for now at least
+        const double absorptance = 0.3;   // Absorptance is always 0.3 for now at least
         std::map<BestWorstSpacerIGU, Tarcog::ISO15099::FrameData> results;
 
         for(auto const & result : frame.results)
@@ -72,12 +72,12 @@ namespace wincalc
                     }
                 }
             }
-            results[std::make_pair(spacer_option, glazing_option)] =
-              Tarcog::ISO15099::FrameData{u_value.value(),
-                                          u_edge.value(),
-                                          projected_frame_dimension.value() / 1000,
-                                          wetted_length.value() / 1000,
-                                          absorptance};
+            results[std::make_pair(spacer_option, glazing_option)] = Tarcog::ISO15099::FrameData{
+              .UValue = u_value.value(),
+              .EdgeUValue = u_edge.value(),
+              .ProjectedFrameDimension = projected_frame_dimension.value() / 1000,
+              .WettedLength = wetted_length.value() / 1000,
+              .Absorptance = absorptance};
         }
 
         return results;
@@ -208,12 +208,10 @@ namespace wincalc
                                          best_worst_u_factors.worst));
         using Tarcog::ISO15099::SingleVisionFramePosition;
 
-        cma_window->setFrameData({
-            {SingleVisionFramePosition::Top, top_cma_frame},
-            {SingleVisionFramePosition::Bottom, bottom_cma_frame},
-            {SingleVisionFramePosition::Left, left_cma_frame},
-            {SingleVisionFramePosition::Right, right_cma_frame}
-        });
+        cma_window->setFrameData({{SingleVisionFramePosition::Top, top_cma_frame},
+                                  {SingleVisionFramePosition::Bottom, bottom_cma_frame},
+                                  {SingleVisionFramePosition::Left, left_cma_frame},
+                                  {SingleVisionFramePosition::Right, right_cma_frame}});
 
         return cma_window;
     }
@@ -239,12 +237,10 @@ namespace wincalc
                                          worst_u_factors));
         using Tarcog::ISO15099::SingleVisionFramePosition;
 
-        cma_window->setFrameData({
-            {SingleVisionFramePosition::Top, top_frame},
-            {SingleVisionFramePosition::Bottom, bottom_frame},
-            {SingleVisionFramePosition::Left, left_frame},
-            {SingleVisionFramePosition::Right, right_frame}
-        });
+        cma_window->setFrameData({{SingleVisionFramePosition::Top, top_frame},
+                                  {SingleVisionFramePosition::Bottom, bottom_frame},
+                                  {SingleVisionFramePosition::Left, left_frame},
+                                  {SingleVisionFramePosition::Right, right_frame}});
 
         return cma_window;
     }
@@ -283,15 +279,14 @@ namespace wincalc
                                                best_worst_u_factors.worst));
         using Tarcog::ISO15099::DualVerticalFramePosition;
 
-        cma_window->setFrameData({
-            {DualVerticalFramePosition::Top, top_cma_frame},
-            {DualVerticalFramePosition::Bottom, bottom_cma_frame},
-            {DualVerticalFramePosition::TopLeft, top_left_cma_frame},
-            {DualVerticalFramePosition::TopRight, top_right_cma_frame},
-            {DualVerticalFramePosition::BottomLeft, bottom_left_cma_frame},
-            {DualVerticalFramePosition::BottomRight, bottom_right_cma_frame},
-            {DualVerticalFramePosition::MeetingRail, meeting_rail_cma_frame}
-        });
+        cma_window->setFrameData(
+          {{DualVerticalFramePosition::Top, top_cma_frame},
+           {DualVerticalFramePosition::Bottom, bottom_cma_frame},
+           {DualVerticalFramePosition::TopLeft, top_left_cma_frame},
+           {DualVerticalFramePosition::TopRight, top_right_cma_frame},
+           {DualVerticalFramePosition::BottomLeft, bottom_left_cma_frame},
+           {DualVerticalFramePosition::BottomRight, bottom_right_cma_frame},
+           {DualVerticalFramePosition::MeetingRail, meeting_rail_cma_frame}});
 
         return cma_window;
     }
@@ -320,15 +315,13 @@ namespace wincalc
                                                worst_u_factors));
         using Tarcog::ISO15099::DualVerticalFramePosition;
 
-        cma_window->setFrameData({
-            {DualVerticalFramePosition::Top, top_frame},
-            {DualVerticalFramePosition::Bottom, bottom_frame},
-            {DualVerticalFramePosition::TopLeft, top_left_frame},
-            {DualVerticalFramePosition::TopRight, top_right_frame},
-            {DualVerticalFramePosition::BottomLeft, bottom_left_frame},
-            {DualVerticalFramePosition::BottomRight, bottom_right_frame},
-            {DualVerticalFramePosition::MeetingRail, meeting_rail}
-        });
+        cma_window->setFrameData({{DualVerticalFramePosition::Top, top_frame},
+                                  {DualVerticalFramePosition::Bottom, bottom_frame},
+                                  {DualVerticalFramePosition::TopLeft, top_left_frame},
+                                  {DualVerticalFramePosition::TopRight, top_right_frame},
+                                  {DualVerticalFramePosition::BottomLeft, bottom_left_frame},
+                                  {DualVerticalFramePosition::BottomRight, bottom_right_frame},
+                                  {DualVerticalFramePosition::MeetingRail, meeting_rail}});
 
         return cma_window;
     }
@@ -367,34 +360,33 @@ namespace wincalc
                                                  best_worst_u_factors.worst));
         using Tarcog::ISO15099::DualHorizontalFramePosition;
 
-        cma_window->setFrameData({
-            {DualHorizontalFramePosition::TopLeft, top_left_cma_frame},
-            {DualHorizontalFramePosition::TopRight, top_right_cma_frame},
-            {DualHorizontalFramePosition::BottomLeft, bottom_left_cma_frame},
-            {DualHorizontalFramePosition::BottomRight, bottom_right_cma_frame},
-            {DualHorizontalFramePosition::Left, left_cma_frame},
-            {DualHorizontalFramePosition::Right, right_cma_frame},
-            {DualHorizontalFramePosition::MeetingRail, meeting_rail_cma_frame}
-        });
+        cma_window->setFrameData(
+          {{DualHorizontalFramePosition::TopLeft, top_left_cma_frame},
+           {DualHorizontalFramePosition::TopRight, top_right_cma_frame},
+           {DualHorizontalFramePosition::BottomLeft, bottom_left_cma_frame},
+           {DualHorizontalFramePosition::BottomRight, bottom_right_cma_frame},
+           {DualHorizontalFramePosition::Left, left_cma_frame},
+           {DualHorizontalFramePosition::Right, right_cma_frame},
+           {DualHorizontalFramePosition::MeetingRail, meeting_rail_cma_frame}});
 
         return cma_window;
     }
 
-        std::shared_ptr<CMA::CMAWindowDualVisionHorizontal>
-		get_cma_window_double_vision_horizontal(CMA::CMAFrame const & top_left_frame,
-			CMA::CMAFrame const & top_right_frame,
-			CMA::CMAFrame const & bottom_left_frame,
-			CMA::CMAFrame const & bottom_right_frame,
-			CMA::CMAFrame const & left_frame,
-			CMA::CMAFrame const & right_frame,
-			CMA::CMAFrame const & meeting_rail,
-			double window_width,
-			double window_height,
-			double best_spacer_keff,
-			double worst_spacer_keff,
-			CMA::CMABestWorstUFactors const & best_u_factors,
-			CMA::CMABestWorstUFactors const & worst_u_factors)
-	{
+    std::shared_ptr<CMA::CMAWindowDualVisionHorizontal>
+      get_cma_window_double_vision_horizontal(CMA::CMAFrame const & top_left_frame,
+                                              CMA::CMAFrame const & top_right_frame,
+                                              CMA::CMAFrame const & bottom_left_frame,
+                                              CMA::CMAFrame const & bottom_right_frame,
+                                              CMA::CMAFrame const & left_frame,
+                                              CMA::CMAFrame const & right_frame,
+                                              CMA::CMAFrame const & meeting_rail,
+                                              double window_width,
+                                              double window_height,
+                                              double best_spacer_keff,
+                                              double worst_spacer_keff,
+                                              CMA::CMABestWorstUFactors const & best_u_factors,
+                                              CMA::CMABestWorstUFactors const & worst_u_factors)
+    {
         std::shared_ptr<CMA::CMAWindowDualVisionHorizontal> cma_window(
           new CMA::CMAWindowDualVisionHorizontal(window_width,
                                                  window_height,
@@ -404,18 +396,16 @@ namespace wincalc
                                                  worst_u_factors));
         using Tarcog::ISO15099::DualHorizontalFramePosition;
 
-        cma_window->setFrameData({
-            {DualHorizontalFramePosition::TopLeft, top_left_frame},
-            {DualHorizontalFramePosition::TopRight, top_right_frame},
-            {DualHorizontalFramePosition::BottomLeft, bottom_left_frame},
-            {DualHorizontalFramePosition::BottomRight, bottom_right_frame},
-            {DualHorizontalFramePosition::Left, left_frame},
-            {DualHorizontalFramePosition::Right, right_frame},
-            {DualHorizontalFramePosition::MeetingRail, meeting_rail}
-        });
+        cma_window->setFrameData({{DualHorizontalFramePosition::TopLeft, top_left_frame},
+                                  {DualHorizontalFramePosition::TopRight, top_right_frame},
+                                  {DualHorizontalFramePosition::BottomLeft, bottom_left_frame},
+                                  {DualHorizontalFramePosition::BottomRight, bottom_right_frame},
+                                  {DualHorizontalFramePosition::Left, left_frame},
+                                  {DualHorizontalFramePosition::Right, right_frame},
+                                  {DualHorizontalFramePosition::MeetingRail, meeting_rail}});
 
         return cma_window;
-	}
+    }
 
     CMAResult calc_cma(CMA::ICMAWindow & window,
                        double glazing_system_u,
@@ -428,5 +418,4 @@ namespace wincalc
         auto shgc = window.shgc(glazing_system_shgc, spacer_keff);
         return CMAResult{u, shgc, tvis};
     }
-
 }   // namespace wincalc
