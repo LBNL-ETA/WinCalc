@@ -10,8 +10,8 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.3</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.56</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.9</font>]
-    WinCalc[WinCalc<br/><font color='red'>v2.5.6</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>FixForDefaults</font>]
+    WinCalc[WinCalc<br/><font color='red'>2025JuneFixes_2</font>]
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
