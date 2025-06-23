@@ -1,6 +1,7 @@
 ```mermaid
 graph TD
     %% Package definitions
+    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.12</font>]
     xmlParser[xmlParser<br/><font color='red'>v1.0.3</font>]
     FileParse[FileParse<br/><font color='red'>Version_1.0.5</font>]
     miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
@@ -10,12 +11,12 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.3</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.56</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>FixForDefaults</font>]
-    WinCalc[WinCalc<br/><font color='red'>2025JuneFixes_2</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Verion_0.10</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.5.7</font>]
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
-    OpticalMeasurementParser --> nlohmann
+    OpticalMeasurementParser --> nlohmann    
     OpticalMeasurementParser --> BSDFXMLParser
     FileParse --> xmlParser
     BSDFXMLParser --> FileParse
@@ -24,4 +25,5 @@ graph TD
     WinCalc --> Windows-CalcStandards
     WinCalc --> WindowsCalcEngine
     LibraryFEMTHERM --> miniz
+    LibraryFEMTHERM --> LBNLCPPCommon
     WinCalc --> LibraryFEMTHERM
