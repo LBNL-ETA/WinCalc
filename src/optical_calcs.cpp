@@ -226,6 +226,11 @@ namespace wincalc
                             FenestrationCommon::Side::Front,
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
+            optical_results.system_results.front.transmittance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::PropertySimple::T);
 
             LOGMSG("before front.reflectance.matrix");
             optical_results.system_results.front.reflectance.matrix =
@@ -235,6 +240,11 @@ namespace wincalc
                             FenestrationCommon::Side::Front,
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
+            optical_results.system_results.front.reflectance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::PropertySimple::R);
 
             LOGMSG("before back.transmittance.matrix");
             optical_results.system_results.back.transmittance.matrix =
@@ -244,6 +254,11 @@ namespace wincalc
                             FenestrationCommon::Side::Back,
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
+            optical_results.system_results.back.transmittance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Back,
+                                                 FenestrationCommon::PropertySimple::T);
 
             LOGMSG("before back.reflectance.matrix");
             optical_results.system_results.back.reflectance.matrix =
@@ -253,6 +268,11 @@ namespace wincalc
                             FenestrationCommon::Side::Back,
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
+            optical_results.system_results.back.reflectance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Back,
+                                                 FenestrationCommon::PropertySimple::R);
         }
 
         LOGMSG("before absorptances_front");
@@ -477,8 +497,8 @@ namespace wincalc
     std::unique_ptr<SingleLayerOptics::IScatteringLayer>
       optical_solar_results_system_needed_for_thermal_calcs(
         std::vector<Product_Data_Optical_Thermal> const & product_data,
-        std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_exterior,
-        std::optional<Product_Data_Optical_Thermal> const& non_coplanar_attachment_interior,
+        std::optional<Product_Data_Optical_Thermal> const & non_coplanar_attachment_exterior,
+        std::optional<Product_Data_Optical_Thermal> const & non_coplanar_attachment_interior,
         window_standards::Optical_Standard const & standard,
         std::optional<SingleLayerOptics::BSDFHemisphere> bsdf_hemisphere,
         Spectal_Data_Wavelength_Range_Method const & type,
@@ -486,18 +506,19 @@ namespace wincalc
         int number_solar_bands)
     {
         LOGMSG("begin optical_solar_results_system_needed_for_thermal_calcs");
-        auto optical_layers = get_optical_layers(product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior);
+        auto optical_layers = get_optical_layers(
+          product_data, non_coplanar_attachment_exterior, non_coplanar_attachment_interior);
         LOGMSG("before solar_method");
         auto solar_method = standard.methods.at("SOLAR");
         LOGMSG("before get_wavelengths");
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
         LOGMSG("before create_multi_pane");
         auto result = create_multi_pane(optical_layers,
-                                 solar_method,
-                                 bsdf_hemisphere,
-                                 type,
-                                 number_visible_bands,
-                                 number_solar_bands);
+                                        solar_method,
+                                        bsdf_hemisphere,
+                                        type,
+                                        number_visible_bands,
+                                        number_solar_bands);
         LOGMSG("end optical_solar_results_system_needed_for_thermal_calcs");
         return result;
     }
@@ -524,13 +545,13 @@ namespace wincalc
         auto lambda_range = get_lambda_range(wavelengths, method);
         LOGMSG("before calc_optical_property");
         auto result = calc_optical_property(std::move(layers),
-                                     property_choice,
-                                     side_choice,
-                                     scattering_choice,
-                                     lambda_range.min_lambda,
-                                     lambda_range.max_lambda,
-                                     theta,
-                                     phi);
+                                            property_choice,
+                                            side_choice,
+                                            scattering_choice,
+                                            lambda_range.min_lambda,
+                                            lambda_range.max_lambda,
+                                            theta,
+                                            phi);
         LOGMSG("end calc_optical_property");
         return result;
     }

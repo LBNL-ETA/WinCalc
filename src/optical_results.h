@@ -4,6 +4,8 @@
 #include <vector>
 #include <optional>
 
+#include <WCECommon.hpp>
+
 namespace wincalc
 {
     template<typename T>
@@ -14,6 +16,7 @@ namespace wincalc
         T diffuse_diffuse;
         T direct_hemispherical;
         std::optional<std::vector<std::vector<T>>> matrix;
+        std::optional<std::vector<FenestrationCommon::SquareMatrix>> wavelength_matrices;
     };
 
     template<typename T>
