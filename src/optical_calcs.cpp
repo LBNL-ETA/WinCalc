@@ -226,6 +226,11 @@ namespace wincalc
                             FenestrationCommon::Side::Front,
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
+            optical_results.system_results.front.transmittance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::PropertySimple::T);
 
             LOGMSG("before front.reflectance.matrix");
             optical_results.system_results.front.reflectance.matrix =
@@ -235,6 +240,11 @@ namespace wincalc
                             FenestrationCommon::Side::Front,
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
+            optical_results.system_results.front.reflectance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Front,
+                                                 FenestrationCommon::PropertySimple::R);
 
             LOGMSG("before back.transmittance.matrix");
             optical_results.system_results.back.transmittance.matrix =
@@ -244,6 +254,11 @@ namespace wincalc
                             FenestrationCommon::Side::Back,
                             FenestrationCommon::PropertySimple::T)
                 .getMatrix();
+            optical_results.system_results.back.transmittance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Back,
+                                                 FenestrationCommon::PropertySimple::T);
 
             LOGMSG("before back.reflectance.matrix");
             optical_results.system_results.back.reflectance.matrix =
@@ -253,6 +268,11 @@ namespace wincalc
                             FenestrationCommon::Side::Back,
                             FenestrationCommon::PropertySimple::R)
                 .getMatrix();
+            optical_results.system_results.back.reflectance.wavelength_matrices =
+              bsdf_system->getWavelengthMatrices(min_lambda,
+                                                 max_lambda,
+                                                 FenestrationCommon::Side::Back,
+                                                 FenestrationCommon::PropertySimple::R);
         }
 
         LOGMSG("before absorptances_front");
