@@ -785,14 +785,16 @@ namespace wincalc
         auto source_spectrum = get_spectum_values(method.source_spectrum, method, wavelengths);
         LOGMSG("before detector_spectrum = get_spectum_values");
         auto detector_spectrum = get_spectum_values(method.detector_spectrum, method, wavelengths);
-        LOGMSG("before combined_layer_wavelengths = combined_layer_wavelength_range_factory");
-        auto combined_layer_wavelengths = combined_layer_wavelength_range_factory(
-          wavelengths, type, number_visible_bands, number_solar_bands);
         LOGMSG("before MultiLayerOptics::CMultiPaneSpecular::create");
-        auto layer =
-          MultiLayerOptics::CMultiPaneSpecular::create(layers, combined_layer_wavelengths);
+        auto layer = MultiLayerOptics::CMultiPaneSpecular::create(layers);
         LOGMSG("before standard_wavelengths = optical_standard_wavelength_set");
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
+        if(type == Spectal_Data_Wavelength_Range_Method::CONDENSED
+           && ((method.name == "SOLAR") || (method.name == "PHOTOPIC")))
+        {
+            standard_wavelengths = combined_layer_wavelength_range_factory(
+              wavelengths, type, number_visible_bands, number_solar_bands);
+        }
         LOGMSG("before SingleLayerOptics::CalculationProperties input");
         const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
@@ -1093,9 +1095,15 @@ namespace wincalc
           wavelengths, type, number_visible_bands, number_solar_bands);
 
         LOGMSG("before MultiLayerOptics::CMultiPaneBSDF::create");
-        auto layer = MultiLayerOptics::CMultiPaneBSDF::create(layers, combined_layer_wavelengths);
+        auto layer = MultiLayerOptics::CMultiPaneBSDF::create(layers);
         LOGMSG("before standard_wavelengths = optical_standard_wavelength_set");
         auto standard_wavelengths = optical_standard_wavelength_set(method, wavelengths);
+        if(type == Spectal_Data_Wavelength_Range_Method::CONDENSED
+           && ((method.name == "SOLAR") || (method.name == "PHOTOPIC")))
+        {
+            standard_wavelengths = combined_layer_wavelength_range_factory(
+              wavelengths, type, number_visible_bands, number_solar_bands);
+        }
         LOGMSG("before SingleLayerOptics::CalculationProperties input");
         const SingleLayerOptics::CalculationProperties input{
           source_spectrum, standard_wavelengths, detector_spectrum};
