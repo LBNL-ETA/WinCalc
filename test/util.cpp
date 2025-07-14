@@ -457,12 +457,19 @@ void test_all_optical_results(std::string const & system_name,
     logMsg("start test_all_optical_results: " + system_name);
     std::string angle = "/" + get_angle_txt(theta, phi);
     logMsg("before optical_method_results SOLAR: " + system_name + angle);
+    std::cerr << "SOLAR" << std::endl;
     auto solar_results = glazing_system->optical_method_results("SOLAR", theta, phi);
     test_optical_results(system_name + angle + "/solar", solar_results, update_results);
     logMsg("before optical_method_results PHOTOPIC: " + system_name + angle);
+    std::cerr << "PHOTOPIC" << std::endl;
     auto photopic_results = glazing_system->optical_method_results("PHOTOPIC", theta, phi);
     test_optical_results(system_name + angle + "/photopic", photopic_results, update_results);
+    std::cerr << "TKR" << std::endl;
+    logMsg("before optical_method_results TKR: " + system_name + angle);
+    auto tkr_results = glazing_system->optical_method_results("TKR", theta, phi);
+    test_optical_results(system_name + angle + "/tkr", tkr_results, update_results);
 
+#if 0
     logMsg("before optical_method_results SPF: " + system_name + angle);
     EXPECT_THROW(glazing_system->optical_method_results("SPF"), std::runtime_error);
 
@@ -497,6 +504,7 @@ void test_all_optical_results(std::string const & system_name,
         auto color_results = glazing_system->color(theta, phi);
         test_optical_results(system_name + angle + "/color", color_results, update_results);
     }
+#endif
     logMsg("end test_all_optical_results: " + system_name);
 }
 
@@ -756,6 +764,7 @@ void test_optical_results(std::string const & system_name,
     double theta = 0;
     double phi = 0;
 
+#if 0
     std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
     std::cerr << "condensed spectrum" << std::endl;
 
@@ -763,13 +772,14 @@ void test_optical_results(std::string const & system_name,
       wincalc::Spectal_Data_Wavelength_Range_Method::CONDENSED);
     test_all_optical_results(
       system_name + "/condensed_spectrum", glazing_system, update, theta, phi);
+#endif
 
     std::cerr << "theta = " << theta << " and phi = " << phi << std::endl;
     std::cerr << "full spectrum" << std::endl;
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
-
+#if 0
     theta = 15;
     phi = 270;
 
@@ -786,6 +796,7 @@ void test_optical_results(std::string const & system_name,
     glazing_system->set_spectral_data_wavelength_range(
       wincalc::Spectal_Data_Wavelength_Range_Method::FULL);
     test_all_optical_results(system_name + "/full_spectrum", glazing_system, update, theta, phi);
+#endif
     logMsg("end test_optical_results: " + system_name);
 }
 

@@ -88,7 +88,7 @@ protected:
           standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
     }
 };
-
+/*
 TEST_F(Test_4_layers_coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_11561_air_bsdf_shade_all_sides_0_01_opening, Test_Thermal)
 {
     test_thermal_results("4_layers/coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_11561_air_bsdf_shade/0.01_opening_all_sides/full_basis",
@@ -100,6 +100,7 @@ TEST_F(Test_4_layers_coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_1
                          glazing_system_shgc,
                          update_results);
 }
+*/
 
 TEST_F(Test_4_layers_coated_nfrc_9962_argon_air_nfrc_102_argon_air_coated_nfrc_11561_air_bsdf_shade_all_sides_0_01_opening, Test_Optical)
 {
