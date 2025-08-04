@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 7.660734550544138,
-    "H_shgc_outdoor": 20.48384038594871,
+    "H_shgc_indoor": 7.660730903778584,
+    "H_shgc_outdoor": 20.483839660388348,
     "H_u_indoor": 6.9612597640667335,
     "H_u_outdoor": 20.38654074852459,
-    "SHGC": 0.7743767927715378,
+    "SHGC": 0.7743773242847033,
     "U": 2.5412920075673457,
     "gap_layer_effective_conductivities_shgc": [
-        0.00053447072974416
+        0.0005344705801484347
     ],
     "gap_layer_effective_conductivities_u": [
         0.0005136093721503346
     ],
-    "heat_flow_shgc_indoor": -63.57057661087444,
-    "heat_flow_shgc_outdoor": 54.20706601090404,
+    "heat_flow_shgc_indoor": -63.570265261176786,
+    "heat_flow_shgc_outdoor": 54.20651193907281,
     "heat_flow_u_indoor": -20.33033605886195,
     "heat_flow_u_outdoor": -20.330336059099125,
     "layer_temperatures_shgc": [
-        307.79633315772617,
-        307.860239638155,
-        305.56382178813163,
-        305.44823513547647
+        307.796306202245,
+        307.86021176834817,
+        305.56378469149934,
+        305.44819844342106
     ],
     "layer_temperatures_u": [
         304.1527569507831,
@@ -28,10 +28,10 @@
         300.07049668419
     ],
     "radiosities_shgc": [
-        506.11399601807733,
-        507.22828018111113,
-        496.34672974934847,
-        485.2889738223888
+        506.11384627846456,
+        507.2280880886848,
+        496.3464973917786,
+        485.2887746247395
     ],
     "radiosities_u": [
         486.23023705226444,
@@ -39,7 +39,7 @@
         463.4717506279163,
         456.85575451154466
     ],
-    "relative_heat_gain": 581.3279398155341,
+    "relative_heat_gain": 581.3283252542124,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         1.0
@@ -48,6 +48,6 @@
         1.0,
         1.0
     ],
-    "system_effective_conductivity_shgc": 0.16774568238854534,
+    "system_effective_conductivity_shgc": 0.1677441652558524,
     "system_effective_conductivity_u": 0.030857112965140026
 }

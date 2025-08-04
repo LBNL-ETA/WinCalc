@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project( wincalc VERSION 2.5.11 LANGUAGES CXX )
+project( wincalc VERSION 2.5.12 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")

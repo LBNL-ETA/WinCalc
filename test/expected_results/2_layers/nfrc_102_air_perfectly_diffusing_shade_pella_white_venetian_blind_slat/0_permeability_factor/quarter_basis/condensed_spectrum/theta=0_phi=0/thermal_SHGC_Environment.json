@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 9.025880978540552,
-    "H_shgc_outdoor": 20.606511783987187,
+    "H_shgc_indoor": 9.025881724282673,
+    "H_shgc_outdoor": 20.606511172086094,
     "H_u_indoor": 7.384416422141169,
     "H_u_outdoor": 20.381724021961364,
-    "SHGC": 0.2106386388536234,
+    "SHGC": 0.21063878961921562,
     "U": 3.0040880362398332,
     "gap_layer_effective_conductivities_shgc": [
-        0.09676381692005838
+        0.09676381323615989
     ],
     "gap_layer_effective_conductivities_u": [
         0.08737697098267391
     ],
-    "heat_flow_shgc_indoor": -188.96275850656235,
-    "heat_flow_shgc_outdoor": 147.5281220005799,
+    "heat_flow_shgc_indoor": -188.96287651845472,
+    "heat_flow_shgc_outdoor": 147.52765810310075,
     "heat_flow_u_indoor": -24.032704244907745,
     "heat_flow_u_outdoor": -24.032704311982286,
     "layer_temperatures_shgc": [
-        312.3092962233583,
-        312.5978521508454,
-        318.08570411805226,
-        318.08565813376265
+        312.30927392467936,
+        312.59782953712323,
+        318.08571546592003,
+        318.08566948167396
     ],
     "layer_temperatures_u": [
         303.9708698991002,
@@ -28,10 +28,10 @@
         300.40451638736266
     ],
     "radiosities_shgc": [
-        531.740606015488,
-        547.0940077726954,
-        577.0805618513572,
-        566.5750063766964
+        531.7404766155605,
+        547.0938861620559,
+        577.0806242364712,
+        566.5750809231276
     ],
     "radiosities_u": [
         485.2561745873745,
@@ -39,7 +39,7 @@
         463.5932950407183,
         459.759059258834
     ],
-    "relative_heat_gain": 176.12113507989815,
+    "relative_heat_gain": 176.12124439013806,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.5184373593167472,
+    "system_effective_conductivity_shgc": 0.5184346631181982,
     "system_effective_conductivity_u": 0.10679544213391522
 }

@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.997300055476853,
-    "H_shgc_outdoor": 20.604402045084306,
+    "H_shgc_indoor": 8.997300797875607,
+    "H_shgc_outdoor": 20.60440142787427,
     "H_u_indoor": 7.3802651877096555,
     "H_u_outdoor": 20.381737438099186,
-    "SHGC": 0.20570777623669503,
+    "SHGC": 0.20570792468456023,
     "U": 3.0027986595568077,
     "gap_layer_effective_conductivities_shgc": [
-        0.0965501035199288
+        0.09655009964045677
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733683395077872
     ],
-    "heat_flow_shgc_indoor": -185.09157809895743,
-    "heat_flow_shgc_outdoor": 145.92903669540277,
+    "heat_flow_shgc_indoor": -185.09169438805114,
+    "heat_flow_shgc_outdoor": 145.9285688971757,
     "heat_flow_u_indoor": -24.022389269838452,
     "heat_flow_u_outdoor": -24.022389324614267,
     "layer_temperatures_shgc": [
-        312.2324203677555,
-        312.51514234158583,
-        317.7219478108862,
-        317.7219023397879
+        312.232397875855,
+        312.5151195287329,
+        317.72195904233865,
+        317.7219135712844
     ],
     "layer_temperatures_u": [
         303.97137676461216,
@@ -28,10 +28,10 @@
         300.4049493372395
     ],
     "radiosities_shgc": [
-        531.2946585672585,
-        546.2136230952419,
-        574.5850787712164,
-        564.094762721312
+        531.2945281484593,
+        546.2135002321863,
+        574.5851398719593,
+        564.0948361944838
     ],
     "radiosities_u": [
         485.25888658094925,
@@ -39,7 +39,7 @@
         463.60927377722874,
         459.7476947576206
     ],
-    "relative_heat_gain": 172.53537825194707,
+    "relative_heat_gain": 172.53548588848625,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.5343548554220812,
+    "system_effective_conductivity_shgc": 0.5343519088616911,
     "system_effective_conductivity_u": 0.1067473926619036
 }
