@@ -43,6 +43,7 @@ namespace wincalc
         }
         SpectralAveraging::MeasuredRow converted(data.wavelength,
                                                  data.directComponent.value().tf,
+                                                 data.directComponent.value().tb,
                                                  data.directComponent.value().rf,
                                                  data.directComponent.value().rb);
         return converted;
@@ -510,8 +511,9 @@ namespace wincalc
         auto eqef = get_eqef(product_data.wavelength_data);
         auto eqeb = get_eqeb(product_data.wavelength_data);
 
+        auto sample = SpectralAveraging::CSpectralSampleData::create(measured_wavelength_data);
         auto pvSample = std::make_shared<SpectralAveraging::PhotovoltaicSampleData>(
-          measured_wavelength_data, eqef, eqeb);
+            *sample, eqef, eqeb);
 
         auto material = SingleLayerOptics::Material::nBandPhotovoltaicMaterial(
           pvSample, product_data.thickness_meters, product_data.material_type);
