@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.977322848167633,
-    "H_shgc_outdoor": 20.594498825376697,
+    "H_shgc_indoor": 8.977311397798598,
+    "H_shgc_outdoor": 20.594486956846985,
     "H_u_indoor": 7.364620311314379,
     "H_u_outdoor": 20.379564754026504,
-    "SHGC": 0.22097516174294246,
+    "SHGC": 0.22097232707696174,
     "U": 3.2116015771337265,
     "gap_layer_effective_conductivities_shgc": [
-        0.09790979589049266
+        0.09790956132012303
     ],
     "gap_layer_effective_conductivities_u": [
         0.08816805745911592
     ],
-    "heat_flow_shgc_indoor": -181.354004855301,
-    "heat_flow_shgc_outdoor": 138.4201640378804,
+    "heat_flow_shgc_indoor": -181.35222978933666,
+    "heat_flow_shgc_outdoor": 138.41116270904536,
     "heat_flow_u_indoor": -23.14910820542036,
     "heat_flow_u_outdoor": -25.692812638755697,
     "layer_temperatures_shgc": [
-        311.8712203224979,
-        312.1302862619009,
-        317.35139466881816,
-        317.35134598608846
+        311.8707871218512,
+        312.12984272576165,
+        317.35122271005645,
+        317.3511740286319
     ],
     "layer_temperatures_u": [
         303.88928550743293,
@@ -28,10 +28,10 @@
         300.29328603779226
     ],
     "radiosities_shgc": [
-        528.9943998901875,
-        543.3497038435291,
-        571.9780704164875,
-        561.8469303567169
+        528.9918915956608,
+        543.346904671546,
+        571.9766663932096,
+        561.8458062596861
     ],
     "radiosities_u": [
         484.8198321234838,
@@ -39,15 +39,15 @@
         462.92111935437185,
         459.1439332865191
     ],
-    "relative_heat_gain": 185.23135170469175,
+    "relative_heat_gain": 185.22929603019696,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
-        136.0041249649506
+        136.00412496294902
     ],
     "solid_layer_effective_conductivities_u": [
         1.0,
         136.00392640894847
     ],
-    "system_effective_conductivity_shgc": 0.5244584638688763,
+    "system_effective_conductivity_shgc": 0.5244283308996632,
     "system_effective_conductivity_u": 0.10202089050114252
 }

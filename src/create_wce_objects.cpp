@@ -83,7 +83,7 @@ namespace wincalc
         for(auto val : measured_data)
         {
             spectral_data->addRecord(
-              std::get<0>(val), std::get<1>(val), std::get<2>(val), std::get<3>(val));
+              std::get<0>(val), std::get<1>(val), std::get<1>(val), std::get<2>(val), std::get<3>(val));
         }
 
         return spectral_data;

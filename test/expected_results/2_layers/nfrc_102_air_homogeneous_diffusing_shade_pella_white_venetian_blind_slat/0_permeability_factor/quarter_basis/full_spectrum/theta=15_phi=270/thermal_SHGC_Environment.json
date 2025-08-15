@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 9.003108145771032,
-    "H_shgc_outdoor": 20.6183010689642,
+    "H_shgc_indoor": 9.003100227792915,
+    "H_shgc_outdoor": 20.618293273521687,
     "H_u_indoor": 7.380265186944966,
     "H_u_outdoor": 20.381737438555504,
-    "SHGC": 0.2068715758088975,
+    "SHGC": 0.2068699872751243,
     "U": 3.002798660254674,
     "gap_layer_effective_conductivities_shgc": [
-        0.09676817110293832
+        0.09676802164727344
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733683402777868
     ],
-    "heat_flow_shgc_indoor": -186.00283311312893,
-    "heat_flow_shgc_outdoor": 156.460176970333,
+    "heat_flow_shgc_indoor": -186.0015893854903,
+    "heat_flow_shgc_outdoor": 156.45427267998838,
     "heat_flow_u_indoor": -24.022389278537318,
     "heat_flow_u_outdoor": -24.022389316266754,
     "layer_temperatures_shgc": [
-        312.7384126643547,
-        313.0323358435734,
-        317.80989333972485,
-        317.80984658971306
+        312.7381291711537,
+        313.03204524767534,
+        317.8097733558609,
+        317.80972660662644
     ],
     "layer_temperatures_u": [
         303.9713767661525,
@@ -28,10 +28,10 @@
         300.4049493442208
     ],
     "radiosities_shgc": [
-        533.9339202475627,
-        549.0097414469218,
-        575.1677008319041,
-        564.3958113413591
+        533.9322600431738,
+        549.0078785393514,
+        575.1667237558602,
+        564.3950218634782
     ],
     "radiosities_u": [
         485.25888657979783,
@@ -39,7 +39,7 @@
         463.60927377463076,
         459.7476947551909
     ],
-    "relative_heat_gain": 173.3793335336661,
+    "relative_heat_gain": 173.37818162378684,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.5812503838734812,
+    "system_effective_conductivity_shgc": 0.5812277576822826,
     "system_effective_conductivity_u": 0.10674739239620881
 }
