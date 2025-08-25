@@ -870,11 +870,11 @@ namespace wincalc
         std::vector<std::vector<double>> wavelengths = get_wavelengths(optical_layers);
         LOGMSG("before get_lambda_range");
         auto lambda_range = get_lambda_range(wavelengths, solar_method);
-        LOGMSG("before optical_system.getPropertySimple");
+        LOGMSG("before optical_system.getPropertySurface");
         auto result =
-          optical_system.getPropertySimple(lambda_range.min_lambda,
+          optical_system.getPropertySurface(lambda_range.min_lambda,
                                            lambda_range.max_lambda,
-                                           FenestrationCommon::PropertySimple::T,
+                                           FenestrationCommon::PropertySurface::T,
                                            FenestrationCommon::Side::Front,
                                            FenestrationCommon::Scattering::DirectHemispherical,
                                            theta,

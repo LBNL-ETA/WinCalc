@@ -17,14 +17,14 @@ wincalc::ThermalIRResults
     wavelengths.push_back(product_data.optical_data->wavelengths());
     auto lambda_range = get_lambda_range(wavelengths, method);
 
-    auto tf = layer.getPropertySimple(lambda_range.min_lambda,
+    auto tf = layer.getPropertySurface(lambda_range.min_lambda,
                                       lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::T,
+                                      FenestrationCommon::PropertySurface::T,
                                       FenestrationCommon::Side::Front,
                                       FenestrationCommon::Scattering::DiffuseDiffuse);
-    auto tb = layer.getPropertySimple(lambda_range.min_lambda,
+    auto tb = layer.getPropertySurface(lambda_range.min_lambda,
                                       lambda_range.max_lambda,
-                                      FenestrationCommon::PropertySimple::T,
+                                      FenestrationCommon::PropertySurface::T,
                                       FenestrationCommon::Side::Back,
                                       FenestrationCommon::Scattering::DiffuseDiffuse);
 

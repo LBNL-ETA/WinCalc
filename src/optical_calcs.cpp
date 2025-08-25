@@ -38,7 +38,7 @@ namespace wincalc
 
     template<typename T>
     WCE_Optical_Results_Template<T>
-      do_calcs(std::function<T(const FenestrationCommon::PropertySimple prop,
+      do_calcs(std::function<T(const FenestrationCommon::PropertySurface prop,
                                const FenestrationCommon::Side side,
                                const FenestrationCommon::Scattering scattering)> const & f)
     {
@@ -48,28 +48,28 @@ namespace wincalc
         calc_result.system_results.front.transmittance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
-                FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Front, scattering);
+                FenestrationCommon::PropertySurface::T, FenestrationCommon::Side::Front, scattering);
           });
 
         LOGMSG("before back transmittance");
         calc_result.system_results.back.transmittance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
-                FenestrationCommon::PropertySimple::T, FenestrationCommon::Side::Back, scattering);
+                FenestrationCommon::PropertySurface::T, FenestrationCommon::Side::Back, scattering);
           });
 
         LOGMSG("before front reflectance");
         calc_result.system_results.front.reflectance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
-                FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Front, scattering);
+                FenestrationCommon::PropertySurface::R, FenestrationCommon::Side::Front, scattering);
           });
 
         LOGMSG("before back reflectance");
         calc_result.system_results.back.reflectance =
           do_calc<T>([&f](const FenestrationCommon::Scattering scattering) {
               return f(
-                FenestrationCommon::PropertySimple::R, FenestrationCommon::Side::Back, scattering);
+                FenestrationCommon::PropertySurface::R, FenestrationCommon::Side::Back, scattering);
           });
 
         LOGMSG("end do_calcs(prop, side, scattering)");
@@ -86,7 +86,7 @@ namespace wincalc
                                  double phi)
     {
         LOGMSG("begin calc_optical_property");
-        double result = layers->getPropertySimple(
+        double result = layers->getPropertySurface(
           min_lambda, max_lambda, property_choice, side_choice, scattering_choice, theta, phi);
         LOGMSG("end calc_optical_property");
         return result;
@@ -205,7 +205,7 @@ namespace wincalc
             max_lambda = min_lambda + 1;
         }
         LOGMSG("before calc_f = ");
-        auto calc_f = [=, &system](const FenestrationCommon::PropertySimple prop,
+        auto calc_f = [=, &system](const FenestrationCommon::PropertySurface prop,
                                    const FenestrationCommon::Side side,
                                    const FenestrationCommon::Scattering scattering) {
             return calc_optical_property(
@@ -224,13 +224,13 @@ namespace wincalc
                 ->getMatrix(min_lambda,
                             max_lambda,
                             FenestrationCommon::Side::Front,
-                            FenestrationCommon::PropertySimple::T)
+                            FenestrationCommon::PropertySurface::T)
                 .getMatrix();
             optical_results.system_results.front.transmittance.wavelength_matrices =
               bsdf_system->getWavelengthMatrices(min_lambda,
                                                  max_lambda,
                                                  FenestrationCommon::Side::Front,
-                                                 FenestrationCommon::PropertySimple::T);
+                                                 FenestrationCommon::PropertySurface::T);
 
             LOGMSG("before front.reflectance.matrix");
             optical_results.system_results.front.reflectance.matrix =
@@ -238,13 +238,13 @@ namespace wincalc
                 ->getMatrix(min_lambda,
                             max_lambda,
                             FenestrationCommon::Side::Front,
-                            FenestrationCommon::PropertySimple::R)
+                            FenestrationCommon::PropertySurface::R)
                 .getMatrix();
             optical_results.system_results.front.reflectance.wavelength_matrices =
               bsdf_system->getWavelengthMatrices(min_lambda,
                                                  max_lambda,
                                                  FenestrationCommon::Side::Front,
-                                                 FenestrationCommon::PropertySimple::R);
+                                                 FenestrationCommon::PropertySurface::R);
 
             LOGMSG("before back.transmittance.matrix");
             optical_results.system_results.back.transmittance.matrix =
@@ -252,13 +252,13 @@ namespace wincalc
                 ->getMatrix(min_lambda,
                             max_lambda,
                             FenestrationCommon::Side::Back,
-                            FenestrationCommon::PropertySimple::T)
+                            FenestrationCommon::PropertySurface::T)
                 .getMatrix();
             optical_results.system_results.back.transmittance.wavelength_matrices =
               bsdf_system->getWavelengthMatrices(min_lambda,
                                                  max_lambda,
                                                  FenestrationCommon::Side::Back,
-                                                 FenestrationCommon::PropertySimple::T);
+                                                 FenestrationCommon::PropertySurface::T);
 
             LOGMSG("before back.reflectance.matrix");
             optical_results.system_results.back.reflectance.matrix =
@@ -266,13 +266,13 @@ namespace wincalc
                 ->getMatrix(min_lambda,
                             max_lambda,
                             FenestrationCommon::Side::Back,
-                            FenestrationCommon::PropertySimple::R)
+                            FenestrationCommon::PropertySurface::R)
                 .getMatrix();
             optical_results.system_results.back.reflectance.wavelength_matrices =
               bsdf_system->getWavelengthMatrices(min_lambda,
                                                  max_lambda,
                                                  FenestrationCommon::Side::Back,
-                                                 FenestrationCommon::PropertySimple::R);
+                                                 FenestrationCommon::PropertySurface::R);
         }
 
         LOGMSG("before absorptances_front");
@@ -299,7 +299,7 @@ namespace wincalc
 
     Color_Result
       calc_color_properties(std::shared_ptr<SingleLayerOptics::ColorProperties> color_props,
-                            const FenestrationCommon::PropertySimple prop,
+                            const FenestrationCommon::PropertySurface prop,
                             const FenestrationCommon::Side side,
                             const FenestrationCommon::Scattering scattering,
                             double theta = 0,
@@ -321,7 +321,7 @@ namespace wincalc
       std::shared_ptr<SingleLayerOptics::ColorProperties> color_props, double theta, double phi)
     {
         auto calc_f =
-          [=, &color_props](const FenestrationCommon::PropertySimple prop,
+          [=, &color_props](const FenestrationCommon::PropertySurface prop,
                             const FenestrationCommon::Side side,
                             const FenestrationCommon::Scattering scattering) -> Color_Result {
             return calc_color_properties(color_props, prop, side, scattering, theta, phi);
@@ -474,9 +474,9 @@ namespace wincalc
                                         number_solar_bands);
 
         double t_sol =
-          layers->getPropertySimple(lambda_range.min_lambda,
+          layers->getPropertySurface(lambda_range.min_lambda,
                                     lambda_range.max_lambda,
-                                    FenestrationCommon::PropertySimple::T,
+                                    FenestrationCommon::PropertySurface::T,
                                     FenestrationCommon::Side::Front,
                                     FenestrationCommon::Scattering::DirectHemispherical,
                                     theta,
