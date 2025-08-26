@@ -38,13 +38,9 @@ namespace wincalc
 
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
-        if(!data.directComponent.has_value())
+        // clang-format off
+        SpectralAveraging::MeasuredRow converted
         {
-            throw std::runtime_error("Missing wavelength direct component");
-        }
-
-        // TODO: Check this with Stephen (Simon)
-        SpectralAveraging::MeasuredRow converted(
             data.wavelength,
             {
                 data.directComponent.has_value() ? data.directComponent.value().tf : 0.0,
@@ -58,7 +54,8 @@ namespace wincalc
                 data.diffuseComponent.has_value() ? data.diffuseComponent.value().rf : 0.0,
                 data.diffuseComponent.has_value() ? data.diffuseComponent.value().rb : 0.0
             }
-            );
+        };
+        // clang-format on
         return converted;
     }
 
