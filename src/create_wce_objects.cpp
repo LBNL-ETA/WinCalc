@@ -38,7 +38,7 @@ namespace wincalc
 
     SpectralAveraging::MeasuredRow convert(OpticsParser::WLData const & data)
     {
-        if(!data.directComponent.has_value() && !data.directComponent.has_value())
+        if(!data.directComponent.has_value() && !data.diffuseComponent.has_value())
         {
             std::stringstream msg;
             msg << "Wavelength " << data.wavelength << " does not have either a direct or diffuse measurement";
