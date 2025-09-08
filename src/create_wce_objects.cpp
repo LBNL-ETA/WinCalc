@@ -860,6 +860,21 @@ namespace wincalc
         return layer;
     }
 
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_direct_diffuse(
+        std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+        window_standards::Optical_Standard_Method const & method,
+        size_t number_of_layers,
+        SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
+    {
+        LOGMSG("begin create_bsdf_layer_direct_diffuse(product_data, " + method.name + ")");
+        auto material = create_material(product_data, method, number_of_layers);
+        LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getDirDifLayer");
+        auto layer =
+            SingleLayerOptics::CBSDFLayerMaker::getDirDifLayer(material, bsdf_hemisphere);
+        LOGMSG("begin create_bsdf_layer_direct_diffuse(product_data, " + method.name + ")");
+        return layer;
+    }
+
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_perfectly_diffuse(
         std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
         window_standards::Optical_Standard_Method const & method,
@@ -1069,7 +1084,7 @@ namespace wincalc
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
             product_data))
         {
-            layer = create_bsdf_layer_specular(
+            layer = create_bsdf_layer_direct_diffuse(
                 std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product_data)
                 ->material_optical_data,
                 method,
@@ -1107,7 +1122,7 @@ namespace wincalc
         {
             LOGMSG("in else in create_bsdf_layer");
             layer =
-                create_bsdf_layer_specular(product_data, method, number_of_layers, bsdf_hemisphere);
+                create_bsdf_layer_direct_diffuse(product_data, method, number_of_layers, bsdf_hemisphere);
         }
 
         LOGMSG("end create_bsdf_layer(product_data, " + method.name + ")");
