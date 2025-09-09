@@ -1186,8 +1186,25 @@ namespace wincalc
                || std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product))
             {
                 as_bsdf = true;
+            }
+
+            auto nband_product = std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product);
+            if(nband_product)
+            {
+                for(auto row : nband_product->wavelength_data)
+                {
+                    if(row.directComponent.has_value() && row.diffuseComponent.has_value())
+                    {
+                        as_bsdf = true;
+                        break;
+                    }
+                }
+            }
+            if(as_bsdf)
+            {
                 break;
             }
+
         }
 
         LOGMSG("before if(as_bsdf && !bsdf_hemisphere.has_value())");
