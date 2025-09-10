@@ -870,7 +870,7 @@ namespace wincalc
         auto material = create_material(product_data, method, number_of_layers);
         LOGMSG("before SingleLayerOptics::CBSDFLayerMaker::getDirDifLayer");
         auto layer =
-            SingleLayerOptics::CBSDFLayerMaker::getSpecularLayer(material, bsdf_hemisphere);
+            SingleLayerOptics::CBSDFLayerMaker::getDirDifLayer(material, bsdf_hemisphere);
         LOGMSG("begin create_bsdf_layer_direct_diffuse(product_data, " + method.name + ")");
         return layer;
     }
