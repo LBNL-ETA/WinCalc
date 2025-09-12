@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 9.025881724282673,
-    "H_shgc_outdoor": 20.606511172086094,
+    "H_shgc_indoor": 9.025869380935235,
+    "H_shgc_outdoor": 20.606498913719264,
     "H_u_indoor": 7.384416422141169,
     "H_u_outdoor": 20.381724021961364,
-    "SHGC": 0.21063878961921562,
+    "SHGC": 0.21063629319958505,
     "U": 3.0040880362398332,
     "gap_layer_effective_conductivities_shgc": [
-        0.09676381323615989
+        0.0967635785698846
     ],
     "gap_layer_effective_conductivities_u": [
         0.08737697098267391
     ],
-    "heat_flow_shgc_indoor": -188.96287651845472,
-    "heat_flow_shgc_outdoor": 147.52765810310075,
+    "heat_flow_shgc_indoor": -188.96092184009063,
+    "heat_flow_shgc_outdoor": 147.51836723672835,
     "heat_flow_u_indoor": -24.032704244907745,
     "heat_flow_u_outdoor": -24.032704311982286,
     "layer_temperatures_shgc": [
-        312.30927392467936,
-        312.59782953712323,
-        318.08571546592003,
-        318.08566948167396
+        312.3088273110599,
+        312.5973717431109,
+        318.08552752380035,
+        318.08548154077585
     ],
     "layer_temperatures_u": [
         303.9708698991002,
@@ -28,10 +28,10 @@
         300.40451638736266
     ],
     "radiosities_shgc": [
-        531.7404766155605,
-        547.0938861620559,
-        577.0806242364712,
-        566.5750809231276
+        531.7378849208137,
+        547.0909781629496,
+        577.0790988954375,
+        566.5738463905652
     ],
     "radiosities_u": [
         485.2561745873745,
@@ -39,7 +39,7 @@
         463.5932950407183,
         459.759059258834
     ],
-    "relative_heat_gain": 176.12124439013806,
+    "relative_heat_gain": 176.11943407807075,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.5184346631181982,
+    "system_effective_conductivity_shgc": 0.5184060855292668,
     "system_effective_conductivity_u": 0.10679544213391522
 }

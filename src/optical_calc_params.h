@@ -10,7 +10,7 @@
 namespace wincalc
 {
     using Side_Choice = FenestrationCommon::Side;
-    using Calculated_Property_Choice = FenestrationCommon::PropertySimple;
+    using Calculated_Property_Choice = FenestrationCommon::PropertySurface;
     using Scattering_Choice = FenestrationCommon::Scattering;
 }   // namespace wincalc
 #endif

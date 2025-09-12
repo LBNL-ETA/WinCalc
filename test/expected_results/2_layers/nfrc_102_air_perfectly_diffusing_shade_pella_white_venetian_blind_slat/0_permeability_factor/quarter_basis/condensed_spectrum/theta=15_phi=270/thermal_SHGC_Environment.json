@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 9.025123964367925,
-    "H_shgc_outdoor": 20.60752185440241,
+    "H_shgc_indoor": 9.025111641551394,
+    "H_shgc_outdoor": 20.607509622225656,
     "H_u_indoor": 7.384416422141169,
     "H_u_outdoor": 20.381724021961364,
-    "SHGC": 0.21048555097525345,
+    "SHGC": 0.21048305973863404,
     "U": 3.0040880362398332,
     "gap_layer_effective_conductivities_shgc": [
-        0.09677274875922426
+        0.09677251456056668
     ],
     "gap_layer_effective_conductivities_u": [
         0.08737697098931661
     ],
-    "heat_flow_shgc_indoor": -188.84289068581975,
-    "heat_flow_shgc_outdoor": 148.29363753086074,
+    "heat_flow_shgc_indoor": -188.840940055097,
+    "heat_flow_shgc_outdoor": 148.28436738900064,
     "heat_flow_u_indoor": -24.032704244907745,
     "heat_flow_u_outdoor": -24.032704311982286,
     "layer_temperatures_shgc": [
-        312.3460926979911,
-        312.63525298559506,
-        318.07417868117807,
-        318.0741326190491
+        312.34564712501725,
+        312.63479625764285,
+        318.07399110767614,
+        318.0739450467663
     ],
     "layer_temperatures_u": [
         303.9708698999015,
@@ -28,10 +28,10 @@
         300.4045163921089
     ],
     "radiosities_shgc": [
-        531.7404766178138,
-        547.0938861662792,
-        577.0806242480107,
-        566.5750809342449
+        531.7378849204827,
+        547.0909781623917,
+        577.0790988938545,
+        566.5738463890382
     ],
     "radiosities_u": [
         485.2561745870326,
@@ -39,7 +39,7 @@
         463.5932950395728,
         459.75905925774236
     ],
-    "relative_heat_gain": 176.01011996890063,
+    "relative_heat_gain": 176.00831337983342,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.522479276063754,
+    "system_effective_conductivity_shgc": 0.5224503466239925,
     "system_effective_conductivity_u": 0.10679544213391522
 }

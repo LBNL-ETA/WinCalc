@@ -28,8 +28,8 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_TEST_NAME}
-		2_layers_nfrc_102_as_awning_nfrc_102.unit.cpp
-		2_layers_nfrc_103_air_nfrc_5487.unit.cpp
+		1_layer_cgdb_31017.unit.cpp
+		1_layer_cgdb_31018.unit.cpp
 		1_layer_nfrc_102_awning_generic.unit.cpp
 		#1_layer_nfrc_102_awning_2011-SA1.unit.cpp
 		1_layer_nfrc_102_WCE.unit.cpp
@@ -44,6 +44,7 @@ add_executable(${PROJECT_TEST_NAME}
 		1_layer_louvered_shade_bsdf_xml.unit.cpp
 		1_layer_nfrc_102.unit.cpp
 		1_layer_nfrc_102_as_bsdf.unit.cpp
+		1_layer_nfrc_102_as_dir_dif.unit.cpp
 		1_layer_perforated_screen_cgdb_18000.unit.cpp
 		1_layer_pleated_shade_genBSDF_cgdb_24040.unit.cpp
 		1_layer_pv_generic.unit.cpp
@@ -66,6 +67,8 @@ add_executable(${PROJECT_TEST_NAME}
 		2_layers_nfrc_102_air_nfrc_102_deflection_tilt.unit.cpp
 		2_layers_nfrc_102_air_nfrc_102_deflection_youngs_modulus.unit.cpp
 		2_layers_nfrc_102_air_perfectly_diffusing_shade_pella_white_venetian_blind_slat.unit.cpp
+		2_layers_nfrc_102_as_awning_nfrc_102.unit.cpp
+		2_layers_nfrc_103_air_nfrc_5487.unit.cpp
 		2_layers_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102.unit.cpp
 		2_layers_vertical_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102.unit.cpp
 		2_layers_nfrc_102_air_nfrc_102_forced_ventilation.unit.cpp
