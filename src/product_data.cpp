@@ -351,7 +351,7 @@ namespace wincalc
           geometry.slatWidth, geometry.slatThickness, geometry.slatAngle, geometry.slatSpacing};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
-          width, height, thickness_meters, wce_geometry, openness);
+          width, height, wce_geometry, openness);
     }
 
     Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(
