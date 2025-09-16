@@ -1282,8 +1282,6 @@ namespace wincalc
             auto ir_results = calc_thermal_ir(standard, layer);
 
             auto effective_thermal_values = layer.optical_data->effective_thermal_values(
-                width,
-                height,
                 layer.thermal_data->opening_top,
                 layer.thermal_data->opening_bottom,
                 layer.thermal_data->opening_left,
