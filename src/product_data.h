@@ -60,9 +60,7 @@ namespace wincalc
         // to be analagous to other properties used in thermal calculations that are actually
         // derived from optical data, e.g. solar absorptance in SHGC calculations.
         virtual std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -161,9 +159,7 @@ namespace wincalc
         std::vector<std::vector<double>> rb_visible;
         bool user_defined_effective_values;
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -193,9 +189,7 @@ namespace wincalc
           bool user_defined_effective_values = false);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -293,9 +287,7 @@ namespace wincalc
           Venetian_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -321,9 +313,7 @@ namespace wincalc
           Woven_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -362,9 +352,7 @@ namespace wincalc
           Perforated_Geometry const & geometry);
 
         std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,

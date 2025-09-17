@@ -27,9 +27,7 @@ namespace wincalc
     }
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical::effective_thermal_values(double width,
-                                                     double height,
-                                                     double gap_width_top,
+      Product_Data_Optical::effective_thermal_values(double gap_width_top,
                                                      double gap_width_bottom,
                                                      double gap_width_left,
                                                      double gap_width_right,
@@ -40,7 +38,7 @@ namespace wincalc
           gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
-          width, height, thickness_meters, permeability_factor, openness);
+          thickness_meters, permeability_factor, openness);
     }
 
 
@@ -136,8 +134,6 @@ namespace wincalc
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical_Venetian::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -157,7 +153,7 @@ namespace wincalc
           gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveHorizontalVenetian>(
-          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
+          material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Optical_Woven_Shade::Product_Data_Optical_Woven_Shade(
@@ -168,8 +164,6 @@ namespace wincalc
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical_Woven_Shade::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -183,7 +177,7 @@ namespace wincalc
           gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
-          width, height, geometry.shade_thickness, wce_geometry, openness);
+          geometry.shade_thickness, wce_geometry, openness);
     }
 
     Product_Data_Optical_Thermal::Product_Data_Optical_Thermal(
@@ -200,8 +194,6 @@ namespace wincalc
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Optical_Perforated_Screen::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -228,7 +220,7 @@ namespace wincalc
           gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
 
         return std::make_unique<EffectiveLayers::EffectiveLayerPerforated>(
-          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
+          material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Dual_Band_Optical_BSDF::Product_Data_Dual_Band_Optical_BSDF(
@@ -268,8 +260,6 @@ namespace wincalc
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
       Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -283,13 +273,11 @@ namespace wincalc
         if(!user_defined_effective_values)
         {
             return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
-              width, height, thickness_meters, permeability_factor, openness);
+              thickness_meters, permeability_factor, openness);
         }
         else
         {
             return std::make_unique<EffectiveLayers::EffectiveLayerUserDefined>(
-              width,
-              height,
               thickness_meters,
               permeability_factor,
               effective_thermal_front_openness_area,
@@ -335,9 +323,7 @@ namespace wincalc
     {}
 
     std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(double width,
-                                                                           double height,
-                                                                           double gap_width_top,
+      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(double gap_width_top,
                                                                            double gap_width_bottom,
                                                                            double gap_width_left,
                                                                            double gap_width_right,
@@ -350,8 +336,8 @@ namespace wincalc
         FenestrationCommon::LouveredShutter::Geometry wce_geometry{
           geometry.slatWidth, geometry.slatThickness, geometry.slatAngle, geometry.slatSpacing};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
-          width, height, wce_geometry, openness);
+        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(wce_geometry,
+                                                                                openness);
     }
 
     Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(
