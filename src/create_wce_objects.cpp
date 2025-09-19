@@ -1281,7 +1281,7 @@ namespace wincalc
             }
             auto ir_results = calc_thermal_ir(standard, layer);
 
-            auto effective_thermal_values = layer.optical_data->effective_thermal_values(
+            const auto effective_thermal_values = layer.optical_data->effective_thermal_values(
                 layer.thermal_data->opening_top,
                 layer.thermal_data->opening_bottom,
                 layer.thermal_data->opening_left,
@@ -1290,9 +1290,9 @@ namespace wincalc
                 layer.thermal_data->permeability_factor);
 
             auto tarcog_layer =
-                Tarcog::ISO15099::Layers::shading(effective_thermal_values->effectiveThickness(),
+                Tarcog::ISO15099::Layers::shading(effective_thermal_values.thickness,
                                                   layer.thermal_data->conductivity.value(),
-                                                  effective_thermal_values->getEffectiveOpenness(),
+                                                  effective_thermal_values.openness,
                                                   ir_results.emissivity_front_hemispheric,
                                                   ir_results.transmittance_front_diffuse_diffuse,
                                                   ir_results.emissivity_back_hemispheric,
