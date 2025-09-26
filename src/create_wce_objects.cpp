@@ -1203,6 +1203,23 @@ namespace wincalc
                 as_bsdf = true;
                 break;
             }
+
+            auto nband = std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product);
+            if(nband)
+            {
+                for(auto wl_row : nband->wavelength_data)
+                {
+                    if(wl_row.diffuseComponent.has_value())
+                    {
+                        as_bsdf = true;
+                        break;
+                    }
+                }
+            }
+            if(as_bsdf)
+            {
+                break;
+            }
         }
 
         LOGMSG("before if(as_bsdf && !bsdf_hemisphere.has_value())");
