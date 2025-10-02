@@ -74,6 +74,7 @@ namespace wincalc
         std::optional<double> emissivity_back;
         virtual std::vector<double> wavelengths() const = 0;
         std::optional<OpticsParser::PVPowerProperties> pv_power_properties;
+        virtual bool is_specular_only() const;
     };
 
 
@@ -229,6 +230,7 @@ namespace wincalc
         std::vector<OpticsParser::WLData> wavelength_data;
         std::optional<CoatedSide> coated_side;
         virtual std::vector<double> wavelengths() const override;
+        bool is_specular_only() const override;
     };
 
     struct Product_Data_Optical_Thermal

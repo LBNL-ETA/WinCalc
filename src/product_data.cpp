@@ -1,4 +1,5 @@
 #include <sstream>
+#include <ranges>
 #include "product_data.h"
 #include "create_wce_objects.h"
 #include "util.h"
@@ -74,6 +75,14 @@ namespace wincalc
     std::vector<double> Product_Data_N_Band_Optical::wavelengths() const
     {
         return get_first_val(wavelength_data);
+    }
+
+    bool Product_Data_N_Band_Optical::is_specular_only() const
+    {
+        return !std::ranges::any_of(
+          wavelength_data, [](const auto & wl) {
+            return wl.diffuseComponent.has_value();
+        });
     }
 
     Flippable_Solid_Layer::Flippable_Solid_Layer(double thickness_meters, bool flipped) :
@@ -352,6 +361,11 @@ namespace wincalc
 
         return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
           width, height, thickness_meters, wce_geometry, openness);
+    }
+
+    bool Product_Data_Optical::is_specular_only() const
+    {
+        return true;
     }
 
     Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(
