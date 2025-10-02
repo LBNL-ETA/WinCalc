@@ -875,6 +875,20 @@ namespace wincalc
         return layer;
     }
 
+    std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_specular_or_direct_diffuse(
+        std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
+        window_standards::Optical_Standard_Method const & method,
+        size_t number_of_layers,
+        SingleLayerOptics::BSDFHemisphere const & bsdf_hemisphere)
+    {
+        if(product_data->is_specular_only())
+        {
+            return create_bsdf_layer_specular(product_data, method, number_of_layers, bsdf_hemisphere);
+        }
+
+        return create_bsdf_layer_direct_diffuse(product_data, method, number_of_layers, bsdf_hemisphere);
+    }
+
     std::shared_ptr<SingleLayerOptics::CBSDFLayer> create_bsdf_layer_perfectly_diffuse(
         std::shared_ptr<wincalc::Product_Data_Optical> const & product_data,
         window_standards::Optical_Standard_Method const & method,
@@ -1084,7 +1098,7 @@ namespace wincalc
         else if(std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(
             product_data))
         {
-            layer = create_bsdf_layer_direct_diffuse(
+            layer = create_bsdf_layer_specular_or_direct_diffuse(
                 std::dynamic_pointer_cast<wincalc::Product_Data_Optical_With_Material>(product_data)
                 ->material_optical_data,
                 method,
@@ -1122,7 +1136,7 @@ namespace wincalc
         {
             LOGMSG("in else in create_bsdf_layer");
             layer =
-                create_bsdf_layer_direct_diffuse(product_data, method, number_of_layers, bsdf_hemisphere);
+                create_bsdf_layer_specular_or_direct_diffuse(product_data, method, number_of_layers, bsdf_hemisphere);
         }
 
         LOGMSG("end create_bsdf_layer(product_data, " + method.name + ")");
@@ -1201,6 +1215,23 @@ namespace wincalc
                || std::dynamic_pointer_cast<wincalc::Product_Data_Dual_Band_Optical_BSDF>(product))
             {
                 as_bsdf = true;
+                break;
+            }
+
+            auto nband = std::dynamic_pointer_cast<wincalc::Product_Data_N_Band_Optical>(product);
+            if(nband)
+            {
+                for(auto wl_row : nband->wavelength_data)
+                {
+                    if(wl_row.diffuseComponent.has_value())
+                    {
+                        as_bsdf = true;
+                        break;
+                    }
+                }
+            }
+            if(as_bsdf)
+            {
                 break;
             }
         }
