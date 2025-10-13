@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.976622446837634,
-    "H_shgc_outdoor": 20.614815034927354,
+    "H_shgc_indoor": 8.976622989440251,
+    "H_shgc_outdoor": 20.614815235764798,
     "H_u_indoor": 7.38026518296434,
     "H_u_outdoor": 20.381737440110708,
-    "SHGC": 0.20158866825988148,
+    "SHGC": 0.20158877599644953,
     "U": 3.0027986596723677,
     "gap_layer_effective_conductivities_shgc": [
-        0.09656887857059095
+        0.09656888436835682
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733683398728798
     ],
-    "heat_flow_shgc_indoor": -181.86631658769397,
-    "heat_flow_shgc_outdoor": 153.81966067081072,
+    "heat_flow_shgc_indoor": -181.86640089742082,
+    "heat_flow_shgc_outdoor": 153.81981274248398,
     "heat_flow_u_indoor": -24.022389281245715,
     "heat_flow_u_outdoor": -24.02238932881994,
     "layer_temperatures_shgc": [
-        312.6116076071479,
-        312.89831188301264,
-        317.41004007079164,
-        317.40999395834854
+        312.61161491050603,
+        312.8983194284534,
+        317.41004824325523,
+        317.4100021307878
     ],
     "layer_temperatures_u": [
         303.9713767647151,
@@ -28,10 +28,10 @@
         300.40494933882655
     ],
     "radiosities_shgc": [
-        533.4974739505631,
-        548.1509103890933,
-        572.7428687093425,
-        562.057466693967
+        533.4975164575806,
+        548.1509638129962,
+        572.742927377124,
+        562.0575199818402
     ],
     "radiosities_u": [
         485.25888658397315,
@@ -39,7 +39,7 @@
         463.60927379155316,
         459.7476947713933
     ],
-    "relative_heat_gain": 169.5483147657303,
+    "relative_heat_gain": 169.54839286556725,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.6006638880365651,
+    "system_effective_conductivity_shgc": 0.6006640583777382,
     "system_effective_conductivity_u": 0.10674739239535519
 }
