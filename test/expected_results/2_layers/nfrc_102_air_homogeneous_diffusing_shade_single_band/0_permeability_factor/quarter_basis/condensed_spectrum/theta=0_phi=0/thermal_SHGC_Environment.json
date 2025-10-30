@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.587799186478499,
-    "H_shgc_outdoor": 20.56447145662952,
+    "H_shgc_indoor": 8.587800625110377,
+    "H_shgc_outdoor": 20.56447278121106,
     "H_u_indoor": 7.380260101731329,
     "H_u_outdoor": 20.38173773852116,
-    "SHGC": 0.2286590843897397,
+    "SHGC": 0.22865928841186775,
     "U": 3.0027699435783655,
     "gap_layer_effective_conductivities_shgc": [
-        0.09384166079422847
+        0.09384168555673848
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733685349742183
     ],
-    "heat_flow_shgc_indoor": -126.80876819703334,
-    "heat_flow_shgc_outdoor": 115.62534031247293,
+    "heat_flow_shgc_indoor": -126.8089519665472,
+    "heat_flow_shgc_outdoor": 115.62634651790984,
     "heat_flow_u_indoor": -24.02215955225557,
     "heat_flow_u_outdoor": -24.02215956051606,
     "layer_temperatures_shgc": [
-        310.7725777815585,
-        310.95956548076873,
-        311.9163788432821,
-        311.9161543330851
+        310.7726263495134,
+        310.95961523787446,
+        311.9163977743425,
+        311.91617326337735
     ],
     "layer_temperatures_u": [
         303.9713880552994,
@@ -28,10 +28,10 @@
         300.4049204525402
     ],
     "radiosities_shgc": [
-        522.8886009550461,
-        531.0805318120949,
-        536.1132392392783,
-        527.1457163970533
+        522.888878652954,
+        531.0808405401426,
+        536.1133874712623,
+        527.1458335354614
     ],
     "radiosities_u": [
         485.2589469900082,
@@ -39,7 +39,7 @@
         463.60953986016693,
         459.747535040667
     ],
-    "relative_heat_gain": 189.17881033676957,
+    "relative_heat_gain": 189.17895829657053,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         159.99999999999997
     ],
-    "system_effective_conductivity_shgc": 1.8127949079841728,
+    "system_effective_conductivity_shgc": 1.8128445242874545,
     "system_effective_conductivity_u": 0.11011294937687845
 }

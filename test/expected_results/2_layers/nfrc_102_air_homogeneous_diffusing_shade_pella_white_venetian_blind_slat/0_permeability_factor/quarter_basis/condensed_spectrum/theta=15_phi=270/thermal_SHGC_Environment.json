@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.97217281293597,
-    "H_shgc_outdoor": 20.603237834951187,
+    "H_shgc_indoor": 8.972172869659818,
+    "H_shgc_outdoor": 20.603237858919506,
     "H_u_indoor": 7.380265188328707,
     "H_u_outdoor": 20.38173743884005,
-    "SHGC": 0.2007072165311047,
+    "SHGC": 0.20070722796728094,
     "U": 3.0027986607377137,
     "gap_layer_effective_conductivities_shgc": [
-        0.0963895838268503
+        0.0963895844637713
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733683404290006
     ],
-    "heat_flow_shgc_indoor": -181.1761398169432,
-    "heat_flow_shgc_outdoor": 145.04653299295768,
+    "heat_flow_shgc_indoor": -181.17614879951682,
+    "heat_flow_shgc_outdoor": 145.04655064688552,
     "heat_flow_u_indoor": -24.022389258103882,
     "heat_flow_u_outdoor": -24.022389307650087,
     "layer_temperatures_shgc": [
-        312.1899873138594,
-        312.46743456590116,
-        317.34316254919327,
-        317.34311749585703
+        312.1899881641294,
+        312.4674354434275,
+        317.3431634223379,
+        317.34311836899894
     ],
     "layer_temperatures_u": [
         303.9713767642917,
@@ -28,10 +28,10 @@
         300.40494933769867
     ],
     "radiosities_shgc": [
-        530.8335366520068,
-        545.3173622354647,
-        572.0876386915425,
-        561.6875793819577
+        530.8335416908849,
+        545.3173684785169,
+        572.0876451219816,
+        561.6875851837074
     ],
     "radiosities_u": [
         485.25888658067663,
@@ -39,7 +39,7 @@
         463.60927377622954,
         459.74769475666557
     ],
-    "relative_heat_gain": 168.90911023414782,
+    "relative_heat_gain": 168.90911854911514,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 0.5571913344503655,
+    "system_effective_conductivity_shgc": 0.5571913595809511,
     "system_effective_conductivity_u": 0.10674739237383074
 }

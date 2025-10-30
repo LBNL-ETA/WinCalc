@@ -1,4 +1,5 @@
 #include <sstream>
+#include <ranges>
 #include "product_data.h"
 #include "create_wce_objects.h"
 #include "util.h"
@@ -26,21 +27,20 @@ namespace wincalc
         return shared_from_this();
     }
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical::effective_thermal_values(double width,
-                                                     double height,
-                                                     double gap_width_top,
+    EffectiveLayers::EffectiveLayerProperties
+      Product_Data_Optical::effective_thermal_values(double gap_width_top,
                                                      double gap_width_bottom,
                                                      double gap_width_left,
                                                      double gap_width_right,
                                                      double,
                                                      double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
-          width, height, thickness_meters, permeability_factor, openness);
+        return EffectiveLayers::makeCommonValues(thickness_meters, permeability_factor, openness);
     }
 
 
@@ -74,6 +74,14 @@ namespace wincalc
     std::vector<double> Product_Data_N_Band_Optical::wavelengths() const
     {
         return get_first_val(wavelength_data);
+    }
+
+    bool Product_Data_N_Band_Optical::is_specular_only() const
+    {
+        return !std::ranges::any_of(
+          wavelength_data, [](const auto & wl) {
+            return wl.diffuseComponent.has_value();
+        });
     }
 
     Flippable_Solid_Layer::Flippable_Solid_Layer(double thickness_meters, bool flipped) :
@@ -134,10 +142,8 @@ namespace wincalc
         Product_Data_Optical_With_Material(optical_data), geometry(geometry)
     {}
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+    EffectiveLayers::EffectiveLayerProperties
       Product_Data_Optical_Venetian::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -146,18 +152,23 @@ namespace wincalc
         double) const   // Front openness is automatically calculated by the model
     {
         // TODO: make sure units match
-        FenestrationCommon::Venetian::Geometry wce_geometry{
-          geometry.slat_width, geometry.slat_spacing, geometry.slat_tilt, geometry.slat_curvature};
+        FenestrationCommon::Venetian::Geometry wce_geometry{.SlatWidth = geometry.slat_width,
+                                                            .SlatSpacing = geometry.slat_spacing,
+                                                            .SlatTiltAngle = geometry.slat_tilt,
+                                                            .CurvatureRadius =
+                                                              geometry.slat_curvature};
 
         // double front_openness_venetian =
         //   ThermalPermeability::Venetian::permeabilityFactor(material_optical_data->thickness_meters,
         //   wce_geometry);
 
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
-        return std::make_unique<EffectiveLayers::EffectiveHorizontalVenetian>(
-          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
+        return EffectiveLayers::makeHorizontalVenetianValues(
+          material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Optical_Woven_Shade::Product_Data_Optical_Woven_Shade(
@@ -166,10 +177,8 @@ namespace wincalc
         Product_Data_Optical_With_Material(material_optical_data), geometry(geometry)
     {}
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+    EffectiveLayers::EffectiveLayerProperties
       Product_Data_Optical_Woven_Shade::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -177,13 +186,14 @@ namespace wincalc
         double,
         double) const   // calculated automatically by the code
     {
-        FenestrationCommon::Woven::Geometry wce_geometry{geometry.thread_diameter,
-                                                         geometry.thread_spacing};
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        FenestrationCommon::Woven::Geometry wce_geometry{.Diameter = geometry.thread_diameter,
+                                                         .Spacing = geometry.thread_spacing};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerWoven>(
-          width, height, geometry.shade_thickness, wce_geometry, openness);
+        return EffectiveLayers::makeWovenValues(geometry.shade_thickness, wce_geometry, openness);
     }
 
     Product_Data_Optical_Thermal::Product_Data_Optical_Thermal(
@@ -198,10 +208,8 @@ namespace wincalc
         Product_Data_Optical_With_Material(material_optical_data), geometry(geometry)
     {}
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+    EffectiveLayers::EffectiveLayerProperties
       Product_Data_Optical_Perforated_Screen::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -217,18 +225,21 @@ namespace wincalc
           {wincalc::Perforated_Geometry::Type::RECTANGULAR,
            FenestrationCommon::Perforated::Type::Rectangular}};
 
-        FenestrationCommon::Perforated::Geometry wce_geometry{wce_map[geometry.perforation_type],
-                                                              geometry.spacing_x,
-                                                              geometry.spacing_y,
-                                                              geometry.dimension_x,
-                                                              geometry.dimension_y};
+        FenestrationCommon::Perforated::Geometry wce_geometry{.type =
+                                                                wce_map[geometry.perforation_type],
+                                                              .SpacingX = geometry.spacing_x,
+                                                              .SpacingY = geometry.spacing_y,
+                                                              .DimensionX = geometry.dimension_x,
+                                                              .DimensionY = geometry.dimension_y};
 
 
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerPerforated>(
-          width, height, material_optical_data->thickness_meters, wce_geometry, openness);
+        return EffectiveLayers::makePerforatedValues(
+          material_optical_data->thickness_meters, wce_geometry, openness);
     }
 
     Product_Data_Dual_Band_Optical_BSDF::Product_Data_Dual_Band_Optical_BSDF(
@@ -266,10 +277,8 @@ namespace wincalc
         user_defined_effective_values(user_defined_effective_values)
     {}
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
+    EffectiveLayers::EffectiveLayerProperties
       Product_Data_Dual_Band_Optical_BSDF::effective_thermal_values(
-        double width,
-        double height,
         double gap_width_top,
         double gap_width_bottom,
         double gap_width_left,
@@ -277,24 +286,18 @@ namespace wincalc
         double effective_thermal_front_openness_area,
         double permeability_factor) const
     {
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
         if(!user_defined_effective_values)
         {
-            return std::make_unique<EffectiveLayers::EffectiveLayerCommon>(
-              width, height, thickness_meters, permeability_factor, openness);
+            return EffectiveLayers::makeCommonValues(
+              this->thickness_meters, permeability_factor, openness);
         }
-        else
-        {
-            return std::make_unique<EffectiveLayers::EffectiveLayerUserDefined>(
-              width,
-              height,
-              thickness_meters,
-              permeability_factor,
-              effective_thermal_front_openness_area,
-              openness);
-        }
+        return EffectiveLayers::makeUserDefinedValues(
+          thickness_meters, permeability_factor, effective_thermal_front_openness_area, openness);
     }
 
     Product_Data_Optical_Louvered_Shutter_BSDF::Product_Data_Optical_Louvered_Shutter_BSDF(
@@ -334,24 +337,31 @@ namespace wincalc
         geometry(geometry)
     {}
 
-    std::unique_ptr<EffectiveLayers::EffectiveLayer>
-      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(double width,
-                                                                           double height,
-                                                                           double gap_width_top,
+    EffectiveLayers::EffectiveLayerProperties
+      Product_Data_Optical_Louvered_Shutter_BSDF::effective_thermal_values(double gap_width_top,
                                                                            double gap_width_bottom,
                                                                            double gap_width_left,
                                                                            double gap_width_right,
                                                                            double,
                                                                            double) const
     {
-        EffectiveLayers::ShadeOpenness openness{
-          gap_width_left, gap_width_right, gap_width_top, gap_width_bottom};
+        EffectiveLayers::ShadeOpenness openness{.Dl = gap_width_left,
+                                                .Dr = gap_width_right,
+                                                .Dtop = gap_width_top,
+                                                .Dbot = gap_width_bottom};
 
         FenestrationCommon::LouveredShutter::Geometry wce_geometry{
-          geometry.slatWidth, geometry.slatThickness, geometry.slatAngle, geometry.slatSpacing};
+          .SlatWidth = geometry.slatWidth,
+          .SlatThickness = geometry.slatThickness,
+          .SlatAngle = geometry.slatAngle,
+          .SlatSpacing = geometry.slatSpacing};
 
-        return std::make_unique<EffectiveLayers::EffectiveLayerLouveredShutter>(
-          width, height, thickness_meters, wce_geometry, openness);
+        return EffectiveLayers::makeLouveredShutterValues(wce_geometry, openness);
+    }
+
+    bool Product_Data_Optical::is_specular_only() const
+    {
+        return true;
     }
 
     Product_Data_Dual_Band_Optical_Hemispheric::Product_Data_Dual_Band_Optical_Hemispheric(

@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 8.587916359071524,
-    "H_shgc_outdoor": 20.565571135128096,
+    "H_shgc_indoor": 8.587917825165608,
+    "H_shgc_outdoor": 20.565572480465597,
     "H_u_indoor": 7.380260101731329,
     "H_u_outdoor": 20.38173773852116,
-    "SHGC": 0.22847697901752984,
+    "SHGC": 0.22847718813416798,
     "U": 3.0027699435783655,
     "gap_layer_effective_conductivities_shgc": [
-        0.09385699562235368
+        0.09385702072194382
     ],
     "gap_layer_effective_conductivities_u": [
         0.08733685347539165
     ],
-    "heat_flow_shgc_indoor": -126.82374015957176,
-    "heat_flow_shgc_outdoor": 116.46087496147669,
+    "heat_flow_shgc_indoor": -126.82392759881049,
+    "heat_flow_shgc_outdoor": 116.461897205598,
     "heat_flow_u_indoor": -24.02215955225557,
     "heat_flow_u_outdoor": -24.02215956051606,
     "layer_temperatures_shgc": [
-        310.81290496822066,
-        311.00072162072513,
-        311.9179213298735,
-        311.91769624485016
+        310.8129543043915,
+        311.0007721657036,
+        311.9179406332672,
+        311.917715547463
     ],
     "layer_temperatures_u": [
         303.97138805489124,
@@ -28,10 +28,10 @@
         300.40492045003884
     ],
     "radiosities_shgc": [
-        522.8886009546977,
-        531.0805318114044,
-        536.1132392372384,
-        527.1457163950827
+        522.8888786510984,
+        531.0808405367359,
+        536.1133874621934,
+        527.1458335267356
     ],
     "radiosities_u": [
         485.25894699140827,
@@ -39,7 +39,7 @@
         463.6095398675717,
         459.74753504777885
     ],
-    "relative_heat_gain": 189.04675255062642,
+    "relative_heat_gain": 189.04690417939372,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         160.0
@@ -48,6 +48,6 @@
         1.0,
         160.0
     ],
-    "system_effective_conductivity_shgc": 1.8766572130496342,
+    "system_effective_conductivity_shgc": 1.8767110028720766,
     "system_effective_conductivity_u": 0.11011294937687845
 }

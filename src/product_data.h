@@ -59,10 +59,8 @@ namespace wincalc
         // And those properties are also used for the optical calculations.  So this seems
         // to be analagous to other properties used in thermal calculations that are actually
         // derived from optical data, e.g. solar absorptance in SHGC calculations.
-        virtual std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        virtual EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -74,6 +72,7 @@ namespace wincalc
         std::optional<double> emissivity_back;
         virtual std::vector<double> wavelengths() const = 0;
         std::optional<OpticsParser::PVPowerProperties> pv_power_properties;
+        virtual bool is_specular_only() const;
     };
 
 
@@ -160,10 +159,8 @@ namespace wincalc
         std::vector<std::vector<double>> rf_visible;
         std::vector<std::vector<double>> rb_visible;
         bool user_defined_effective_values;
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -192,10 +189,8 @@ namespace wincalc
           bool flipped = false,
           bool user_defined_effective_values = false);
 
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -229,6 +224,7 @@ namespace wincalc
         std::vector<OpticsParser::WLData> wavelength_data;
         std::optional<CoatedSide> coated_side;
         virtual std::vector<double> wavelengths() const override;
+        bool is_specular_only() const override;
     };
 
     struct Product_Data_Optical_Thermal
@@ -292,10 +288,8 @@ namespace wincalc
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
           Venetian_Geometry const & geometry);
 
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -320,10 +314,8 @@ namespace wincalc
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
           Woven_Geometry const & geometry);
 
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
@@ -361,10 +353,8 @@ namespace wincalc
           std::shared_ptr<Product_Data_Optical> const & material_optical_data,
           Perforated_Geometry const & geometry);
 
-        std::unique_ptr<EffectiveLayers::EffectiveLayer>
-          effective_thermal_values(double width,
-                                   double height,
-                                   double gap_width_top,
+        EffectiveLayers::EffectiveLayerProperties
+          effective_thermal_values(double gap_width_top,
                                    double gap_width_bottom,
                                    double gap_width_left,
                                    double gap_width_right,
