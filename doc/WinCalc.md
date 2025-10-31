@@ -1,7 +1,7 @@
 ```mermaid
 graph TD
     %% Package definitions
-    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.12</font>]
+    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.13</font>]
     xmlParser[xmlParser<br/><font color='red'>v1.0.3</font>]
     FileParse[FileParse<br/><font color='red'>Version_1.0.5</font>]
     miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
@@ -11,7 +11,7 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.3</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.63</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.13</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.14</font>]
     WinCalc[WinCalc<br/><font color='red'>v2.6.2</font>]
 
     %% Package relations

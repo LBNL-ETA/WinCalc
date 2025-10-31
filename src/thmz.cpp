@@ -23,7 +23,7 @@ namespace wincalc
         {
             auto it = std::ranges::find_if(v, std::forward<Pred>(p));
             if(it != v.end())
-                return &*it;
+                return lbnl::make_expected<const typename Vec::value_type *, FrameLoadErr>(&*it);
             return lbnl::make_unexpected<const typename Vec::value_type *, FrameLoadErr>(err);
         }
 
@@ -58,7 +58,9 @@ namespace wincalc
             if(!proj.has_value())
                 return lbnl::make_unexpected<double, FrameLoadErr>(proj.error());
             if(proj.value()->uFactor)
-                return *proj.value()->uFactor;
+            {
+                return lbnl::make_expected<double, FrameLoadErr>(*proj.value()->uFactor);
+            }
             return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::UValuesMissing);
         }
 
@@ -74,7 +76,9 @@ namespace wincalc
             if(!proj.has_value())
                 return lbnl::make_unexpected<double, FrameLoadErr>(proj.error());
             if(proj.value()->length)
-                return *proj.value()->length;
+            {
+                return lbnl::make_expected<double, FrameLoadErr>(*proj.value()->length);
+            }
             return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::ProjectedLenMissing);
         }
 
@@ -95,7 +99,9 @@ namespace wincalc
                   },
                   FrameLoadErr::WettedLenMissing);
                 if(proj.has_value() && proj.value()->length && *proj.value()->length >= 0.0)
-                    return *proj.value()->length;
+                {
+                    return lbnl::make_expected<double, FrameLoadErr>(*proj.value()->length);
+                }
             }
 
             auto frameF = expect_element(
@@ -111,7 +117,9 @@ namespace wincalc
                   },
                   FrameLoadErr::WettedLenMissing);
                 if(proj.has_value() && proj.value()->length)
-                    return *proj.value()->length;
+                {
+                    return lbnl::make_expected<double, FrameLoadErr>(*proj.value()->length);
+                }
             }
 
             return lbnl::make_unexpected<double, FrameLoadErr>(FrameLoadErr::WettedLenMissing);
@@ -133,7 +141,8 @@ namespace wincalc
                 return lbnl::make_unexpected<Tarcog::ISO15099::IGUData>(
                   FrameLoadErr::IGUDataMissing);
 
-            return Tarcog::ISO15099::IGUData{winter->uValue, glz_sys_thickness(glz)};
+            return lbnl::make_expected<Tarcog::ISO15099::IGUData, FrameLoadErr>(
+              Tarcog::ISO15099::IGUData{winter->uValue, glz_sys_thickness(glz)});
         }
 
     }   // namespace Helper
@@ -142,59 +151,66 @@ namespace wincalc
     {
         auto resultsOpt = ThermFile::loadSteadyStateResultsFromZipFile(fileName.data());
         if(!resultsOpt.has_value())
-            return FrameLoadErr::MissingThermResults;
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              FrameLoadErr::MissingThermResults);
 
         auto modelOpt = ThermFile::loadThermModelFromZipFile(fileName.data());
         if(!modelOpt.has_value())
-            return FrameLoadErr::MissingThermModel;
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              FrameLoadErr::MissingThermModel);
 
         const auto & results = *resultsOpt;
         const auto & model = *modelOpt;
 
         auto ucase = Helper::get_u_case(results);
         if(!ucase.has_value())
-            return ucase.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(ucase.error());
 
         auto frameF = Helper::expect_element(
           ucase.value()->steadyStateUFactors,
           [&](const auto & f) { return f.tag == tags.frame; },
           FrameLoadErr::FrameOrEdgeTagMissing);
         if(!frameF.has_value())
-            return frameF.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(frameF.error());
 
         auto edgeF = Helper::expect_element(
           ucase.value()->steadyStateUFactors,
           [&](const auto & f) { return f.tag == tags.edge; },
           FrameLoadErr::FrameOrEdgeTagMissing);
         if(!edgeF.has_value())
-            return edgeF.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(edgeF.error());
 
         auto uVal = Helper::expect_projected_uvalue(frameF.value());
         if(!uVal.has_value())
-            return uVal.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(uVal.error());
 
         auto edgeUVal = Helper::expect_projected_uvalue(edgeF.value());
         if(!edgeUVal.has_value())
-            return edgeUVal.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              edgeUVal.error());
 
         auto projLen = Helper::expect_projected_length(frameF.value());
         if(!projLen.has_value())
-            return projLen.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              projLen.error());
 
         auto wettedLen = Helper::expect_wetted_length(ucase.value(), tags);
         if(!wettedLen.has_value())
-            return wettedLen.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              wettedLen.error());
 
         auto iguData = Helper::expect_igu_data(model);
         if(!iguData.has_value())
-            return iguData.error();
+            return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+              iguData.error());
 
-        return Tarcog::ISO15099::FrameData{.UValue = uVal.value(),
-                                           .EdgeUValue = edgeUVal.value(),
-                                           .ProjectedFrameDimension = projLen.value(),
-                                           .WettedLength = wettedLen.value(),
-                                           .Absorptance = 0.3,
-                                           .iguData = iguData.value()};
+        return lbnl::make_expected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
+          Tarcog::ISO15099::FrameData{.UValue = uVal.value(),
+                                      .EdgeUValue = edgeUVal.value(),
+                                      .ProjectedFrameDimension = projLen.value(),
+                                      .WettedLength = wettedLen.value(),
+                                      .Absorptance = 0.3,
+                                      .iguData = iguData.value()});
     }
 
 }   // namespace wincalc
