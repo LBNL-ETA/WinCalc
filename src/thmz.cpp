@@ -210,7 +210,9 @@ namespace wincalc
                                       .ProjectedFrameDimension = projLen.value(),
                                       .WettedLength = wettedLen.value(),
                                       .Absorptance = 0.3,
-                                      .iguData = iguData.value()});
+                                      .iguData = iguData.value(),
+                                      .Class = std::monostate(),
+                                      .condensationData = std::nullopt });
     }
 
 }   // namespace wincalc

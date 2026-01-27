@@ -77,7 +77,10 @@ namespace wincalc
               .EdgeUValue = u_edge.value(),
               .ProjectedFrameDimension = projected_frame_dimension.value() / 1000,
               .WettedLength = wetted_length.value() / 1000,
-              .Absorptance = absorptance};
+              .Absorptance = absorptance,
+              .iguData = std::nullopt,
+              .Class = std::monostate(),
+              .condensationData  = std::nullopt};
         }
 
         return results;
