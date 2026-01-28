@@ -311,8 +311,11 @@ namespace wincalc
         auto rgb = color_props->getRGB(prop, side, scattering, theta, phi);
         LOGMSG("before getCIE_Lab");
         auto lab = color_props->getCIE_Lab(prop, side, scattering, theta, phi);
+        LOGMSG("before getDominantWavelengthAndPurity");
+        auto dominant_wavelength_purity =
+          color_props->getDominantWavelengthAndPurity(prop, side, scattering, theta, phi);
         LOGMSG("before result = Color_Result");
-        auto result = Color_Result(trichromatic, rgb, lab);
+        auto result = Color_Result(trichromatic, rgb, lab, dominant_wavelength_purity);
         LOGMSG("end calc_color_properties");
         return result;
     }

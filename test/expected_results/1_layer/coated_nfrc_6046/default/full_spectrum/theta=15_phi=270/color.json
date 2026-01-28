@@ -3,6 +3,10 @@
         "back": {
             "reflectance": {
                 "diffuse_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5302296129537324,
+                        "purity": 1.2846130793618449
+                    },
                     "lab": {
                         "L": 40.05036041195757,
                         "a": -1.689132231553675,
@@ -20,6 +24,10 @@
                     }
                 },
                 "direct_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.0,
+                        "purity": 0.0
+                    },
                     "lab": {
                         "L": 0.0,
                         "a": 0.0,
@@ -37,6 +45,10 @@
                     }
                 },
                 "direct_direct": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5305289885092939,
+                        "purity": 3.475796014988747
+                    },
                     "lab": {
                         "L": 25.661344694774144,
                         "a": -3.318495888434497,
@@ -54,6 +66,10 @@
                     }
                 },
                 "direct_hemispheric": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5305289885092939,
+                        "purity": 3.475796014988747
+                    },
                     "lab": {
                         "L": 25.661344694774144,
                         "a": -3.318495888434497,
@@ -73,6 +89,10 @@
             },
             "transmittance": {
                 "diffuse_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5452586019606928,
+                        "purity": 2.306686620111658
+                    },
                     "lab": {
                         "L": 87.72300245874416,
                         "a": -3.557387626535957,
@@ -90,6 +110,10 @@
                     }
                 },
                 "direct_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.0,
+                        "purity": 0.0
+                    },
                     "lab": {
                         "L": 0.0,
                         "a": 0.0,
@@ -107,6 +131,10 @@
                     }
                 },
                 "direct_direct": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5453743838565356,
+                        "purity": 2.304415591577754
+                    },
                     "lab": {
                         "L": 91.19129768851262,
                         "a": -3.656414719474199,
@@ -124,6 +152,10 @@
                     }
                 },
                 "direct_hemispheric": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5453743838565356,
+                        "purity": 2.304415591577754
+                    },
                     "lab": {
                         "L": 91.19129768851262,
                         "a": -3.656414719474199,
@@ -145,6 +177,10 @@
         "front": {
             "reflectance": {
                 "diffuse_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.36,
+                        "purity": 2.3792968412964326
+                    },
                     "lab": {
                         "L": 42.01609101146379,
                         "a": 1.458295617952965,
@@ -162,6 +198,10 @@
                     }
                 },
                 "direct_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.0,
+                        "purity": 0.0
+                    },
                     "lab": {
                         "L": 0.0,
                         "a": 0.0,
@@ -179,6 +219,10 @@
                     }
                 },
                 "direct_direct": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.36,
+                        "purity": 5.3585249583459245
+                    },
                     "lab": {
                         "L": 29.33443914402229,
                         "a": 2.614396024320759,
@@ -196,6 +240,10 @@
                     }
                 },
                 "direct_hemispheric": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.36,
+                        "purity": 5.3585249583459245
+                    },
                     "lab": {
                         "L": 29.33443914402229,
                         "a": 2.614396024320759,
@@ -215,6 +263,10 @@
             },
             "transmittance": {
                 "diffuse_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5452586019606928,
+                        "purity": 2.306686620111658
+                    },
                     "lab": {
                         "L": 87.72300245874416,
                         "a": -3.557387626535957,
@@ -232,6 +284,10 @@
                     }
                 },
                 "direct_diffuse": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.0,
+                        "purity": 0.0
+                    },
                     "lab": {
                         "L": 0.0,
                         "a": 0.0,
@@ -249,6 +305,10 @@
                     }
                 },
                 "direct_direct": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5453743838565356,
+                        "purity": 2.304415591577754
+                    },
                     "lab": {
                         "L": 91.19129768851262,
                         "a": -3.656414719474199,
@@ -266,6 +326,10 @@
                     }
                 },
                 "direct_hemispheric": {
+                    "dominant_wavelength_purity": {
+                        "dominant_wavelength": 0.5453743838565356,
+                        "purity": 2.304415591577754
+                    },
                     "lab": {
                         "L": 91.19129768851262,
                         "a": -3.656414719474199,

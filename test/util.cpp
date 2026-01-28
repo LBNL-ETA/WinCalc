@@ -153,6 +153,21 @@ void test_rgb_result(nlohmann::json & expected, wincalc::WinCalc_RGB const & res
     }
 }
 
+void test_dominant_wavelength_purity_result(nlohmann::json & expected,
+                                            wincalc::DominantWavelengthPurity const & results,
+                                            bool update)
+{
+    EXPECT_NEAR(results.dominant_wavelength,
+                expected.value("dominant_wavelength", -1.0),
+                TEST_TOLARANCE);
+    EXPECT_NEAR(results.purity, expected.value("purity", -1.0), TEST_TOLARANCE);
+    if(update)
+    {
+        expected["dominant_wavelength"] = results.dominant_wavelength;
+        expected["purity"] = results.purity;
+    }
+}
+
 double get_possible_nan(nlohmann::json & expected, std::string const & field_name)
 {
     if(expected.count(field_name) == 0 || expected.at(field_name).is_null())
@@ -218,9 +233,13 @@ void test_wce_color_result(nlohmann::json & expected,
     auto & expected_rgb = get_json_field(expected, "rgb", update);
     auto & expected_lab = get_json_field(expected, "lab", update);
     auto & expected_trichromatic = get_json_field(expected, "trichromatic", update);
+    auto & expected_dominant_wavelength_purity =
+      get_json_field(expected, "dominant_wavelength_purity", update);
     test_rgb_result(expected_rgb, results.rgb, update);
     test_trichromatic_result(expected_trichromatic, results.trichromatic, update);
     test_lab_result(expected_lab, results.lab, update);
+    test_dominant_wavelength_purity_result(
+      expected_dominant_wavelength_purity, results.dominant_wavelength_purity, update);
 }
 
 void test_wce_optical_result_simple(

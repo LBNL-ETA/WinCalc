@@ -102,17 +102,35 @@ namespace wincalc
         double b;
     };
 
+    struct DominantWavelengthPurity
+    {
+        DominantWavelengthPurity() = default;
+        template<typename T>
+        DominantWavelengthPurity(T const & other) :
+            dominant_wavelength(other.dominantWavelength),
+            purity(other.purity)
+        {}
+
+        double dominant_wavelength;
+        double purity;
+    };
+
     struct Color_Result
     {
         Color_Result() = default;
 
-        template<typename T, typename R, typename L>
-        Color_Result(T const & t, R const & r, L const & l) : trichromatic(t), rgb(r), lab(l)
+        template<typename T, typename R, typename L, typename D>
+        Color_Result(T const & tri, R const & rgb_val, L const & lab_val, D const & dwp) :
+            trichromatic(tri),
+            rgb(rgb_val),
+            lab(lab_val),
+            dominant_wavelength_purity(dwp)
         {}
 
         Trichromatic trichromatic;
         WinCalc_RGB rgb;
         Lab lab;
+        DominantWavelengthPurity dominant_wavelength_purity;
     };
 
     template<>
