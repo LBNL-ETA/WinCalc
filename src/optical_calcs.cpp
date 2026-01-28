@@ -405,8 +405,12 @@ namespace wincalc
           {common_wavelengths}, type, number_visible_bands, number_solar_bands);
 
         LOGMSG("before color_props");
+        const SingleLayerOptics::ColorDetectors detectors{detector_x, detector_y, detector_z};
+        const SingleLayerOptics::SpectrumLocus locus{
+            SingleLayerOptics::CIE_1964_Locus_X(),
+            SingleLayerOptics::CIE_1964_Locus_Y()};
         auto color_props = std::make_shared<SingleLayerOptics::ColorProperties>(
-          std::move(layer_x), source_spectrum, detector_x, detector_y, detector_z, wavelength_set);
+          std::move(layer_x), source_spectrum, detectors, locus, wavelength_set);
 
         LOGMSG("before calc_color_properties");
         auto result = calc_color_properties(color_props, theta, phi);
