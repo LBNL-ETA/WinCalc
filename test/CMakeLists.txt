@@ -2,30 +2,21 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 set(PROJECT_TEST_NAME ${LIB_NAME}-test)
 
-# Download and unpack googletest at configure time
-configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "Build step for googletest failed: ${result}")
+# GoogleTest
+if(MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
 
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+include(FetchContent)
 
-# Add googletest directly to our build. This defines
-# the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                 ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-                 EXCLUDE_FROM_ALL)
+if(NOT TARGET gtest)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0
+    )
+    FetchContent_MakeAvailable(googletest)
+endif()
 
 add_executable(${PROJECT_TEST_NAME}
 		1_layer_cgdb_31017.unit.cpp
@@ -49,14 +40,14 @@ add_executable(${PROJECT_TEST_NAME}
 		1_layer_pleated_shade_genBSDF_cgdb_24040.unit.cpp
 		1_layer_pv_generic.unit.cpp
 		1_layer_roller_shade_bsdf_xml_cgdb_14060.unit.cpp
-		1_layer_roller_shade_bsdf_xml_cgdb_46016.unit.cpp	
+		1_layer_roller_shade_bsdf_xml_cgdb_46016.unit.cpp
 		1_layer_roman_shade_genBSDF.unit.cpp
 		1_layer_venetian_cgdb_24000.unit.cpp
 		1_layer_venetian_cgdb_24001.unit.cpp
 		1_layer_venetian_cgdb_24002.unit.cpp
-		1_layer_woven_shade.unit.cpp					
+		1_layer_woven_shade.unit.cpp
 		2_layers_laminate_nfrc_18000_air_NFRC_102_quarter_basis.unit.cpp
-		2_layers_nfrc_102_air_bsdf_xml_thermal_openness_10_mm_top_and_bottom.unit.cpp	
+		2_layers_nfrc_102_air_bsdf_xml_thermal_openness_10_mm_top_and_bottom.unit.cpp
 		2_layers_nfrc_102_air_bsdf_xml_thermal_openness_10_mm_top_and_bottom_0.222_effective_front_thermal_openness_area_0.0789_permeability_factor.unit.cpp
 		2_layers_nfrc_102_air_homogeneous_diffusing_shade_pella_white_venetian_blind_slat.unit.cpp
 		2_layers_nfrc_102_air_homogeneous_diffusing_shade_single_band.unit.cpp
@@ -72,12 +63,12 @@ add_executable(${PROJECT_TEST_NAME}
 		2_layers_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102.unit.cpp
 		2_layers_vertical_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102.unit.cpp
 		2_layers_nfrc_102_air_nfrc_102_forced_ventilation.unit.cpp
-		2_layers_nfrc_102_vacuum_nfrc_102.unit.cpp	
+		2_layers_nfrc_102_vacuum_nfrc_102.unit.cpp
 		2_layers_vertical_venetian_pella_white_venetian_blind_slat_user_geometry_air_nfrc_102.unit.cpp
 		2_layers_venetian_pella_white_venetian_blind_slat_user_geometry_air_nfrc_102.unit.cpp
 		2_layers_perforated_screen_pella_white_venetian_blind_slat_user_geometry_air_nfrc_102.unit.cpp
 		#double_layer_perfect_clear_exterior_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
-		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp	
+		#double_layer_interior_xml_with_thermal_openings_10mm_all_sides.unit.cpp
 		2_layers_nfrc_102_air_nfrc_102.unit.cpp
  		2_layers_low_e_nfrc_2191_air_nfrc_102.unit.cpp
  		2_layers_venetian_cgdb_3001_air_nfrc_102.unit.cpp
@@ -91,7 +82,7 @@ add_executable(${PROJECT_TEST_NAME}
 		load_frame_data.unit.cpp
 		nfrc_9023.unit.cpp
 		main.cpp
-		paths.h 
+		paths.h
 		util.h
 		util.cpp)
 

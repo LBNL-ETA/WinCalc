@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.14)
 
 project( wincalc VERSION 2.6.4 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
@@ -28,18 +28,66 @@ set(BUILD_Windows_CalcStandards_tests OFF CACHE BOOL "")
 set(BUILD_Optical_Measurement_Parser_Tests OFF CACHE BOOL "")
 set(BUILD_WCE_TESTING OFF CACHE BOOL "")
 set(BUILD_THMX_Parser_Tests OFF CACHE BOOL "")
+set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "")
+set(BUILD_FileParse_tests OFF CACHE BOOL "")
 
-include(CMakeLists-Windows-Standards.txt)
-include(CMakeLists-OpticalMeasurementParser.txt)
-include(CMakeLists-THMXParser.txt)
-include(CMakeLists-Windows-CalcEngine.txt)
-include(CMakeLists-LibraryFEMTHERM.txt)
+include(FetchContent)
+
+set(WindowsCalcStandards_Branch "v1.2.2")
+if(NOT TARGET window_standards)
+    FetchContent_Declare(
+        WindowsCalcStandards
+        GIT_REPOSITORY https://github.com/LBNL-ETA/Windows-CalcStandards.git
+        GIT_TAG ${WindowsCalcStandards_Branch}
+    )
+    FetchContent_MakeAvailable(WindowsCalcStandards)
+endif()
+
+set(OpticalMeasurementParser_Branch "feature/disable-wide-char")
+if(NOT TARGET OpticalMeasurementParser)
+    FetchContent_Declare(
+        OpticalMeasurementParser
+        GIT_REPOSITORY https://github.com/LBNL-ETA/OpticalMeasurementParser.git
+        GIT_TAG ${OpticalMeasurementParser_Branch}
+    )
+    FetchContent_MakeAvailable(OpticalMeasurementParser)
+endif()
+
+set(THMXParser_Branch "feature/disable-wide-char")
+if(NOT TARGET THMXParser)
+    FetchContent_Declare(
+        THMXParser
+        GIT_REPOSITORY https://github.com/LBNL-ETA/THMXParser.git
+        GIT_TAG ${THMXParser_Branch}
+    )
+    FetchContent_MakeAvailable(THMXParser)
+endif()
+
+set(WindowsCalcEngine_Branch "Version_1.0.66")
+if(NOT TARGET Windows-CalcEngine)
+    FetchContent_Declare(
+        WindowsCalc-Engine
+        GIT_REPOSITORY https://github.com/LBNL-ETA/Windows-CalcEngine.git
+        GIT_TAG ${WindowsCalcEngine_Branch}
+    )
+    FetchContent_MakeAvailable(WindowsCalc-Engine)
+endif()
+
+set(LibraryFEMTherm_Branch "feature/disable-wide-char")
+if(NOT TARGET LibraryFEMTHERM)
+    FetchContent_Declare(
+        LibraryFEMTherm
+        GIT_REPOSITORY https://github.com/LBNL-ETA/LibraryFEMTherm.git
+        GIT_TAG ${LibraryFEMTherm_Branch}
+    )
+    FetchContent_MakeAvailable(LibraryFEMTherm)
+endif()
 
 add_subdirectory(src)
 
 target_include_directories(${LIB_NAME}
-    PUBLIC 
-        $<INSTALL_INTERFACE:include>    
+    PUBLIC
+        $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -59,4 +107,3 @@ if(BUILD_WinCalc_tests)
     add_test(NAME wincalc-test
              COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/wincalc-test --gtest_catch_exceptions=0)
 endif()
-
