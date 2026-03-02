@@ -6,7 +6,8 @@ graph TD
     FileParse[FileParse<br/><font color='red'>Version_1.1.1</font>]
     miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.7</font>]
-    nlohmann[nlohmann<br/><font color='red'>v3.12.0</font>]
+    nlohmann_omp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
+    nlohmann_fp[nlohmann_json<br/><font color='red'>v3.11.3</font>]
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.8</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.4</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.67</font>]
@@ -16,10 +17,12 @@ graph TD
 
     %% Package relations
     WinCalc --> OpticalMeasurementParser
-    OpticalMeasurementParser --> nlohmann
+    OpticalMeasurementParser --> nlohmann_omp
     OpticalMeasurementParser --> BSDFXMLParser
     FileParse --> xmlParser
+    FileParse --> nlohmann_fp
     BSDFXMLParser --> FileParse
+    LibraryFEMTHERM --> FileParse
     THMXParser --> xmlParser
     WinCalc --> THMXParser
     WinCalc --> Windows-CalcStandards
