@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.4 LANGUAGES CXX )
+project( wincalc VERSION 2.6.5 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")
@@ -43,7 +43,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "feature/disable-wide-char")
+set(OpticalMeasurementParser_Branch "v2.3.7")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -53,7 +53,7 @@ if(NOT TARGET OpticalMeasurementParser)
     FetchContent_MakeAvailable(OpticalMeasurementParser)
 endif()
 
-set(THMXParser_Branch "feature/disable-wide-char")
+set(THMXParser_Branch "v1.1.4")
 if(NOT TARGET THMXParser)
     FetchContent_Declare(
         THMXParser
@@ -63,7 +63,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "feature/disable-wide-char")
+set(WindowsCalcEngine_Branch "Version_1.0.67")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
@@ -73,7 +73,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "feature/disable-wide-char")
+set(LibraryFEMTherm_Branch "Version_0.16")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
