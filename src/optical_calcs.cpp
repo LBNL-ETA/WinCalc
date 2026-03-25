@@ -287,8 +287,29 @@ namespace wincalc
             LOGMSG("in absorptances loop iteration: " + std::to_string(i));
             optical_results.layer_results.push_back(
               WCE_Optical_Result_By_Side<WCE_Optical_Result_Layer<double>>{
-                WCE_Optical_Result_Absorptance<double>{absorptances_front[i]},
-                WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}});
+                WCE_Optical_Result_Layer<double>{WCE_Optical_Result_Absorptance<double>{absorptances_front[i]}},
+                WCE_Optical_Result_Layer<double>{WCE_Optical_Result_Absorptance<double>{absorptances_back[i]}}});
+        }
+
+        if(bsdf_system)
+        {
+            const size_t numLayers = optical_results.layer_results.size();
+            for(size_t idx = 0; idx < numLayers; ++idx)
+            {
+                const size_t layerIndex = idx + 1;   // 1-based for WCE API
+                optical_results.layer_results[idx].front.transmittance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Front, FenestrationCommon::PropertySurface::T);
+                optical_results.layer_results[idx].front.reflectance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Front, FenestrationCommon::PropertySurface::R);
+                optical_results.layer_results[idx].back.transmittance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Back, FenestrationCommon::PropertySurface::T);
+                optical_results.layer_results[idx].back.reflectance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Back, FenestrationCommon::PropertySurface::R);
+            }
         }
 
         LOGMSG("end calc_all(system, " + std::to_string(min_lambda) + ", "
