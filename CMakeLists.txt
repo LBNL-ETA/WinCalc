@@ -83,6 +83,8 @@ if(NOT TARGET LibraryFEMTHERM)
     FetchContent_MakeAvailable(LibraryFEMTherm)
 endif()
 
+configure_file(doc/WinCalc.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/WinCalc.md @ONLY)
+
 add_subdirectory(src)
 
 target_include_directories(${LIB_NAME}
