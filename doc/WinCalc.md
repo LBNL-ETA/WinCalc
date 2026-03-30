@@ -6,7 +6,7 @@ graph TD
     %% Level 1 - direct dependencies
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.7</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.4</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.69</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.70</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
     LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.16</font>]
 
