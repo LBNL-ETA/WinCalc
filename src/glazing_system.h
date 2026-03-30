@@ -104,6 +104,11 @@ namespace wincalc
                                                    double theta = 0,
                                                    double phi = 0) const;
 
+        // Compute per-layer wavelength matrices on demand. This is expensive
+        // and separated from optical_method_results() for performance reasons.
+        void populate_layer_wavelength_matrices(WCE_Optical_Results & results,
+                                                std::string const & method_name) const;
+
         WCE_Color_Results color(double theta = 0,
                                 double phi = 0,
                                 std::string const & tristimulus_x_method = "COLOR_TRISTIMX",

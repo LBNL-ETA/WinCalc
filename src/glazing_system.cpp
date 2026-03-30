@@ -77,6 +77,37 @@ namespace wincalc
         return result;
     }
 
+    void Glazing_System::populate_layer_wavelength_matrices(WCE_Optical_Results & results,
+                                                              std::string const & method_name) const
+    {
+        auto method = get_method(method_name);
+        std::shared_ptr<SingleLayerOptics::IScatteringLayer> layer =
+          get_or_create_layer(method_name, method);
+        auto bsdf_system =
+          std::dynamic_pointer_cast<MultiLayerOptics::CMultiPaneBSDF>(layer);
+
+        if(bsdf_system)
+        {
+            const size_t numLayers = results.layer_results.size();
+            for(size_t idx = 0; idx < numLayers; ++idx)
+            {
+                const size_t layerIndex = idx + 1;   // 1-based for WCE API
+                results.layer_results[idx].front.transmittance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Front, FenestrationCommon::PropertySurface::T);
+                results.layer_results[idx].front.reflectance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Front, FenestrationCommon::PropertySurface::R);
+                results.layer_results[idx].back.transmittance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Back, FenestrationCommon::PropertySurface::T);
+                results.layer_results[idx].back.reflectance_wavelength_matrices =
+                  bsdf_system->getLayerWavelengthMatrices(
+                    layerIndex, FenestrationCommon::Side::Back, FenestrationCommon::PropertySurface::R);
+            }
+        }
+    }
+
     WCE_Color_Results Glazing_System::color(double theta,
                                             double phi,
                                             std::string const & tristimulus_x_method,
