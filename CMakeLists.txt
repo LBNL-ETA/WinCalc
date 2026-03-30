@@ -43,7 +43,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "v2.3.7")
+set(OpticalMeasurementParser_Branch "v2.3.8")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -73,7 +73,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.16")
+set(LibraryFEMTherm_Branch "Version_0.19.0")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
@@ -81,6 +81,17 @@ if(NOT TARGET LibraryFEMTHERM)
         GIT_TAG ${LibraryFEMTherm_Branch}
     )
     FetchContent_MakeAvailable(LibraryFEMTherm)
+endif()
+
+# Read transitive dependency versions from targets for the dependency diagram
+get_property(BSDFXMLParser_Branch TARGET OpticalMeasurementParser PROPERTY BSDFXMLParser_Branch)
+get_property(nlohmann_omp_Branch TARGET OpticalMeasurementParser PROPERTY nlohmann_Branch)
+get_property(FileParse_Branch TARGET BSDFXMLParser PROPERTY FileParse_Branch)
+get_property(miniz_Branch TARGET LibraryFEMTHERM PROPERTY miniz_Branch)
+get_property(LBNLCPPCommon_Branch TARGET LibraryFEMTHERM PROPERTY LBNLCPPCommon_Branch)
+# TODO: Remove this fallback once LibraryFEMTherm is updated to 0.20
+if(NOT LBNLCPPCommon_Branch)
+    set(LBNLCPPCommon_Branch "v0.15")
 endif()
 
 configure_file(doc/WinCalc.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/WinCalc.md @ONLY)
