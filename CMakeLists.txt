@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.7 LANGUAGES CXX )
+project( wincalc VERSION 2.6.8 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")
@@ -73,7 +73,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.19.0")
+set(LibraryFEMTherm_Branch "Version_0.20.0")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
@@ -89,10 +89,6 @@ get_property(nlohmann_omp_Branch TARGET OpticalMeasurementParser PROPERTY nlohma
 get_property(FileParse_Branch TARGET BSDFXMLParser PROPERTY FileParse_Branch)
 get_property(miniz_Branch TARGET LibraryFEMTHERM PROPERTY miniz_Branch)
 get_property(LBNLCPPCommon_Branch TARGET LibraryFEMTHERM PROPERTY LBNLCPPCommon_Branch)
-# TODO: Remove this fallback once LibraryFEMTherm is updated to 0.20
-if(NOT LBNLCPPCommon_Branch)
-    set(LBNLCPPCommon_Branch "v0.15")
-endif()
 
 configure_file(doc/WinCalc.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/WinCalc.md @ONLY)
 
