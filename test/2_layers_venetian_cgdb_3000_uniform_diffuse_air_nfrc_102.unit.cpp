@@ -71,12 +71,12 @@ protected:
 TEST_F(Test_2_layers_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102, Test_Thermal)
 {
     test_thermal_results(
-      "2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102", "thermal_U_Environment", glazing_system_u, update_results);
+      "2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102/quarter_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102/quarter_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_2_layers_venetian_cgdb_3000_uniform_diffuse_air_nfrc_102, Test_Optical)
 {
-    test_optical_results("2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102", glazing_system_u, update_results);
+    test_optical_results("2_layers/venetian_cgdb_3000_uniform_diffuse_air_nfrc_102/quarter_basis", glazing_system_u, update_results);
 }

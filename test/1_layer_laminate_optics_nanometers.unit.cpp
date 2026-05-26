@@ -49,13 +49,13 @@ protected:
 
 TEST_F(Test_1_layer_laminate_optics_nanometers, Test_Thermal)
 {
-    test_thermal_results("1_layer/laminate_optics_nanometers/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/laminate_optics_nanometers/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/laminate_optics_nanometers/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/laminate_optics_nanometers/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 
 TEST_F(Test_1_layer_laminate_optics_nanometers, Test_Optical)
 {
-    test_optical_results("1_layer/laminate_optics_nanometers/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/laminate_optics_nanometers/no_basis", glazing_system_u, update_results);
 }

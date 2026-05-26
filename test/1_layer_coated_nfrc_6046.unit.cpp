@@ -47,12 +47,12 @@ protected:
 
 TEST_F(Test_1_layer_coated_nfrc_6046, Test_Thermal)
 {
-    test_thermal_results("1_layer/coated_nfrc_6046/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/coated_nfrc_6046/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/coated_nfrc_6046/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/coated_nfrc_6046/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_1_layer_coated_nfrc_6046, Test_Optical)
 {
-    test_optical_results("1_layer/coated_nfrc_6046/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/coated_nfrc_6046/no_basis", glazing_system_u, update_results);
 }

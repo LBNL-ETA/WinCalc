@@ -57,9 +57,9 @@ protected:
 
 TEST_F(Test_1_layer_nfrc_102_awning_generic, Test_Thermal)
 {
-    test_thermal_results("1_layer/nfrc_102_awning_generic/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/nfrc_102_awning_generic/quarter_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/nfrc_102_awning_generic/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/nfrc_102_awning_generic/quarter_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 #if 0
@@ -84,5 +84,5 @@ TEST_F(Test_1_layer_nfrc_102_awning_generic, Test_Thermal_Conductivity_0_5)
 
 TEST_F(Test_1_layer_nfrc_102_awning_generic, Test_Optical)
 {
-    test_optical_results("1_layer/nfrc_102_awning_generic/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/nfrc_102_awning_generic/quarter_basis", glazing_system_u, update_results);
 }

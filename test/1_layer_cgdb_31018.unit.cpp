@@ -52,12 +52,12 @@ protected:
 
 TEST_F(Test_1_layer_cgdb_31018, Test_Thermal)
 {
-    test_thermal_results("1_layer/cgdb_31018/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/cgdb_31018/quarter_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/cgdb_31018/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/cgdb_31018/quarter_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_1_layer_cgdb_31018, Test_Optical)
 {
-    test_optical_results("1_layer/cgdb_31018/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/cgdb_31018/quarter_basis", glazing_system_u, update_results);
 }

@@ -49,9 +49,9 @@ protected:
 
 TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal)
 {
-    test_thermal_results("1_layer/nfrc_102/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/nfrc_102/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/nfrc_102/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/nfrc_102/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal_Conductivity_0_2)
@@ -74,5 +74,5 @@ TEST_F(Test_1_layer_nfrc_102_default, Test_Thermal_Conductivity_0_5)
 
 TEST_F(Test_1_layer_nfrc_102_default, Test_Optical)
 {
-    test_optical_results("1_layer/nfrc_102/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/nfrc_102/no_basis", glazing_system_u, update_results);
 }

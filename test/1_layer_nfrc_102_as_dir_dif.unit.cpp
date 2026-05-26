@@ -52,14 +52,14 @@ protected:
 
 TEST_F(Test_1_layer_nfrc_102_dir_dif, Test_Thermal)
 {
-    test_thermal_results("1_layer/nfrc_102/dir-dif", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/nfrc_102/dir-dif/full_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/nfrc_102/dir-dif", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/nfrc_102/dir-dif/full_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_1_layer_nfrc_102_dir_dif, Test_Optical)
 {
-    test_optical_results("1_layer/nfrc_102/dir-dif", glazing_system_u, update_results);
+    test_optical_results("1_layer/nfrc_102/dir-dif/full_basis", glazing_system_u, update_results);
 }
 
 TEST_F(Test_1_layer_nfrc_102_dir_dif, Test_NoBSDFHemisphere)

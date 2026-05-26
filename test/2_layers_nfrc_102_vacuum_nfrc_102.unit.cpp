@@ -64,11 +64,11 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Cylindrical)
 {
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/cylindrical",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/cylindrical/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/cylindrical",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/cylindrical/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -91,11 +91,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Spherical)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/spherical",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/spherical/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/spherical",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/spherical/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -118,11 +118,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Rectangular)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/rectangular",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/rectangular/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/rectangular",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/rectangular/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -147,11 +147,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Triangular)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/triangular",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/triangular/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/triangular",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/triangular/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -176,11 +176,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Pentagon)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/pentagon",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/pentagon/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/pentagon",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/pentagon/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -204,11 +204,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Hexagon)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/hexagon",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/hexagon/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/hexagon",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/hexagon/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -231,11 +231,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_LinearBearing)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/linear_bearing",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/linear_bearing/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/linear_bearing",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/linear_bearing/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -259,11 +259,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_TruncatedCone)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/truncated_cone",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/truncated_cone/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/truncated_cone",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/truncated_cone/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -287,11 +287,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_AnnulusCylinder)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/annulus_cylinder",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/annulus_cylinder/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/annulus_cylinder",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/annulus_cylinder/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -308,11 +308,11 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Measured)
     glazing_system_u->gap_layers({pillarGap});
     glazing_system_shgc->gap_layers({pillarGap});
 
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/measured",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/measured/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/measured",
+    test_thermal_results("2_layers/nfrc_102_vacuum_nfrc_102/measured/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -321,5 +321,5 @@ TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Thermal_Measured)
 
 TEST_F(Test_2_layers_nfrc_102_vacuum_nfrc_102, Test_Optical)
 {
-    test_optical_results("2_layers/nfrc_102_vacuum_nfrc_102", glazing_system_u, update_results);
+    test_optical_results("2_layers/nfrc_102_vacuum_nfrc_102/no_basis", glazing_system_u, update_results);
 }

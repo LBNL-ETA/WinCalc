@@ -65,25 +65,25 @@ protected:
 TEST_F(Test_2_layers_low_e_nfrc_2191_air_nfrc_102, Test_Thermal)
 {
     test_thermal_results(
-      "2_layers/low_e_nfrc_2191_air_nfrc_102/default", "thermal_U_Environment", glazing_system_u, update_results);
+      "2_layers/low_e_nfrc_2191_air_nfrc_102/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "2_layers/low_e_nfrc_2191_air_nfrc_102/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "2_layers/low_e_nfrc_2191_air_nfrc_102/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 TEST_F(Test_2_layers_low_e_nfrc_2191_air_nfrc_102, Test_Optical)
 {
-    test_optical_results("2_layers/low_e_nfrc_2191_air_nfrc_102/default", glazing_system_u, update_results);
+    test_optical_results("2_layers/low_e_nfrc_2191_air_nfrc_102/no_basis", glazing_system_u, update_results);
 }
 
 TEST_F(Test_2_layers_low_e_nfrc_2191_air_nfrc_102, Test_Thermal_Flipped_LowE)
 {
     glazing_system_u->flip_layer(0, true);
     glazing_system_shgc->flip_layer(0, true);
-    test_thermal_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e",
+    test_thermal_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e/no_basis",
                          "thermal_U_Environment",
                          glazing_system_u,
                          update_results);
-    test_thermal_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e",
+    test_thermal_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e/no_basis",
                          "thermal_SHGC_Environment",
                          glazing_system_shgc,
                          update_results);
@@ -92,5 +92,5 @@ TEST_F(Test_2_layers_low_e_nfrc_2191_air_nfrc_102, Test_Thermal_Flipped_LowE)
 TEST_F(Test_2_layers_low_e_nfrc_2191_air_nfrc_102, Test_Optical_Flipped_LowE)
 {
     glazing_system_shgc->flip_layer(0, true);
-    test_optical_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e", glazing_system_u, update_results);
+    test_optical_results("2_layers/low_e_nfrc_2191_air_nfrc_102/flipped_low_e/no_basis", glazing_system_u, update_results);
 }
