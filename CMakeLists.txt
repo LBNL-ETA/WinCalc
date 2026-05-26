@@ -73,7 +73,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.21.1")
+set(LibraryFEMTherm_Branch "Version_0.21.2")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm

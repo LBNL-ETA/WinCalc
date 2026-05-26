@@ -8,7 +8,7 @@ graph TD
     THMXParser[THMXParser<br/><font color='red'>v1.1.4</font>]
     WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.70</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.21.1</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.21.2</font>]
 
     %% Level 2
     nlohmann_omp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
