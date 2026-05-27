@@ -64,7 +64,7 @@ protected:
 
 TEST_F(Test_3_layers_nfrc_102_air_nfrc_102_air_nfrc_102, Test_Deflection_Off)
 {
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_off",
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,
@@ -76,12 +76,12 @@ TEST_F(Test_3_layers_nfrc_102_air_nfrc_102_air_nfrc_102, Test_Deflection_On)
     glazing_system_u->enable_deflection(true);
 
     glazing_system_u->set_deflection_properties(273, 101325);
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_on_winter_u_run",
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_on_winter_shgc_run",
                             glazing_system_u,
                             Tarcog::ISO15099::System::SHGC,
@@ -90,12 +90,12 @@ TEST_F(Test_3_layers_nfrc_102_air_nfrc_102_air_nfrc_102, Test_Deflection_On)
     glazing_system_shgc->enable_deflection(true);
 
     glazing_system_shgc->set_deflection_properties(273, 101325);
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_on_summer_u_run",
                             glazing_system_shgc,
                             Tarcog::ISO15099::System::Uvalue,
                             update_results);
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_on_summer_shgc_run",
                             glazing_system_shgc,
                             Tarcog::ISO15099::System::SHGC,
@@ -107,7 +107,7 @@ TEST_F(Test_3_layers_nfrc_102_air_nfrc_102_air_nfrc_102, Test_Deflection_Measure
     glazing_system_u->enable_deflection(true);
     const std::vector<double> measured_deflected_gaps = {0.0135, 0.013};
     glazing_system_u->set_deflection_properties(measured_deflected_gaps);
-    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/default",
+    test_deflection_results("3_layers/nfrc_102_air_nfrc_102_air_nfrc_102/no_basis",
                             "deflection/deflection_measured",
                             glazing_system_u,
                             Tarcog::ISO15099::System::Uvalue,

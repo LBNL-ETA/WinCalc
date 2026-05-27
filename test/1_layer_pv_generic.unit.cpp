@@ -49,13 +49,13 @@ protected:
 
 TEST_F(Test_1_layer_pv_generic, Test_Thermal)
 {
-    test_thermal_results("1_layer/pv_generic/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("1_layer/pv_generic/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "1_layer/pv_generic/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "1_layer/pv_generic/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 
 TEST_F(Test_1_layer_pv_generic, Test_Optical)
 {
-    test_optical_results("1_layer/pv_generic/default", glazing_system_u, update_results);
+    test_optical_results("1_layer/pv_generic/no_basis", glazing_system_u, update_results);
 }

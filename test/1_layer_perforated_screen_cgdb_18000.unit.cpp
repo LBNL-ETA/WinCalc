@@ -21,6 +21,8 @@ class Test_1_layer_perforated_screen_cgdb_18000 : public testing::Test
 protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
     std::shared_ptr<Glazing_System> glazing_system_shgc;
+    std::shared_ptr<Glazing_System> glazing_system_u_quarter;
+    std::shared_ptr<Glazing_System> glazing_system_shgc_quarter;
 
     virtual void SetUp()
     {
@@ -45,6 +47,20 @@ protected:
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
         glazing_system_shgc = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments(), bsdf_hemisphere);
+
+        auto bsdf_hemisphere_quarter =
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
+
+        glazing_system_u_quarter = std::make_shared<Glazing_System>(
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere_quarter);
+        glazing_system_shgc_quarter = std::make_shared<Glazing_System>(standard,
+                                                                       products,
+                                                                       gaps,
+                                                                       1.0,
+                                                                       1.0,
+                                                                       90,
+                                                                       nfrc_shgc_environments(),
+                                                                       bsdf_hemisphere_quarter);
     }
 };
 
@@ -53,9 +69,20 @@ TEST_F(Test_1_layer_perforated_screen_cgdb_18000, Test_Thermal)
     test_thermal_results("1_layer/perforated_screen_cgdb_18000/full_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
       "1_layer/perforated_screen_cgdb_18000/full_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+
+    test_thermal_results("1_layer/perforated_screen_cgdb_18000/quarter_basis",
+                         "thermal_U_Environment",
+                         glazing_system_u_quarter,
+                         update_results);
+    test_thermal_results("1_layer/perforated_screen_cgdb_18000/quarter_basis",
+                         "thermal_SHGC_Environment",
+                         glazing_system_shgc_quarter,
+                         update_results);
 }
 
 TEST_F(Test_1_layer_perforated_screen_cgdb_18000, Test_Optical)
 {
     test_optical_results("1_layer/perforated_screen_cgdb_18000/full_basis", glazing_system_u, update_results);
+    test_optical_results(
+      "1_layer/perforated_screen_cgdb_18000/quarter_basis", glazing_system_u_quarter, update_results);
 }

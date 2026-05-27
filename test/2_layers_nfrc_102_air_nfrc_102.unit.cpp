@@ -55,13 +55,13 @@ protected:
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102, Test_Thermal)
 {
-    test_thermal_results("2_layers/nfrc_102_air_nfrc_102/default", "thermal_U_Environment", glazing_system_u, update_results);
+    test_thermal_results("2_layers/nfrc_102_air_nfrc_102/no_basis", "thermal_U_Environment", glazing_system_u, update_results);
     test_thermal_results(
-      "2_layers/nfrc_102_air_nfrc_102/default", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
+      "2_layers/nfrc_102_air_nfrc_102/no_basis", "thermal_SHGC_Environment", glazing_system_shgc, update_results);
 }
 
 
 TEST_F(Test_2_layers_nfrc_102_air_nfrc_102, Test_Optical)
 {
-    test_optical_results("2_layers/nfrc_102_air_nfrc_102/default", glazing_system_u, update_results);
+    test_optical_results("2_layers/nfrc_102_air_nfrc_102/no_basis", glazing_system_u, update_results);
 }

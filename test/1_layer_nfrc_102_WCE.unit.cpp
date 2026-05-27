@@ -53,5 +53,5 @@ protected:
 
 TEST_F(Test_1_layer_nfrc_102_WCE, Test_Thermal)
 {
-    test_thermal_results("1_layer/nfrc_102/default", "thermal_WCE_Environment", glazing_system, update_results);
+    test_thermal_results("1_layer/nfrc_102/no_basis", "thermal_WCE_Environment", glazing_system, update_results);
 }
