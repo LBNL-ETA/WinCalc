@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.14)
 project( wincalc VERSION 2.6.12 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
+# Enable MSVC file-level parallel compilation (/MP) for every target, including
+# the FetchContent dependencies pulled in below via add_subdirectory. Without it
+# the Visual Studio generator compiles the .cpp files inside a single .vcxproj
+# (notably the large wincalc-test target) serially, regardless of --parallel.
+if(MSVC)
+    add_compile_options(/MP)
+endif()
+
 # Graceful local-sibling fallback: the `local` CMake preset sets
 # FETCHCONTENT_SOURCE_DIR_<NAME> to ${sourceDir}/../<DepName> for each declared
 # dependency. If a sibling working copy is missing, unset that variable here so
