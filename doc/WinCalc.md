@@ -1,24 +1,24 @@
 ```mermaid
 graph TD
     %% Level 0
-    WinCalc[WinCalc<br/><font color='red'>v2.6.11</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.6.12</font>]
 
     %% Level 1 - direct dependencies
-    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.8</font>]
-    THMXParser[THMXParser<br/><font color='red'>v1.1.4</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.70</font>]
-    Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.2</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.21.2</font>]
+    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.9</font>]
+    THMXParser[THMXParser<br/><font color='red'>v1.1.6</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.71</font>]
+    Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.4</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.21.3</font>]
 
     %% Level 2
     nlohmann_omp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
-    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.9</font>]
-    FileParse[FileParse<br/><font color='red'>Version_1.1.2</font>]
+    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.11</font>]
+    FileParse[FileParse<br/><font color='red'>Version_1.1.4</font>]
     miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
-    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.15</font>]
+    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.16</font>]
 
     %% Level 3
-    xmlParser[xmlParser<br/><font color='red'>v1.0.4</font>]
+    xmlParser[xmlParser<br/><font color='red'>v1.0.5</font>]
     nlohmann_fp[nlohmann_json<br/><font color='red'>v3.11.3</font>]
 
     %% WinCalc dependencies

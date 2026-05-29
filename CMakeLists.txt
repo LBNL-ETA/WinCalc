@@ -1,7 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.11 LANGUAGES CXX )
+project( wincalc VERSION 2.6.12 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
+
+# Graceful local-sibling fallback: the `local` CMake preset sets
+# FETCHCONTENT_SOURCE_DIR_<NAME> to ${sourceDir}/../<DepName> for each declared
+# dependency. If a sibling working copy is missing, unset that variable here so
+# FetchContent falls back to the declared remote instead of erroring out.
+foreach(_dep WINDOWSCALCSTANDARDS OPTICALMEASUREMENTPARSER THMXPARSER WINDOWSCALC-ENGINE LIBRARYFEMTHERM GOOGLETEST)
+    if(DEFINED FETCHCONTENT_SOURCE_DIR_${_dep})
+        if(NOT EXISTS "${FETCHCONTENT_SOURCE_DIR_${_dep}}/CMakeLists.txt")
+            message(STATUS
+                "Local sibling for ${_dep} not found at "
+                "${FETCHCONTENT_SOURCE_DIR_${_dep}}; falling back to remote.")
+            unset(FETCHCONTENT_SOURCE_DIR_${_dep} CACHE)
+        endif()
+    endif()
+endforeach()
 
 if(NOT "${CMAKE_CXX_STANDARD}")
 	set(CMAKE_CXX_STANDARD 20)
@@ -33,7 +48,7 @@ set(BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-set(WindowsCalcStandards_Branch "v1.2.2")
+set(WindowsCalcStandards_Branch "v1.2.4")
 if(NOT TARGET window_standards)
     FetchContent_Declare(
         WindowsCalcStandards
@@ -43,7 +58,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "v2.3.8")
+set(OpticalMeasurementParser_Branch "v2.3.9")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -53,7 +68,7 @@ if(NOT TARGET OpticalMeasurementParser)
     FetchContent_MakeAvailable(OpticalMeasurementParser)
 endif()
 
-set(THMXParser_Branch "v1.1.4")
+set(THMXParser_Branch "v1.1.6")
 if(NOT TARGET THMXParser)
     FetchContent_Declare(
         THMXParser
@@ -63,7 +78,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "NanoBSDF")
+set(WindowsCalcEngine_Branch "Version_1.0.71")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
@@ -73,7 +88,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.21.2")
+set(LibraryFEMTherm_Branch "Version_0.21.3")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
