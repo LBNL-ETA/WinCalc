@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 7.281651755374131,
-    "H_shgc_outdoor": 20.416875700516883,
+    "H_shgc_indoor": 7.281576819231057,
+    "H_shgc_outdoor": 20.416865610635774,
     "H_u_indoor": 6.37051732692842,
     "H_u_outdoor": 20.33205853746781,
-    "SHGC": 0.7412321071368138,
+    "SHGC": 0.7412402547994879,
     "U": 0.6107751008916729,
     "gap_layer_effective_conductivities_shgc": [
-        0.10979988617537886
+        0.1097995992018312
     ],
     "gap_layer_effective_conductivities_u": [
         0.10756024817237433
     ],
-    "heat_flow_shgc_indoor": -36.20670589214266,
-    "heat_flow_shgc_outdoor": 2.959168393402365,
+    "heat_flow_shgc_indoor": -36.20225260097866,
+    "heat_flow_shgc_outdoor": 2.951429741206084,
     "heat_flow_u_indoor": -4.886200807412198,
     "heat_flow_u_outdoor": -62.27876708753564,
     "layer_temperatures_shgc": [
-        305.2949373761579,
-        305.18724574144005,
-        302.14545524115294,
-        302.12232044437883
+        305.29455841545206,
+        305.1868564171534,
+        302.14489379838943,
+        302.1217600321553
     ],
     "layer_temperatures_u": [
         302.0869177758842,
@@ -28,10 +28,10 @@
         297.91700220052235
     ],
     "radiosities_shgc": [
-        492.163153457999,
-        488.900812836735,
-        474.89162750751314,
-        467.27353994650724
+        492.1611350364933,
+        488.8982103520066,
+        474.8883084367666,
+        467.27064319953666
     ],
     "radiosities_u": [
         475.269393648411,
@@ -39,7 +39,7 @@
         450.05872023902646,
         445.8900871519249
     ],
-    "relative_heat_gain": 542.2729065982396,
+    "relative_heat_gain": 542.2788150584513,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         1.0
@@ -48,6 +48,6 @@
         1.0,
         0.9999999999999999
     ],
-    "system_effective_conductivity_shgc": 0.21450470246978764,
+    "system_effective_conductivity_shgc": 0.21446605322379292,
     "system_effective_conductivity_u": 0.022024674041477166
 }

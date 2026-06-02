@@ -1,25 +1,25 @@
 {
-    "H_shgc_indoor": 7.739232903699362,
-    "H_shgc_outdoor": 20.495780200939215,
+    "H_shgc_indoor": 7.739160715293121,
+    "H_shgc_outdoor": 20.49576665488886,
     "H_u_indoor": 7.023284248300763,
     "H_u_outdoor": 20.383158342010667,
-    "SHGC": 0.7619769705291554,
+    "SHGC": 0.7619824137634525,
     "U": 2.8662613804500423,
     "gap_layer_effective_conductivities_shgc": [
-        0.08728212611699411
+        0.08728169520455711
     ],
     "gap_layer_effective_conductivities_u": [
         0.08391318537701341
     ],
-    "heat_flow_shgc_indoor": -70.49382416483563,
-    "heat_flow_shgc_outdoor": 63.32141209998821,
+    "heat_flow_shgc_indoor": -70.4872533062488,
+    "heat_flow_shgc_outdoor": 63.31107552873891,
     "heat_flow_u_indoor": -22.930091043614492,
     "heat_flow_u_outdoor": -22.930091043599475,
     "layer_temperatures_shgc": [
-        308.2394853223037,
-        308.3157778122752,
-        306.3862738956121,
-        306.2586319590075
+        308.2389830370722,
+        308.31525724500557,
+        306.38550233291903,
+        306.2578678812001
     ],
     "layer_temperatures_u": [
         304.0250472002989,
@@ -28,10 +28,10 @@
         300.4148672946989
     ],
     "radiosities_shgc": [
-        508.2826621433404,
-        510.19231110287853,
-        500.93996213220225,
-        489.34149755782676
+        508.2799083428231,
+        510.18869695837935,
+        500.9352245982745,
+        489.3373836661567
     ],
     "radiosities_u": [
         485.5461283253144,
@@ -39,7 +39,7 @@
         465.217923668721,
         458.63134520204017
     ],
-    "relative_heat_gain": 574.8641925133118,
+    "relative_heat_gain": 574.8681397966717,
     "solid_layer_effective_conductivities_shgc": [
         1.0,
         1.0
@@ -48,6 +48,6 @@
         1.0,
         0.9999999999999998
     ],
-    "system_effective_conductivity_shgc": 0.6689046030700719,
+    "system_effective_conductivity_shgc": 0.6687538697239819,
     "system_effective_conductivity_u": 0.11938296898927941
 }
