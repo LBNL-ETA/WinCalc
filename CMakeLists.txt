@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.12 LANGUAGES CXX )
+project( wincalc VERSION 2.6.13 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 # Enable MSVC file-level parallel compilation (/MP) for every target, including
@@ -86,7 +86,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "plain-vov-baseline")
+set(WindowsCalcEngine_Branch "Version_1.0.73")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
@@ -96,7 +96,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.21.3")
+set(LibraryFEMTherm_Branch "Version_0.22.0")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm

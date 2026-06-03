@@ -1,14 +1,14 @@
 ```mermaid
 graph TD
     %% Level 0
-    WinCalc[WinCalc<br/><font color='red'>v2.6.12</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.6.13</font>]
 
     %% Level 1 - direct dependencies
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.9</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.6</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>plain-vov-baseline</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.73</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.4</font>]
-    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.21.3</font>]
+    LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.22.0</font>]
 
     %% Level 2
     nlohmann_omp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
