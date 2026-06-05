@@ -19,7 +19,7 @@ graph TD
 
     %% Level 3
     xmlParser[xmlParser<br/><font color='red'>v1.0.5</font>]
-    nlohmann_fp[nlohmann_json<br/><font color='red'>v3.11.3</font>]
+    nlohmann_fp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
 
     %% WinCalc dependencies
     WinCalc --> OpticalMeasurementParser

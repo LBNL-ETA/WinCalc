@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.13 LANGUAGES CXX )
+project( wincalc VERSION 2.6.14 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 # Enable MSVC file-level parallel compilation (/MP) for every target, including
@@ -72,7 +72,7 @@ set(BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-set(WindowsCalcStandards_Branch "v1.2.4")
+set(WindowsCalcStandards_Branch "v1.2.5")
 if(NOT TARGET window_standards)
     FetchContent_Declare(
         WindowsCalcStandards
@@ -82,7 +82,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "v2.3.9")
+set(OpticalMeasurementParser_Branch "v2.3.10")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -92,7 +92,7 @@ if(NOT TARGET OpticalMeasurementParser)
     FetchContent_MakeAvailable(OpticalMeasurementParser)
 endif()
 
-set(THMXParser_Branch "v1.1.6")
+set(THMXParser_Branch "v1.1.7")
 if(NOT TARGET THMXParser)
     FetchContent_Declare(
         THMXParser
@@ -102,7 +102,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "Version_1.0.73")
+set(WindowsCalcEngine_Branch "Version_1.0.74")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
@@ -112,7 +112,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "Version_0.22.0")
+set(LibraryFEMTherm_Branch "Version_0.22.1")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
