@@ -38,8 +38,8 @@ namespace wincalc
     {
         WCE_Optical_Result_Absorptance<T> absorptance;
         // Per-layer T/R wavelength matrices (only populated for BSDF systems in debug mode)
-        std::optional<std::vector<FenestrationCommon::MatrixAtWavelength>> transmittance_wavelength_matrices;
-        std::optional<std::vector<FenestrationCommon::MatrixAtWavelength>> reflectance_wavelength_matrices;
+        std::optional<std::vector<FenestrationCommon::MatrixAtWavelength>> transmittance_wavelength_matrices{};
+        std::optional<std::vector<FenestrationCommon::MatrixAtWavelength>> reflectance_wavelength_matrices{};
     };
 
     template<typename T>
