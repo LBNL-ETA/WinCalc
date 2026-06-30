@@ -19,6 +19,7 @@ if(NOT TARGET gtest)
 endif()
 
 add_executable(${PROJECT_TEST_NAME}
+		1_layer_coated_nfrc_9924.unit.cpp
 		1_layer_cgdb_31017.unit.cpp
 		1_layer_cgdb_31018.unit.cpp
 		1_layer_nfrc_102_awning_generic.unit.cpp
