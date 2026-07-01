@@ -22,6 +22,7 @@ protected:
     std::shared_ptr<Glazing_System> glazing_system_u;
     std::shared_ptr<Glazing_System> glazing_system_shgc;
     std::shared_ptr<Glazing_System> glazing_system_u_quarter_basis;
+    std::shared_ptr<Glazing_System> glazing_system_u_full_basis;
 
     virtual void SetUp()
     {
@@ -44,12 +45,17 @@ protected:
         auto bsdf_hemisphere =
           SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Quarter);
 
+        auto bsdf_hemisphere_full =
+          SingleLayerOptics::BSDFHemisphere::create(SingleLayerOptics::BSDFBasis::Full);
+
         glazing_system_u = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments());
         glazing_system_shgc = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_shgc_environments());
         glazing_system_u_quarter_basis = std::make_shared<Glazing_System>(
           standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere);
+        glazing_system_u_full_basis = std::make_shared<Glazing_System>(
+          standard, products, gaps, 1.0, 1.0, 90, nfrc_u_environments(), bsdf_hemisphere_full);
     }
 };
 
@@ -75,4 +81,5 @@ TEST_F(Test_1_layer_coated_nfrc_9924, Test_Optical)
                                                            {15.0, 270.0}};
     test_optical_results("1_layer/coated_nfrc_9924/no_basis", glazing_system_u, update_results, incident_angles);
     test_optical_results("1_layer/coated_nfrc_9924/quarter_basis", glazing_system_u_quarter_basis, update_results, incident_angles);
+    test_optical_results("1_layer/coated_nfrc_9924/full_basis", glazing_system_u_full_basis, update_results, incident_angles);
 }
