@@ -102,7 +102,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "Version_1.0.74")
+set(WindowsCalcEngine_Branch "Version_1.0.75")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
