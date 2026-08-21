@@ -15,7 +15,7 @@ graph TD
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.12</font>]
     FileParse[FileParse<br/><font color='red'>Version_1.1.5</font>]
     miniz[miniz<br/><font color='red'>89d7a5f6c3ce8893ea042b0a9d2a2d9975589ac9</font>]
-    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.18</font>]
+    LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>v0.19</font>]
 
     %% Level 3
     xmlParser[xmlParser<br/><font color='red'>v1.0.5</font>]

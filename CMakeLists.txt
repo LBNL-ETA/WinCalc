@@ -82,7 +82,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "v2.3.10")
+set(OpticalMeasurementParser_Branch "v2.3.11")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -102,7 +102,7 @@ if(NOT TARGET THMXParser)
     FetchContent_MakeAvailable(THMXParser)
 endif()
 
-set(WindowsCalcEngine_Branch "Version_1.0.75")
+set(WindowsCalcEngine_Branch "Version_1.0.76")
 if(NOT TARGET Windows-CalcEngine)
     FetchContent_Declare(
         WindowsCalc-Engine
