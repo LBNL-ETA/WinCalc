@@ -1,12 +1,12 @@
 ```mermaid
 graph TD
     %% Level 0
-    WinCalc[WinCalc<br/><font color='red'>v2.6.20</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.6.21</font>]
 
     %% Level 1 - direct dependencies
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.10</font>]
     THMXParser[THMXParser<br/><font color='red'>v1.1.7</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.75</font>]
+    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>Version_1.0.77</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>v1.2.5</font>]
     LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>Version_0.23.3</font>]
 
