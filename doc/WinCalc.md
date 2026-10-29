@@ -1,7 +1,7 @@
 ```mermaid
 graph TD
     %% Level 0
-    WinCalc[WinCalc<br/><font color='red'>v2.6.21</font>]
+    WinCalc[WinCalc<br/><font color='red'>v2.6.22</font>]
 
     %% Level 1 - direct dependencies
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.11</font>]
