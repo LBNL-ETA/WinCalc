@@ -17,4 +17,4 @@ so.
  
 ## Detailed package relation diagram
 
-[Located here](./doc/WinCalc.md)
+[Dependency Chart](doc/DependencyChart.md)
