@@ -82,7 +82,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "v2.3.11")
+set(OpticalMeasurementParser_Branch "rework/bcs")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
