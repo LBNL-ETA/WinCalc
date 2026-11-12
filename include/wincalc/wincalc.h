@@ -6,5 +6,6 @@
 #include "../../src/cma.h"
 #include "../../src/thermal_ir.h"
 #include "../../src/shade_factories.h"
+#include "../../src/report/thermal_report/thermal_report.h"
 
 #endif

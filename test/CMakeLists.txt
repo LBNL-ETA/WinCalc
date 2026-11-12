@@ -84,6 +84,7 @@ add_executable(${PROJECT_TEST_NAME}
 		WINDOW_issue_1216.unit.cpp
 		load_frame_data.unit.cpp
 		nfrc_9023.unit.cpp
+		thermal_report.unit.cpp
 		main.cpp
 		paths.h
 		util.h

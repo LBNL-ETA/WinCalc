@@ -27,7 +27,11 @@ add_library( ${LIB_NAME}
 		thmz.cpp
 		deflection_results.h
 		shade_factories.h
-		shade_factories.cpp)
+		shade_factories.cpp
+		report/thermal_report/thermal_report.h
+		report/thermal_report/thermal_report.cpp
+		report/thermal_report/thermal_report_serializers.hxx
+		report/thermal_report/thermal_report_io.cpp)
 
 
 
@@ -48,6 +52,13 @@ endif()
 
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_20)
 target_link_libraries(${LIB_NAME} PUBLIC window_standards OpticalMeasurementParser THMXParser Windows-CalcEngine LibraryFEMTHERM)
+
+# The report serializers (src/report) write XML and JSON through FileParse. The FileParse target
+# already exists in this build: LibraryFEMTherm and BSDFXMLParser bring it in. Its headers are
+# included as <fileParse/...>, so the include root is the parent of the target's source folder.
+get_target_property(FileParse_Source_Dir FileParse SOURCE_DIR)
+target_link_libraries(${LIB_NAME} PRIVATE FileParse)
+target_include_directories(${LIB_NAME} SYSTEM PRIVATE "${FileParse_Source_Dir}/..")
 
 
 

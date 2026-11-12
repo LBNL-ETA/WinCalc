@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Thermal report of a glazing system (ISO 15099 center of glass), as written by
+  wincalc::thermal_report_to_xml and wincalc::save_thermal_report.
+
+  The JSON form has the same structure: every element below is a property of the same name,
+  numbers are JSON numbers, IsShade is a JSON boolean, and SolidLayer and Gap are JSON arrays.
+
+  Units: temperatures in K, heat flows and irradiance in W/m2, coefficients in W/(m2 K),
+  conductivities in W/(m K), lengths in m, pressures in Pa, angles in degrees.
+
+  The element names and their order are defined in thermal_report_serializers.hxx. Keep the
+  two files in step.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="ThermalReport" type="ThermalReportType"/>
+
+  <xs:complexType name="ThermalReportType">
+    <xs:sequence>
+      <xs:element name="SystemType" type="SystemTypeType">
+        <xs:annotation>
+          <xs:documentation>Which of the two ISO 15099 runs the values belong to.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Theta" type="xs:double"/>
+      <xs:element name="Phi" type="xs:double"/>
+      <xs:element name="NumberOfIterations" type="xs:nonNegativeInteger"/>
+      <xs:element name="SystemEffectiveConductivity" type="xs:double"/>
+      <xs:element name="Outdoor" type="EnvironmentType"/>
+      <xs:element name="SolidLayers" type="SolidLayersType">
+        <xs:annotation>
+          <xs:documentation>Ordered from the outdoor side to the indoor side.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Gaps" type="GapsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Gap number i lies between solid layers i and i + 1. Absent for a single layer.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Indoor" type="EnvironmentType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="SystemTypeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="U"/>
+      <xs:enumeration value="SHGC"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="EnvironmentType">
+    <xs:sequence>
+      <xs:element name="AirTemperature" type="xs:double"/>
+      <xs:element name="RadiationTemperature" type="xs:double"/>
+      <xs:element name="InfraredIrradiance" type="xs:double"/>
+      <xs:element name="HeatFlow" type="xs:double"/>
+      <xs:element name="ConvectiveHeatFlow" type="xs:double"/>
+      <xs:element name="RadiativeHeatFlow" type="xs:double"/>
+      <xs:element name="ConvectiveCoefficient" type="xs:double"/>
+      <xs:element name="RadiativeCoefficient" type="xs:double"/>
+      <xs:element name="ShadingEmissivityRatio" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>
+            Ratio that lets a system without the shade reproduce the shaded system. 1 when no
+            shading device faces this environment.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ShadingConvectiveCoefficientRatio" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SurfaceType">
+    <xs:sequence>
+      <xs:element name="Temperature" type="xs:double"/>
+      <xs:element name="Radiosity" type="xs:double"/>
+      <xs:element name="Emissivity" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SolidLayersType">
+    <xs:sequence>
+      <xs:element name="SolidLayer" type="SolidLayerType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SolidLayerType">
+    <xs:sequence>
+      <xs:element name="Thickness" type="xs:double"/>
+      <xs:element name="IsShade" type="xs:boolean"/>
+      <xs:element name="FrontSurface" type="SurfaceType">
+        <xs:annotation>
+          <xs:documentation>The surface that faces the outdoor side.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BackSurface" type="SurfaceType"/>
+      <xs:element name="HeatFlow" type="xs:double"/>
+      <xs:element name="AbsorbedSolarRadiation" type="xs:double"/>
+      <xs:element name="EffectiveConductivity" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GapsType">
+    <xs:sequence>
+      <xs:element name="Gap" type="GapType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GapType">
+    <xs:sequence>
+      <xs:element name="Thickness" type="xs:double"/>
+      <xs:element name="Pressure" type="xs:double"/>
+      <xs:element name="AverageTemperature" type="xs:double"/>
+      <xs:element name="HeatFlow" type="xs:double"/>
+      <xs:element name="ConvectiveHeatFlow" type="xs:double"/>
+      <xs:element name="RadiativeHeatFlow" type="xs:double"/>
+      <xs:element name="VentilationHeatGain" type="xs:double"/>
+      <xs:element name="ConvectiveCoefficient" type="xs:double"/>
+      <xs:element name="EffectiveConductivity" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
