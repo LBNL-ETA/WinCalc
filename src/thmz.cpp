@@ -1,7 +1,9 @@
 #include <numeric>
 #include <algorithm>
+#include <string>
 #include <string_view>
 
+#include <THMZ/Archive/Archive.hxx>
 #include <THMZ/Model/THMX.hxx>
 #include <THMZ/Model/DB.hxx>
 #include <THMZ/SteadyStateResults/Results.hxx>
@@ -149,12 +151,13 @@ namespace wincalc
 
     FrameLoadResult load_frame_data(std::string_view fileName, const Tags & tags)
     {
-        auto resultsOpt = ThermFile::loadSteadyStateResultsFromZipFile(fileName.data());
+        const auto thmzArchive{ThermArchive::read(std::string{fileName})};
+        auto resultsOpt = ThermArchive::partOrNothing(thmzArchive, &ThermArchive::steadyStateResults);
         if(!resultsOpt.has_value())
             return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
               FrameLoadErr::MissingThermResults);
 
-        auto modelOpt = ThermFile::loadThermModelFromZipFile(fileName.data());
+        auto modelOpt = ThermArchive::partOrNothing(thmzArchive, &ThermArchive::model);
         if(!modelOpt.has_value())
             return lbnl::make_unexpected<Tarcog::ISO15099::FrameData, FrameLoadErr>(
               FrameLoadErr::MissingThermModel);
