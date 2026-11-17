@@ -92,7 +92,7 @@ if(NOT TARGET OpticalMeasurementParser)
     FetchContent_MakeAvailable(OpticalMeasurementParser)
 endif()
 
-set(THMXParser_Branch "v1.1.7")
+set(THMXParser_Branch "rework/bcs")
 if(NOT TARGET THMXParser)
     FetchContent_Declare(
         THMXParser
@@ -124,12 +124,28 @@ endif()
 
 # Read transitive dependency versions from targets for the dependency diagram
 get_property(BSDFXMLParser_Branch TARGET OpticalMeasurementParser PROPERTY BSDFXMLParser_Branch)
-get_property(nlohmann_omp_Branch TARGET OpticalMeasurementParser PROPERTY nlohmann_Branch)
+get_property(nlohmann_json_Branch TARGET OpticalMeasurementParser PROPERTY nlohmann_Branch)
 get_property(FileParse_Branch TARGET BSDFXMLParser PROPERTY FileParse_Branch)
+get_property(xmlParser_Branch TARGET FileParse PROPERTY xmlParser_Branch)
 get_property(miniz_Branch TARGET LibraryFEMTHERM PROPERTY miniz_Branch)
 get_property(LBNLCPPCommon_Branch TARGET LibraryFEMTHERM PROPERTY LBNLCPPCommon_Branch)
 
-configure_file(doc/WinCalc.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/WinCalc.md @ONLY)
+# This project's own box in the dependency chart: the checked-out branch while work is
+# in flight, the version when the checkout sits exactly on a release tag.
+set(Chart_Self "v${PROJECT_VERSION}")
+execute_process(COMMAND git describe --tags --exact-match
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RESULT_VARIABLE Chart_NotOnTag OUTPUT_QUIET ERROR_QUIET)
+execute_process(COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE Chart_Branch OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+if(Chart_Branch STREQUAL "HEAD" AND DEFINED ENV{GITHUB_REF_NAME})
+    set(Chart_Branch "$ENV{GITHUB_REF_NAME}")
+endif()
+if(Chart_NotOnTag AND Chart_Branch AND NOT Chart_Branch STREQUAL "HEAD")
+    set(Chart_Self "${Chart_Branch}")
+endif()
+configure_file(doc/WinCalc.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/DependencyChart.md @ONLY)
 
 add_subdirectory(src)
 

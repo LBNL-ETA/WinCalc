@@ -1,25 +1,24 @@
 ```mermaid
 graph TD
     %% Level 0
-    WinCalc[WinCalc<br/><font color='red'>v@PROJECT_VERSION@</font>]
+    WinCalc[WinCalc<br/><font color='red'>@Chart_Self@</font>]
 
     %% Level 1 - direct dependencies
     OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>@OpticalMeasurementParser_Branch@</font>]
     THMXParser[THMXParser<br/><font color='red'>@THMXParser_Branch@</font>]
-    WindowsCalcEngine[WindowsCalcEngine<br/><font color='red'>@WindowsCalcEngine_Branch@</font>]
+    WindowsCalcEngine[Windows-CalcEngine<br/><font color='red'>@WindowsCalcEngine_Branch@</font>]
     Windows-CalcStandards[Windows-CalcStandards<br/><font color='red'>@WindowsCalcStandards_Branch@</font>]
     LibraryFEMTHERM[LibraryFEMTHERM<br/><font color='red'>@LibraryFEMTherm_Branch@</font>]
 
     %% Level 2
-    nlohmann_omp[nlohmann_json<br/><font color='red'>@nlohmann_omp_Branch@</font>]
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>@BSDFXMLParser_Branch@</font>]
     FileParse[FileParse<br/><font color='red'>@FileParse_Branch@</font>]
     miniz[miniz<br/><font color='red'>@miniz_Branch@</font>]
     LBNLCPPCommon[LBNLCPPCommon<br/><font color='red'>@LBNLCPPCommon_Branch@</font>]
 
     %% Level 3
-    xmlParser[xmlParser<br/><font color='red'>v1.0.5</font>]
-    nlohmann_fp[nlohmann_json<br/><font color='red'>v3.12.0</font>]
+    xmlParser[xmlParser<br/><font color='red'>@xmlParser_Branch@</font>]
+    nlohmann_json[nlohmann_json<br/><font color='red'>@nlohmann_json_Branch@</font>]
 
     %% WinCalc dependencies
     WinCalc --> OpticalMeasurementParser
@@ -29,7 +28,7 @@ graph TD
     WinCalc --> LibraryFEMTHERM
 
     %% OpticalMeasurementParser dependencies
-    OpticalMeasurementParser --> nlohmann_omp
+    OpticalMeasurementParser --> nlohmann_json
     OpticalMeasurementParser --> BSDFXMLParser
 
     %% LibraryFEMTHERM dependencies
@@ -42,7 +41,7 @@ graph TD
 
     %% FileParse dependencies
     FileParse --> xmlParser
-    FileParse --> nlohmann_fp
+    FileParse --> nlohmann_json
 
     %% THMXParser dependencies
     THMXParser --> xmlParser

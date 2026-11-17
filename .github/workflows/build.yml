@@ -92,21 +92,13 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C RELEASE -V
 
-  # Runs after every build passed. When the chart differs from the committed
-  # doc/DependencyChart.md, the job creates a chart-only commit through the API,
-  # puts a success status on it, and only then moves the branch to it, so the
-  # branch tip always has a check status. No workflow runs on that commit: it
-  # differs from the tested one in the chart alone.
+  # Shows the dependency chart on the run's summary page. The CMake configure
+  # writes doc/DependencyChart.md, which git ignores; nothing is committed.
   dependency-chart:
     name: Dependency chart
-    needs: [windows, mac, linux]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/rework/bcs'
     runs-on: ubuntu-24.04
     permissions:
-      contents: write
-      statuses: write
-    concurrency:
-      group: dependency-chart
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -116,31 +108,4 @@ jobs:
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
 
       - name: Show the dependency chart on the run's summary page
-        run: cat doc/WinCalc.md >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Commit the chart when it changed
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if cmp -s doc/WinCalc.md doc/DependencyChart.md; then
-            echo "The committed chart is current."
-            exit 0
-          fi
-          api="repos/${GITHUB_REPOSITORY}"
-          tip=$(gh api "${api}/git/ref/heads/${GITHUB_REF_NAME}" --jq '.object.sha')
-          if [ "$tip" != "$GITHUB_SHA" ]; then
-            echo "The branch moved past ${GITHUB_SHA}; the newer run commits the chart."
-            exit 0
-          fi
-          base_tree=$(git rev-parse "${GITHUB_SHA}^{tree}")
-          blob=$(printf '{"content":"%s","encoding":"base64"}' "$(base64 -w0 doc/WinCalc.md)" \
-            | gh api -X POST "${api}/git/blobs" --input - --jq '.sha')
-          tree=$(printf '{"base_tree":"%s","tree":[{"path":"doc/DependencyChart.md","mode":"100644","type":"blob","sha":"%s"}]}' "$base_tree" "$blob" \
-            | gh api -X POST "${api}/git/trees" --input - --jq '.sha')
-          commit=$(printf '{"message":"Refresh dependency chart","tree":"%s","parents":["%s"]}' "$tree" "$GITHUB_SHA" \
-            | gh api -X POST "${api}/git/commits" --input - --jq '.sha')
-          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          printf '{"state":"success","context":"Builds carried over","description":"Chart-only commit; all builds passed on %s","target_url":"%s"}' "${GITHUB_SHA:0:7}" "$run_url" \
-            | gh api -X POST "${api}/statuses/${commit}" --input - --jq '.state'
-          printf '{"sha":"%s","force":false}' "$commit" \
-            | gh api -X PATCH "${api}/git/refs/heads/${GITHUB_REF_NAME}" --input - --jq '.object.sha'
+        run: cat doc/DependencyChart.md >> "$GITHUB_STEP_SUMMARY"
