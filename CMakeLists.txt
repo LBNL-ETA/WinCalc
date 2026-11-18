@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project( wincalc VERSION 2.6.23 LANGUAGES CXX )
+project( wincalc VERSION 2.6.24 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 # Enable MSVC file-level parallel compilation (/MP) for every target, including
@@ -82,7 +82,7 @@ if(NOT TARGET window_standards)
     FetchContent_MakeAvailable(WindowsCalcStandards)
 endif()
 
-set(OpticalMeasurementParser_Branch "rework/bcs")
+set(OpticalMeasurementParser_Branch "v2.3.12")
 if(NOT TARGET OpticalMeasurementParser)
     FetchContent_Declare(
         OpticalMeasurementParser
@@ -92,7 +92,7 @@ if(NOT TARGET OpticalMeasurementParser)
     FetchContent_MakeAvailable(OpticalMeasurementParser)
 endif()
 
-set(THMXParser_Branch "rework/bcs")
+set(THMXParser_Branch "v1.1.8")
 if(NOT TARGET THMXParser)
     FetchContent_Declare(
         THMXParser
@@ -112,7 +112,7 @@ if(NOT TARGET Windows-CalcEngine)
     FetchContent_MakeAvailable(WindowsCalc-Engine)
 endif()
 
-set(LibraryFEMTherm_Branch "rework/bcs")
+set(LibraryFEMTherm_Branch "Version_0.24.0")
 if(NOT TARGET LibraryFEMTHERM)
     FetchContent_Declare(
         LibraryFEMTherm
